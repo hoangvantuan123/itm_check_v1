@@ -1,0 +1,8 @@
+:where(.css-dev-only-do-not-override-1b0bdye).ant-drawer-right
+  > .ant-drawer-content-wrapper {
+  padding: 10px;
+  box-shadow: none;
+}
+:where(.css-dev-only-do-not-override-1b0bdye).ant-drawer .ant-drawer-content {
+  border-radius: 10px;
+}
