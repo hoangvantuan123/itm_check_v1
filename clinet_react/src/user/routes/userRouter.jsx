@@ -5,11 +5,11 @@ import Sidebar from '../components/sildebar-frame/sidebar'
 import Home from '../pages/home'
 import Login from '../auth/login'
 import Templates from '../pages/templates'
-
+import Register from '../auth/register'
 const { Content } = Layout
 
 const UserRouter = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'))
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('userInfo'))
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -21,6 +21,7 @@ const UserRouter = () => {
   return (
     <Routes>
       <Route path="u/login" element={<Login />} />
+      <Route path="u/register" element={<Register />} />
       {isLoggedIn && (
         <Route
           path="/*"

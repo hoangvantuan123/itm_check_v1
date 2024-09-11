@@ -1,20 +1,20 @@
+# Sử dụng phiên bản nhẹ của Node.js
 FROM node:20-alpine
 
-# Set the working directory
+# Đặt thư mục làm việc
 WORKDIR /app
 
-# Copy package.json and yarn.lock files
-COPY package*.json ./
-COPY yarn.lock ./
+# Sao chép package.json và yarn.lock trước để tận dụng Docker cache
+COPY package.json yarn.lock ./
 
-# Install dependencies
-RUN yarn install
+# Cài đặt dependencies
+RUN yarn install --frozen-lockfile && yarn cache clean
 
-# Copy the rest of the application code
+# Sao chép phần còn lại của mã nguồn
 COPY . .
 
-# Expose port 3000
+# Expose port 3000 để ứng dụng có thể được truy cập từ ngoài
 EXPOSE 3000
 
-# Start the application
+# Lệnh khởi chạy ứng dụng
 CMD ["yarn", "dev"]

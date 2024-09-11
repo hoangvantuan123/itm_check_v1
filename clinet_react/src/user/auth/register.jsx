@@ -20,9 +20,9 @@ export default function Register() {
   const { loading, error } = useSelector((state) => state.auth)
 
   const onFinish = async (values) => {
-    const { email, password, firstName, lastName } = values
+    const { login, password } = values
     try {
-      const data = await registerUser({ email, password, firstName, lastName })
+      const data = await registerUser({ login, password })
       window.location.href = '/u/login'
     } catch (error) {
       console.error(error.message)
@@ -42,14 +42,9 @@ export default function Register() {
           layout="vertical"
           className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 p-5 lg:p-0 "
         >
-          <Form.Item name="firstName">
-            <Input size="large" placeholder="First Name" />
-          </Form.Item>
-          <Form.Item name="lastName">
-            <Input size="large" placeholder="Last Name" />
-          </Form.Item>
-          <Form.Item name="email">
-            <Input size="large" placeholder="Email" />
+        
+          <Form.Item name="login">
+            <Input size="large" placeholder="Login" />
           </Form.Item>
           <Form.Item name="password">
             <Input.Password size="large" placeholder="Password" />

@@ -11,7 +11,7 @@ dotenv.config();
     port: 5432,
     username: 'tuanhoang',
     password:'tienhung-admin@admin.com',
-    database:'tienhung',
+    database:'itm_db',
     synchronize: true,
     logging: true,
     entities: [__dirname + '/**/*.entity{.ts,.js}'],

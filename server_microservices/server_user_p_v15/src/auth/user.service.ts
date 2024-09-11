@@ -17,12 +17,12 @@ export class UserService {
     return await this.userRepository.save(newUser);
   }
 
-  async findUserByEmail(email: string): Promise<User | undefined> {
+  async findUserByEmail(login: string): Promise<User | undefined> {
     try {
-      const user = await this.userRepository.findOne({ where: { email } });
+      const user = await this.userRepository.findOne({ where: { login } });
       return user;
     } catch (error) {
-      throw new NotFoundException(`User with email ${email} not found`);
+      throw new NotFoundException(`User with login ${login} not found`);
     }
   }
   async saveUser(user: User): Promise<User> {

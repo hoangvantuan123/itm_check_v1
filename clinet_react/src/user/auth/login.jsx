@@ -15,7 +15,7 @@ import {
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import LogoGoogle from '../../assets/google_login.png'
 import LogoApple from '../../assets/apple_login.png'
-import { login } from '../../features/auth/API/authAPI'
+import { loginAuth } from '../../features/auth/API/authAPI'
 import { loginGoogle } from '../../features/auth/API/authAPI'
 import decodeJWT from '../../utils/decode-JWT'
 
@@ -29,20 +29,17 @@ export default function Login() {
   const { loading, error } = useSelector((state) => state.auth)
 
   const onFinish = async (values) => {
-    const { email, password } = values
+    const { login, password } = values
     try {
-      const data = await login({ email, password })
-      localStorage.setItem('token', data.accessToken)
+      const data = await loginAuth({ login, password })
       localStorage.setItem('userInfo', JSON.stringify(data))
-      window.location.href = '/u/workflows'
+      window.location.href = '/u/home'
     } catch (error) {
       console.error(error.message)
     }
   }
 
-  const handleGoogleLogin = () => {
-    window.location.href = 'http://localhost:3000/api/google/login' // Thay đổi URL tương ứng với endpoint của bạn
-  }
+ 
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search)
@@ -54,7 +51,7 @@ export default function Login() {
       localStorage.setItem('token', token)
       localStorage.setItem('userInfo', JSON.stringify(decoded))
 
-      window.location.href = '/u/workflows'
+      window.location.href = '/u/home'
     }
   }, [location])
 
@@ -64,73 +61,48 @@ export default function Login() {
     if (token) {
       localStorage.setItem('token', token)
 
-      window.location.href = '/u/workflows'
+      window.location.href = '/u/home'
     } else {
       console.error('Token not found in URL')
     }
   }
 
   return (
-    <>
-      <Helmet>
-        <title>{t('auth.login')}</title>
-      </Helmet>
-      <div className="min-h-screen overflow-hidden flex flex-col items-center justify-center p-2 lg:p-0">
-        <div className="text-center">
-          <Title level={2}>Chào mừng đến với Workflow Automation SaaS</Title>
-        </div>
-        <Form
-          onFinish={onFinish}
-          layout="vertical"
-          className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 p-5 lg:p-0 "
-        >
-          <Form.Item name="email">
-            <Input
-              size="large"
-              prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Email"
-            />
-          </Form.Item>
-          <Form.Item name="password">
-            <Input.Password
-              size="large"
-              prefix={<LockOutlined className="site-form-item-icon" />}
-              placeholder="Password"
-            />
-          </Form.Item>
+<>
+  <Helmet>
+    <title>{t('auth.login')}</title>
+  </Helmet>
+  <div className="min-h-screen overflow-hidden flex flex-col items-center justify-center p-2 lg:p-0">
+    <div className="mx-auto max-w-lg text-center mb-5">
+      <h1 className="text-2xl font-bold sm:text-3xl">Get started today!</h1>
+
+      <p className="mt-4 text-gray-500">
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Et libero nulla eaque error neque
+      ipsa culpa autem, at itaque nostrum!
+      </p>
+    </div>
+    <Form onFinish={onFinish} layout="vertical" className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 p-5 lg:p-0 ">
+      <Form.Item name="login">
+        <Input className="w-full rounded-lg border-gray-200 p-4  text-sm shadow-sm" size="large" prefix={<UserOutlined className="site-form-item-icon" />
+} placeholder="Employee ID" />
+      </Form.Item>
+      <Form.Item name="password">
+        <Input.Password className="w-full rounded-lg border-gray-200 p-4  text-sm shadow-sm" size="large" prefix={<LockOutlined className="site-form-item-icon" />
+} placeholder="Password" />
+      </Form.Item>
           {error && <Text type="danger">{error}</Text>}
-          <Form.Item>
-            <Button htmlType="submit" className="w-full" size="large">
-              Tiếp tục
-            </Button>
-          </Form.Item>
-        </Form>
-        <Text>
+          <Text>
           Bạn chưa có tài khoản? <Link to="/u/register">Đăng ký</Link>
         </Text>
-        <Text className="mt-5">Hoặc</Text>
-        <ul className="space-y-1 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 mt-3 p-5 lg:p-0">
-          <li>
-            <a
-              onClick={handleGoogleLogin}
-              className="flex items-center  justify-center gap-2 rounded-lg px-4 py-2 border cursor-pointer text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-            >
-              <Image src={LogoGoogle} className="w-4 h-4" />
-              <span className="text-sm font-medium">
-                Tiếp tục với tài khoản Google
-              </span>
-            </a>
-          </li>
-          <li>
-            <a className="flex items-center gap-2  justify-center rounded-lg px-4 py-2 border cursor-pointer text-gray-500 hover:bg-gray-100 hover:text-gray-700">
-              <Image src={LogoApple} className="w-4 h-4" />
-              <span className="text-sm font-medium">
-                Tiếp tục với tài khoản Apple
-              </span>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </>
+      <Form.Item>
+        <Button htmlType="submit" className="w-full rounded-lg border-gray-200 bg-indigo-600 text-white p-4 shadow-sm text-sm" size="large">
+  Continue
+        </Button>
+      </Form.Item>
+    </Form>
+
+
+  </div>
+</>
   )
 }

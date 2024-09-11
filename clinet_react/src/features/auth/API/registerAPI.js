@@ -1,10 +1,8 @@
 import { HOST_API } from '../../../services'
 
 export const registerUser = async ({
-  email,
-  password,
-  firstName,
-  lastName,
+  login,
+  password
 }) => {
   try {
     const response = await fetch(`${HOST_API}/register`, {
@@ -12,7 +10,7 @@ export const registerUser = async ({
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email, password, firstName, lastName }),
+      body: JSON.stringify({ login, password }),
       credentials: 'same-origin',
     })
 
