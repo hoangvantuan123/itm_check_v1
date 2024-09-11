@@ -28,7 +28,7 @@ export class AppController {
 
 
   @Put(':id/update-access-token')
-  async updateUserAccessToken(@Param('id') id: string, @Body('accessToken') accessToken: string): Promise<User> {
+  async updateUserAccessToken(@Param('id') id: number, @Body('accessToken') accessToken: string): Promise<User> {
     return this.appService.updateUserAccessToken(id, accessToken);
   }
 

@@ -4,8 +4,8 @@ import * as bcrypt from 'bcrypt';
 
 @Entity('users')
 export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column()
   email: string;
@@ -29,7 +29,7 @@ export class User {
   password: string;
 
   beforeInsert() {
-    this.id = uuidv4();
+   
     this.hashPassword();
   }
 

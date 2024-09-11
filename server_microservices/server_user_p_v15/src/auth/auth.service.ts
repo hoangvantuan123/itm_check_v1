@@ -84,7 +84,7 @@ export class AppService {
     }
   }
   
-  async updateUserAccessToken(userId: string, newAccessToken: string): Promise<User> {
+  async updateUserAccessToken(userId: number, newAccessToken: string): Promise<User> {
     const user = await this.userService.findOne(userId);
 
     if (!user) {

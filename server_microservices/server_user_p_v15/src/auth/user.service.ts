@@ -28,14 +28,14 @@ export class UserService {
   async saveUser(user: User): Promise<User> {
     return this.userRepository.save(user);
   }
-  async findOne(id: string): Promise<User | undefined> {
+  async findOne(id: number): Promise<User | undefined> {
     return this.userRepository.findOne({ where: { id } });
   }
 
   async save(user: User): Promise<User> {
     return this.userRepository.save(user);
   }
-  async updateUser(id: string, updateUserDto: Partial<User>): Promise<User> {
+  async updateUser(id: number, updateUserDto: Partial<User>): Promise<User> {
     const user = await this.userRepository.findOne({ where: { id } });
 
     if (!user) {

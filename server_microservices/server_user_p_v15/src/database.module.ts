@@ -7,11 +7,11 @@ dotenv.config();
 @Module({
   imports: [TypeOrmModule.forRoot({
     type: 'postgres',
-    host: 'localhost',
+    host: '103.75.180.66',
     port: 5432,
-    username: 'postgres',
-    password:'admin',
-    database:'server_user_p_v15',
+    username: 'tuanhoang',
+    password:'tienhung-admin@admin.com',
+    database:'tienhung',
     synchronize: true,
     logging: true,
     entities: [__dirname + '/**/*.entity{.ts,.js}'],
