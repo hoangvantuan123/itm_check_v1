@@ -31,12 +31,4 @@ export class AppController {
   async updateUserAccessToken(@Param('id') id: number, @Body('accessToken') accessToken: string): Promise<User> {
     return this.appService.updateUserAccessToken(id, accessToken);
   }
-
-
-
-
-
-
-
-
 }

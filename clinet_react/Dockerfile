@@ -1,19 +1,20 @@
-# Use the official Node.js version from https://hub.docker.com/
-FROM node:20-alpine as build
+FROM node:20-alpine
 
-# Set the working directory inside the container to /app
+# Set the working directory
 WORKDIR /app
 
-
+# Copy package.json and yarn.lock files
 COPY package*.json ./
 COPY yarn.lock ./
-RUN yarn install --frozen-lockfile
 
-# Copy the rest of the application code to the working directory
+# Install dependencies
+RUN yarn install
+
+# Copy the rest of the application code
 COPY . .
 
-# Expose port 5002 to allow external access
-EXPOSE 5173
+# Expose port 3000
+EXPOSE 3000
 
-# Specify the command to run the application when the container starts
-CMD [ "yarn", "run", "dev"]
+# Start the application
+CMD ["yarn", "dev"]
