@@ -38,6 +38,8 @@ const Border = () => {
 
 export default function AuthUser({ collapsed }) {
   const [showModal, setShowModal] = React.useState(false)
+  const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
+  const userNameLogin = userFromLocalStorage?.login || 'none'
   const { t } = useTranslation()
   const onClickShowModal = () => {
     setShowModal(!showModal)
@@ -62,7 +64,7 @@ export default function AuthUser({ collapsed }) {
           >
             <div className="flex items-center gap-2">
               <Avatar shazpe="square" icon={<UserOutlined />} />
-              <Text className="text-sm font-medium">Tuan Hoang</Text>
+              <Text className="text-sm font-medium">{userNameLogin}</Text>
             </div>
           </div>
 
@@ -71,30 +73,32 @@ export default function AuthUser({ collapsed }) {
               <div className=" w-[350px] mt-2 h-auto  border rounded-lg fixed z-50 bg-white ml-4 shadow-lg">
                 <div className="p-2">
                   <Text className=" text-xs font-medium opacity-70">
-                    tuanvhoang31@gmail.com
+                    {userNameLogin}
                   </Text>
                 </div>
                 <Border />
                 <div className="p-2">
-                  <Setting />
+                  <Setting userNameLogin={userNameLogin} />
                 </div>
 
                 <div className=" bg-slate-50 w-full h-auto p-2 rounded-e-lg">
-                  <div className="flex items-center gap-2 rounded-lg px-4 py-1 cursor-pointer text-gray-500 hover:bg-gray-200 hover:text-gray-700">
-                    <Text className="text-[12px] ">Thêm tài khoản</Text>
-                  </div>
                   <div
                     onClick={handleLogout}
-                    className="flex items-center gap-2 rounded-lg px-4 py-1 cursor-pointer text-gray-500 hover:bg-gray-200 hover:text-gray-700"
+                    className="flex items-center gap-2 rounded-lg px-4 py-3 cursor-pointer text-red-600 hover:bg-red-100 hover:text-red-600"
                   >
-                    <Text className="text-[12px] ">Ngắt kết nối</Text>
+                    <Text className="text-[12px]  text-red-600">  {t('model_setting_user.logout')}</Text>
                   </div>
                 </div>
                 <Border />
                 <div className=" bg-slate-50 w-full h-auto p-2 rounded-e-lg">
-                  <div className="flex items-center gap-2 rounded-lg px-4 py-1 cursor-pointer text-gray-500 hover:bg-gray-200 hover:text-gray-700">
+                  <div className="flex items-center gap-2 rounded-lg px-4 py-3 cursor-pointer text-gray-500 hover:bg-gray-200 hover:text-gray-700">
                     <Text className="text-[12px] ">
-                      Tải xuống ứng dụng cho macos
+                    {t('model_setting_user.download_ios')}
+                    </Text>
+                  </div>
+                  <div className="flex items-center gap-2 rounded-lg px-4 py-3 cursor-pointer text-gray-500 hover:bg-gray-200 hover:text-gray-700">
+                    <Text className="text-[12px] ">
+                    {t('model_setting_user.download_android')}
                     </Text>
                   </div>
                 </div>

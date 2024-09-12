@@ -10,7 +10,6 @@ import {
   Image,
   notification,
 } from 'antd'
-import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import { registerUser } from '../../features/auth/API/registerAPI'
 const { Title, Text } = Typography
 
@@ -35,14 +34,13 @@ export default function Register() {
       </Helmet>
       <div className="min-h-screen overflow-hidden flex flex-col items-center justify-center p-2 lg:p-0">
         <div className="text-center">
-          <Title level={2}>Đăng ký Workflow Automation SaaS</Title>
+          <Title level={2}>Đăng ký</Title>
         </div>
         <Form
           onFinish={onFinish}
           layout="vertical"
           className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 p-5 lg:p-0 "
         >
-        
           <Form.Item name="login">
             <Input size="large" placeholder="Login" />
           </Form.Item>

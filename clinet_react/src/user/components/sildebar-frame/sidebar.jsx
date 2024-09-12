@@ -1,157 +1,89 @@
 import { Layout, Menu } from 'antd'
 import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
-import { useState } from 'react' // Import useState hook
-
+import { useState, useEffect } from 'react' // Import useEffect để xử lý responsive
 import SidebarContent from './styled-components/toggle-sidebar'
-import LogoWorkFlow from './styled-components/logo'
-import { HomeOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import AuthUser from '../auth'
-import NewWorkFlow from './new-workflow'
-
+import { useTranslation } from 'react-i18next'
 const { Sider, Footer } = Layout
+const { SubMenu } = Menu // Import SubMenu từ Menu
 const menuStyle = {
   borderInlineEnd: 'none',
 }
-const WorkflowsIcon = () => {
+
+const HomeIcon = () => {
   return (
     <svg
-      className="w-5 h-5 opacity-65 "
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      id="Home-2--Streamline-Solar-Ar"
+      className="w-5 h-5 opacity-65 "
     >
       <path
-        d="M2.5 6.5C2.5 4.29086 4.29086 2.5 6.5 2.5C8.70914 2.5 10.5 4.29086 10.5 6.5C10.5 8.70914 8.70914 10.5 6.5 10.5C4.29086 10.5 2.5 8.70914 2.5 6.5Z"
-        stroke="#1C274C"
+        d="M1.0605 12.2231C1.0605 9.7196 1.0605 8.4679 1.6284 7.4303C2.1964 6.3926 3.2341 5.7486 5.3094 4.4606L7.4973 3.1027C9.6911 1.7412 10.788 1.0605 12 1.0605C13.212 1.0605 14.3089 1.7412 16.5027 3.1027L18.6906 4.4606C20.766 5.7486 21.8036 6.3926 22.3715 7.4303C22.9395 8.4679 22.9395 9.7196 22.9395 12.2231V13.8871C22.9395 18.1544 22.9395 20.2881 21.6579 21.6138C20.3763 22.9395 18.3134 22.9395 14.1879 22.9395H9.8121C5.6865 22.9395 3.6238 22.9395 2.3421 21.6138C1.0605 20.2881 1.0605 18.1544 1.0605 13.8871V12.2231Z"
+        stroke="#000000"
         strokeWidth="1.5"
-      />
+      ></path>
       <path
-        d="M13.5 17.5C13.5 15.2909 15.2909 13.5 17.5 13.5C19.7091 13.5 21.5 15.2909 21.5 17.5C21.5 19.7091 19.7091 21.5 17.5 21.5C15.2909 21.5 13.5 19.7091 13.5 17.5Z"
-        stroke="#1C274C"
+        d="M12 15.2819V18.5637"
+        stroke="#000000"
+        strokeLinecap="round"
         strokeWidth="1.5"
-      />
-      <path
-        d="M21.5 6.5C21.5 4.61438 21.5 3.67157 20.9142 3.08579C20.3284 2.5 19.3856 2.5 17.5 2.5C15.6144 2.5 14.6716 2.5 14.0858 3.08579C13.5 3.67157 13.5 4.61438 13.5 6.5C13.5 8.38562 13.5 9.32843 14.0858 9.91421C14.6716 10.5 15.6144 10.5 17.5 10.5C19.3856 10.5 20.3284 10.5 20.9142 9.91421C21.5 9.32843 21.5 8.38562 21.5 6.5Z"
-        stroke="#1C274C"
-        strokeWidth="1.5"
-      />
-      <path
-        d="M10.5 17.5C10.5 15.6144 10.5 14.6716 9.91421 14.0858C9.32843 13.5 8.38562 13.5 6.5 13.5C4.61438 13.5 3.67157 13.5 3.08579 14.0858C2.5 14.6716 2.5 15.6144 2.5 17.5C2.5 19.3856 2.5 20.3284 3.08579 20.9142C3.67157 21.5 4.61438 21.5 6.5 21.5C8.38562 21.5 9.32843 21.5 9.91421 20.9142C10.5 20.3284 10.5 19.3856 10.5 17.5Z"
-        stroke="#1C274C"
-        strokeWidth="1.5"
-      />
+      ></path>
     </svg>
   )
 }
-const SearchIcon = () => {
+const BoxIcon = () => {
   return (
     <svg
-      className="w-5 h-5 opacity-65 "
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      id="Box-Minimalistic--Streamline-Solar-Ar"
+      className="w-5 h-5 opacity-65 "
     >
-      <circle cx="11" cy="11" r="9" stroke="#1C274C" strokeWidth="1.5" />
       <path
-        d="M21.812 20.9748C21.7493 21.0695 21.636 21.1828 21.4094 21.4094C21.1828 21.636 21.0695 21.7493 20.9748 21.812C20.4202 22.1793 19.6699 21.99 19.3559 21.4036C19.3023 21.3035 19.2563 21.15 19.1643 20.843C19.0638 20.5076 19.0136 20.3398 19.0038 20.2218C18.9466 19.5268 19.5268 18.9466 20.2218 19.0038C20.3398 19.0136 20.5075 19.0638 20.843 19.1643C21.15 19.2563 21.3035 19.3023 21.4036 19.3559C21.99 19.6699 22.1793 20.4202 21.812 20.9748Z"
-        stroke="#1C274C"
-        strokeWidth="1.5"
+        d="M15.9138 2.5723L18.1017 3.7204C20.4556 4.9557 21.6325 5.5733 22.286 6.6831C22.9395 7.7929 22.9395 9.174 22.9395 11.936V12.064C22.9395 14.826 22.9395 16.2071 22.286 17.3169S20.4556 19.0443 18.1017 20.2796L15.9138 21.4277C13.9933 22.4355 13.033 22.9395 12 22.9395C10.967 22.9395 10.0067 22.4356 8.0861 21.4277L5.8982 20.2796C3.5444 19.0443 2.3675 18.4268 1.714 17.317C1.0605 16.2071 1.0605 14.826 1.0605 12.064V11.936C1.0605 9.174 1.0605 7.7929 1.714 6.6831C2.3675 5.5733 3.5444 4.9557 5.8982 3.7204L8.0862 2.5723C10.0067 1.5644 10.967 1.0605 12 1.0605C13.033 1.0605 13.9933 1.5644 15.9138 2.5723Z"
+        stroke="#000000"
         strokeLinecap="round"
-      />
+        strokeWidth="1.5"
+      ></path>
+      <path
+        d="M21.8456 7.0772L12 12M12 12L2.1544 7.0772M12 12V22.3926"
+        stroke="#000000"
+        strokeLinecap="round"
+        strokeWidth="1.5"
+      ></path>
     </svg>
   )
 }
 
-const TemplateIcon = () => {
+const UserIcon = () => {
   return (
     <svg
-      className="w-5 h-5 opacity-65 "
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      id="User-Circle--Streamline-Solar-Ar"
+      className="w-5 h-5 opacity-65 "
     >
       <path
-        d="M2 6C2 4.59987 2 3.8998 2.27248 3.36502C2.51217 2.89462 2.89462 2.51217 3.36502 2.27248C3.8998 2 4.59987 2 6 2C7.40013 2 8.1002 2 8.63498 2.27248C9.10538 2.51217 9.48783 2.89462 9.72752 3.36502C10 3.8998 10 4.59987 10 6V18C10 19.4001 10 20.1002 9.72752 20.635C9.48783 21.1054 9.10538 21.4878 8.63498 21.7275C8.1002 22 7.40013 22 6 22C4.59987 22 3.8998 22 3.36502 21.7275C2.89462 21.4878 2.51217 21.1054 2.27248 20.635C2 20.1002 2 19.4001 2 18V6Z"
-        stroke="#1C274C"
+        stroke="#000000"
+        d="M8.7181 8.7181C8.7181 11.2445 11.453 12.8235 13.6409 11.5603C14.6563 10.9741 15.2819 9.8906 15.2819 8.7181C15.2819 6.1918 12.547 4.6128 10.3591 5.876C9.3437 6.4622 8.7181 7.5456 8.7181 8.7181"
         strokeWidth="1.5"
-      />
+      ></path>
       <path
-        d="M7 19H5"
-        stroke="#1C274C"
+        stroke="#000000"
+        d="M1.0605 12C1.0605 20.4213 10.1767 25.6845 17.4698 21.4739C20.8545 19.5198 22.9395 15.9083 22.9395 12C22.9395 3.5787 13.8233 -1.6845 6.5302 2.5261C3.1455 4.4802 1.0605 8.0917 1.0605 12"
         strokeWidth="1.5"
+      ></path>
+      <path
+        d="M18.53 20.7516C18.356 17.5885 17.3875 15.2819 12 15.2819C6.6126 15.2819 5.6441 17.5885 5.47 20.7516"
+        stroke="#000000"
         strokeLinecap="round"
-      />
-      <path
-        d="M13.3137 4.92912L11.1716 7.07121C10.5935 7.64927 10.3045 7.9383 10.1522 8.30585C10 8.67339 10 9.08214 10 9.89964L10 19.5565L18.9705 10.586C19.9606 9.59594 20.4556 9.10091 20.6411 8.53009C20.8042 8.02798 20.8042 7.48712 20.6411 6.98501C20.4556 6.41419 19.9606 5.91917 18.9705 4.92912C17.9805 3.93908 17.4855 3.44406 16.9146 3.25859C16.4125 3.09544 15.8717 3.09544 15.3695 3.25859C14.7987 3.44406 14.3037 3.93908 13.3137 4.92912Z"
-        stroke="#1C274C"
         strokeWidth="1.5"
-      />
-      <path
-        d="M6 22L18 22C19.4001 22 20.1002 22 20.635 21.7275C21.1054 21.4878 21.4878 21.1054 21.7275 20.635C22 20.1002 22 19.4001 22 18C22 16.5999 22 15.8998 21.7275 15.365C21.4878 14.8946 21.1054 14.5122 20.635 14.2725C20.1002 14 19.4001 14 18 14L15.5 14"
-        stroke="#1C274C"
-        strokeWidth="1.5"
-      />
-    </svg>
-  )
-}
-const ExecutionsIcon = () => {
-  return (
-    <svg
-      className="w-5 h-5 opacity-65 "
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M22 13V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22H15"
-        stroke="#292D32"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-      <path
-        d="M19 22V16L17 18"
-        stroke="#292D32"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-      <path
-        d="M19 16L21 18"
-        stroke="#292D32"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-      <path
-        d="M9.95002 6.26001L8.90002 15.73"
-        stroke="#292D32"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-      <path
-        d="M13.1101 6.26001L12.0601 15.73"
-        stroke="#292D32"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-      <path
-        d="M6.53003 9.41992H16"
-        stroke="#292D32"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-      <path
-        d="M6 12.5801H15.47"
-        stroke="#292D32"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
+      ></path>
     </svg>
   )
 }
@@ -159,333 +91,356 @@ const ExecutionsIcon = () => {
 const SettingIcon = () => {
   return (
     <svg
-      className="w-5 h-5 opacity-65 "
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      id="Settings--Streamline-Solar-Ar"
+      className="w-5 h-5 opacity-65 "
     >
       <path
-        d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z"
-        stroke="#292D32"
+        stroke="#000000"
+        d="M8.7181 12C8.7181 14.5264 11.453 16.1054 13.6409 14.8422C14.6563 14.2559 15.2819 13.1725 15.2819 12C15.2819 9.4736 12.547 7.8946 10.3591 9.1578C9.3437 9.7441 8.7181 10.8275 8.7181 12"
         strokeWidth="1.5"
-        strokeMiterlimit="10"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      ></path>
       <path
-        d="M2 12.8799V11.1199C2 10.0799 2.85 9.21994 3.9 9.21994C5.71 9.21994 6.45 7.93994 5.54 6.36994C5.02 5.46994 5.33 4.29994 6.24 3.77994L7.97 2.78994C8.76 2.31994 9.78 2.59994 10.25 3.38994L10.36 3.57994C11.26 5.14994 12.74 5.14994 13.65 3.57994L13.76 3.38994C14.23 2.59994 15.25 2.31994 16.04 2.78994L17.77 3.77994C18.68 4.29994 18.99 5.46994 18.47 6.36994C17.56 7.93994 18.3 9.21994 20.11 9.21994C21.15 9.21994 22.01 10.0699 22.01 11.1199V12.8799C22.01 13.9199 21.16 14.7799 20.11 14.7799C18.3 14.7799 17.56 16.0599 18.47 17.6299C18.99 18.5399 18.68 19.6999 17.77 20.2199L16.04 21.2099C15.25 21.6799 14.23 21.3999 13.76 20.6099L13.65 20.4199C12.75 18.8499 11.27 18.8499 10.36 20.4199L10.25 20.6099C9.78 21.3999 8.76 21.6799 7.97 21.2099L6.24 20.2199C5.33 19.6999 5.02 18.5299 5.54 17.6299C6.45 16.0599 5.71 14.7799 3.9 14.7799C2.85 14.7799 2 13.9199 2 12.8799Z"
-        stroke="#292D32"
+        d="M13.9313 1.227C13.5291 1.0605 13.0195 1.0605 12 1.0605C10.9805 1.0605 10.4709 1.0605 10.0687 1.227C9.5327 1.4491 9.1067 1.875 8.8847 2.4111C8.7833 2.6558 8.7436 2.9404 8.7281 3.3556C8.7053 3.9657 8.3924 4.5304 7.8637 4.8356C7.335 5.1409 6.6895 5.1295 6.1497 4.8442C5.7825 4.6501 5.5161 4.5421 5.2535 4.5075C4.6782 4.4318 4.0964 4.5877 3.636 4.9409C3.2908 5.2059 3.0359 5.6473 2.5262 6.5302C2.0165 7.413 1.7616 7.8544 1.7048 8.2859C1.6291 8.8612 1.785 9.4431 2.1382 9.9034C2.2994 10.1136 2.526 10.2901 2.8777 10.5111C3.3947 10.836 3.7274 11.3895 3.7274 12C3.7273 12.6105 3.3947 13.1639 2.8777 13.4886C2.526 13.7097 2.2993 13.8864 2.1381 14.0966C1.7848 14.5569 1.6289 15.1387 1.7047 15.714C1.7615 16.1454 2.0164 16.5869 2.5261 17.4698C3.0358 18.3526 3.2907 18.7941 3.6359 19.059C4.0963 19.4122 4.6781 19.5681 5.2534 19.4924C5.516 19.4578 5.7823 19.3498 6.1496 19.1558C6.6894 18.8705 7.3349 18.8591 7.8637 19.1643C8.3924 19.4696 8.7053 20.0343 8.7281 20.6445C8.7436 21.0596 8.7833 21.3442 8.8847 21.5889C9.1067 22.125 9.5327 22.551 10.0687 22.773C10.4709 22.9395 10.9806 22.9395 12 22.9395C13.0195 22.9395 13.5291 22.9395 13.9313 22.773C14.4673 22.551 14.8933 22.125 15.1153 21.5889C15.2167 21.3442 15.2564 21.0596 15.2719 20.6444C15.2947 20.0343 15.6075 19.4696 16.1362 19.1643C16.665 18.859 17.3105 18.8705 17.8504 19.1558C18.2176 19.3498 18.4839 19.4577 18.7464 19.4923C19.3217 19.5681 19.9036 19.4122 20.3639 19.059C20.7092 18.794 20.9641 18.3526 21.4738 17.4697C21.9835 16.5868 22.2384 16.1454 22.2952 15.714C22.3709 15.1387 22.215 14.5568 21.8618 14.0964C21.7005 13.8863 21.4739 13.7096 21.1222 13.4886C20.6053 13.1639 20.2726 12.6104 20.2726 11.9999S20.6053 10.8361 21.1222 10.5113C21.474 10.2903 21.7007 10.1137 21.8619 9.9034C22.2151 9.4431 22.371 8.8613 22.2953 8.286C22.2385 7.8545 21.9837 7.4131 21.4739 6.5302C20.9642 5.6474 20.7093 5.2059 20.3641 4.941C19.9037 4.5878 19.3218 4.4319 18.7465 4.5076C18.484 4.5422 18.2177 4.6501 17.8504 4.8442C17.3106 5.1295 16.6651 5.1409 16.1364 4.8357C15.6075 4.5304 15.2947 3.9656 15.2719 3.3555C15.2564 2.9404 15.2167 2.6558 15.1153 2.4111C14.8933 1.875 14.4673 1.4491 13.9313 1.227Z"
+        stroke="#000000"
         strokeWidth="1.5"
-        strokeMiterlimit="10"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      ></path>
     </svg>
   )
 }
-
-const BookIcon = () => {
+const WorkIcon = () => {
   return (
     <svg
-      className="w-5 h-5 opacity-65 "
-      viewBox="0 0 24 24"
+      viewBox="-0.5 -0.5 16 16"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      id="Case-Minimalistic--Streamline-Solar-Ar"
+      className="w-5 h-5 opacity-65"
     >
       <path
-        d="M3.5 18V7C3.5 3 4.5 2 8.5 2H15.5C19.5 2 20.5 3 20.5 7V17C20.5 17.14 20.5 17.28 20.49 17.42"
-        stroke="#292D32"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+        d="M8.867437500000001 3.0558125H6.1325625C5.2055 3.0558125 4.445125 3.0558125 3.8141874999999996 3.0930625000000003C2.690125 3.159375 1.976875 3.3438125000000003 1.4638125 3.856875C0.6628125 4.657875000000001 0.6628125 5.947125 0.6628125 8.5255625S0.6628125 12.3933125 1.4638125 13.1943125C2.264875 13.995375000000001 3.5540624999999997 13.995375000000001 6.1325625 13.995375000000001H8.867437500000001C11.445875000000001 13.995375000000001 12.7351875 13.995375000000001 13.536125000000002 13.1943125C14.337187499999999 12.3933125 14.337187499999999 11.104062500000001 14.337187499999999 8.5255625C14.337187499999999 5.947125 14.337187499999999 4.657875000000001 13.5361875 3.856875C13.023187499999999 3.3438125000000003 12.3098125 3.159375 11.185875000000001 3.0930625000000003C10.554875 3.0558125 9.794500000000001 3.0558125 8.867437500000001 3.0558125Z"
+        stroke="#000000"
+        strokeWidth="1"
+      ></path>
       <path
-        d="M6.35 15H20.5V18.5C20.5 20.43 18.93 22 17 22H7C5.07 22 3.5 20.43 3.5 18.5V17.85C3.5 16.28 4.78 15 6.35 15Z"
-        stroke="#292D32"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+        d="M3.8143124999999998 3.0930625000000003C4.3773125 3.0787500000000003 4.874 2.683125 5.0655625 2.1535C5.0714375 2.13725 5.077500000000001 2.119125 5.0895624999999995 2.082875L5.107125 2.03025C5.135999999999999 1.9436875 5.150375 1.9004375000000002 5.1658124999999995 1.8620625C5.362875000000001 1.371875 5.824625 1.0390625 6.351875 1.0071875C6.393187500000001 1.0046249999999999 6.438812499999999 1.0046249999999999 6.5300625 1.0046249999999999H8.47025C8.561499999999999 1.0046249999999999 8.6070625 1.0046249999999999 8.648375 1.007125C9.1756875 1.0390625 9.6374375 1.371875 9.8345 1.8620625C9.849875 1.9004375000000002 9.8643125 1.9436875 9.893125000000001 2.03025L9.91075 2.082875C9.92275 2.1190625 9.928812500000001 2.13725 9.93475 2.1535C10.126312500000001 2.683125 10.6229375 3.0787500000000003 11.186 3.0930625000000003"
+        stroke="#000000"
+        strokeWidth="1"
+      ></path>
       <path
-        d="M8 7H16"
-        stroke="#292D32"
-        strokeWidth="1.5"
+        d="M14.106000000000002 4.915375C12.0480625 6.2529375 11.019125 6.921749999999999 9.934375 7.2588125C8.348875 7.751375 6.651249999999999 7.751375 5.0656875 7.2588125C3.981 6.921749999999999 2.9520625000000003 6.2529375 0.8941250000000001 4.915375"
+        stroke="#000000"
         strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+        strokeWidth="1"
+      ></path>
       <path
-        d="M8 10.5H13"
-        stroke="#292D32"
-        strokeWidth="1.5"
+        d="M4.765125 6.4744375V7.841875"
+        stroke="#000000"
         strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+        strokeWidth="1"
+      ></path>
+      <path
+        d="M10.234875 6.4744375V7.841875"
+        stroke="#000000"
+        strokeLinecap="round"
+        strokeWidth="1"
+      ></path>
     </svg>
   )
 }
-const SupportIcon = () => {
+const NotificationIcon = () => {
   return (
     <svg
-      className="w-5 h-5 opacity-65 "
-      viewBox="0 0 24 24"
+      viewBox="-0.5 -0.5 16 16"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      id="Notification-Unread-Lines--Streamline-Solar-Ar"
+     className="w-5 h-5 opacity-65 "
     >
+  
       <path
-        d="M14 6.19995V10C11.21 10.05 10.05 11.21 10 14H6.2C3.2 14 2 12.8 2 9.80005V6.19995C2 3.19995 3.2 2 6.2 2H9.8C12.8 2 14 3.19995 14 6.19995Z"
-        stroke="#292D32"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M6.96001 5.86996C6.43001 5.50996 5.73001 5.50998 5.20001 5.88998"
-        stroke="#292D32"
-        strokeWidth="1.5"
-        strokeMiterlimit="10"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M10.96 5.86996C10.43 5.50996 9.73001 5.50998 9.20001 5.88998"
-        stroke="#292D32"
-        strokeWidth="1.5"
-        strokeMiterlimit="10"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M8.15999 11.42H5.83999C5.53999 11.42 5.29999 11.18 5.29999 10.88C5.29999 9.39 6.50999 8.18005 7.99999 8.18005C8.63999 8.18005 9.22999 8.40002 9.68999 8.77002"
-        stroke="#292D32"
-        strokeWidth="1.5"
-        strokeMiterlimit="10"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M22 14.2V17.8C22 20.8 20.8 22 17.8 22H14.2C11.2 22 10 20.8 10 17.8V14C10.05 11.21 11.21 10.05 14 10H17.8C20.8 10 22 11.2 22 14.2Z"
-        stroke="#292D32"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M14.96 13.62C14.43 13.98 13.73 13.98 13.2 13.6"
-        stroke="#292D32"
-        strokeWidth="1.5"
-        strokeMiterlimit="10"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M18.96 13.62C18.43 13.98 17.73 13.98 17.2 13.6"
-        stroke="#292D32"
-        strokeWidth="1.5"
-        strokeMiterlimit="10"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M13.84 16.1801H18.16C18.46 16.1801 18.7 16.42 18.7 16.72C18.7 18.21 17.49 19.42 16 19.42C14.51 19.42 13.3 18.21 13.3 16.72C13.3 16.42 13.54 16.1801 13.84 16.1801Z"
-        stroke="#292D32"
-        strokeWidth="1.5"
-        strokeMiterlimit="10"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-const AutomaticIcon = () => {
-  return (
-    <svg
-      className="w-5 h-5 opacity-65 "
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M12 8V13"
-        stroke="#292D32"
-        stroke-width="1.5"
+        d="M14.337187499999999 6.4744375V7.5C14.337187499999999 10.723062500000001 14.337187499999999 12.334624999999999 13.335875 13.335875C12.3346875 14.337187499999999 10.723062500000001 14.337187499999999 7.5 14.337187499999999C4.276875 14.337187499999999 2.665375 14.337187499999999 1.6640625 13.335875C0.6628125 12.3346875 0.6628125 10.723062500000001 0.6628125 7.5C0.6628125 4.276875 0.6628125 2.665375 1.6640625 1.6640625C2.665375 0.6628125 4.276875 0.6628125 7.5 0.6628125H8.5255625"
+        stroke="#000000"
         stroke-linecap="round"
-        stroke-linejoin="round"
-      />
+        stroke-width="1"
+      ></path>
       <path
-        d="M12 22C7.17 22 3.25 18.08 3.25 13.25C3.25 8.42 7.17 4.5 12 4.5C16.83 4.5 20.75 8.42 20.75 13.25"
-        stroke="#292D32"
-        stroke-width="1.5"
+        stroke="#000000"
+        d="M10.234875 2.7139375C10.234875 4.2929375 11.944187500000002 5.279812499999999 13.311625 4.4903125C13.94625 4.1239375 14.337187499999999 3.44675 14.337187499999999 2.7139375C14.337187499999999 1.135 12.6279375 0.148125 11.2604375 0.9376249999999999C10.6258125 1.3039999999999998 10.234875 1.981125 10.234875 2.7139375"
+        stroke-width="1"
+      ></path>
+      <path
+        d="M4.0813749999999995 8.867437500000001H10.234875"
+        stroke="#000000"
         stroke-linecap="round"
-        stroke-linejoin="round"
-      />
+        stroke-width="1"
+      ></path>
       <path
-        d="M9 2H15"
-        stroke="#292D32"
-        stroke-width="1.5"
-        stroke-miterlimit="10"
+        d="M4.0813749999999995 11.2604375H8.1836875"
+        stroke="#000000"
         stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-      <path
-        d="M14.9 18.5V17.34C14.9 15.91 15.92 15.32 17.16 16.04L18.16 16.62L19.16 17.2C20.4 17.92 20.4 19.09 19.16 19.81L18.16 20.39L17.16 20.97C15.92 21.69 14.9 21.1 14.9 19.67V18.5Z"
-        stroke="#292D32"
-        stroke-width="1.5"
-        stroke-miterlimit="10"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-    </svg>
-  )
-}
-const AppCodeIcon = () => {
-  return (
-    <svg
-      className="w-5 h-5 opacity-65 "
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M6.89088 15.75C6.61088 15.75 6.35088 15.6 6.22088 15.34C6.03088 14.97 6.18088 14.52 6.56088 14.33C7.43088 13.9 8.17088 13.24 8.70088 12.44C8.88088 12.17 8.88088 11.83 8.70088 11.56C8.16088 10.76 7.42088 10.1 6.56088 9.67002C6.18088 9.49002 6.03088 9.04002 6.22088 8.66002C6.40088 8.29002 6.85088 8.14002 7.22088 8.33002C8.32088 8.88002 9.26088 9.71002 9.94088 10.73C10.4509 11.5 10.4509 12.5 9.94088 13.27C9.26088 14.29 8.32088 15.12 7.22088 15.67C7.12088 15.72 7.00088 15.75 6.89088 15.75Z"
-        fill="#292D32"
-      />
-      <path
-        d="M17 15.75H13C12.59 15.75 12.25 15.41 12.25 15C12.25 14.59 12.59 14.25 13 14.25H17C17.41 14.25 17.75 14.59 17.75 15C17.75 15.41 17.41 15.75 17 15.75Z"
-        fill="#292D32"
-      />
-      <path
-        d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H15C20.43 1.25 22.75 3.57 22.75 9V15C22.75 20.43 20.43 22.75 15 22.75ZM9 2.75C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V9C21.25 4.39 19.61 2.75 15 2.75H9Z"
-        fill="#292D32"
-      />
+        stroke-width="1"
+      ></path>
     </svg>
   )
 }
 const Sidebar = () => {
   const location = useLocation()
-
+  const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
+  const userNameLogin = userFromLocalStorage?.login || 'none'
   const [collapsed, setCollapsed] = useState(false)
-
+  const [isMobile, setIsMobile] = useState(false)
+  const { t } = useTranslation()
   const toggleSidebar = () => {
     setCollapsed(!collapsed)
   }
 
+  // Xử lý responsive
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+
+    handleResize() // Gọi lần đầu tiên khi component mount
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
+
   if (location.pathname === '/u/login') {
     return null
   }
-  return (
-    <Sider
-      width={230}
-      theme="light"
-      collapsed={collapsed}
-      onCollapse={toggleSidebar}
-      className="p-1  border-r-[1px]"
-    >
-      <SidebarContent collapsed={collapsed} toggleSidebar={toggleSidebar} />
-      <AuthUser collapsed={collapsed} />
-      <Menu
-        style={menuStyle}
-        theme="light"
-        defaultSelectedKeys={['workflows']}
-        className="border-r-0"
-      >
-        <Menu.Item key="workflows">
-          <Link to="/u/workflows" className="flex items-center">
-            {collapsed ? (
-              <span className="mt-3">
-                <WorkflowsIcon />
-              </span>
-            ) : (
-              <span className=" flex items-center  gap-3">
-                <WorkflowsIcon /> Workflows
-              </span>
-            )}
-          </Link>
-        </Menu.Item>
 
-        <Menu.Item key="templates">
-          <Link to="/u/templates" className="flex items-center">
-            {' '}
-            {collapsed ? (
-              <span className="mt-3">
-                <TemplateIcon />
-              </span>
-            ) : (
-              <span className=" flex items-center  gap-3">
-                <TemplateIcon /> Templates
-              </span>
-            )}
-          </Link>
-        </Menu.Item>
-        <Menu.Item key="executions">
-          <Link to="/u/executions" className="flex items-center ">
-            {' '}
-            {collapsed ? (
-              <span className="mt-3">
-                <ExecutionsIcon />
-              </span>
-            ) : (
-              <span className=" flex items-center  gap-3">
-                <ExecutionsIcon /> Workflow executions
-              </span>
-            )}
-          </Link>
-        </Menu.Item>
-        <Menu.Item key="automatic">
-          <Link to="/u/automatic" className="flex items-center ">
-            {' '}
-            {collapsed ? (
-              <span className="mt-3">
-                <AutomaticIcon />
-              </span>
-            ) : (
-              <span className=" flex items-center  gap-3">
-                <AutomaticIcon /> Automatic
-              </span>
-            )}
-          </Link>
-        </Menu.Item>
-        <Menu.Item key="appcode">
-          <Link to="/u/appcode" className="flex items-center ">
-            {' '}
-            {collapsed ? (
-              <span className="mt-3">
-                <AppCodeIcon />
-              </span>
-            ) : (
-              <span className=" flex items-center  gap-3">
-                <AppCodeIcon /> App Code
-              </span>
-            )}
-          </Link>
-        </Menu.Item>
-        <Menu.Item key="docs">
-          <Link to="/u/docs" className="flex items-center">
-            {collapsed ? (
-              <span className="mt-3">
-                <BookIcon />
-              </span>
-            ) : (
-              <span className=" flex items-center  gap-3">
-                <BookIcon /> Learning & Socials
-              </span>
-            )}
-          </Link>
-        </Menu.Item>
-        <Menu.Item key="support">
-          <Link to="/u/support" className="flex items-center">
-            {collapsed ? (
-              <span className="mt-3">
-                <SupportIcon />
-              </span>
-            ) : (
-              <span className=" flex items-center  gap-3">
-                <SupportIcon /> Support
-              </span>
-            )}
-          </Link>
-        </Menu.Item>
-      </Menu>
-    </Sider>
+  return (
+    <>
+      {!isMobile ? (
+        <Sider
+          width={230}
+          theme="light"
+          collapsed={collapsed}
+          onCollapse={toggleSidebar}
+          className="p-1 border-r-[1px]"
+        >
+          <SidebarContent collapsed={collapsed} toggleSidebar={toggleSidebar} />
+          <AuthUser collapsed={collapsed} />
+          <Menu
+            style={menuStyle}
+            theme="light"
+            defaultSelectedKeys={['home']}
+            className="border-r-0"
+          >
+            {/* Menu cha - Home */}
+            <Menu.Item key="home">
+              <Link to="/u/home" className="flex items-center justify-start">
+                <span
+                  className={`icon-wrapper ${collapsed ? ' justify-center mt-2' : ''}`}
+                >
+                  <HomeIcon />
+                </span>
+                {!collapsed && (
+                  <span className="ml-3">{t('side_bar.home')}</span>
+                )}
+              </Link>
+            </Menu.Item>
+
+            {/* Menu có nhiều cấp */}
+
+            <SubMenu
+              key="work"
+              title={
+                <span className="flex items-center gap-3">
+                  <span
+                    className={`icon-wrapper ${collapsed ? ' justify-center mt-2' : ''}`}
+                  >
+                    <WorkIcon />
+                  </span>
+                  {!collapsed && <span>{t('side_bar.work')}</span>}
+                </span>
+              }
+            >
+              <Menu.Item key="work-1-1">
+                <Link
+                  to="/u/action=6/time_tracking"
+                  className="flex items-center justify-start"
+                >
+                  {t('side_bar.time_tracking')}
+                </Link>
+              </Menu.Item>
+
+              <Menu.Item key="work-1-2">
+                <Link
+                  to="/u/action=7/payroll"
+                  className="flex items-center justify-start"
+                >
+                  {t('side_bar.payroll')}
+                </Link>
+              </Menu.Item>
+            </SubMenu>
+
+            <SubMenu
+              key="setting"
+              title={
+                <span className="flex items-center gap-3">
+                  <span
+                    className={`icon-wrapper ${collapsed ? ' justify-center mt-2' : ''}`}
+                  >
+                    <SettingIcon />
+                  </span>
+                  {!collapsed && <span>{t('side_bar.setting')}</span>}
+                </span>
+              }
+            >
+              <Menu.Item key="setting-1-1">
+                <Link
+                  to="/u/action=1/general_settings"
+                  className="flex items-center justify-start"
+                >
+                  {t('side_bar.general_settings')}
+                </Link>
+              </Menu.Item>
+
+              <Menu.Item key="setting-1-2">
+                <Link
+                  to="/u/action=2/users"
+                  className="flex items-center justify-start"
+                >
+                  {t('side_bar.users')}
+                </Link>
+              </Menu.Item>
+              <Menu.Item key="setting-1-3">
+                <Link
+                  to="/u/action=3/groups_users"
+                  className="flex items-center justify-start"
+                >
+                  {t('side_bar.groups_users')}
+                </Link>
+              </Menu.Item>
+
+              <SubMenu
+                key="setting-2-1"
+                title={
+                  <span className="flex items-center gap-3">
+                    {' '}
+                    {t('side_bar.technique')}
+                  </span>
+                }
+              >
+                <Menu.Item key="setting-2-1-1">
+                  <Link
+                    to="/u/action=4/technique_access"
+                    className="flex items-center justify-start"
+                  >
+                    {t('side_bar.technique_access')}
+                  </Link>
+                </Menu.Item>
+
+                <Menu.Item key="setting-2-1-2">
+                  <Link
+                    to="/u/action=5/technique_menu"
+                    className="flex items-center justify-start"
+                  >
+                    {t('side_bar.technique_menu')}
+                  </Link>
+                </Menu.Item>
+              </SubMenu>
+            </SubMenu>
+            {/*   <SubMenu
+              key="submenu1"
+              title={
+                <span className="flex items-center gap-3">
+                  <span
+                    className={`icon-wrapper ${collapsed ? ' justify-center mt-2' : ''}`}
+                  >
+                    <HomeIcon />
+                  </span>
+                  {!collapsed && 'Menu Cha'}
+                </span>
+              }
+            >
+              <Menu.Item key="submenu1-1">
+                <Link to="/u/item1" className="flex items-center justify-start">
+                  Menu Item 1
+                </Link>
+              </Menu.Item>
+
+              <Menu.Item key="submenu1-2">
+                <Link to="/u/item2" className="flex items-center justify-start">
+                  Menu Item 2
+                </Link>
+              </Menu.Item>
+
+              <SubMenu
+                key="submenu1-submenu2"
+                title={
+                  <span className="flex items-center gap-3">Menu Con</span>
+                }
+              >
+                <Menu.Item key="submenu1-2-1">
+                  <Link
+                    to="/u/subitem1"
+                    className="flex items-center justify-start"
+                  >
+                    Menu Con 1
+                  </Link>
+                </Menu.Item>
+
+                <Menu.Item key="submenu1-2-2">
+                  <Link
+                    to="/u/subitem2"
+                    className="flex items-center justify-start"
+                  >
+                    Menu Con 2
+                  </Link>
+                </Menu.Item>
+              </SubMenu>
+            </SubMenu> */}
+          </Menu>
+        </Sider>
+      ) : (
+        <Footer className="fixed bottom-0 w-full bg-white border-t-[1px] border-b-0 pt-3  pb-4 p-0">
+          <div className="flex justify-around w-full space-x-4">
+            <div className="flex-1 text-center">
+              <Link to="/u/home" className="flex flex-col items-center">
+                <HomeIcon />
+                <span className="mt-2  font-semibold">
+                  {' '}
+                  {t('footer_app.home')}
+                </span>
+              </Link>
+            </div>
+            <div className="flex-1 text-center">
+              <Link to="/u/phone/work" className="flex flex-col items-center">
+                <WorkIcon />
+                <span className="mt-2  font-semibold">
+                  {t('side_bar.work')}
+                </span>
+              </Link>
+            </div>
+            <div className="flex-1 text-center">
+              <Link to="/u/phone/item2" className="flex flex-col items-center">
+                <NotificationIcon />
+                <span className="mt-2  font-semibold"> {t('side_bar.notifications')}</span>
+              </Link>
+            </div>
+            <div className="flex-1 text-center ">
+              <Link
+                to={`u/profile/${userNameLogin}`}
+                className="flex flex-col items-center"
+              >
+                <UserIcon />
+                <span className="mt-2 font-semibold">
+                  {t('footer_app.profile')}
+                </span>
+              </Link>
+            </div>
+          </div>
+        </Footer>
+      )}
+    </>
   )
 }
 

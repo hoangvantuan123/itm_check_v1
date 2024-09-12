@@ -17,7 +17,6 @@ export class AppService {
 
   async registerUser(registrationData: RegistrationDto): Promise<User> {
     const { login, password } = registrationData;
-    console.log(login)
     const existingUser = await this.userService.findUserByEmail(login);
 
     if (existingUser) {
@@ -34,38 +33,52 @@ export class AppService {
     return savedUser;
   }
 
-  async loginUser(loginData: LoginDto): Promise<Partial<User>> {
+  async loginUser(loginData: LoginDto): Promise<{ success: boolean, data?: Partial<User>, error?: string }> {
     const { login, password } = loginData;
-    const user = await this.userService.findUserByEmail(login);
 
-    if (!user) {
-      throw new NotFoundException(`User with login ${login} not found`);
+    try {
+      const user = await this.userService.findUserByEmail(login);
+
+      if (!user) {
+        // Trả về lỗi nếu không tìm thấy user
+        return {
+          success: false,
+          error: `User with login ${login} not found`,
+        };
+      }
+
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+
+      if (!isPasswordValid) {
+        // Trả về lỗi nếu mật khẩu không hợp lệ
+        return {
+          success: false,
+          error: 'Invalid credentials',
+        };
+      }
+
+      const token = jwt.sign({
+        login: user.login,
+        partnerId: user.partnerId,
+      }, 'your-secret-key-31', { expiresIn: '1h' });
+
+      // Trả về thành công với dữ liệu user
+      const userResponse: Partial<User> = {
+        login: user.login,
+        partnerId: user.partnerId,
+      };
+
+      return {
+        success: true,
+        data: userResponse,
+      };
+
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message || 'Wrong account or password',
+      };
     }
-
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
-
-    const token = jwt.sign({
-      id: user.id,
-      login: user.login,
-      partnerId: user.partnerId,
-    }, 'your-secret-key-31', { expiresIn: '1h' });
-
-
-    const userResponse: Partial<User> = {
-      id: user.id,
-      login: user.login,
-      partnerId: user.partnerId,
-    };
-
-    return userResponse;
   }
-
-
-
-
 
 }

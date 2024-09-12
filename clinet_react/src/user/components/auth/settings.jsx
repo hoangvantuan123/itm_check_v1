@@ -1,16 +1,17 @@
 import { Button, Modal, Menu, Input, Form, Typography } from 'antd'
-import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useState, useEffect } from 'react'
 import { Avatar, Space } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import KeyMenu01 from './menu-key/key-01'
 import KeyMenu02 from './menu-key/key-02'
+import KeyMenu03 from './menu-key/key-03'
 
 const { Title, Text } = Typography
 const { SubMenu } = Menu
-export default function Setting() {
+export default function Setting({ userNameLogin }) {
   const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
-
+  const { t } = useTranslation()
   const [isModalOpen, setIsModalOpen] = React.useState(false)
   const [selectedMenuKey, setSelectedMenuKey] = useState('2')
 
@@ -34,7 +35,7 @@ export default function Setting() {
       case '4':
         return <KeyMenu02 />
       case '5':
-        return <div>Nội dung của menu 4</div>
+        return <KeyMenu03 />
       default:
         return null
     }
@@ -43,10 +44,10 @@ export default function Setting() {
     <div>
       <div
         onClick={showModal}
-        className="flex items-center gap-2 rounded-lg px-4 py-1 cursor-pointer text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+        className="flex items-center gap-2 rounded-lg px-4 py-3 cursor-pointer text-gray-500 hover:bg-gray-100 hover:text-gray-700"
       >
         <Avatar shape="square" icon={<UserOutlined />} />
-        <Text className="text-sm font-medium">Tuan Hoang</Text>
+        <Text className="text-sm font-medium">{userNameLogin}</Text>
       </div>
       <Modal
         open={isModalOpen}
@@ -56,7 +57,7 @@ export default function Setting() {
         centered
         footer={null}
       >
-        <div className="flex h-[600px]  overflow-hidden  ">
+        <div className="flex h-[700px]  overflow-hidden  ">
           <Menu
             mode="inline"
             defaultSelectedKeys={['1']}
@@ -66,25 +67,14 @@ export default function Setting() {
             onClick={handleMenuClick}
             selectedKeys={[selectedMenuKey]}
           >
-            <SubMenu key="sub1" title="Personal">
-              <Menu.Item key="2">Account</Menu.Item>
+            <SubMenu key="sub1" title={t('model_setting.personal')}>
+              <Menu.Item key="2">{t('model_setting.account')}</Menu.Item>
             </SubMenu>
-            <SubMenu key="sub2" title="Organization">
-              <Menu.Item key="4">Users</Menu.Item>
-              <Menu.Item key="5">Permissions</Menu.Item>
-              <Menu.Item key="6">Environments</Menu.Item>
-              <Menu.Item key="7">API</Menu.Item>
-              <Menu.Item key="8">IAM Credentials</Menu.Item>
-              <Menu.Item key="9">Billing</Menu.Item>
-              <Menu.Item key="10">Branding</Menu.Item>
-              <Menu.Item key="11">Business</Menu.Item>
-              <Menu.Item key="12">Themes</Menu.Item>
-              <Menu.Item key="13">Source Control</Menu.Item>
-              <Menu.Item key="14">Enterprise</Menu.Item>
-              <Menu.Item key="15">Advanced</Menu.Item>
-              <Menu.Item key="16">Beta</Menu.Item>
-              <Menu.Item key="17">Retool Events</Menu.Item>
-              <Menu.Item key="18">Retool AI</Menu.Item>
+
+            <SubMenu key="sub2" title={t('model_setting.setting')} >
+              <Menu.Item key="4" >{t('model_setting.personalized_customization')}</Menu.Item>
+              <Menu.Item key="5">{t('model_setting.account_security')}</Menu.Item>
+              <Menu.Item key="6">{t('model_setting.job_information')}</Menu.Item>
             </SubMenu>
           </Menu>
 

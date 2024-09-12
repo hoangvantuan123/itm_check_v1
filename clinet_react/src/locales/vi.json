@@ -11,5 +11,106 @@
     "hello": "Xin chào",
     "goodMorning": "Chào buổi sáng",
     "goodAfternoon": "Chào buổi chiều"
+  },
+  "page_setting": {
+    "helmet_setting": "Cài đặt"
+  },
+
+  "page_login": {
+    "login": "Đăng nhập"
+  },
+  "side_bar": {
+    "setting": "Cài đặt",
+    "general_settings": "Thiết lập chung",
+    "users": "Người dùng",
+    "groups_users": "Nhóm người dùng",
+    "technique_access": "Quyền truy cập",
+    "technique_menu": "Mục Menu",
+    "home": "Trang chủ",
+    "technique": "Kỹ thuật",
+    "work": "Công việc",
+    "time_tracking": "Chấm công",
+    "payroll": "Lương",
+    "notifications": "Thông báo"
+  },
+  "footer_app": {
+    "home": "Trang chủ",
+    "profile": "Cá nhân"
+  },
+  "model_setting_user": {
+    "logout": "Đăng xuất",
+    "download_ios":"Tải ứng dung cho IOS",
+    "download_android" : "Tải ứng dụng cho Android"
+  },
+  "model_setting": {
+    "personal": "Riêng tư",
+    "account": "Tài khoản",
+    "setting" :"Cài đặt",
+    "personalized_customization" :"Tùy chỉnh cá nhân",
+    "account_security" :"Bảo mật tài khoản",
+    "job_information" :"Thông tin công việc"
+  },
+  "personal_settings_key_menu_01" : {
+    "personal_settings": "Cài đặt cá nhân",
+    "information": "Thông tin",
+    "first_name": "Họ",
+    "last_name": "Tên",
+    "email": "Email",
+    "save": "Lưu",
+    "logout":"Đăng xuất",
+    "personal_information" :"Thông tin cá nhân",
+    "contact_information" :"Thông tin liên hệ",
+    "mobile" : "Số điện thoại",
+    "work_email" : "Email công việc",
+    "work_location":"Địa chỉ làm việc",
+    "address_1" : "Địa chỉ cá nhân",
+    "bank_account": "Tài khoản ngân hàng",
+    "additional_information": "Thông tin bổ sung",
+    "gender": "Giới tính",
+    "birth_date": "Ngày sinh",
+    "birth_place" : "Nơi sinh",
+    "marital_status" : "Tình trạng hôn nhân",
+    "single":  "Độc thânh",
+    "married" : "Đã cưới",
+    "divorced":  "Góa phụ",
+    "education" : "Giáo dục",
+    "education_level" : "Trình độ học vấn",
+    "certification" : "Chứng nhận",
+    "research_field" : "Lĩnh vực nghiên cứu",
+    "school"  : "Trường học",
+    "dependents" : "Ghi chú",
+    "emergency_contact" : "Liên hệ khẩn cấp",
+    "emergency_contact_name" : "Người đại diện",
+    "emergency_contact_phone" : "Số điện thoại khẩn cấp",
+    "work_permit" :  "Giấy phép lao động", 
+    "visa_number" : "Số thẻ Visa",
+    "work_permit_number" : "Số giấy phép làm việc",
+    "visa_expiry_date" : "Ngày hết hạn Visa",
+    "citizenship_country" :"Quyền công dân",
+    "id_number" : "Số định danh"
+
+  },
+  "personal_settings_key_menu_02" : {
+    "personalized_customization": "Tùy chỉnh cá nhân",
+    "notification_method": "Thông báo",
+    "email" : "Email",
+    "system" : "Hệ thống",
+    "language": "Ngôn ngữ",
+    "timezone": "Múi giờ",
+    "vietnamese": "Việt Nam",
+    "english" : "Tiếng Anh",
+    "save": "Lưu"
+  },
+  "personal_settings_key_menu_03" : {
+    "password_management": "Quản lý mật khẩu",
+    "change_password": "Thay đổi mật khẩu",
+    "device_list" : "Danh sách thiết bị",
+    "other_devices" : "Các thiết bị khác",
+    "sign_out_of_all_devices": "Đăng xuất khỏi tất cả thiết bị",
+    "save": "Lưu",
+    "cancel" : "Hủy",
+    "label_new_pass" : "Mật khẩu mới",
+    "rules_new_message" : "Vui lòng nhập mật khẩu mới",
+    "label_succ_pass" : "Xác nhận mật khẩu mới"
   }
 }
