@@ -1,4 +1,4 @@
-import useState from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Checkbox, Form, Input, Typography, Image } from 'antd'
 import { Avatar, Space } from 'antd'
@@ -37,7 +37,7 @@ const Border = () => {
 }
 
 export default function AuthUser({ collapsed }) {
-  const [showModal, setShowModal] = React.useState(false)
+  const [showModal, setShowModal] = useState(false)
   const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
   const userNameLogin = userFromLocalStorage?.login || 'none'
   const { t } = useTranslation()
@@ -55,7 +55,10 @@ export default function AuthUser({ collapsed }) {
   return (
     <div className="p-1 mt-3 mb-3 cursor-pointer ">
       {collapsed ? (
-        ''
+        <div onClick={onClickShowModal} className="flex items-center justify-center" >
+          <Avatar
+            icon={<UserOutlined />} />
+        </div>
       ) : (
         <>
           <div
@@ -68,45 +71,50 @@ export default function AuthUser({ collapsed }) {
             </div>
           </div>
 
-          {showModal && (
-            <>
-              <div className=" w-[350px] mt-2 h-auto  border rounded-lg fixed z-50 bg-white ml-4 shadow-lg">
-                <div className="p-2">
-                  <Text className=" text-xs font-medium opacity-70">
-                    {userNameLogin}
-                  </Text>
-                </div>
-                <Border />
-                <div className="p-2">
-                  <Setting userNameLogin={userNameLogin} />
-                </div>
 
-                <div className=" bg-slate-50 w-full h-auto p-2 rounded-e-lg">
-                  <div
-                    onClick={handleLogout}
-                    className="flex items-center gap-2 rounded-lg px-4 py-3 cursor-pointer text-red-600 hover:bg-red-100 hover:text-red-600"
-                  >
-                    <Text className="text-[12px]  text-red-600">  {t('model_setting_user.logout')}</Text>
-                  </div>
-                </div>
-                <Border />
-                <div className=" bg-slate-50 w-full h-auto p-2 rounded-e-lg">
-                  <div className="flex items-center gap-2 rounded-lg px-4 py-3 cursor-pointer text-gray-500 hover:bg-gray-200 hover:text-gray-700">
-                    <Text className="text-[12px] ">
-                    {t('model_setting_user.download_ios')}
-                    </Text>
-                  </div>
-                  <div className="flex items-center gap-2 rounded-lg px-4 py-3 cursor-pointer text-gray-500 hover:bg-gray-200 hover:text-gray-700">
-                    <Text className="text-[12px] ">
-                    {t('model_setting_user.download_android')}
-                    </Text>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
         </>
       )}
+      {showModal && (
+        <>
+          <div className=" w-[350px] mt-2 h-auto  border rounded-lg fixed z-50 bg-white ml-4 shadow-lg">
+            <div className="p-2">
+              <Text className=" text-xs font-medium opacity-70">
+                {userNameLogin}
+              </Text>
+            </div>
+            <Border />
+            <div className="p-2">
+              <Setting userNameLogin={userNameLogin} />
+            </div>
+
+            <div className=" bg-slate-50 w-full h-auto p-2 rounded-e-lg">
+              <div
+                onClick={handleLogout}
+                className="flex items-center gap-2 rounded-lg px-4 py-3 cursor-pointer text-red-600 hover:bg-red-100 hover:text-red-600"
+              >
+                <Text className="text-[12px]  text-red-600">
+                  {' '}
+                  {t('model_setting_user.logout')}
+                </Text>
+              </div>
+            </div>
+            <Border />
+            <div className=" bg-slate-50 w-full h-auto p-2 rounded-e-lg">
+              <div className="flex items-center gap-2 rounded-lg px-4 py-3 cursor-pointer text-gray-500 hover:bg-gray-200 hover:text-gray-700">
+                <Text className="text-[12px] ">
+                  {t('model_setting_user.download_ios')}
+                </Text>
+              </div>
+              <div className="flex items-center gap-2 rounded-lg px-4 py-3 cursor-pointer text-gray-500 hover:bg-gray-200 hover:text-gray-700">
+                <Text className="text-[12px] ">
+                  {t('model_setting_user.download_android')}
+                </Text>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
     </div>
   )
 }

@@ -35,15 +35,17 @@ export class UserService {
   async save(user: User): Promise<User> {
     return this.userRepository.save(user);
   }
-  async updateUser(id: number, updateUserDto: Partial<User>): Promise<User> {
-    const user = await this.userRepository.findOne({ where: { id } });
-
+  async findUserById(userId: number): Promise<User | undefined> {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
     if (!user) {
-      throw new NotFoundException(`User with id ${id} not found`);
+      throw new NotFoundException('User not found');
     }
+    return user;
+  }
 
-    Object.assign(user, updateUserDto);
-
+  async updateUser(user: User): Promise<User> {
     return this.userRepository.save(user);
   }
+
+ 
 }

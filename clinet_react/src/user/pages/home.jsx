@@ -6,10 +6,7 @@ import { AudioOutlined } from '@ant-design/icons'
 import { Input, Space, Table, Typography, message, Tabs } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 const { Search } = Input
-import 'reactflow/dist/style.css'
-
 import decodeJWT from '../../utils/decode-JWT'
-
 const { Title, Text } = Typography
 const { TabPane } = Tabs
 import 'moment/locale/vi'

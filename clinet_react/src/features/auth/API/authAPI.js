@@ -15,6 +15,7 @@ export const loginAuth = async ({ login, password }) => {
       throw new Error('Invalid credentials')
     }
     const data = await response.json()
+    console.log(data)
     return data
   } catch (error) {
     throw new Error('Đăng nhập thất bại: ' + error.message)

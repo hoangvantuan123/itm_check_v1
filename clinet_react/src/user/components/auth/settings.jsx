@@ -1,45 +1,38 @@
-import { Button, Modal, Menu, Input, Form, Typography } from 'antd'
-import { useTranslation } from 'react-i18next'
-import { useState, useEffect } from 'react'
-import { Avatar, Space } from 'antd'
-import { UserOutlined } from '@ant-design/icons'
-import KeyMenu01 from './menu-key/key-01'
-import KeyMenu02 from './menu-key/key-02'
-import KeyMenu03 from './menu-key/key-03'
+import { useState } from 'react';
+import { Modal, Avatar, Typography, Tabs } from 'antd';
+import { UserOutlined, SettingOutlined, SecurityScanOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
+import KeyMenu01 from './menu-key/key-01';
+import KeyMenu02 from './menu-key/key-02';
+import KeyMenu03 from './menu-key/key-03';
+import './static/css/tabUserSetting.css';
 
-const { Title, Text } = Typography
-const { SubMenu } = Menu
+const { Text } = Typography;
+const { TabPane } = Tabs;
+
 export default function Setting({ userNameLogin }) {
-  const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
-  const { t } = useTranslation()
-  const [isModalOpen, setIsModalOpen] = React.useState(false)
-  const [selectedMenuKey, setSelectedMenuKey] = useState('2')
+  const { t } = useTranslation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTab, setSelectedTab] = useState('1');
 
-  const showModal = () => {
-    setIsModalOpen(true)
-  }
-  const handleOk = () => {
-    setIsModalOpen(false)
-  }
-  const handleCancel = () => {
-    setIsModalOpen(false)
-  }
-  const handleMenuClick = ({ key }) => {
-    setSelectedMenuKey(key)
-  }
+  const showModal = () => setIsModalOpen(true);
+  const handleOk = () => setIsModalOpen(false);
+  const handleCancel = () => setIsModalOpen(false);
+  const handleTabChange = (key) => setSelectedTab(key);
 
   const renderContent = () => {
-    switch (selectedMenuKey) {
+    switch (selectedTab) {
+      case '1':
+        return <KeyMenu01 />;
       case '2':
-        return <KeyMenu01 />
-      case '4':
-        return <KeyMenu02 />
-      case '5':
-        return <KeyMenu03 />
+        return <KeyMenu02 />;
+      case '3':
+        return <KeyMenu03 />;
       default:
-        return null
+        return null;
     }
-  }
+  };
+
   return (
     <div>
       <div
@@ -53,36 +46,44 @@ export default function Setting({ userNameLogin }) {
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-        width={1300}
+        width={1500}
         centered
         footer={null}
       >
-        <div className="flex h-[700px]  overflow-hidden  ">
-          <Menu
-            mode="inline"
-            defaultSelectedKeys={['1']}
-            defaultOpenKeys={['sub1', 'sub2']}
-            style={{ width: '256px', borderRight: 0 }}
-            className="h-full overflow-auto scrollable-content  overflow-y-auto scroll-container"
-            onClick={handleMenuClick}
-            selectedKeys={[selectedMenuKey]}
+        <div className="flex h-[800px]">
+          <Tabs
+            defaultActiveKey="1"
+            activeKey={selectedTab}
+            onChange={handleTabChange}
+            tabPosition="left"
           >
-            <SubMenu key="sub1" title={t('model_setting.personal')}>
-              <Menu.Item key="2">{t('model_setting.account')}</Menu.Item>
-            </SubMenu>
+            <TabPane
+              tab={<span className="flex items-center gap-3"><UserOutlined /> {t('model_setting.account')}</span>}
+              key="1"
+            >
+            </TabPane>
+            <TabPane
+              tab={<span className="flex items-center gap-3"><SettingOutlined /> {t('model_setting.setting')}</span>}
+              key="2"
+            >
+            </TabPane>
+            <TabPane
+              tab={<span className="flex items-center gap-3"><SecurityScanOutlined /> {t('model_setting.account_security')}</span>}
+              key="3"
+            >
+            </TabPane>
+            <TabPane
+              tab={<span className="flex items-center gap-3"><InfoCircleOutlined /> {t('model_setting.job_information')}</span>}
+              key="4"
+            >
+            </TabPane>
+          </Tabs>
 
-            <SubMenu key="sub2" title={t('model_setting.setting')} >
-              <Menu.Item key="4" >{t('model_setting.personalized_customization')}</Menu.Item>
-              <Menu.Item key="5">{t('model_setting.account_security')}</Menu.Item>
-              <Menu.Item key="6">{t('model_setting.job_information')}</Menu.Item>
-            </SubMenu>
-          </Menu>
-
-          <div style={{ padding: '24px' }} className="w-full">
+          <div style={{ padding: 20 }} className="flex-1 overflow-auto">
             {renderContent()}
           </div>
         </div>
       </Modal>
     </div>
-  )
+  );
 }

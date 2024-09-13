@@ -36,7 +36,9 @@ export default function Login() {
       const response = await loginAuth({ login, password })
 
       if (response.success) {
-        localStorage.setItem('userInfo', JSON.stringify(response.data))
+        localStorage.setItem('userInfo', JSON.stringify(response.data.user))
+        localStorage.setItem('token_1h', response.data.token); 
+        
         window.location.href = '/u/home'
       } else {
         setError(response.error)
