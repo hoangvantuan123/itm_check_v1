@@ -55,9 +55,11 @@ export default function AuthUser({ collapsed }) {
   return (
     <div className="p-1 mt-3 mb-3 cursor-pointer ">
       {collapsed ? (
-        <div onClick={onClickShowModal} className="flex items-center justify-center" >
-          <Avatar
-            icon={<UserOutlined />} />
+        <div
+          onClick={onClickShowModal}
+          className="flex items-center justify-center"
+        >
+          <Avatar icon={<UserOutlined />} />
         </div>
       ) : (
         <>
@@ -70,8 +72,6 @@ export default function AuthUser({ collapsed }) {
               <Text className="text-sm font-medium">{userNameLogin}</Text>
             </div>
           </div>
-
-
         </>
       )}
       {showModal && (
@@ -114,7 +114,6 @@ export default function AuthUser({ collapsed }) {
           </div>
         </>
       )}
-
     </div>
   )
 }

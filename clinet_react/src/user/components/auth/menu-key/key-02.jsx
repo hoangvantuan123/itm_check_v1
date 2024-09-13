@@ -1,28 +1,32 @@
 import { Button, Form, Input, Select, Typography } from 'antd'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { message } from 'antd';
+import { message } from 'antd'
 
 const { Title } = Typography
 const { Option } = Select
 
 export default function KeyMenu02() {
-
   const { t } = useTranslation()
-  const [email, setEmail] = useState( localStorage.getItem('email') || 'none@itm.com')
-  const [language, setLanguage] = useState( localStorage.getItem('language') || 'en')
-  const [timezone, setTimezone] = useState(localStorage.getItem('timezone') || '')
+  const [email, setEmail] = useState(
+    localStorage.getItem('email') || 'none@itm.com',
+  )
+  const [language, setLanguage] = useState(
+    localStorage.getItem('language') || 'en',
+  )
+  const [timezone, setTimezone] = useState(
+    localStorage.getItem('timezone') || '',
+  )
 
   const onFinish = (values) => {
     try {
-      setLanguage(values.language);
-      localStorage.setItem('language', values.language);
-      message.success(t('personal_settings_key_menu_02.success'));
+      setLanguage(values.language)
+      localStorage.setItem('language', values.language)
+      message.success(t('personal_settings_key_menu_02.success'))
     } catch (error) {
-      message.error(t('personal_settings_key_menu_02.error'));
+      message.error(t('personal_settings_key_menu_02.error'))
     }
-  };
-  
+  }
 
   return (
     <div className="p-4">
@@ -41,10 +45,7 @@ export default function KeyMenu02() {
         <Title level={5}>
           {t('personal_settings_key_menu_02.notification_method')}
         </Title>
-        <Form.Item
-          name="notification_method"
-         
-        >
+        <Form.Item name="notification_method">
           <Select placeholder={t('select_notification_method')} size="large">
             <Option value="email">
               {t('personal_settings_key_menu_02.email')}
@@ -55,7 +56,6 @@ export default function KeyMenu02() {
           </Select>
         </Form.Item>
 
-       
         <Form.Item
           label={t('personal_settings_key_menu_02.email')}
           name="email"
@@ -67,16 +67,13 @@ export default function KeyMenu02() {
           />
         </Form.Item>
 
-     
         <Form.Item
           label={t('personal_settings_key_menu_02.language')}
           name="language"
-          
         >
           <Select
             size="large"
             value={language}
-          
             onChange={(value) => setLanguage(value)}
           >
             <Option value="vi">

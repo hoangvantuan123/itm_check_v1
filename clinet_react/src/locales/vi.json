@@ -51,7 +51,7 @@
     "job_information": "Thông tin công việc"
   },
   "personal_settings_key_menu_01": {
-    "your_personal_account" : "Tài khoản cá nhân của bạn",
+    "your_personal_account": "Tài khoản cá nhân của bạn",
     "personal_settings": "Cài đặt cá nhân",
     "information": "Thông tin",
     "first_name": "Họ",
@@ -100,9 +100,8 @@
     "vietnamese": "Việt Nam",
     "english": "Tiếng Anh",
     "save": "Lưu",
-    "success" :"Bản cài đặt đã được thay đổi",
-    "error" :"Đã xảy ra lỗi"
-
+    "success": "Bản cài đặt đã được thay đổi",
+    "error": "Đã xảy ra lỗi"
   },
   "personal_settings_key_menu_03": {
     "password_management": "Quản lý mật khẩu",
@@ -115,17 +114,21 @@
     "label_new_pass": "Mật khẩu mới",
     "rules_new_message": "Vui lòng nhập mật khẩu mới",
     "label_succ_pass": "Xác nhận mật khẩu mới",
-    "token_missing" : "Thiếu mã Token",
-    "error_occurred" : "Đã xảy ra lỗi",
+    "token_missing": "Thiếu mã Token",
+    "error_occurred": "Đã xảy ra lỗi",
     "passwords_do_not_match": "Mật khẩu không khớp",
-    "please_confirm_new_password" :"Vui lòng nhập mật khẩu mới",
+    "please_confirm_new_password": "Vui lòng nhập mật khẩu mới",
     "please_input_new_password": "Vui lòng nhập mật khẩu mới",
-    "label_old_pass" : "Mật khẩu cũ",
-    "please_input_old_password" : "Vui lòng nhập mật khẩu cũ"
-
-
+    "label_old_pass": "Mật khẩu cũ",
+    "please_input_old_password": "Vui lòng nhập mật khẩu cũ"
   },
-  "page_notifications" : {
+  "page_notifications": {
     "notifications": "Thông báo"
+  },
+  "phone_profile" : {
+    "menu_item_1": "Tài khoản",
+    "menu_item_2": "Cá nhân hoá",
+    "menu_item_3" : "Bảo mật"
+    
   }
 }

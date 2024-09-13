@@ -21,7 +21,7 @@ import './static/css/scroll_container.css'
 const { Option } = Select
 import 'moment/locale/vi'
 
-export default function GeneralSettings() {
+export default function PhoneGeneralSettings() {
   const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
   const userNameLogin = userFromLocalStorage?.login || 'none'
   const dispatch = useDispatch()
@@ -42,21 +42,15 @@ export default function GeneralSettings() {
     }
   }
   return (
-    <div className="w-full h-screen bg-slate-50">
-      <Helmet>
-        <title>ITM - {t('page_setting.helmet_setting')}</title>
-      </Helmet>
-      <div className="h-full pb-20 lg:pb-4">
-        <div className="h-full p-2 overflow-auto scrollable-content">
-          <div className="p-2 mb-5">
+    <div className="w-ful">
+    
+        <div className="h-full">
+          <div className="p-2 mb-2">
             <h1 className="text-xl font-bold text-gray-900 sm:text-2xl ">
-              Thiết lập chung
+              Cài đặt
             </h1>
 
-            <p className="mt-1.5 text-sm text-gray-500">
-              Thay đổi các thiết lập chung của hệ thống để tối ưu hóa hoạt động
-              và trải nghiệm người dùng.
-            </p>
+            
           </div>
 
           <div className="divide-y divide-gray-100 rounded-xl border border-gray-100 bg-white">
@@ -404,7 +398,7 @@ export default function GeneralSettings() {
             </details>
           </div>
         </div>
-      </div>
+      
     </div>
   )
 }

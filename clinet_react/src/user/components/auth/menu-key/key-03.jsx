@@ -1,9 +1,18 @@
-import { Button, Space, Table, Typography, Modal, Form, Input, message } from 'antd';
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { changePassword } from '../../../../features/auth/API/changePasswordAPI';
+import {
+  Button,
+  Space,
+  Table,
+  Typography,
+  Modal,
+  Form,
+  Input,
+  message,
+} from 'antd'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { changePassword } from '../../../../features/auth/API/changePasswordAPI'
 
-const { Title } = Typography;
+const { Title } = Typography
 
 const columns = [
   {
@@ -26,7 +35,7 @@ const columns = [
       </Space>
     ),
   },
-];
+]
 
 const data = [
   {
@@ -54,54 +63,53 @@ const data = [
     name: 'Opera trên Android',
     permissions: '15/08/2024 11:40:10',
   },
-];
+]
 
 const KeyMenu03 = () => {
-  const { t } = useTranslation();
-  const [oldPassword, setOldPassword] = useState('admin@cloud');
-  const [newPassword, setNewPassword] = useState('');
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [form] = Form.useForm();
+  const { t } = useTranslation()
+  const [oldPassword, setOldPassword] = useState('admin@cloud')
+  const [newPassword, setNewPassword] = useState('')
+  const [isModalVisible, setIsModalVisible] = useState(false)
+  const [form] = Form.useForm()
 
   const handleChangePassword = () => {
-    setIsModalVisible(true);
-  };
+    setIsModalVisible(true)
+  }
 
   const handleCancel = () => {
-    setIsModalVisible(false);
-  };
+    setIsModalVisible(false)
+  }
 
   const handleOk = async () => {
     try {
-      const values = await form.validateFields();
-      const { new_password, confirm_password, old_password } = values;
-  
+      const values = await form.validateFields()
+      const { new_password, confirm_password, old_password } = values
+
       if (new_password !== confirm_password) {
-        message.error(t('personal_settings_key_menu_03.passwords_do_not_match'));
-        return;
+        message.error(t('personal_settings_key_menu_03.passwords_do_not_match'))
+        return
       }
-  
-      const token = localStorage.getItem('token_1h');
+
+      const token = localStorage.getItem('token_1h')
       if (!token) {
-        message.error(t('personal_settings_key_menu_03.token_missing'));
-        return;
+        message.error(t('personal_settings_key_menu_03.token_missing'))
+        return
       }
-      
-      const response = await changePassword(old_password, new_password, token);
-  
+
+      const response = await changePassword(old_password, new_password, token)
+
       if (response.success) {
-        message.success(response.message);
-        form.resetFields();
-        setIsModalVisible(false);
+        message.success(response.message)
+        form.resetFields()
+        setIsModalVisible(false)
       } else {
-        message.error(response.message);
+        message.error(response.message)
       }
     } catch (error) {
-      console.error('Validate Failed:', error);
-      message.error(t('personal_settings_key_menu_03.error_occurred'));
+      console.error('Validate Failed:', error)
+      message.error(t('personal_settings_key_menu_03.error_occurred'))
     }
-  };
-  
+  }
 
   return (
     <div>
@@ -124,7 +132,10 @@ const KeyMenu03 = () => {
         <Title level={4}>
           {t('personal_settings_key_menu_03.other_devices')}
         </Title>
-        <Button size="large" className="rounded-lg border-gray-200 bg-indigo-600 text-white p-4 shadow-sm text-sm">
+        <Button
+          size="large"
+          className="rounded-lg border-gray-200 bg-indigo-600 text-white p-4 shadow-sm text-sm"
+        >
           {t('personal_settings_key_menu_03.sign_out_of_all_devices')}
         </Button>
       </div>
@@ -134,19 +145,35 @@ const KeyMenu03 = () => {
         visible={isModalVisible}
         onCancel={handleCancel}
         footer={[
-          <Button key="cancel" onClick={handleCancel} style={{ backgroundColor: '#f5f5f5', borderColor: '#d9d9d9' }}>
+          <Button
+            key="cancel"
+            onClick={handleCancel}
+            style={{ backgroundColor: '#f5f5f5', borderColor: '#d9d9d9' }}
+          >
             {t('personal_settings_key_menu_03.cancel')}
           </Button>,
-          <Button key="submit" type="primary" onClick={handleOk} style={{ backgroundColor: '#1890ff', borderColor: '#1890ff' }}>
+          <Button
+            key="submit"
+            type="primary"
+            onClick={handleOk}
+            style={{ backgroundColor: '#1890ff', borderColor: '#1890ff' }}
+          >
             {t('personal_settings_key_menu_03.save')}
           </Button>,
         ]}
       >
         <Form form={form} layout="vertical" name="change_password">
-        <Form.Item
+          <Form.Item
             label={t('personal_settings_key_menu_03.label_old_pass')}
             name="old_password"
-            rules={[{ required: true, message: t('personal_settings_key_menu_03.please_input_old_password') }]}
+            rules={[
+              {
+                required: true,
+                message: t(
+                  'personal_settings_key_menu_03.please_input_old_password',
+                ),
+              },
+            ]}
           >
             <Input.Password
               size="large"
@@ -156,7 +183,14 @@ const KeyMenu03 = () => {
           <Form.Item
             label={t('personal_settings_key_menu_03.label_new_pass')}
             name="new_password"
-            rules={[{ required: true, message: t('personal_settings_key_menu_03.please_input_new_password') }]}
+            rules={[
+              {
+                required: true,
+                message: t(
+                  'personal_settings_key_menu_03.please_input_new_password',
+                ),
+              },
+            ]}
           >
             <Input.Password
               size="large"
@@ -169,13 +203,22 @@ const KeyMenu03 = () => {
             name="confirm_password"
             dependencies={['new_password']}
             rules={[
-              { required: true, message: t('personal_settings_key_menu_03.please_confirm_new_password') },
+              {
+                required: true,
+                message: t(
+                  'personal_settings_key_menu_03.please_confirm_new_password',
+                ),
+              },
               ({ getFieldValue }) => ({
                 validator(_, value) {
                   if (!value || getFieldValue('new_password') === value) {
-                    return Promise.resolve();
+                    return Promise.resolve()
                   }
-                  return Promise.reject(new Error(t('personal_settings_key_menu_03.passwords_do_not_match')));
+                  return Promise.reject(
+                    new Error(
+                      t('personal_settings_key_menu_03.passwords_do_not_match'),
+                    ),
+                  )
                 },
               }),
             ]}
@@ -188,7 +231,7 @@ const KeyMenu03 = () => {
         </Form>
       </Modal>
     </div>
-  );
-};
+  )
+}
 
-export default KeyMenu03;
+export default KeyMenu03

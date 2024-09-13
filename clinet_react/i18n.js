@@ -3,8 +3,7 @@ import { initReactI18next } from 'react-i18next'
 import translationVI from './src/locales/vi.json'
 import translationEN from './src/locales/en.json'
 
-
-const savedLanguage = localStorage.getItem('language') || 'en' 
+const savedLanguage = localStorage.getItem('language') || 'en'
 
 i18n.use(initReactI18next).init({
   resources: {

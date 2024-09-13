@@ -10,7 +10,7 @@ import {
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import DefaultAvatar from '../../../../assets/default-avatar.png'
-import "../static/css/scroll_container.css"
+import '../static/css/scroll_container.css'
 const { Title } = Typography
 const { Option } = Select
 
@@ -118,14 +118,16 @@ export default function KeyMenu01() {
         {/* Khung ảnh cá nhân */}
         <Avatar
           size={64}
-         
           src={avatar}
           icon={<img src={DefaultAvatar} alt="Default Avatar" />}
           className="mr-4"
         />
         <div>
           <Title level={5}>{userFromLocalStorage?.login || 'none'}</Title>
-          <span className=""> {t('personal_settings_key_menu_01.your_personal_account')}</span>
+          <span className="">
+            {' '}
+            {t('personal_settings_key_menu_01.your_personal_account')}
+          </span>
         </div>
       </div>
 
@@ -140,26 +142,26 @@ export default function KeyMenu01() {
           {t('personal_settings_key_menu_01.personal_information')}
         </Title>
         <Form.Item
-            label={t('personal_settings_key_menu_01.first_name')}
-            name="first_name"
-          >
-            <Input
-              size="large"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-            />
-          </Form.Item>
+          label={t('personal_settings_key_menu_01.first_name')}
+          name="first_name"
+        >
+          <Input
+            size="large"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+          />
+        </Form.Item>
 
-          <Form.Item
-            label={t('personal_settings_key_menu_01.last_name')}
-            name="last_name"
-          >
-            <Input
-              size="large"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-            />
-          </Form.Item>
+        <Form.Item
+          label={t('personal_settings_key_menu_01.last_name')}
+          name="last_name"
+        >
+          <Input
+            size="large"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
+        </Form.Item>
         {/* Thông tin liên hệ */}
         <Title level={5}>
           {t('personal_settings_key_menu_01.contact_information')}

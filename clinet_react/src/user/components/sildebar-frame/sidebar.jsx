@@ -232,7 +232,6 @@ const ActiveNotificationIcon = () => {
       id="Notification-Unread-Lines--Streamline-Solar"
       className="w-5 h-5 opacity-65 "
     >
-
       <path
         d="M14.850000000000001 2.355C14.850000000000001 3.5728125 13.862812499999999 4.5600000000000005 12.645 4.5600000000000005S10.440000000000001 3.5728125 10.440000000000001 2.355S11.4271875 0.15 12.645 0.15S14.850000000000001 1.1371875 14.850000000000001 2.355Z"
         fill="#1677ff"
@@ -300,8 +299,8 @@ const Sidebar = () => {
           <AuthUser collapsed={collapsed} />
           <Menu
             style={menuStyle}
-             mode="inline"
-           /*  theme="light" */
+            mode="inline"
+            /*  theme="light" */
             defaultSelectedKeys={['home']}
             className="border-r-0"
           >
@@ -319,7 +318,10 @@ const Sidebar = () => {
               </Link>
             </Menu.Item>
             <Menu.Item key="notifications">
-              <Link to="/u/notifications" className="flex items-center justify-start">
+              <Link
+                to="/u/notifications"
+                className="flex items-center justify-start"
+              >
                 <span
                   className={`icon-wrapper ${collapsed ? ' justify-center mt-2' : ''}`}
                 >
@@ -432,7 +434,6 @@ const Sidebar = () => {
                 </Menu.Item>
               </SubMenu>
             </SubMenu>
-         
           </Menu>
         </Sider>
       ) : (
@@ -447,8 +448,9 @@ const Sidebar = () => {
               >
                 {activeTab === 'home' ? <ActiveHomeIcon /> : <HomeIcon />}
                 <span
-                  className={`mt-2 text-xs ${activeTab === 'home' ? 'text-blue-500' : 'text-gray-500'
-                    }`}
+                  className={`mt-2 text-xs ${
+                    activeTab === 'home' ? 'text-blue-500' : 'text-gray-500'
+                  }`}
                 >
                   {t('footer_app.home')}
                 </span>
@@ -463,8 +465,9 @@ const Sidebar = () => {
               >
                 {activeTab === 'work' ? <ActiveWorkIcon /> : <WorkIcon />}
                 <span
-                  className={`mt-2 text-xs ${activeTab === 'work' ? 'text-blue-500' : 'text-gray-500'
-                    }`}
+                  className={`mt-2 text-xs ${
+                    activeTab === 'work' ? 'text-blue-500' : 'text-gray-500'
+                  }`}
                 >
                   {t('side_bar.work')}
                 </span>
@@ -477,10 +480,17 @@ const Sidebar = () => {
                 className="flex flex-col items-center"
                 onClick={() => setActiveTab('notifications')}
               >
-                {activeTab === 'notifications' ? <ActiveNotificationIcon /> : <NotificationIcon />}
+                {activeTab === 'notifications' ? (
+                  <ActiveNotificationIcon />
+                ) : (
+                  <NotificationIcon />
+                )}
                 <span
-                  className={`mt-2 text-xs ${activeTab === 'notifications' ? 'text-blue-500' : 'text-gray-500'
-                    }`}
+                  className={`mt-2 text-xs ${
+                    activeTab === 'notifications'
+                      ? 'text-blue-500'
+                      : 'text-gray-500'
+                  }`}
                 >
                   {t('side_bar.notifications')}
                 </span>
@@ -495,8 +505,9 @@ const Sidebar = () => {
               >
                 {activeTab === 'profile' ? <ActiveUserIcon /> : <UserIcon />}
                 <span
-                  className={`mt-2 text-xs ${activeTab === 'profile' ? 'text-blue-500' : 'text-gray-500'
-                    }`}
+                  className={`mt-2 text-xs ${
+                    activeTab === 'profile' ? 'text-blue-500' : 'text-gray-500'
+                  }`}
                 >
                   {t('footer_app.profile')}
                 </span>

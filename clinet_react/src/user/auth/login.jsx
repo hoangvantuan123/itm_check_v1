@@ -37,8 +37,8 @@ export default function Login() {
 
       if (response.success) {
         localStorage.setItem('userInfo', JSON.stringify(response.data.user))
-        localStorage.setItem('token_1h', response.data.token); 
-        
+        localStorage.setItem('token_1h', response.data.token)
+
         window.location.href = '/u/home'
       } else {
         setError(response.error)
