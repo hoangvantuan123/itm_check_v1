@@ -1,7 +1,17 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet'
-import { Input, Space, Table, Typography, message, Tabs, Avatar, Dropdown,Menu } from 'antd'
+import {
+  Input,
+  Space,
+  Table,
+  Typography,
+  message,
+  Tabs,
+  Avatar,
+  Dropdown,
+  Menu,
+} from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 const { Search } = Input
 import decodeJWT from '../../utils/decode-JWT'
@@ -21,7 +31,7 @@ const SettingIcon = () => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       id="Settings--Streamline-Solar-Ar"
-      className="w-6 h-6 opacity-65 "
+      className="w-5 h-5 opacity-65 "
     >
       <path
         stroke="#000000"
@@ -42,7 +52,7 @@ const MenuIcon = () => {
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="-0.5 -0.5 24 24"
-      className="w-7 h-7 opacity-65 "
+      className="w-6 h-6 opacity-65 "
       id="Flip--Streamline-Rounded----Material-Symbols"
     >
       <path
@@ -54,32 +64,31 @@ const MenuIcon = () => {
   )
 }
 export default function Profile() {
-  const [selectedMenuKey, setSelectedMenuKey] = useState('1');
-  const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'));
-  const userNameLogin = userFromLocalStorage?.login || 'none';
-  const avatar = userFromLocalStorage?.avatar || DefaultAvatar; 
+  const [selectedMenuKey, setSelectedMenuKey] = useState('1')
+  const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
+  const userNameLogin = userFromLocalStorage?.login || 'none'
+  const avatar = userFromLocalStorage?.avatar || DefaultAvatar
 
-  const dispatch = useDispatch();
-  const userId = userFromLocalStorage.id;
-  const page = 1;
-  const pageSize = 100;
-  const { t } = useTranslation();
-  
- 
+  const dispatch = useDispatch()
+  const userId = userFromLocalStorage.id
+  const page = 1
+  const pageSize = 100
+  const { t } = useTranslation()
+
   const handleMenuClick = (e) => {
-    setSelectedMenuKey(e.key); 
-  };
+    setSelectedMenuKey(e.key)
+  }
   const handleSettingsClick = () => {
-    setSelectedMenuKey('4'); 
-  };
+    setSelectedMenuKey('4')
+  }
   // Menu items
   const menu = (
-    <Menu onClick={handleMenuClick}>
+    <Menu onClick={handleMenuClick} style={{ width: 200 }}>
       <Menu.Item key="1">{t('phone_profile.menu_item_1')}</Menu.Item>
       <Menu.Item key="2">{t('phone_profile.menu_item_2')}</Menu.Item>
       <Menu.Item key="3">{t('phone_profile.menu_item_3')}</Menu.Item>
     </Menu>
-  );
+  )
   return (
     <div className="w-full h-screen bg-slate-50">
       <Helmet>
@@ -87,7 +96,7 @@ export default function Profile() {
       </Helmet>
       <div className="h-full pb-20 lg:pb-4">
         <div className="h-full p-3 overflow-auto scrollable-content">
-          <header className="flex items-center justify-end mt-4 mb-5">
+          <header className="flex items-center justify-end  mb-5">
             <div className="flex items-center gap-4">
               <button type="button" onClick={handleSettingsClick}>
                 <SettingIcon />
@@ -116,15 +125,9 @@ export default function Profile() {
               </div>
             </div>
           )}
-          {selectedMenuKey === '2' && (
-            <KeyMenu02/>
-          )}
-          {selectedMenuKey === '3' && (
-           <KeyMenu03/>
-          )}
-          {selectedMenuKey === '4' && (
-            <PhoneGeneralSettings/>
-          )}
+          {selectedMenuKey === '2' && <KeyMenu02 />}
+          {selectedMenuKey === '3' && <KeyMenu03 />}
+          {selectedMenuKey === '4' && <PhoneGeneralSettings />}
         </div>
       </div>
     </div>

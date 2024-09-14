@@ -15,8 +15,10 @@ import Setting from '../pages/settingAdmin'
 import GeneralSettings from '../pages/generalSettings'
 import Notifications from '../pages/notifications'
 import WorkTimeTracking from '../pages/workTimeTracking'
+import GroupsUsersSettings from '../pages/groupsUserSettings'
 const { Content } = Layout
 import { useTranslation } from 'react-i18next'
+import UsersSettings from '../pages/usersSettings'
 
 const UserRouter = () => {
   const { t } = useTranslation()
@@ -61,6 +63,14 @@ const UserRouter = () => {
                     <Route
                       path={`u/notifications`}
                       element={<Notifications />}
+                    />
+                    <Route
+                      path={`u/action=2/users`}
+                      element={<UsersSettings />}
+                    />
+                    <Route
+                      path={`u/action=3/groups_users`}
+                      element={<GroupsUsersSettings />}
                     />
                   </Routes>
                 </Content>

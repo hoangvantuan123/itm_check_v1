@@ -437,7 +437,7 @@ const Sidebar = () => {
           </Menu>
         </Sider>
       ) : (
-        <Footer className="fixed bottom-0 w-full bg-white border-t-[1px] border-b-0 pt-3 pb-6 p-0">
+        <Footer className="fixed bottom-0 z-50 w-full bg-white border-t-[1px] border-b-0 pt-3 pb-6 p-0">
           <div className="flex justify-around w-full space-x-4">
             {/* Home Tab */}
             <div className="flex-1 text-center">

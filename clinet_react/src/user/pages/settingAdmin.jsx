@@ -22,8 +22,8 @@ export default function Setting() {
       <Helmet>
         <title>ITM - {t('page_setting.helmet_setting')}</title>
       </Helmet>
-      <div>
-        <div className="p-3 h-screen overflow-hidden flex flex-col">
+      <div className="h-full pb-20 lg:pb-4">
+        <div className="h-full p-3 overflow-auto scrollable-content">
           {' '}
           Setting : {userNameLogin}{' '}
         </div>

@@ -101,7 +101,8 @@
     "english": "Tiếng Anh",
     "save": "Lưu",
     "success": "Bản cài đặt đã được thay đổi",
-    "error": "Đã xảy ra lỗi"
+    "error": "Đã xảy ra lỗi",
+    "select_notification_method": "Nơi thông báo"
   },
   "personal_settings_key_menu_03": {
     "password_management": "Quản lý mật khẩu",
@@ -125,10 +126,15 @@
   "page_notifications": {
     "notifications": "Thông báo"
   },
-  "phone_profile" : {
+  "phone_profile": {
     "menu_item_1": "Tài khoản",
     "menu_item_2": "Cá nhân hoá",
-    "menu_item_3" : "Bảo mật"
-    
+    "menu_item_3": "Bảo mật"
+  },
+  "users_setting": {
+    "helmet_user_setting": "Người dùng"
+  },
+  "groups_users": {
+    "helmet_user_setting": "Nhóm người dùng"
   }
 }

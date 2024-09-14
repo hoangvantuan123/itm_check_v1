@@ -29,7 +29,7 @@ export default function KeyMenu02() {
   }
 
   return (
-    <div className="p-4">
+    <div>
       <Title level={4}>
         {t('personal_settings_key_menu_02.personalized_customization')}
       </Title>
@@ -46,7 +46,12 @@ export default function KeyMenu02() {
           {t('personal_settings_key_menu_02.notification_method')}
         </Title>
         <Form.Item name="notification_method">
-          <Select placeholder={t('select_notification_method')} size="large">
+          <Select
+            placeholder={t(
+              'personal_settings_key_menu_02.select_notification_method',
+            )}
+            size="large"
+          >
             <Option value="email">
               {t('personal_settings_key_menu_02.email')}
             </Option>
