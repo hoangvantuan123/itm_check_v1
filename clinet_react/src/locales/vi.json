@@ -129,7 +129,8 @@
   "phone_profile": {
     "menu_item_1": "Tài khoản",
     "menu_item_2": "Cá nhân hoá",
-    "menu_item_3": "Bảo mật"
+    "menu_item_3": "Bảo mật",
+    "menu_item_4": "Đăng xuất"
   },
   "users_setting": {
     "helmet_user_setting": "Người dùng"

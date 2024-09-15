@@ -10,7 +10,7 @@ const { TabPane } = Tabs
 import 'moment/locale/vi'
 import './static/css/scroll_container.css'
 
-export default function Notifications() {
+export default function Default() {
   const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
   const userNameLogin = userFromLocalStorage?.login || 'none'
   const dispatch = useDispatch()
@@ -21,12 +21,17 @@ export default function Notifications() {
   return (
     <div className="w-full h-screen bg-slate-50">
       <Helmet>
-        <title>ITM - {t('page_notifications.notifications')}</title>
+        <title>ITM - {t('Default')}</title>
       </Helmet>
-      <div className="h-full pb-20 lg:pb-4">
+      {/* <div className="h-full pb-20 lg:pb-4">
         <div className="h-full p-3 overflow-auto scrollable-content">
-          <div className="grid place-content-center px-4">
-            <div className="text-center">
+         
+        </div>
+      </div>  */}
+    
+
+<div className="grid h-screen place-content-center bg-white px-4">
+<div className="text-center">
               <svg
                 className="mx-auto h-56 w-auto text-black sm:h-64"
                 viewBox="0 0 1466 1393"
@@ -344,9 +349,7 @@ export default function Notifications() {
                 The website is in development stage.
               </p>
             </div>
-          </div>
-        </div>
-      </div>
+</div>
     </div>
   )
 }

@@ -31,7 +31,12 @@ const groupsData = [
 const groupUsers = {
   group1: [
     { name: 'Người dùng 1', login: 'login1', language: 'vi', status: 'Active' },
-    { name: 'Người dùng 2', login: 'login2', language: 'en', status: 'Inactive' },
+    {
+      name: 'Người dùng 2',
+      login: 'login2',
+      language: 'en',
+      status: 'Inactive',
+    },
     // ... more users
   ],
   group2: [
@@ -40,7 +45,12 @@ const groupUsers = {
     // ... more users
   ],
   group3: [
-    { name: 'Người dùng 4', login: 'login4', language: 'en', status: 'Inactive' },
+    {
+      name: 'Người dùng 4',
+      login: 'login4',
+      language: 'en',
+      status: 'Inactive',
+    },
     { name: 'Người dùng 9', login: 'login9', language: 'vi', status: 'Active' },
     // ... more users
   ],
@@ -57,7 +67,7 @@ export default function GroupsUsersSettings() {
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const onSelectChange = (newSelectedRowKeys) => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys)
-    setSelectedRowKeys(newSelectedRowKeys) 
+    setSelectedRowKeys(newSelectedRowKeys)
   }
   const rowSelection = {
     selectedRowKeys,
@@ -70,8 +80,7 @@ export default function GroupsUsersSettings() {
   }
   const [visibleColumns, setVisibleColumns] = useState({
     key: true,
-    label: true
-
+    label: true,
   })
 
   useEffect(() => {
@@ -141,7 +150,7 @@ export default function GroupsUsersSettings() {
 
   const renderTable = () => (
     <Table
-    rowSelection={rowSelection}
+      rowSelection={rowSelection}
       columns={columns}
       dataSource={groupsData}
       rowKey="key"
@@ -183,7 +192,7 @@ export default function GroupsUsersSettings() {
         <div className="h-full">
           <div>
             {isMobile && (
-              <div className='flex items-center justify-end'>
+              <div className="flex items-center justify-end">
                 <PhoneSettingAction />
               </div>
             )}
@@ -271,13 +280,14 @@ export default function GroupsUsersSettings() {
               width={600}
             >
               <p>
-                <strong>Số người dùng:</strong> {(groupUsers[selectedGroupDetails.key] || []).length}
+                <strong>Số người dùng:</strong>{' '}
+                {(groupUsers[selectedGroupDetails.key] || []).length}
               </p>
               <p>
                 <strong>Danh sách người dùng:</strong>
               </p>
               <ul>
-                {(groupUsers[selectedGroupDetails.key] || []).map(user => (
+                {(groupUsers[selectedGroupDetails.key] || []).map((user) => (
                   <li key={user.login}>
                     {user.name} - {user.login} - {user.language} - {user.status}
                   </li>

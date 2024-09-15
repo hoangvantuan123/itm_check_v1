@@ -27,15 +27,22 @@ const SettingIcon = () => {
   )
 }
 
-export default function PhoneSettingAction() {
+export default function PhoneSettingAction({
+  handleMenuShowActionClick,
+  setShowSettingActionDropdown,
+  showSttingActionDropdown,
+}) {
   const { t } = useTranslation()
   const [showDropdown, setShowDropdown] = useState(false)
 
   const menu = (
-    <Menu style={{ width: '200px', marginRight: "20px" }}>
-      <Menu.Item key="1">Thêm người dùng</Menu.Item>
-      <Menu.Item key="2">Tùy chọn</Menu.Item>
-      <Menu.Item key="3">Hành động</Menu.Item>
+    <Menu
+      style={{ width: '200px', marginRight: '20px' }}
+      onClick={handleMenuShowActionClick}
+    >
+      <Menu.Item key="action_setting_1">Thêm người dùng</Menu.Item>
+      <Menu.Item key="action_setting_2">Tùy chọn</Menu.Item>
+      <Menu.Item key="action_setting_3">Hành động</Menu.Item>
       <Menu.Item key="4">Fields</Menu.Item>
     </Menu>
   )
@@ -43,8 +50,8 @@ export default function PhoneSettingAction() {
     <Dropdown
       overlay={menu}
       trigger={['click']}
-      visible={showDropdown}
-      onClick={() => setShowDropdown(!showDropdown)}
+      visible={showSttingActionDropdown}
+      onClick={() => setShowSettingActionDropdown(!showSttingActionDropdown)}
     >
       <button className="   p-[0.6rem] w-auto flex items-center space-x-2">
         <SettingIcon />

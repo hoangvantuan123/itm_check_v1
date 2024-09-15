@@ -6,3 +6,10 @@
 :where(.css-dev-only-do-not-override-qnu6hi).ant-drawer .ant-drawer-content {
   border-radius: 13px;
 }
+
+:where(.css-dev-only-do-not-override-qnu6hi).ant-card .ant-card-body{
+  padding: 14px;
+}
+:where(.css-dev-only-do-not-override-qnu6hi).ant-drawer .ant-drawer-body{
+  padding: 14px;
+}

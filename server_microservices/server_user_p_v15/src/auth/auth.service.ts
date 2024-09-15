@@ -14,22 +14,20 @@ export class AppService {
     const saltRounds = 10;
     return bcrypt.hash(password, saltRounds);
   }
-
   async registerUser(registrationData: RegistrationDto): Promise<User> {
-    const { login, password } = registrationData;
+    const { login, password, nameUser } = registrationData;
     const existingUser = await this.userService.findUserByEmail(login);
-
     if (existingUser) {
       throw new Error('User with this login already exists');
     }
-
+    
     const hashedPassword = await this.hashPassword(password);
     const newUser = new User();
     newUser.login = login;
     newUser.password = hashedPassword;
+    newUser.nameUser = nameUser;
 
     const savedUser = await this.userService.createUser(newUser);
-
     return savedUser;
   }
 

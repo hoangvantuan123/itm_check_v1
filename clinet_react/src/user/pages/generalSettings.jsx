@@ -11,6 +11,7 @@ import {
   message,
   Tabs,
 } from 'antd'
+import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 const { Search } = Input
 import decodeJWT from '../../utils/decode-JWT'
@@ -122,7 +123,7 @@ export default function GeneralSettings() {
                     3000 Người dùng hoạt động
                   </strong>
                   <p className="mt-2 max-w-md cursor-pointer text-pretty text-sm text-indigo-500">
-                    Quản lý người dùng
+                    <Link to="/u/action=2/users">Quản lý người dùng</Link>
                   </p>
                 </div>
               </div>

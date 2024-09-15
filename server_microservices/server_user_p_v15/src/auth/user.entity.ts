@@ -62,6 +62,11 @@ export class User {
 
   @Column({ nullable: true })
   employeeCode: string;  
+  
+  @Column({ nullable: true })
+  nameUser: string;  
+  @Column({ nullable: true })
+  language: string;  
 
   beforeInsert() {
     this.hashPassword();

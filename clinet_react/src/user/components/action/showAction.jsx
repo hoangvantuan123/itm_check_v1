@@ -34,11 +34,11 @@ export default function ShowAction({ isOpen, onClose }) {
 
   const menu = (
     <Menu>
-      <Menu.Item key="1">Nhập danh sách</Menu.Item>
-      <Menu.Item key="2">Xuất danh sách</Menu.Item>
-      <Menu.Item key="3">Lưu trữ</Menu.Item>
-      <Menu.Item key="4">Bỏ lưu trữ</Menu.Item>
-      <Menu.Item key="5">Xóa</Menu.Item>
+      <Menu.Item key="action_show_1">Nhập danh sách</Menu.Item>
+      <Menu.Item key="action_show_2">Xuất danh sách</Menu.Item>
+      <Menu.Item key="action_show_3">Lưu trữ</Menu.Item>
+      <Menu.Item key="action_show_4">Bỏ lưu trữ</Menu.Item>
+      <Menu.Item key="action_show_5">Xóa</Menu.Item>
     </Menu>
   )
 

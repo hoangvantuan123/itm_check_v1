@@ -14,6 +14,7 @@ import {
   Space,
   Dropdown,
   Select,
+  Typography,
   Menu as AntdMenu,
 } from 'antd'
 import { useTranslation } from 'react-i18next'
@@ -27,8 +28,10 @@ import Search from '../components/search'
 import ShowAction from '../components/action/showAction'
 import FieldAction from '../components/action/fieldsAction'
 import PhoneSettingAction from '../components/phone/usersSettingAction'
+import AddUser from '../components/add/addUser'
+import UserProfile from '../components/profile'
 const { Option } = Select
-
+const { Title } = Typography
 export default function UsersSettings() {
   const [selectedGroup, setSelectedGroup] = useState('all') // Mặc định chọn nhóm "Tất cả"
   const [isModalVisible, setIsModalVisible] = useState(false)
@@ -36,13 +39,23 @@ export default function UsersSettings() {
   const [userData, setUserData] = useState([])
   const [isMobile, setIsMobile] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  console.log(isModalOpen)
+  const [isModalOpenAddUser, setIsModalOpenAddUser] = useState(false)
+  const [phoneSettingUser, setPhoneSettingUser] = useState(null)
+  const [showSttingActionDropdown, setShowSettingActionDropdown] =
+    useState(false)
+
   const openModal = () => {
     setIsModalOpen(true)
+  }
+  const openModalAddUser = () => {
+    setIsModalOpenAddUser(true)
   }
 
   const closeModal = () => {
     setIsModalOpen(false)
+  }
+  const closeModalAddUser = () => {
+    setIsModalOpenAddUser(false)
   }
   const [visibleColumns, setVisibleColumns] = useState({
     name: true,
@@ -54,7 +67,6 @@ export default function UsersSettings() {
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const { t } = useTranslation()
   const onSelectChange = (newSelectedRowKeys) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys)
     setSelectedRowKeys(newSelectedRowKeys) // Update selected row keys
   }
   // Danh sách nhóm bao gồm "Tất cả"
@@ -329,13 +341,13 @@ export default function UsersSettings() {
           let color
           switch (status) {
             case 'Active':
-              color = '#87d068'
+              color = 'success'
               break
             case 'Inactive':
-              color = '#f50'
+              color = 'processing'
               break
             default:
-              color = 'purple'
+              color = 'error'
           }
 
           return (
@@ -350,41 +362,22 @@ export default function UsersSettings() {
         },
         ...(visibleColumns.status ? {} : { render: () => null }),
       },
-      {
-        title: 'Hành động',
-        key: 'action',
-        render: (text, record) => (
-          <Button onClick={() => showUserForm(record)}>
-            {' '}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="size-4"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
-              />
-            </svg>
-            Sửa
-          </Button>
-        ),
-        ...(visibleColumns.action ? {} : { render: () => null }),
-      },
     ]
 
     return (
       <>
         <Table
-          rowSelection={rowSelection} // Add rowSelection for selecting rows
+          rowSelection={rowSelection}
           columns={columns}
           dataSource={userData}
-          rowKey="login" // Use login as the unique row key
-          className="bg-slate-50"
+          rowKey="login"
+          className="bg-slate-50 cursor-pointer pb-0 md:pb-40"
+          onRow={(record) => ({
+            onClick: () => {
+              console.log('Record selected:', record)
+              showUserForm(record)
+            },
+          })}
         />
       </>
     )
@@ -416,6 +409,13 @@ export default function UsersSettings() {
     )
   }
 
+  const handleMenuShowActionClick = (e) => {
+    setPhoneSettingUser(e.key)
+    if (e.key === 'action_setting_1') {
+      setShowSettingActionDropdown(false)
+      setIsModalOpenAddUser(true)
+    }
+  }
   return (
     <div className="w-full h-screen bg-slate-50">
       <Helmet>
@@ -426,20 +426,30 @@ export default function UsersSettings() {
         <div className="h-full">
           <div>
             {isMobile && (
-              <div className=' flex items-center justify-end'>
-                <PhoneSettingAction />
+              <div className=" flex items-center justify-end">
+                <PhoneSettingAction
+                  handleMenuShowActionClick={handleMenuShowActionClick}
+                  showSttingActionDropdown={showSttingActionDropdown}
+                  setShowSettingActionDropdown={setShowSettingActionDropdown}
+                />
               </div>
+            )}
+            {isMobile && phoneSettingUser === 'action_setting_1' && (
+              <AddUser
+                isOpen={isModalOpenAddUser}
+                onClose={closeModalAddUser}
+              />
             )}
             <div className="p-2 flex items-center justify-between">
               <h1 className="text-xl font-bold text-gray-900 sm:text-xl ">
                 Người dùng
               </h1>
-              <div></div>
 
               {!isMobile && (
                 <span class="inline-flex overflow-hidden  ">
                   <div className="flex items-center gap-2">
                     <Button
+                      onClick={openModalAddUser}
                       type="primary"
                       icon={<PlusOutlined />}
                       className="w-full rounded-lg h-full border-gray-200  bg-indigo-600 text-white  shadow-sm text-sm"
@@ -450,6 +460,10 @@ export default function UsersSettings() {
                   </div>
                 </span>
               )}
+              <AddUser
+                isOpen={isModalOpenAddUser}
+                onClose={closeModalAddUser}
+              />
             </div>
             {!isMobile && (
               <div className="p-2 mb flex items-center justify-between">
@@ -522,25 +536,23 @@ export default function UsersSettings() {
             </Layout>
 
             <Drawer
-              title="Chỉnh sửa thông tin người dùng"
+             title={
+              <Title level={4} style={{ textAlign: 'center' }}>
+                {t('Thông tin người dùng')}
+              </Title>
+            }
               open={isModalVisible}
               onClose={handleCancel}
-              width={600}
+              width={900}
+              closable={false} 
+              footer={[
+                <Button key="cancel" onClick={handleCancel}>
+                  {t('Thoát')}
+                </Button>
+               
+              ]}
             >
-              <Form layout="vertical">
-                <Form.Item label="Tên">
-                  <Input defaultValue={selectedUser?.name} />
-                </Form.Item>
-                <Form.Item label="Đăng nhập">
-                  <Input defaultValue={selectedUser?.login} />
-                </Form.Item>
-                <Form.Item label="Ngôn ngữ">
-                  <Input defaultValue={selectedUser?.language} />
-                </Form.Item>
-                <Form.Item label="Trạng thái">
-                  <Input defaultValue={selectedUser?.status} />
-                </Form.Item>
-              </Form>
+              <UserProfile user={selectedUser} />
             </Drawer>
           </Layout>
         </div>

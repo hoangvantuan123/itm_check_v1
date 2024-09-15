@@ -114,12 +114,9 @@ export default function PhoneGeneralSettings() {
                   3000 Người dùng hoạt động
                 </strong>
 
-                <Link
-                  to="/u/action=2/users"
-                  className="mt-2 max-w-md cursor-pointer text-pretty text-sm text-indigo-500"
-                >
-                  Quản lý người dùng
-                </Link>
+                <p className="mt-2 max-w-md cursor-pointer text-pretty text-sm text-indigo-500">
+                  <Link to="/u/action=2/users">Quản lý người dùng</Link>
+                </p>
               </div>
             </div>
           </details>
@@ -355,10 +352,12 @@ export default function PhoneGeneralSettings() {
                 <p className="mt-2 max-w-md cursor-pointer text-pretty text-sm text-indigo-500">
                   Quản lý người dùng
                 </p>
-                <Link
-                  to="/u/action=3/groups_users" className="mt-2 max-w-md cursor-pointer text-pretty text-sm text-indigo-500">
-                  Quản lý nhóm người dùng
-                </Link>
+                <p className="mt-2 max-w-md cursor-pointer text-pretty text-sm text-indigo-500">
+                  <Link to="/u/action=3/groups_users">
+                    Quản lý nhóm người dùng
+                  </Link>
+                </p>
+
                 <p className="mt-2 max-w-md cursor-pointer text-pretty text-sm text-indigo-500">
                   Hồ sơ người dùng
                 </p>

@@ -19,6 +19,7 @@ import GroupsUsersSettings from '../pages/groupsUserSettings'
 const { Content } = Layout
 import { useTranslation } from 'react-i18next'
 import UsersSettings from '../pages/usersSettings'
+import Default from '../pages/default'
 
 const UserRouter = () => {
   const { t } = useTranslation()
@@ -51,7 +52,7 @@ const UserRouter = () => {
               <Layout>
                 <Content>
                   <Routes>
-                    <Route path="u/home" element={<Home />} />
+                    <Route path="u/home" element={<Default />} />
                     <Route
                       path={`u/profile/${JSON.parse(localStorage.getItem('userInfo'))?.login || 'none'}`}
                       element={<Profile />}
@@ -62,7 +63,7 @@ const UserRouter = () => {
                     />
                     <Route
                       path={`u/notifications`}
-                      element={<Notifications />}
+                      element={<Default />}
                     />
                     <Route
                       path={`u/action=2/users`}
@@ -71,6 +72,26 @@ const UserRouter = () => {
                     <Route
                       path={`u/action=3/groups_users`}
                       element={<GroupsUsersSettings />}
+                    />
+                    <Route
+                      path={`u/phone/work`}
+                      element={<Default />}
+                    />
+                    <Route
+                      path={`u/action=6/time_tracking`}
+                      element={<Default />}
+                    />
+                    <Route
+                      path={`u/action=7/payroll`}
+                      element={<Default />}
+                    />
+                    <Route
+                      path={`u/action=4/technique_access`}
+                      element={<Default />}
+                    />
+                    <Route
+                      path={`u/action=5/technique_menu`}
+                      element={<Default />}
                     />
                   </Routes>
                 </Content>

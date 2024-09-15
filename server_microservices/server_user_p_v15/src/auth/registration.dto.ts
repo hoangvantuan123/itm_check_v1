@@ -11,4 +11,7 @@ export class RegistrationDto {
   @IsString()
   partnerId: string;
 
+  @IsString()
+  nameUser: string;
+
 }
