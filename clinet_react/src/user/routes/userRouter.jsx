@@ -21,34 +21,35 @@ import { useTranslation } from 'react-i18next'
 import UsersSettings from '../pages/usersSettings'
 import Default from '../pages/default'
 import { RefreshToken } from '../../features/auth/API/refreshToken'
+import TimeTracking from '../pages/TimeTracking'
 
 const UserRouter = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const intervalRef = useRef(null);
+  const intervalRef = useRef(null)
   useEffect(() => {
-    const refreshInterval = 1000 * 60 * 40; 
+    const refreshInterval = 1000 * 60 * 40
 
     const refreshToken = async () => {
-      const token = localStorage.getItem('token_1h');
+      const token = localStorage.getItem('token_1h')
       if (token) {
         try {
-          const result = await RefreshToken(token);
-          console.log(result);
+          const result = await RefreshToken(token)
+          console.log(result)
           if (!result.success) {
-            console.error(result.message);
+            console.error(result.message)
           }
         } catch (error) {
-          console.error('Error refreshing token:', error);
+          console.error('Error refreshing token:', error)
         }
       }
-    };
+    }
 
-    intervalRef.current = setInterval(refreshToken, refreshInterval);
+    intervalRef.current = setInterval(refreshToken, refreshInterval)
 
-    return () => clearInterval(intervalRef.current);
-  }, []);
+    return () => clearInterval(intervalRef.current)
+  }, [])
   useEffect(() => {
     const token = localStorage.getItem('token_1h')
     const userInfo = localStorage.getItem('userInfo')
@@ -84,10 +85,7 @@ const UserRouter = () => {
                       path={`u/action=1/general_settings`}
                       element={<GeneralSettings />}
                     />
-                    <Route
-                      path={`u/notifications`}
-                      element={<Default />}
-                    />
+                    <Route path={`u/notifications`} element={<Default />} />
                     <Route
                       path={`u/action=2/users`}
                       element={<UsersSettings />}
@@ -96,18 +94,12 @@ const UserRouter = () => {
                       path={`u/action=3/groups_users`}
                       element={<GroupsUsersSettings />}
                     />
-                    <Route
-                      path={`u/phone/work`}
-                      element={<Default />}
-                    />
+                    <Route path={`u/phone/work`} element={<Default />} />
                     <Route
                       path={`u/action=6/time_tracking`}
-                      element={<Default />}
+                      element={<TimeTracking />}
                     />
-                    <Route
-                      path={`u/action=7/payroll`}
-                      element={<Default />}
-                    />
+                    <Route path={`u/action=7/payroll`} element={<Default />} />
                     <Route
                       path={`u/action=4/technique_access`}
                       element={<Default />}

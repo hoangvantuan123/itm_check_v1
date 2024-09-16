@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Input, Modal, Typography,Button } from 'antd'
+import { Input, Modal, Typography, Button } from 'antd'
 
 const { Title } = Typography
 
@@ -35,10 +35,7 @@ export default function Search({ isOpen, onClose }) {
       onCancel={onClose}
       style={{ top: 20 }}
       width={1500}
-      footer={
-       null
-      }
-      
+      footer={null}
     >
       <Input
         placeholder="Nhập từ khóa tìm kiếm..."

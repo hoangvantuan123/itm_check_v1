@@ -18,7 +18,11 @@ export const PostResGroups = async (name, comment, token) => {
     )
 
     if (response.status === 200 || response.status === 201) {
-      return { success: true, message: response.data.message || 'Operation successful', data: response.data }
+      return {
+        success: true,
+        message: response.data.message || 'Operation successful',
+        data: response.data,
+      }
     } else {
       return {
         success: false,
@@ -29,7 +33,9 @@ export const PostResGroups = async (name, comment, token) => {
     // Xử lý lỗi tốt hơn
     return {
       success: false,
-      message: error.response ? error.response.data.message || 'Có lỗi xảy ra' : 'Không thể kết nối tới server',
+      message: error.response
+        ? error.response.data.message || 'Có lỗi xảy ra'
+        : 'Không thể kết nối tới server',
     }
   }
 }

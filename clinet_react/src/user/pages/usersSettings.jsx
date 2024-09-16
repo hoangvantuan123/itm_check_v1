@@ -42,7 +42,8 @@ export default function UsersSettings() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isModalOpenAddUser, setIsModalOpenAddUser] = useState(false)
   const [phoneSettingUser, setPhoneSettingUser] = useState(null)
-  const [showSttingActionDropdown, setShowSettingActionDropdown] = useState(false)
+  const [showSttingActionDropdown, setShowSettingActionDropdown] =
+    useState(false)
 
   const openModal = () => {
     setIsModalOpen(true)
@@ -67,7 +68,6 @@ export default function UsersSettings() {
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const { t } = useTranslation()
   const onSelectChange = (newSelectedRowKeys) => {
-   
     setSelectedRowKeys(newSelectedRowKeys)
   }
   // Danh sách nhóm bao gồm "Tất cả"
@@ -479,8 +479,9 @@ export default function UsersSettings() {
                       <Option value="2">Grid</Option>
                       <Option value="3">List</Option>
                     </Select>
-                    <ImportAction/>
-                    <ShowAction />
+                    <ImportAction />
+                    {selectedRowKeys != null && selectedRowKeys.length > 0  && (<><ShowAction/></>)}
+                    
                     <FieldAction />
                   </div>
                 </span>
@@ -538,20 +539,19 @@ export default function UsersSettings() {
             </Layout>
 
             <Drawer
-             title={
-              <Title level={4} style={{ textAlign: 'center' }}>
-                {t('Thông tin người dùng')}
-              </Title>
-            }
+              title={
+                <Title level={4} style={{ textAlign: 'center' }}>
+                  {t('Thông tin người dùng')}
+                </Title>
+              }
               open={isModalVisible}
               onClose={handleCancel}
               width={900}
-              closable={false} 
+              closable={false}
               footer={[
                 <Button key="cancel" onClick={handleCancel}>
                   {t('Thoát')}
-                </Button>
-               
+                </Button>,
               ]}
             >
               <UserProfile user={selectedUser} />

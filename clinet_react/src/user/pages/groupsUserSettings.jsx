@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useQuery } from 'react-query';
+import { useQuery } from 'react-query'
 import {
   Layout,
   Table,
@@ -12,7 +12,7 @@ import {
   Modal,
   Typography,
   Drawer,
-  Pagination
+  Pagination,
 } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet'
@@ -22,9 +22,10 @@ import Search from '../components/search'
 import PhoneSettingAction from '../components/phone/usersSettingAction'
 import AddUserGroups from '../components/add/addUserGroups'
 import { GetAllResGroups } from '../../features/resGroups/getResGroups'
-import UserGroupsDrawer from '../components/userGroups/userGroups';
-import PhoneUserGroupsAction from '../components/phone/usersGroupsAction';
-import ImportAction from '../components/action/importAction';
+import UserGroupsDrawer from '../components/userGroups/userGroups'
+import PhoneUserGroupsAction from '../components/phone/usersGroupsAction'
+import ImportAction from '../components/action/importAction'
+import ShowAction from '../components/action/showAction'
 const { Content } = Layout
 const { Option } = Select
 const { Text } = Typography
@@ -37,45 +38,45 @@ export default function GroupsUsersSettings() {
   const [userData, setUserData] = useState([])
   const [isMobile, setIsMobile] = useState(false)
   const [selectedGroupDetails, setSelectedGroupDetails] = useState(null)
-  const [isModalOpenAddUserGroups, setIsModalOpenAddUserGroups] = useState(false)
+  const [isModalOpenAddUserGroups, setIsModalOpenAddUserGroups] =
+    useState(false)
   const { t } = useTranslation()
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const [isModalVisible, setIsModalVisible] = useState(false)
   /* GET */
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [totalPages, setTotalPages] = useState(0);
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [total, setTotal] = useState(0);
+  const [data, setData] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [totalPages, setTotalPages] = useState(0)
+  const [page, setPage] = useState(1)
+  const [limit, setLimit] = useState(10)
+  const [total, setTotal] = useState(0)
   const [phoneSettingUser, setPhoneSettingUser] = useState(null)
-  const [showSttingActionDropdown, setShowSettingActionDropdown] = useState(false)
+  const [showSttingActionDropdown, setShowSettingActionDropdown] =
+    useState(false)
 
   const fetchData = async () => {
-    setLoading(true);
-    const token = localStorage.getItem('token_1h');
-    const response = await GetAllResGroups(page, limit, token);
+    setLoading(true)
+    const token = localStorage.getItem('token_1h')
+    const response = await GetAllResGroups(page, limit, token)
     if (response.success) {
-      setData(response.data.data);
-      setTotal(response.data.total);
-      setTotalPages(response.data.totalPages);
-      setError(null);
+      setData(response.data.data)
+      setTotal(response.data.total)
+      setTotalPages(response.data.totalPages)
+      setError(null)
     } else {
-      setError(response.message);
-      setData([]);
+      setError(response.message)
+      setData([])
     }
-    setLoading(false);
-  };
+    setLoading(false)
+  }
   const handleTableChange = (pagination) => {
-    setPage(pagination.current);
-    setLimit(pagination.pageSize);
-  };
+    setPage(pagination.current)
+    setLimit(pagination.pageSize)
+  }
   useEffect(() => {
-    fetchData();
-  }, [page, limit]);
-
-
+    fetchData()
+  }, [page, limit])
 
   const openModalAddUserGroups = () => {
     setIsModalOpenAddUserGroups(true)
@@ -84,9 +85,7 @@ export default function GroupsUsersSettings() {
     setIsModalOpenAddUserGroups(false)
   }
 
-
   const onSelectChange = (newSelectedRowKeys) => {
-    console.log('Selected Row Keys:', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys)
   }
   const rowSelection = {
@@ -97,12 +96,12 @@ export default function GroupsUsersSettings() {
       Table.SELECTION_INVERT,
       Table.SELECTION_NONE,
     ],
+    columnWidth: 60,
   }
   const [visibleColumns, setVisibleColumns] = useState({
     id: true,
     name: true,
   })
-
 
   useEffect(() => {
     const handleResize = () => {
@@ -144,9 +143,8 @@ export default function GroupsUsersSettings() {
     },
     {
       title: 'Số người dùng',
-      key: 'usersCount'
-    }
-
+      key: 'usersCount',
+    },
   ]
 
   const renderTable = () => (
@@ -168,9 +166,9 @@ export default function GroupsUsersSettings() {
         total: total,
         showSizeChanger: true,
         showTotal: (total) => `Tổng ${total} mục`,
-        onChange: (page, pageSize) => handleTableChange({ current: page, pageSize }),
+        onChange: (page, pageSize) =>
+          handleTableChange({ current: page, pageSize }),
       }}
-
       onChange={(pagination) => handleTableChange(pagination)}
       loading={loading}
       scroll={{
@@ -181,12 +179,19 @@ export default function GroupsUsersSettings() {
   )
 
   const renderKanban = () => (
-    <div id="kanban-container" >
-
-      <Row gutter={16} className="bg-slate-50 pb-60 flex items-center justify-center">
-        {data.map(item => (
+    <div id="kanban-container">
+      <Row
+        gutter={16}
+        className="bg-slate-50 pb-60 flex items-center justify-center"
+      >
+        {data.map((item) => (
           <Col span={24} key={item.id} className="mb-2">
-            <Card title={item.name} extra={<Button onClick={() => handleViewDetails(item)}>View</Button>}>
+            <Card
+              title={item.name}
+              extra={
+                <Button onClick={() => handleViewDetails(item)}>View</Button>
+              }
+            >
               <p>Comment: {item.comment}</p>
             </Card>
           </Col>
@@ -198,13 +203,13 @@ export default function GroupsUsersSettings() {
             pageSize={limit}
             total={total}
             showSizeChanger
-            onChange={(page, pageSize) => handleTableChange({ current: page, pageSize })}
+            onChange={(page, pageSize) =>
+              handleTableChange({ current: page, pageSize })
+            }
           />
         </div>
       </Row>
       {loading && <div>Loading...</div>}
-
-
     </div>
   )
   const handleMenuShowActionClick = (e) => {
@@ -225,12 +230,14 @@ export default function GroupsUsersSettings() {
           <div>
             {isMobile && (
               <div className="flex items-center justify-end">
-                <PhoneUserGroupsAction    handleMenuShowActionClick={handleMenuShowActionClick}
+                <PhoneUserGroupsAction
+                  handleMenuShowActionClick={handleMenuShowActionClick}
                   showSttingActionDropdown={showSttingActionDropdown}
-                  setShowSettingActionDropdown={setShowSettingActionDropdown} />
+                  setShowSettingActionDropdown={setShowSettingActionDropdown}
+                />
               </div>
             )}
-          
+
             <div className="p-2 flex items-center justify-between">
               <h1 className="text-xl font-bold text-gray-900 sm:text-xl ">
                 Nhóm người dùng
@@ -251,19 +258,13 @@ export default function GroupsUsersSettings() {
                     </Button>
                   </div>
                 </span>
-
               )}
 
-
-              
               <AddUserGroups
                 isOpen={isModalOpenAddUserGroups}
                 onClose={closeModalAddUserGroups}
                 fetchData={fetchData}
               />
-
-
-              
             </div>
             {!isMobile && (
               <div className="p-2 mb flex items-center justify-between">
@@ -278,7 +279,9 @@ export default function GroupsUsersSettings() {
                       <Option value="2">Grid</Option>
                       <Option value="3">List</Option>
                     </Select>
-                    <ImportAction/>
+                    <ImportAction />
+                    {selectedRowKeys != null && selectedRowKeys.length > 0  && (<><ShowAction/></>)}
+                    
                   </div>
                 </span>
                 <button
@@ -332,13 +335,11 @@ export default function GroupsUsersSettings() {
             footer={[
               <Button key="cancel" onClick={handleCancel}>
                 {t('Thoát')}
-              </Button>
-
+              </Button>,
             ]}
           >
             <UserGroupsDrawer group={selectedGroupDetails} />
           </Drawer>
-
         </div>
       </div>
     </div>

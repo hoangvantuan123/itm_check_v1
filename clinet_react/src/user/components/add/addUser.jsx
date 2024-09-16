@@ -14,7 +14,7 @@ import {
   Checkbox,
   Drawer,
   Radio,
-  message
+  message,
 } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
 import { registerUser } from '../../../features/auth/API/registerAPI'
@@ -28,17 +28,21 @@ export default function AddUser({ isOpen, onClose }) {
   const userNameLogin = userFromLocalStorage?.login || 'none'
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [form] = Form.useForm() 
+  const [form] = Form.useForm()
 
   const handleFinish = async (values) => {
-   const {fullname, username, password } = values
+    const { fullname, username, password } = values
     try {
-      const data = await registerUser({ login: username , password: password, nameUser: fullname })
+      const data = await registerUser({
+        login: username,
+        password: password,
+        nameUser: fullname,
+      })
       message.success(t('Đăng ký tài khoản thành công'))
       onClose()
     } catch (error) {
       message.error(t('Lỗi khi đăng ký tài khoản!'))
-    } 
+    }
   }
 
   return (
@@ -49,7 +53,7 @@ export default function AddUser({ isOpen, onClose }) {
         </Title>
       }
       open={isOpen}
-      closable={false} 
+      closable={false}
       width={900}
       footer={[
         <Button key="cancel" onClick={onClose}>
@@ -144,29 +148,29 @@ export default function AddUser({ isOpen, onClose }) {
 
         {/* Chọn nhóm truy cập */}
         <Card>
-        <div className="mb-3">
-          <Title level={5}>{t('Loại người dùng')}</Title>
+          <div className="mb-3">
+            <Title level={5}>{t('Loại người dùng')}</Title>
 
-          <Radio.Group>
-    <Space direction="vertical">
-      <Radio value="admin">{t('Người dùng nội bộ')}</Radio>
-      <Radio value="editor">{t('Cổng thông tin')}</Radio>
-      <Radio value="viewer">{t('Công khai')}</Radio>
-    </Space>
-  </Radio.Group>
-        </div>
-        <div>
-          <Title level={5}>{t('Nhóm truy cập & quyền')}</Title>
+            <Radio.Group>
+              <Space direction="vertical">
+                <Radio value="admin">{t('Người dùng nội bộ')}</Radio>
+                <Radio value="editor">{t('Cổng thông tin')}</Radio>
+                <Radio value="viewer">{t('Công khai')}</Radio>
+              </Space>
+            </Radio.Group>
+          </div>
+          <div>
+            <Title level={5}>{t('Nhóm truy cập & quyền')}</Title>
 
-          <Checkbox.Group>
-            <Space direction="vertical">
-              <Checkbox value="admin">{t('Quản trị viên')}</Checkbox>
-              <Checkbox value="editor">{t('Biên tập viên')}</Checkbox>
-              <Checkbox value="viewer">{t('Người xem')}</Checkbox>
-            </Space>
-          </Checkbox.Group>
-        </div>
-      </Card>
+            <Checkbox.Group>
+              <Space direction="vertical">
+                <Checkbox value="admin">{t('Quản trị viên')}</Checkbox>
+                <Checkbox value="editor">{t('Biên tập viên')}</Checkbox>
+                <Checkbox value="viewer">{t('Người xem')}</Checkbox>
+              </Space>
+            </Checkbox.Group>
+          </div>
+        </Card>
       </Form>
     </Drawer>
   )

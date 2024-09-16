@@ -14,7 +14,7 @@ import {
   Checkbox,
   Typography,
   Table,
-  Radio
+  Radio,
 } from 'antd'
 import { EditOutlined, MoreOutlined } from '@ant-design/icons'
 import {
@@ -161,41 +161,51 @@ export default function UserProfile({ user }) {
       </Row>
 
       <Card>
-  <Row gutter={16} justify="center" align="top" className="flex-col md:flex-row">
-    {/* Cột cho ảnh avatar */}
-    <Col xs={24} md={6} style={{ display: 'flex', justifyContent: 'center' }} className="pb-5 md:pb-0">
-      <Avatar  shape="square"  size={128} src={DefaultAvatar} />
-    </Col>
+        <Row
+          gutter={16}
+          justify="center"
+          align="top"
+          className="flex-col md:flex-row"
+        >
+          {/* Cột cho ảnh avatar */}
+          <Col
+            xs={24}
+            md={6}
+            style={{ display: 'flex', justifyContent: 'center' }}
+            className="pb-5 md:pb-0"
+          >
+            <Avatar shape="square" size={128} src={DefaultAvatar} />
+          </Col>
 
-    <Col xs={24} md={18}>
-      <Row gutter={[16, 16]} className="pb-4">
-        <Col xs={24} md={12}>
-          <p>
-            <strong>Tên:</strong> {user?.name}
-          </p>
-        </Col>
-        <Col xs={24} md={12}>
-          <p>
-            <strong>Email:</strong> {user?.email}
-          </p>
-        </Col>
-      </Row>
-      <Row gutter={[16, 16]}>
-        <Col xs={24} md={12}>
-          <p>
-            <strong>Ngôn ngữ:</strong> {user?.language}
-          </p>
-        </Col>
-        <Col xs={24} md={12}>
-          <p>
-            <strong>Trạng thái:</strong>{' '}
-            {user?.status === 'active' ? 'Hoạt động' : 'Không hoạt động'}
-          </p>
-        </Col>
-      </Row>
-    </Col>
-  </Row>
-</Card>
+          <Col xs={24} md={18}>
+            <Row gutter={[16, 16]} className="pb-4">
+              <Col xs={24} md={12}>
+                <p>
+                  <strong>Tên:</strong> {user?.name}
+                </p>
+              </Col>
+              <Col xs={24} md={12}>
+                <p>
+                  <strong>Email:</strong> {user?.email}
+                </p>
+              </Col>
+            </Row>
+            <Row gutter={[16, 16]}>
+              <Col xs={24} md={12}>
+                <p>
+                  <strong>Ngôn ngữ:</strong> {user?.language}
+                </p>
+              </Col>
+              <Col xs={24} md={12}>
+                <p>
+                  <strong>Trạng thái:</strong>{' '}
+                  {user?.status === 'active' ? 'Hoạt động' : 'Không hoạt động'}
+                </p>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </Card>
 
       <Title className="mt-5" level={5}>
         {t('Quyền truy cập')}
@@ -205,12 +215,12 @@ export default function UserProfile({ user }) {
           <Title level={5}>{t('Loại người dùng')}</Title>
 
           <Radio.Group>
-    <Space direction="vertical">
-      <Radio value="admin">{t('Người dùng nội bộ')}</Radio>
-      <Radio value="editor">{t('Cổng thông tin')}</Radio>
-      <Radio value="viewer">{t('Công khai')}</Radio>
-    </Space>
-  </Radio.Group>
+            <Space direction="vertical">
+              <Radio value="admin">{t('Người dùng nội bộ')}</Radio>
+              <Radio value="editor">{t('Cổng thông tin')}</Radio>
+              <Radio value="viewer">{t('Công khai')}</Radio>
+            </Space>
+          </Radio.Group>
         </div>
         <div>
           <Title level={5}>{t('Nhóm truy cập & quyền')}</Title>
