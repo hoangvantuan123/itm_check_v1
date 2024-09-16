@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
+import { useQuery } from 'react-query';
 import {
   Layout,
   Table,
@@ -10,6 +11,8 @@ import {
   Select,
   Modal,
   Typography,
+  Drawer,
+  Pagination
 } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet'
@@ -17,44 +20,15 @@ import './static/css/drawer_cusstom.css'
 import { PlusOutlined, SearchOutlined, EyeOutlined } from '@ant-design/icons'
 import Search from '../components/search'
 import PhoneSettingAction from '../components/phone/usersSettingAction'
-
+import AddUserGroups from '../components/add/addUserGroups'
+import { GetAllResGroups } from '../../features/resGroups/getResGroups'
+import UserGroupsDrawer from '../components/userGroups/userGroups';
+import PhoneUserGroupsAction from '../components/phone/usersGroupsAction';
+import ImportAction from '../components/action/importAction';
 const { Content } = Layout
 const { Option } = Select
 const { Text } = Typography
-
-const groupsData = [
-  { key: 'group1', label: 'Nhóm 1' },
-  { key: 'group2', label: 'Nhóm 2' },
-  { key: 'group3', label: 'Nhóm 3' },
-]
-
-const groupUsers = {
-  group1: [
-    { name: 'Người dùng 1', login: 'login1', language: 'vi', status: 'Active' },
-    {
-      name: 'Người dùng 2',
-      login: 'login2',
-      language: 'en',
-      status: 'Inactive',
-    },
-    // ... more users
-  ],
-  group2: [
-    { name: 'Người dùng 3', login: 'login3', language: 'vi', status: 'Active' },
-    { name: 'Người dùng 7', login: 'login7', language: 'en', status: 'Active' },
-    // ... more users
-  ],
-  group3: [
-    {
-      name: 'Người dùng 4',
-      login: 'login4',
-      language: 'en',
-      status: 'Inactive',
-    },
-    { name: 'Người dùng 9', login: 'login9', language: 'vi', status: 'Active' },
-    // ... more users
-  ],
-}
+const { Title } = Typography
 
 export default function GroupsUsersSettings() {
   const [selectedGroup, setSelectedGroup] = useState('all')
@@ -63,10 +37,56 @@ export default function GroupsUsersSettings() {
   const [userData, setUserData] = useState([])
   const [isMobile, setIsMobile] = useState(false)
   const [selectedGroupDetails, setSelectedGroupDetails] = useState(null)
+  const [isModalOpenAddUserGroups, setIsModalOpenAddUserGroups] = useState(false)
   const { t } = useTranslation()
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
+  const [isModalVisible, setIsModalVisible] = useState(false)
+  /* GET */
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [totalPages, setTotalPages] = useState(0);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [total, setTotal] = useState(0);
+  const [phoneSettingUser, setPhoneSettingUser] = useState(null)
+  const [showSttingActionDropdown, setShowSettingActionDropdown] = useState(false)
+
+  const fetchData = async () => {
+    setLoading(true);
+    const token = localStorage.getItem('token_1h');
+    const response = await GetAllResGroups(page, limit, token);
+    if (response.success) {
+      setData(response.data.data);
+      setTotal(response.data.total);
+      setTotalPages(response.data.totalPages);
+      setError(null);
+    } else {
+      setError(response.message);
+      setData([]);
+    }
+    setLoading(false);
+  };
+  const handleTableChange = (pagination) => {
+    setPage(pagination.current);
+    setLimit(pagination.pageSize);
+  };
+  useEffect(() => {
+    fetchData();
+  }, [page, limit]);
+
+
+
+  const openModalAddUserGroups = () => {
+    setIsModalOpenAddUserGroups(true)
+  }
+  const closeModalAddUserGroups = () => {
+    setIsModalOpenAddUserGroups(false)
+  }
+
+
   const onSelectChange = (newSelectedRowKeys) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys)
+    console.log('Selected Row Keys:', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys)
   }
   const rowSelection = {
@@ -79,18 +99,10 @@ export default function GroupsUsersSettings() {
     ],
   }
   const [visibleColumns, setVisibleColumns] = useState({
-    key: true,
-    label: true,
+    id: true,
+    name: true,
   })
 
-  useEffect(() => {
-    if (selectedGroup === 'all') {
-      const allUsers = Object.values(groupUsers).flat()
-      setUserData(allUsers)
-    } else {
-      setUserData(groupUsers[selectedGroup])
-    }
-  }, [selectedGroup])
 
   useEffect(() => {
     const handleResize = () => {
@@ -114,74 +126,94 @@ export default function GroupsUsersSettings() {
   }
 
   const handleViewDetails = (group) => {
-    console.log('Clicked group ID:', group.key)
     setSelectedGroupDetails(group)
+    setIsModalVisible(true)
+  }
+  const handleCancel = () => {
+    setIsModalVisible(false)
+    setSelectedGroupDetails(null)
   }
 
   const columns = [
     {
       title: 'Tên nhóm',
-      dataIndex: 'label',
-      key: 'label',
-      sorter: (a, b) => a.label.localeCompare(b.label),
-      ...(visibleColumns.label ? {} : { render: () => null }),
+      dataIndex: 'name',
+      key: 'name',
+      sorter: (a, b) => a.name.localeCompare(b.name),
+      ...(visibleColumns.name ? {} : { render: () => null }),
     },
     {
       title: 'Số người dùng',
-      key: 'usersCount',
-      render: (_, record) => (
-        <span>{(groupUsers[record.key] || []).length}</span>
-      ),
-      ...(visibleColumns.usersCount ? {} : { render: () => null }),
-    },
-    {
-      title: 'Hành động',
-      key: 'action',
-      render: (_, record) => (
-        <Button
-          icon={<EyeOutlined />}
-          onClick={() => handleViewDetails(record)}
-        >
-          Xem chi tiết
-        </Button>
-      ),
-    },
+      key: 'usersCount'
+    }
+
   ]
 
   const renderTable = () => (
     <Table
       rowSelection={rowSelection}
       columns={columns}
-      dataSource={groupsData}
-      rowKey="key"
-      className="bg-slate-50"
+      dataSource={data}
+      rowKey="id"
+      className="bg-slate-50 cursor-pointer"
+      bordered
+      onRow={(record) => ({
+        onClick: () => {
+          handleViewDetails(record)
+        },
+      })}
+      pagination={{
+        current: page,
+        pageSize: limit,
+        total: total,
+        showSizeChanger: true,
+        showTotal: (total) => `Tổng ${total} mục`,
+        onChange: (page, pageSize) => handleTableChange({ current: page, pageSize }),
+      }}
+
+      onChange={(pagination) => handleTableChange(pagination)}
+      loading={loading}
+      scroll={{
+        x: 'calc(100px + 50%)',
+        y: 650,
+      }}
     />
   )
 
   const renderKanban = () => (
-    <Row gutter={16} className="bg-slate-50 pb-60">
-      {userData.map((user) => (
-        <Col span={24} key={user.login} style={{ marginBottom: 16 }}>
-          <Card
-            title={user.name}
-            extra={<Button onClick={() => setSelectedUser(user)}>Sửa</Button>}
-            style={{ width: '100%' }}
-          >
-            <p>
-              <strong>Đăng nhập:</strong> {user.login}
-            </p>
-            <p>
-              <strong>Ngôn ngữ:</strong> {user.language}
-            </p>
-            <p>
-              <strong>Trạng thái:</strong> {user.status}
-            </p>
-          </Card>
-        </Col>
-      ))}
-    </Row>
-  )
+    <div id="kanban-container" >
 
+      <Row gutter={16} className="bg-slate-50 pb-60 flex items-center justify-center">
+        {data.map(item => (
+          <Col span={24} key={item.id} className="mb-2">
+            <Card title={item.name} extra={<Button onClick={() => handleViewDetails(item)}>View</Button>}>
+              <p>Comment: {item.comment}</p>
+            </Card>
+          </Col>
+        ))}
+        <div className="mt-2 ">
+          <Pagination
+            simple
+            current={page}
+            pageSize={limit}
+            total={total}
+            showSizeChanger
+            onChange={(page, pageSize) => handleTableChange({ current: page, pageSize })}
+          />
+        </div>
+      </Row>
+      {loading && <div>Loading...</div>}
+
+
+    </div>
+  )
+  const handleMenuShowActionClick = (e) => {
+    setPhoneSettingUser(e.key)
+    if (e.key === 'action_users_group_1') {
+      setShowSettingActionDropdown(false)
+      setIsModalOpenAddUserGroups(true)
+    }
+  }
   return (
     <div className="w-full h-screen bg-slate-50">
       <Helmet>
@@ -193,9 +225,12 @@ export default function GroupsUsersSettings() {
           <div>
             {isMobile && (
               <div className="flex items-center justify-end">
-                <PhoneSettingAction />
+                <PhoneUserGroupsAction    handleMenuShowActionClick={handleMenuShowActionClick}
+                  showSttingActionDropdown={showSttingActionDropdown}
+                  setShowSettingActionDropdown={setShowSettingActionDropdown} />
               </div>
             )}
+          
             <div className="p-2 flex items-center justify-between">
               <h1 className="text-xl font-bold text-gray-900 sm:text-xl ">
                 Nhóm người dùng
@@ -206,6 +241,7 @@ export default function GroupsUsersSettings() {
                 <span className="inline-flex overflow-hidden">
                   <div className="flex items-center gap-2">
                     <Button
+                      onClick={openModalAddUserGroups}
                       type="primary"
                       icon={<PlusOutlined />}
                       className="w-full rounded-lg h-full border-gray-200 bg-indigo-600 text-white shadow-sm text-sm"
@@ -215,7 +251,19 @@ export default function GroupsUsersSettings() {
                     </Button>
                   </div>
                 </span>
+
               )}
+
+
+              
+              <AddUserGroups
+                isOpen={isModalOpenAddUserGroups}
+                onClose={closeModalAddUserGroups}
+                fetchData={fetchData}
+              />
+
+
+              
             </div>
             {!isMobile && (
               <div className="p-2 mb flex items-center justify-between">
@@ -230,6 +278,7 @@ export default function GroupsUsersSettings() {
                       <Option value="2">Grid</Option>
                       <Option value="3">List</Option>
                     </Select>
+                    <ImportAction/>
                   </div>
                 </span>
                 <button
@@ -270,31 +319,26 @@ export default function GroupsUsersSettings() {
             </Layout>
           </Layout>
 
-          {/* Modal for Group Details */}
-          {selectedGroupDetails && (
-            <Modal
-              title={selectedGroupDetails.label}
-              visible={!!selectedGroupDetails}
-              onCancel={() => setSelectedGroupDetails(null)}
-              footer={null}
-              width={600}
-            >
-              <p>
-                <strong>Số người dùng:</strong>{' '}
-                {(groupUsers[selectedGroupDetails.key] || []).length}
-              </p>
-              <p>
-                <strong>Danh sách người dùng:</strong>
-              </p>
-              <ul>
-                {(groupUsers[selectedGroupDetails.key] || []).map((user) => (
-                  <li key={user.login}>
-                    {user.name} - {user.login} - {user.language} - {user.status}
-                  </li>
-                ))}
-              </ul>
-            </Modal>
-          )}
+          <Drawer
+            title={
+              <Title level={4} style={{ textAlign: 'center' }}>
+                {selectedGroupDetails?.name}
+              </Title>
+            }
+            open={isModalVisible}
+            onClose={handleCancel}
+            width={900}
+            closable={false}
+            footer={[
+              <Button key="cancel" onClick={handleCancel}>
+                {t('Thoát')}
+              </Button>
+
+            ]}
+          >
+            <UserGroupsDrawer group={selectedGroupDetails} />
+          </Drawer>
+
         </div>
       </div>
     </div>

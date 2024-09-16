@@ -30,6 +30,7 @@ import FieldAction from '../components/action/fieldsAction'
 import PhoneSettingAction from '../components/phone/usersSettingAction'
 import AddUser from '../components/add/addUser'
 import UserProfile from '../components/profile'
+import ImportAction from '../components/action/importAction'
 const { Option } = Select
 const { Title } = Typography
 export default function UsersSettings() {
@@ -41,8 +42,7 @@ export default function UsersSettings() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isModalOpenAddUser, setIsModalOpenAddUser] = useState(false)
   const [phoneSettingUser, setPhoneSettingUser] = useState(null)
-  const [showSttingActionDropdown, setShowSettingActionDropdown] =
-    useState(false)
+  const [showSttingActionDropdown, setShowSettingActionDropdown] = useState(false)
 
   const openModal = () => {
     setIsModalOpen(true)
@@ -67,7 +67,8 @@ export default function UsersSettings() {
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const { t } = useTranslation()
   const onSelectChange = (newSelectedRowKeys) => {
-    setSelectedRowKeys(newSelectedRowKeys) // Update selected row keys
+   
+    setSelectedRowKeys(newSelectedRowKeys)
   }
   // Danh sách nhóm bao gồm "Tất cả"
   const groups = [
@@ -368,13 +369,13 @@ export default function UsersSettings() {
       <>
         <Table
           rowSelection={rowSelection}
+          bordered
           columns={columns}
           dataSource={userData}
           rowKey="login"
           className="bg-slate-50 cursor-pointer pb-0 md:pb-40"
           onRow={(record) => ({
             onClick: () => {
-              console.log('Record selected:', record)
               showUserForm(record)
             },
           })}
@@ -478,6 +479,7 @@ export default function UsersSettings() {
                       <Option value="2">Grid</Option>
                       <Option value="3">List</Option>
                     </Select>
+                    <ImportAction/>
                     <ShowAction />
                     <FieldAction />
                   </div>

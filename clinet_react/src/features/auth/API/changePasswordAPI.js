@@ -1,10 +1,10 @@
 import axios from 'axios'
-import { HOST_API } from '../../../services'
+import { HOST_API_SERVER_P } from '../../../services'
 
 export const changePassword = async (oldPassword, newPassword, token) => {
   try {
     const response = await axios.post(
-      `${HOST_API}/change-password`,
+      `${HOST_API_SERVER_P}/change-password`,
       {
         oldPassword: oldPassword,
         newPassword: newPassword,

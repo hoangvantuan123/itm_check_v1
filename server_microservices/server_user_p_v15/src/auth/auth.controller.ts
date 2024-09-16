@@ -50,4 +50,27 @@ export class AppController {
       throw new UnauthorizedException('Invalid or expired token');
     }
   }
+
+
+  @Post('refresh-token')
+  async refreshToken(@Req() req: Request, @Res() res: Response) {
+    const token = req.headers['authorization']?.split(' ')[1];
+
+    if (!token) {
+      return res.status(401).json({ success: false, error: 'Token is required' });
+    }
+
+    try {
+      const { token: newToken } = await this.appService.refreshToken(token);
+      return res.json({
+        success: true,
+        data: {
+          token: newToken,
+        },
+      });
+
+    } catch (error) {
+      return res.status(401).json({ success: false, error: error.message });
+    }
+  }
 }

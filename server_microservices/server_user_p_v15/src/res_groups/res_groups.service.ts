@@ -1,31 +1,48 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ResGroups } from './res_groups.entity';
+import { UserService } from 'src/auth/user.service';
 
 @Injectable()
 export class ResGroupsService {
   constructor(
     @InjectRepository(ResGroups)
     private readonly resGroupsRepository: Repository<ResGroups>,
-  ) {}
+    private readonly userService: UserService
+  ) { }
 
   // Tạo mới
-  async create(createResGroupsDto: Partial<ResGroups>): Promise<ResGroups> {
+  async create(userId: number, createResGroupsDto: Partial<ResGroups>): Promise<{ success: boolean; message: string; data?: ResGroups }> {
+    const user = await this.userService.findUserById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
     const newGroup = this.resGroupsRepository.create(createResGroupsDto);
-    return this.resGroupsRepository.save(newGroup);
+    await this.resGroupsRepository.save(newGroup);
+    return {
+      success: true,
+      message: 'Group created successfully',
+      data: newGroup,
+    };
   }
 
-  // Lấy danh sách với phân trang
-  async findAll(page: number = 1, limit: number = 10): Promise<{ data: ResGroups[], total: number }> {
+  async findAll(userId: number, page: number = 1, limit: number = 10): Promise<{ data: ResGroups[], total: number, totalPages:number }> {
+    const user = await this.userService.findUserById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
     const [data, total] = await this.resGroupsRepository.findAndCount({
       skip: (page - 1) * limit,
       take: limit,
     });
+    const totalPages = Math.ceil(total / limit);
 
     return {
       data,
       total,
+      totalPages
     };
   }
 

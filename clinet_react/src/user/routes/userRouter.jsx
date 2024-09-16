@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import {
   BrowserRouter as Router,
   Routes,
@@ -20,12 +20,35 @@ const { Content } = Layout
 import { useTranslation } from 'react-i18next'
 import UsersSettings from '../pages/usersSettings'
 import Default from '../pages/default'
+import { RefreshToken } from '../../features/auth/API/refreshToken'
 
 const UserRouter = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const intervalRef = useRef(null);
+  useEffect(() => {
+    const refreshInterval = 1000 * 60 * 40; 
 
+    const refreshToken = async () => {
+      const token = localStorage.getItem('token_1h');
+      if (token) {
+        try {
+          const result = await RefreshToken(token);
+          console.log(result);
+          if (!result.success) {
+            console.error(result.message);
+          }
+        } catch (error) {
+          console.error('Error refreshing token:', error);
+        }
+      }
+    };
+
+    intervalRef.current = setInterval(refreshToken, refreshInterval);
+
+    return () => clearInterval(intervalRef.current);
+  }, []);
   useEffect(() => {
     const token = localStorage.getItem('token_1h')
     const userInfo = localStorage.getItem('userInfo')

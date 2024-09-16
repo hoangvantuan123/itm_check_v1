@@ -5,19 +5,19 @@ export class ResGroups {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: false })
   name: string;
 
-  @Column()
+  @Column({ type: 'int', nullable: true })
   category_id: number;
 
-  @Column()
+  @Column({ nullable: true })
   color: string;
 
-  @Column()
+  @Column({ nullable: true })
   create_uid: number;
 
-  @Column()
+  @Column({ nullable: true })
   write_uid: number;
 
   @Column({ type: 'text', nullable: true })

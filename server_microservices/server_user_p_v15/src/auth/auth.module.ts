@@ -12,5 +12,6 @@ import { DatabaseModule } from 'src/database.module';
     imports: [DatabaseModule, TypeOrmModule.forFeature([User])],
     controllers: [AppController],
     providers: [AppService, UserService ],
+    exports: [UserService, AppService], 
   })
 export class AuthModule { }

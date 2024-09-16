@@ -5,10 +5,12 @@ import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { RegistrationDto } from './registration.dto';
 import { LoginDto } from './login.dto';
+import { jwtConstants } from 'src/config/config';
 
 @Injectable()
 export class AppService {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService, 
+  ) { }
 
   private async hashPassword(password: string): Promise<string> {
     const saltRounds = 10;
@@ -20,7 +22,7 @@ export class AppService {
     if (existingUser) {
       throw new Error('User with this login already exists');
     }
-    
+
     const hashedPassword = await this.hashPassword(password);
     const newUser = new User();
     newUser.login = login;
@@ -57,7 +59,7 @@ export class AppService {
         id: user.id,
         login: user.login,
         partnerId: user.partnerId,
-      }, 'P@5sW0rD!$R3c3nT@2024', { expiresIn: '1h' });
+      },jwtConstants.secret, { expiresIn: '2h' });
 
       const userResponse: Partial<User> = {
         login: user.login,
@@ -105,5 +107,29 @@ export class AppService {
       success: true,
       message: 'Password changed successfully',
     };
+  }
+
+
+  async refreshToken(token: string): Promise<{ token: string }> {
+    try {
+      const decoded: any = jwt.verify(token, jwtConstants.secret);
+
+      const user = await this.userService.findUserById(decoded.id);
+      if (!user) {
+        throw new UnauthorizedException('Invalid token');
+      }
+
+      // Tạo token mới
+      const newToken = jwt.sign({
+        id: user.id,
+        login: user.login,
+        partnerId: user.partnerId,
+      },jwtConstants.secret, { expiresIn: '2h' });
+
+      return { token: newToken };
+
+    } catch (error) {
+      throw new UnauthorizedException('Invalid token');
+    }
   }
 }

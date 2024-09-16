@@ -1,8 +1,8 @@
-import { HOST_API } from '../../../services'
+import { HOST_API_SERVER_P } from '../../../services'
 
 export const registerUser = async ({ login, password, nameUser }) => {
   try {
-    const response = await fetch(`${HOST_API}/register`, {
+    const response = await fetch(`${HOST_API_SERVER_P}/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -1,8 +1,8 @@
-import { HOST_API } from '../../../services'
+import { HOST_API_SERVER_P } from '../../../services'
 
 export const loginAuth = async ({ login, password }) => {
   try {
-    const response = await fetch(`${HOST_API}/login`, {
+    const response = await fetch(`${HOST_API_SERVER_P}/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

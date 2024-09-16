@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-
+import { HOST_API_SERVER_P } from '../../../services'
 export const loginAsync = createAsyncThunk(
   'auth/login',
   async ({ email, password }) => {
