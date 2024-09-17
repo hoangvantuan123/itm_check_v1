@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Input,
@@ -21,32 +21,65 @@ import {
 import { DownOutlined } from '@ant-design/icons'
 import { PostResGroups } from '../../../features/resGroups/postResGroups'
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons'
-import { GetAllResGroups } from '../../../features/resGroups/getResGroups'
+import { PostResUserGroups } from '../../../features/resGroups/postResUserGroups'
+import ShowListUser from './modalListUser'
+import { GetAllResUserGroupsPageLimitID } from '../../../features/resGroups/getResUserGroupsID'
 const { Title } = Typography
 const { Option } = Select
 const { TextArea } = Input
-export default function UserGroupsDrawer({ group }) {
+
+
+export default function UserGroupsDrawer({ group, isModalVisible }) {
   const { t } = useTranslation()
   const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
   const userNameLogin = userFromLocalStorage?.login || 'none'
-  const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(false)
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [form] = Form.useForm()
-  const [dataSource, setDataSource] = useState([
-    { key: '1', name: 'User 1', age: 32, address: 'Hanoi' },
-    { key: '2', name: 'User 2', age: 42, address: 'Danang' },
-  ])
+  const [dataSource, setDataSource] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [totalPages, setTotalPages] = useState(0)
+  const [page, setPage] = useState(1)
+  const [limit, setLimit] = useState(10)
+  const [total, setTotal] = useState(0)
   const [count, setCount] = useState(3)
 
-  const handleAddRow = () => {
-    const newRow = {
-      key: count,
-      name: `User ${count}`,
-      age: 25,
-      address: `Address ${count}`,
+
+  const fetchData = async () => {
+    setLoading(true);
+
+    try {
+      // Gọi các API đồng thời
+      const [response, responseAllResGroups] = await Promise.all([
+        GetAllResUserGroupsPageLimitID(group?.id, page, limit),
+      ]);
+
+      if (response.success) {
+        setDataSource(response.data.data);
+        setTotal(response.data.total);
+        setTotalPages(response.data.totalPages);
+        setError(null);
+      } else {
+        setError(response.message);
+        setDataSource([]);
+      }
+    } catch (error) {
+      setError(error.message || 'Đã xảy ra lỗi');
+      setDataSource([]);
+    } finally {
+      setLoading(false);
     }
-    setDataSource([...dataSource, newRow])
-    setCount(count + 1)
+  };
+  useEffect(() => {
+    if (isModalVisible === true) {
+      fetchData()
+    }
+  }, [page, limit, group?.id])
+
+
+  const handleAddRow = () => {
+    setIsModalOpen(true)
   }
 
   const handleDelete = (key) => {
@@ -58,42 +91,45 @@ export default function UserGroupsDrawer({ group }) {
       title: t('Tên'),
       dataIndex: 'name',
       key: 'name',
-      sorter: (a, b) => a.name.localeCompare(b.name),
+      sorter: (a, b) => {
+        const nameA = a.name || ''; 
+        const nameB = b.name || '';
+        return nameA.localeCompare(nameB);
+      },
     },
     {
-      title: t('Tuổi'),
-      dataIndex: 'age',
-      key: 'age',
-      sorter: (a, b) => a.age - b.age,
+      title: t('Đăng nhập'),
+      dataIndex: 'login',
+      key: 'login',
+      sorter: (a, b) => {
+        const loginA = a.login || ''; 
+        const loginB = b.login || '';
+        return loginA.localeCompare(loginB);
+      },
     },
     {
-      title: t('Địa chỉ'),
-      dataIndex: 'address',
-      key: 'address',
-      sorter: (a, b) => a.address.localeCompare(b.address),
+      title: t('Ngôn ngữ'),
+      dataIndex: 'language',
+      key: 'language',
+      sorter: (a, b) => a.language.localeCompare(b.language),
+      sorter: (a, b) => {
+        const languageA = a.language || ''; 
+        const languageB = b.language || '';
+        return languageA.localeCompare(languageB);
+      },
     },
     {
-      title: t('Hành động'),
-      key: 'action',
-      render: (_, record) => (
-        <Popconfirm
-          title={t('Bạn có chắc chắn muốn xóa?')}
-          onConfirm={() => handleDelete(record.key)}
-          okButtonProps={{
-            style: {
-              backgroundColor: '#f5222d',
-              color: 'white',
-              border: 'none',
-            },
-          }}
-          cancelButtonProps={{
-            style: { border: '1px solid #d9d9d9', color: '#595959' },
-          }}
-        >
-          <Button danger icon={<DeleteOutlined />} />
-        </Popconfirm>
-      ),
-    },
+      title: t('Trạng thái'),
+      dataIndex: 'active',
+      key: 'active',
+      sorter: (a, b) => {
+        if (a.active === b.active) {
+          return 0;
+        }
+        return a.active ? -1 : 1;
+      },
+    }
+  
   ]
 
   const handleFinish = async (values) => {
@@ -115,6 +151,12 @@ export default function UserGroupsDrawer({ group }) {
     } catch (error) {
       message.error('Lỗi khi tạo nhóm!')
     }
+  }
+  const openModal = () => {
+    setIsModalOpen(true)
+  }
+  const closeModal = () => {
+    setIsModalOpen(false)
   }
 
   return (
@@ -188,22 +230,24 @@ export default function UserGroupsDrawer({ group }) {
             </summary>
 
             <div>
-              <Space className="mt-2 mb-3">
-                <Button
-                  type="primary"
-                  className="  border-gray-200  bg-indigo-600 text-white  shadow-sm text-sm"
-                  icon={<PlusOutlined />}
-                  onClick={handleAddRow}
-                >
-                  {t('Thêm dòng')}
-                </Button>
-              </Space>
               <Table
+                className="mt-3"
                 dataSource={dataSource}
                 columns={columns}
-                rowSelection={{ type: 'checkbox' }} // Checkbox để chọn dòng
-                pagination={{ pageSize: 5 }} // Số lượng hàng mỗi trang
+                rowSelection={{ type: 'checkbox' }}
+                pagination={{ pageSize: 10 }}
                 bordered
+                footer={() => (
+                  <span
+                    type="primary"
+                    icon={<PlusOutlined />}
+                    onClick={handleAddRow}
+                    className="mt-2 max-w-md cursor-pointer text-pretty text-base text-indigo-500"
+                    size="large"
+                  >
+                    Thêm hàng mới
+                  </span>
+                )}
               />
             </div>
           </details>
@@ -273,6 +317,7 @@ export default function UserGroupsDrawer({ group }) {
           </details>
         </div>
       </Form>
+      <ShowListUser isOpen={isModalOpen} onClose={closeModal} group={group} fetchDataUserGroups={fetchData} />
     </div>
   )
 }

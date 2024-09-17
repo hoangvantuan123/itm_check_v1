@@ -1,8 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert, OneToMany} from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { ResUserGroups } from 'src/res_groups/entity/res_user_groups.entity';
 
 @Entity('users')
-export class User {
+export class Users {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -27,7 +28,7 @@ export class User {
   @Column({ nullable: true })
   actionId: number;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true })   
   createUid: number;
 
   @Column({ nullable: true })
@@ -71,6 +72,9 @@ export class User {
   beforeInsert() {
     this.hashPassword();
   }
+
+  @OneToMany(() => ResUserGroups, userGroups => userGroups.user)
+  userGroups: ResUserGroups[];
 
   private hashPassword() {
     const saltRounds = 10;

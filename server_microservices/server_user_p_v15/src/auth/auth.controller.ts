@@ -6,6 +6,7 @@ import { LoginDto } from './login.dto';
 import { ChangePasswordDto } from './change-password.dto';
 import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
+import { jwtConstants } from 'src/config/config';
 
 @Controller('api/p')
 export class AppController {
@@ -41,7 +42,7 @@ export class AppController {
     const token = authHeader.split(' ')[1];
 
     try {
-      const decodedToken = jwt.verify(token, 'P@5sW0rD!$R3c3nT@2024');
+      const decodedToken = jwt.verify(token, jwtConstants.secret);
       const userId = (decodedToken as { id: number }).id;
 
       await this.appService.changePassword(userId, oldPassword, newPassword);

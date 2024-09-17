@@ -21,7 +21,7 @@ import {
 import { DownOutlined } from '@ant-design/icons'
 import { PostResGroups } from '../../../features/resGroups/postResGroups'
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons'
-import { GetAllResGroups } from '../../../features/resGroups/getResGroups'
+import { GetAllResGroupsPageLimit } from '../../../features/resGroups/getResGroupsPageLimit'
 const { Title } = Typography
 const { Option } = Select
 const { TextArea } = Input
@@ -101,7 +101,9 @@ export default function AddUserGroups({ isOpen, onClose, fetchData }) {
     try {
       const token = localStorage.getItem('token_1h')
       if (!token) {
-        message.error('Token không tồn tại. Vui lòng đăng nhập lại.')
+        message.error(
+          'Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại để tiếp tục.',
+        )
         return
       }
 
@@ -203,22 +205,24 @@ export default function AddUserGroups({ isOpen, onClose, fetchData }) {
             </summary>
 
             <div>
-              <Space className="mt-2 mb-3">
-                <Button
-                  type="primary"
-                  className="  border-gray-200  bg-indigo-600 text-white  shadow-sm text-sm"
-                  icon={<PlusOutlined />}
-                  onClick={handleAddRow}
-                >
-                  {t('Thêm dòng')}
-                </Button>
-              </Space>
               <Table
+                className="mt-3"
                 dataSource={dataSource}
                 columns={columns}
-                rowSelection={{ type: 'checkbox' }} // Checkbox để chọn dòng
-                pagination={{ pageSize: 5 }} // Số lượng hàng mỗi trang
+                rowSelection={{ type: 'checkbox' }}
+                pagination={{ pageSize: 10 }}
                 bordered
+                footer={() => (
+                  <span
+                    type="primary"
+                    icon={<PlusOutlined />}
+                    onClick={handleAddRow}
+                    className="mt-2 max-w-md cursor-pointer text-pretty text-base text-indigo-500"
+                    size="large"
+                  >
+                    Thêm hàng mới
+                  </span>
+                )}
               />
             </div>
           </details>

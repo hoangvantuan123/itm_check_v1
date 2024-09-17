@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Input, Modal, Typography, Dropdown, Menu } from 'antd'
+import { Input, Modal, Typography, Dropdown, Menu, message } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
-
+import { DeleteResGroups } from '../../../features/resGroups/DeleteResGroups'
+import { DeleteResUsers } from '../../../features/resUsers/deleteResUsers'
 const { Title } = Typography
 const SettingIcon = () => {
   return (
@@ -26,19 +27,104 @@ const SettingIcon = () => {
     </svg>
   )
 }
-export default function ShowAction({ isOpen, onClose }) {
-  const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
-  const userNameLogin = userFromLocalStorage?.login || 'none'
+export default function ShowAction({
+  isOpen,
+  onClose,
+  selectedRowKeys,
+  setSelectedRowKeys,
+  fetchData,
+
+  fetchDataUser,
+  setActionUsers,
+  actionUsers
+
+
+}) {
   const { t } = useTranslation()
   const [showDropdown, setShowDropdown] = useState(false)
+  const [selectedMenuKey, setSelectedMenuKey] = useState('')
+  const handleDeleteGroups = async () => {
+    const token = localStorage.getItem('token_1h')
+    try {
+      const response = await DeleteResGroups(selectedRowKeys, token)
+
+      if (response.success) {
+        message.success('Xóa thành công các nhóm')
+        setSelectedRowKeys([])
+        fetchData()
+      } else {
+        message.error(`Xóa thất bại: ${response.message}`)
+      }
+    } catch (error) {
+      console.error('Lỗi khi xóa nhóm:', error)
+      message.error('Có lỗi xảy ra, vui lòng thử lại')
+    }
+  }
+  const handleDeleteUsers = async () => {
+    const token = localStorage.getItem('token_1h')
+    try {
+      const response = await DeleteResUsers(selectedRowKeys, token)
+
+      if (response.success) {
+        message.success('Xóa thành công tài khoản')
+        setSelectedRowKeys([])
+        fetchDataUser()
+        setActionUsers(false)
+      } else {
+        message.error(`Xóa thất bại: ${response.message}`)
+      }
+    } catch (error) {
+      console.error('Lỗi khi xóa tài khoản:', error)
+      message.error('Có lỗi xảy ra, vui lòng thử lại')
+    }
+  }
+  const handleMenuClick = (e) => {
+    setSelectedMenuKey(e.key)
+    setShowDropdown(false)
+    setActionUsers(true)
+
+    if (e.key === 'action_show_5' && e.key === 'action_21') {
+      Modal.confirm({
+        title: 'Xác nhận xóa',
+        content: 'Bạn có chắc chắn muốn xóa các nhóm đã chọn?',
+        okText: 'Xóa',
+        cancelText: 'Hủy',
+        okButtonProps: {
+          style: {
+            backgroundColor: '#ff4d4f',
+            borderColor: '#ff4d4f',
+            color: '#fff',
+          },
+        },
+        onOk: handleDeleteGroups,
+      })
+    }
+    
+    if (e.key === 'action_show_5' && actionUsers === true) {
+      Modal.confirm({
+        title: 'Xác nhận xóa',
+        content: 'Bạn có chắc chắn muốn xóa các nhóm đã chọn?',
+        okText: 'Xóa',
+        cancelText: 'Hủy',
+        okButtonProps: {
+          style: {
+            backgroundColor: '#ff4d4f',
+            borderColor: '#ff4d4f',
+            color: '#fff',
+          },
+        },
+        onOk: handleDeleteUsers,
+      })
+    }
+  }
 
   const menu = (
-    <Menu>
+    <Menu onClick={handleMenuClick}>
       <Menu.Item key="action_show_1">Nhập danh sách</Menu.Item>
       <Menu.Item key="action_show_2">Xuất danh sách</Menu.Item>
       <Menu.Item key="action_show_3">Lưu trữ</Menu.Item>
       <Menu.Item key="action_show_4">Bỏ lưu trữ</Menu.Item>
-      <Menu.Item key="action_show_5">Xóa</Menu.Item>
+      <Menu.Item key="action_show_5"> <span className="w-full text-red-700">Xóa</span></Menu.Item>
     </Menu>
   )
 

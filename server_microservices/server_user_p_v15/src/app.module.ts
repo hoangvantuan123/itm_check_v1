@@ -1,11 +1,12 @@
 import { Module, MiddlewareConsumer } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { ResGroupsModule } from './res_groups/res_groups.module';
+import { ResUsersModule } from './users/users.module';
 import * as cors from 'cors';
 
 
 @Module({
-  imports: [AuthModule, ResGroupsModule],
+  imports: [AuthModule, ResGroupsModule,ResUsersModule],
   providers: [],
 })
 

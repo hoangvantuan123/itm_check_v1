@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UserService } from './user.service';
-import { User } from './user.entity';
+import { Users } from './user.entity';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { RegistrationDto } from './registration.dto';
@@ -9,14 +9,14 @@ import { jwtConstants } from 'src/config/config';
 
 @Injectable()
 export class AppService {
-  constructor(private readonly userService: UserService, 
+  constructor(private readonly userService: UserService,
   ) { }
 
   private async hashPassword(password: string): Promise<string> {
     const saltRounds = 10;
     return bcrypt.hash(password, saltRounds);
   }
-  async registerUser(registrationData: RegistrationDto): Promise<User> {
+  async registerUser(registrationData: RegistrationDto): Promise<Users> {
     const { login, password, nameUser } = registrationData;
     const existingUser = await this.userService.findUserByEmail(login);
     if (existingUser) {
@@ -24,7 +24,7 @@ export class AppService {
     }
 
     const hashedPassword = await this.hashPassword(password);
-    const newUser = new User();
+    const newUser = new Users();
     newUser.login = login;
     newUser.password = hashedPassword;
     newUser.nameUser = nameUser;
@@ -33,7 +33,7 @@ export class AppService {
     return savedUser;
   }
 
-  async loginUser(loginData: LoginDto): Promise<{ success: boolean, data?: { user: Partial<User>, token: string }, error?: string }> {
+  async loginUser(loginData: LoginDto): Promise<{ success: boolean, data?: { user: Partial<Users>, token: string }, error?: string }> {
     const { login, password } = loginData;
 
     try {
@@ -59,9 +59,9 @@ export class AppService {
         id: user.id,
         login: user.login,
         partnerId: user.partnerId,
-      },jwtConstants.secret, { expiresIn: '2h' });
+      }, jwtConstants.secret);
 
-      const userResponse: Partial<User> = {
+      const userResponse: Partial<Users> = {
         login: user.login,
         partnerId: user.partnerId,
       };
@@ -120,11 +120,17 @@ export class AppService {
       }
 
       // Tạo token mới
+      /*   const newToken = jwt.sign({
+          id: user.id,
+          login: user.login,
+          partnerId: user.partnerId,
+        },jwtConstants.secret, { expiresIn: '2h' });
+   */
       const newToken = jwt.sign({
         id: user.id,
         login: user.login,
         partnerId: user.partnerId,
-      },jwtConstants.secret, { expiresIn: '2h' });
+      }, jwtConstants.secret);
 
       return { token: newToken };
 
@@ -132,4 +138,8 @@ export class AppService {
       throw new UnauthorizedException('Invalid token');
     }
   }
+
+
+
+  
 }

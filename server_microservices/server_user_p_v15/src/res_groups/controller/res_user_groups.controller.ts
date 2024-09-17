@@ -1,0 +1,75 @@
+import { Controller, Post,Get, HttpStatus,Query , Body, Req, Res, UnauthorizedException,Param } from '@nestjs/common';
+import { ResUserGroupsService } from '../services/res_user_groups.services';
+import { Request, Response } from 'express';
+import * as jwt from 'jsonwebtoken';
+import { jwtConstants } from 'src/config/config';
+
+@Controller('api/p')
+export class ResUserGroupsController {
+  constructor(private readonly resGroupsService: ResUserGroupsService) { }
+
+  @Post('res_user_groups')
+  async create(
+    @Req() req: Request,
+    @Body() body: { userIds: number[]; groupId: number },
+    @Res() res: Response
+  ): Promise<Response> {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      throw new UnauthorizedException('Authorization header missing');
+    }
+
+    const token = authHeader.split(' ')[1];
+    if (!token) {
+      throw new UnauthorizedException('The job version has expired. Please log in again to continue.');
+    }
+
+    try {
+      const decodedToken = jwt.verify(token, jwtConstants.secret);
+      const userId = (decodedToken as { id: number }).id;
+      if (!userId) {
+        throw new UnauthorizedException('Invalid token payload');
+      }
+
+      const { userIds, groupId } = body;
+      const result = await this.resGroupsService.create(userId, userIds, groupId);
+      return res.status(HttpStatus.OK).json(result);
+    } catch (error) {
+      throw new UnauthorizedException('Request sending failed, please try again!');
+    }
+  }
+
+
+
+
+  @Get('group/:groupId')
+  async findUsersByGroupId(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Param('groupId') groupId: number,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ): Promise<Response> {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      throw new UnauthorizedException('Authorization header missing');
+    }
+    const token = authHeader.split(' ')[1];
+    if (!token) {
+      throw new UnauthorizedException('The job version has expired. Please log in again to continue.');
+    }
+
+    try {
+      const decodedToken = jwt.verify(token, jwtConstants.secret);
+      const userId = (decodedToken as { id: number }).id;
+      if (!userId) {
+        throw new UnauthorizedException('Invalid token payload');
+      }
+
+      const result = await this.resGroupsService.findUsersByGroupId(groupId, userId, page, limit);
+      return res.status(HttpStatus.OK).json(result);
+    } catch (error) {
+      throw new UnauthorizedException('Request sending failed, please try again!');
+    }
+  }
+}

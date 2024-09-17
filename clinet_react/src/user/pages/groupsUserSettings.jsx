@@ -21,21 +21,19 @@ import { PlusOutlined, SearchOutlined, EyeOutlined } from '@ant-design/icons'
 import Search from '../components/search'
 import PhoneSettingAction from '../components/phone/usersSettingAction'
 import AddUserGroups from '../components/add/addUserGroups'
-import { GetAllResGroups } from '../../features/resGroups/getResGroups'
+import { GetAllResGroupsPageLimit } from '../../features/resGroups/getResGroupsPageLimit'
 import UserGroupsDrawer from '../components/userGroups/userGroups'
 import PhoneUserGroupsAction from '../components/phone/usersGroupsAction'
 import ImportAction from '../components/action/importAction'
 import ShowAction from '../components/action/showAction'
+import { PostResGroups } from '../../features/resGroups/postResGroups'
 const { Content } = Layout
 const { Option } = Select
 const { Text } = Typography
 const { Title } = Typography
 
 export default function GroupsUsersSettings() {
-  const [selectedGroup, setSelectedGroup] = useState('all')
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedUser, setSelectedUser] = useState(null)
-  const [userData, setUserData] = useState([])
   const [isMobile, setIsMobile] = useState(false)
   const [selectedGroupDetails, setSelectedGroupDetails] = useState(null)
   const [isModalOpenAddUserGroups, setIsModalOpenAddUserGroups] =
@@ -58,7 +56,7 @@ export default function GroupsUsersSettings() {
   const fetchData = async () => {
     setLoading(true)
     const token = localStorage.getItem('token_1h')
-    const response = await GetAllResGroups(page, limit, token)
+    const response = await GetAllResGroupsPageLimit(page, limit, token)
     if (response.success) {
       setData(response.data.data)
       setTotal(response.data.total)
@@ -132,13 +130,40 @@ export default function GroupsUsersSettings() {
     setIsModalVisible(false)
     setSelectedGroupDetails(null)
   }
+  const handleAddRow = async () => {
+    const name = 'Nhóm Mới'
+    const comment =
+      'Vui lòng cấu hình quyền truy cập cho nhóm mới theo yêu cầu.'
+    try {
+      const token = localStorage.getItem('token_1h')
+      if (!token) {
+        message.error(
+          'Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại để tiếp tục.',
+        )
+        return
+      }
 
+      const result = await PostResGroups(name, comment, token)
+
+      if (result.success) {
+        fetchData()
+      } else {
+        message.error(result.message || 'Lỗi khi tạo nhóm!')
+      }
+    } catch (error) {
+      message.error('Lỗi khi tạo nhóm!')
+    }
+  }
   const columns = [
     {
       title: 'Tên nhóm',
       dataIndex: 'name',
       key: 'name',
-      sorter: (a, b) => a.name.localeCompare(b.name),
+      sorter: (a, b) => {
+        const nameA = a.name || ''; 
+        const nameB = b.name || '';
+        return nameA.localeCompare(nameB);
+      },
       ...(visibleColumns.name ? {} : { render: () => null }),
     },
     {
@@ -175,6 +200,16 @@ export default function GroupsUsersSettings() {
         x: 'calc(100px + 50%)',
         y: 650,
       }}
+      footer={() => (
+        <span
+          type="primary"
+          onClick={handleAddRow}
+          className="mt-2 max-w-md cursor-pointer text-pretty text-base text-indigo-500"
+          size="large"
+        >
+          Thêm hàng mới
+        </span>
+      )}
     />
   )
 
@@ -280,8 +315,15 @@ export default function GroupsUsersSettings() {
                       <Option value="3">List</Option>
                     </Select>
                     <ImportAction />
-                    {selectedRowKeys != null && selectedRowKeys.length > 0  && (<><ShowAction/></>)}
-                    
+                    {selectedRowKeys != null && selectedRowKeys.length > 0 && (
+                      <>
+                        <ShowAction
+                          selectedRowKeys={selectedRowKeys}
+                          setSelectedRowKeys={setSelectedRowKeys}
+                          fetchData={fetchData}
+                        />
+                      </>
+                    )}
                   </div>
                 </span>
                 <button
@@ -338,7 +380,7 @@ export default function GroupsUsersSettings() {
               </Button>,
             ]}
           >
-            <UserGroupsDrawer group={selectedGroupDetails} />
+            <UserGroupsDrawer isModalVisible={isModalVisible} group={selectedGroupDetails} />
           </Drawer>
         </div>
       </div>

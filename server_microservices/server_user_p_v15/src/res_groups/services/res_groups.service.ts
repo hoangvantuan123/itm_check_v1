@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ResGroups } from './res_groups.entity';
+import { ResGroups } from '../entity/res_groups.entity';
 import { UserService } from 'src/auth/user.service';
 
 @Injectable()
@@ -27,7 +27,7 @@ export class ResGroupsService {
     };
   }
 
-  async findAll(userId: number, page: number = 1, limit: number = 10): Promise<{ data: ResGroups[], total: number, totalPages:number }> {
+  async findAllPageLimit(userId: number, page: number = 1, limit: number = 10): Promise<{ data: ResGroups[], total: number, totalPages:number }> {
     const user = await this.userService.findUserById(userId);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -36,6 +36,9 @@ export class ResGroupsService {
     const [data, total] = await this.resGroupsRepository.findAndCount({
       skip: (page - 1) * limit,
       take: limit,
+      order: {
+        create_date: 'DESC',
+      },
     });
     const totalPages = Math.ceil(total / limit);
 
@@ -43,6 +46,23 @@ export class ResGroupsService {
       data,
       total,
       totalPages
+    };
+  }
+  async findAll(userId: number): Promise<{ data: ResGroups[], total: number}> {
+    const user = await this.userService.findUserById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const [data, total] = await this.resGroupsRepository.findAndCount({
+      order: {
+        create_date: 'DESC',
+      },
+    });
+
+    return {
+      data,
+      total
     };
   }
 
@@ -57,8 +77,16 @@ export class ResGroupsService {
     return this.resGroupsRepository.findOneBy({ id });
   }
 
-  // Xóa
-  async remove(id: number): Promise<void> {
-    await this.resGroupsRepository.delete(id);
+  async remove(userId: number, ids: number[]): Promise<void> {
+    // Kiểm tra người dùng tồn tại hay không
+    const user = await this.userService.findUserById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+  
+    // Xóa tất cả các `id` trong một truy vấn duy nhất
+    await this.resGroupsRepository.delete(ids);
   }
+  
+  
 }

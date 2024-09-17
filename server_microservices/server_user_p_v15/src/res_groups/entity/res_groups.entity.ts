@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, Timestamp } from 'typeorm';
+import { ResUserGroups } from './res_user_groups.entity'; // Đảm bảo rằng bạn đã import đúng đường dẫn
 
 @Entity('res_groups')
 export class ResGroups {
@@ -31,4 +32,7 @@ export class ResGroups {
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   write_date: Date;
+
+  @OneToMany(() => ResUserGroups, userGroups => userGroups.group)
+  userGroups: ResUserGroups[];
 }

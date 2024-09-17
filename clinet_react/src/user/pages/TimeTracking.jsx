@@ -1,35 +1,47 @@
-import { Calendar, Table, Drawer, Button, List, Typography, Dropdown, Menu } from 'antd';
-import { useState } from 'react';
-import { CheckCircleOutlined, ExclamationCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import dayjs from 'dayjs';
-import 'dayjs/locale/vi';
-import timezone from 'dayjs/plugin/timezone';
-import utc from 'dayjs/plugin/utc';
-import { useTranslation } from 'react-i18next';
+import {
+  Calendar,
+  Table,
+  Drawer,
+  Button,
+  List,
+  Typography,
+  Dropdown,
+  Menu,
+} from 'antd'
+import { useState } from 'react'
+import {
+  CheckCircleOutlined,
+  ExclamationCircleOutlined,
+  CloseCircleOutlined,
+} from '@ant-design/icons'
+import dayjs from 'dayjs'
+import 'dayjs/locale/vi'
+import timezone from 'dayjs/plugin/timezone'
+import utc from 'dayjs/plugin/utc'
+import { useTranslation } from 'react-i18next'
 
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet'
 
-dayjs.extend(utc);
-dayjs.extend(timezone);
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 export default function TimeTracking() {
-  const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'));
-  const userNameLogin = userFromLocalStorage?.login || 'none';
-  const userId = userFromLocalStorage.id;
-  const { t } = useTranslation();
+  const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
+  const userNameLogin = userFromLocalStorage?.login || 'none'
+  const userId = userFromLocalStorage.id
+  const { t } = useTranslation()
 
   // Lấy ngày hiện tại theo múi giờ Việt Nam
-  const now = dayjs().tz('Asia/Ho_Chi_Minh');
+  const now = dayjs().tz('Asia/Ho_Chi_Minh')
 
   // Khai báo state
-  const [value, setValue] = useState(() => now);
-  const [selectedValue, setSelectedValue] = useState(() => now);
-  const [drawerVisible, setDrawerVisible] = useState(false);
-  const [checkInOutHistory, setCheckInOutHistory] = useState([]); // Dữ liệu chấm công cho ngày đã chọn
-  const [miniCalendarVisible, setMiniCalendarVisible] = useState(false);
-  const [viewMode, setViewMode] = useState('calendar'); // Thay đổi chế độ hiển thị
+  const [value, setValue] = useState(() => now)
+  const [selectedValue, setSelectedValue] = useState(() => now)
+  const [drawerVisible, setDrawerVisible] = useState(false)
+  const [checkInOutHistory, setCheckInOutHistory] = useState([]) // Dữ liệu chấm công cho ngày đã chọn
+  const [miniCalendarVisible, setMiniCalendarVisible] = useState(false)
+  const [viewMode, setViewMode] = useState('calendar') // Thay đổi chế độ hiển thị
 
-  // Dữ liệu mẫu cho chấm công (check-in, check-out)
   const sampleData = [
     {
       date: '2024-09-09',
@@ -66,46 +78,54 @@ export default function TimeTracking() {
         { key: 2, timeIn: '13:00', timeOut: '17:00', status: 'On Time' },
       ],
     },
-  ];
+  ]
 
   // Hàm xử lý khi người dùng chọn ngày trên lịch
   const onSelect = (newValue) => {
-    const selectedDate = newValue.tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD');
-    setValue(newValue);
-    setSelectedValue(newValue);
+    const selectedDate = newValue.tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD')
+    setValue(newValue)
+    setSelectedValue(newValue)
     const data =
-      sampleData.find((item) => item.date === selectedDate)?.records || [];
-    setCheckInOutHistory(data);
-    setDrawerVisible(true); // Mở Drawer khi chọn ngày
-  };
+      sampleData.find((item) => item.date === selectedDate)?.records || []
+    setCheckInOutHistory(data)
+    setDrawerVisible(true) // Mở Drawer khi chọn ngày
+  }
 
   // Hàm tùy chỉnh ô lịch để hiển thị icon màu sắc dưới số ngày
   const dateCellRender = (date) => {
-    const selectedDate = date.tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD');
-    const record = sampleData.find((item) => item.date === selectedDate);
+    const selectedDate = date.tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD')
+    const record = sampleData.find((item) => item.date === selectedDate)
 
-    if (!record) return <div>{date.date()}</div>; // Hiển thị ngày nếu không có dữ liệu
+    if (!record) return <div>{date.date()}</div> // Hiển thị ngày nếu không có dữ liệu
 
     // Kiểm tra trạng thái của ngày để hiển thị màu và icon phù hợp
     const icons = record.records.map((r, index) => {
-      let icon = null;
+      let icon = null
       if (r.status === 'Absent') {
-        icon = <CloseCircleOutlined style={{ color: 'red', fontSize: '16px' }} />;
+        icon = (
+          <CloseCircleOutlined style={{ color: 'red', fontSize: '16px' }} />
+        )
       } else if (r.status === 'Late') {
-        icon = <ExclamationCircleOutlined style={{ color: 'yellow', fontSize: '16px' }} />;
+        icon = (
+          <ExclamationCircleOutlined
+            style={{ color: 'yellow', fontSize: '16px' }}
+          />
+        )
       } else {
-        icon = <CheckCircleOutlined style={{ color: 'green', fontSize: '16px' }} />;
+        icon = (
+          <CheckCircleOutlined style={{ color: 'green', fontSize: '16px' }} />
+        )
       }
-      return <div key={index}>{icon}</div>;
-    });
+      return <div key={index}>{icon}</div>
+    })
 
     return (
       <div className="flex flex-col items-center">
         <div>{date.date()}</div>
         {icons}
       </div>
-    );
-  };
+    )
+  }
 
   // Cột cho bảng chấm công
   const columns = [
@@ -129,47 +149,41 @@ export default function TimeTracking() {
       dataIndex: 'status',
       key: 'status',
     },
-  ];
+  ]
 
   // Dữ liệu bảng lương
-  const salaryData = sampleData.flatMap(day =>
-    day.records.map(record => ({
+  const salaryData = sampleData.flatMap((day) =>
+    day.records.map((record) => ({
       date: day.date,
       timeIn: record.timeIn,
       timeOut: record.timeOut,
       status: record.status,
-    }))
-  );
+    })),
+  )
 
   // Dữ liệu danh sách
-  const listData = sampleData.flatMap(day =>
-    day.records.map(record => ({
+  const listData = sampleData.flatMap((day) =>
+    day.records.map((record) => ({
       date: day.date,
       timeIn: record.timeIn,
       timeOut: record.timeOut,
       status: record.status,
-    }))
-  );
+    })),
+  )
 
   // Xử lý khi người dùng chọn một chế độ hiển thị từ menu
   const handleMenuClick = (e) => {
-    setViewMode(e.key);
-  };
+    setViewMode(e.key)
+  }
 
   // Tạo menu cho Dropdown
   const menu = (
     <Menu onClick={handleMenuClick}>
-      <Menu.Item key="calendar">
-        {t('View Calendar')}
-      </Menu.Item>
-      <Menu.Item key="table">
-        {t('View Table')}
-      </Menu.Item>
-      <Menu.Item key="list">
-        {t('View List')}
-      </Menu.Item>
+      <Menu.Item key="calendar">{t('View Calendar')}</Menu.Item>
+      <Menu.Item key="table">{t('View Table')}</Menu.Item>
+      <Menu.Item key="list">{t('View List')}</Menu.Item>
     </Menu>
-  );
+  )
 
   return (
     <div className="w-full h-screen bg-slate-50">
@@ -183,11 +197,14 @@ export default function TimeTracking() {
               {viewMode === 'calendar'
                 ? t('View Calendar')
                 : viewMode === 'table'
-                ? t('View Table')
-                : t('View List')}
+                  ? t('View Table')
+                  : t('View List')}
             </Button>
           </Dropdown>
-          <button onClick={() => setMiniCalendarVisible(!miniCalendarVisible)} className="mb-2">
+          <button
+            onClick={() => setMiniCalendarVisible(!miniCalendarVisible)}
+            className="mb-2"
+          >
             Icon
           </button>
         </div>
@@ -228,14 +245,16 @@ export default function TimeTracking() {
             <div className="flex flex-col">
               <List
                 dataSource={listData}
-                renderItem={item => (
+                renderItem={(item) => (
                   <List.Item>
-                    <Typography.Text>{item.date} - {item.timeIn} - {item.timeOut} - {item.status}</Typography.Text>
+                    <Typography.Text>
+                      {item.date} - {item.timeIn} - {item.timeOut} -{' '}
+                      {item.status}
+                    </Typography.Text>
                   </List.Item>
                 )}
                 bordered
               />
-           
             </div>
           )}
         </div>
@@ -255,5 +274,5 @@ export default function TimeTracking() {
         </Drawer>
       </div>
     </div>
-  );
+  )
 }

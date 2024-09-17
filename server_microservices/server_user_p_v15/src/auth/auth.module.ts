@@ -4,12 +4,12 @@ import { AppController } from './auth.controller';
 import { AppService } from './auth.service';
 
 import { UserService } from './user.service';
-import { User } from './user.entity';
+import { Users } from './user.entity';
 import { DatabaseModule } from 'src/database.module';
 
 
 @Module({
-    imports: [DatabaseModule, TypeOrmModule.forFeature([User])],
+    imports: [DatabaseModule, TypeOrmModule.forFeature([Users])],
     controllers: [AppController],
     providers: [AppService, UserService ],
     exports: [UserService, AppService], 
