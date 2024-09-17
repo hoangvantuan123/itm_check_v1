@@ -143,7 +143,6 @@ export default function ShowListUser({ isOpen, onClose, group , fetchDataUserGro
     setPage(pagination.current)
     setLimit(pagination.pageSize)
   }
-
   const handleFinish = async () => {
     try {
       const groupId =  group?.id
