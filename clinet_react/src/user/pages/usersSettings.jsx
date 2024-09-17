@@ -55,8 +55,10 @@ export default function UsersSettings() {
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
   const [total, setTotal] = useState(0)
-  const [actionUsers, setActionUsers] = useState(false)
-
+  const [actionUsers, setActionUsers] = useState(null)
+  const handleOnClickAction = () =>{
+    setActionUsers("actionUsers");
+  }
   const openModal = () => {
     setIsModalOpen(true)
   }
@@ -83,38 +85,36 @@ export default function UsersSettings() {
     setSelectedRowKeys(newSelectedRowKeys)
   }
 
-
   const fetchData = async () => {
-    setLoading(true);
-    const token = localStorage.getItem('token_1h');
+    setLoading(true)
+    const token = localStorage.getItem('token_1h')
 
     try {
       // Gọi các API đồng thời
       const [response, responseAllResGroups] = await Promise.all([
         GetAllResUsers(page, limit, token),
         GetAllResGroups(token),
-      ]);
+      ])
 
       if (response.success) {
-        setUserData(response.data.data);
-        setGroupsData(responseAllResGroups.data.data);
-        setTotal(response.data.total);
-        setTotalPages(response.data.totalPages);
-        setError(null);
+        setUserData(response.data.data)
+        setGroupsData(responseAllResGroups.data.data)
+        setTotal(response.data.total)
+        setTotalPages(response.data.totalPages)
+        setError(null)
       } else {
-        setError(response.message);
-        setUserData([]);
-        setGroupsData([]);
+        setError(response.message)
+        setUserData([])
+        setGroupsData([])
       }
     } catch (error) {
-      setError(error.message || 'Đã xảy ra lỗi');
-      setUserData([]);
-      setGroupsData([]);
+      setError(error.message || 'Đã xảy ra lỗi')
+      setUserData([])
+      setGroupsData([])
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
-
+  }
 
   const handleTableChange = (pagination) => {
     setPage(pagination.current)
@@ -161,18 +161,20 @@ export default function UsersSettings() {
     ],
   }
   const generateRandomString = (length) => {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
-    const charactersLength = characters.length;
+    const characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    let result = ''
+    const charactersLength = characters.length
     for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      result += characters.charAt(Math.floor(Math.random() * charactersLength))
     }
-    return result;
-  };
+    return result
+  }
   const handleAddRow = async () => {
-    const login = `User_${generateRandomString(6)}`;
-    const password = `123456789`;
-   
+    const login = `User_${generateRandomString(6)}`
+    const password = `123456789`
+    const language = `vi`
+
     const token = localStorage.getItem('token_1h')
     if (!token) {
       message.error(
@@ -180,9 +182,14 @@ export default function UsersSettings() {
       )
       return
     }
-    const result = await registerUser({login:login, password:password, nameUser:login, token})
+    const result = await registerUser({
+      login: login,
+      password: password,
+      nameUser: login,
+      language: language,
+      token,
+    })
     fetchData()
-    
   }
   const renderTable = () => {
     const columns = [
@@ -191,9 +198,9 @@ export default function UsersSettings() {
         dataIndex: 'name',
         key: 'name',
         sorter: (a, b) => {
-          const nameA = a.name || ''; 
-          const nameB = b.name || '';
-          return nameA.localeCompare(nameB);
+          const nameA = a.name || ''
+          const nameB = b.name || ''
+          return nameA.localeCompare(nameB)
         },
         ...(visibleColumns.name ? {} : { render: () => null }),
       },
@@ -202,9 +209,9 @@ export default function UsersSettings() {
         dataIndex: 'login',
         key: 'login',
         sorter: (a, b) => {
-          const loginA = a.login || '';
-          const loginB = b.login || '';
-          return loginA.localeCompare(loginB);
+          const loginA = a.login || ''
+          const loginB = b.login || ''
+          return loginA.localeCompare(loginB)
         },
         ...(visibleColumns.login ? {} : { render: () => null }),
       },
@@ -213,10 +220,10 @@ export default function UsersSettings() {
         dataIndex: 'language',
         key: 'language',
         sorter: (a, b) => {
-          const languageA = a.language || '';
-          const languageB = b.language || '';
-      
-          return languageA.localeCompare(languageB);
+          const languageA = a.language || ''
+          const languageB = b.language || ''
+
+          return languageA.localeCompare(languageB)
         },
         ...(visibleColumns.language ? {} : { render: () => null }),
       },
@@ -226,9 +233,9 @@ export default function UsersSettings() {
         key: 'active',
         sorter: (a, b) => {
           if (a.active === b.active) {
-            return 0;
+            return 0
           }
-          return a.active ? -1 : 1;
+          return a.active ? -1 : 1
         },
         render: (active) => {
           let color
@@ -249,9 +256,9 @@ export default function UsersSettings() {
             <Tag
               color={color}
               key={active}
-              className="  p-1 font-bold rounded-lg px-6"
+              className="p-1 font-bold rounded-lg px-6"
             >
-              {active}
+              {displayText} {/* Hiển thị văn bản thay vì {active} */}
             </Tag>
           )
         },
@@ -273,6 +280,7 @@ export default function UsersSettings() {
               showUserForm(record)
             },
           })}
+          loading={loading}
           footer={() => (
             <span
               onClick={handleAddRow}
@@ -293,11 +301,11 @@ export default function UsersSettings() {
               handleTableChange({ current: page, pageSize }),
           }}
           onChange={(pagination) => handleTableChange(pagination)}
-      loading={loading}
-      scroll={{
-        x: 'calc(100px + 50%)',
-        y: 650,
-      }}
+          loading={loading}
+          scroll={{
+            x: 'calc(100px + 50%)',
+            y: 650,
+          }}
         />
       </>
     )
@@ -338,8 +346,8 @@ export default function UsersSettings() {
   }
 
   const handleShowActionClick = () => {
-    setActionUsers(true);
-  };
+    setActionUsers(true)
+  }
   return (
     <div className="w-full h-screen bg-slate-50">
       <Helmet>
@@ -387,6 +395,7 @@ export default function UsersSettings() {
               <AddUser
                 isOpen={isModalOpenAddUser}
                 onClose={closeModalAddUser}
+                fetchData={fetchData}
               />
             </div>
             {!isMobile && (
@@ -406,8 +415,9 @@ export default function UsersSettings() {
                     {selectedRowKeys != null && selectedRowKeys.length > 0 && (
                       <>
                         <ShowAction
-                          setActionUsers={setActionUsers}
+                          handleOnClickAction={handleOnClickAction}
                           actionUsers={actionUsers}
+                          setActionUsers={setActionUsers}
                           setSelectedRowKeys={setSelectedRowKeys}
                           selectedRowKeys={selectedRowKeys}
                           fetchDataUser={fetchData}

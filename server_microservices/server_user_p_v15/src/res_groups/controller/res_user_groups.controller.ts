@@ -1,4 +1,4 @@
-import { Controller, Post,Get, HttpStatus,Query , Body, Req, Res, UnauthorizedException,Param } from '@nestjs/common';
+import { Controller, Post,Get, HttpStatus,Query , Body, Req, Res, UnauthorizedException,Param ,Delete} from '@nestjs/common';
 import { ResUserGroupsService } from '../services/res_user_groups.services';
 import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
@@ -70,6 +70,35 @@ export class ResUserGroupsController {
       return res.status(HttpStatus.OK).json(result);
     } catch (error) {
       throw new UnauthorizedException('Request sending failed, please try again!');
+    }
+  }
+
+
+  @Delete('res_user_groups')
+  async remove(@Body('ids') ids: number[], @Req() req: Request): Promise<void> {
+    const authHeader = req.headers.authorization;
+  
+    if (!authHeader) {
+      throw new UnauthorizedException('Authorization header missing');
+    }
+  
+    const token = authHeader.split(' ')[1];
+    if (!token) {
+      throw new UnauthorizedException('The job version has expired. Please log in again to continue.');
+    }
+  
+    try {
+      const decodedToken = jwt.verify(token, jwtConstants.secret);
+      const userId = (decodedToken as { id: number }).id;
+      if (!userId) {
+        throw new UnauthorizedException('Invalid token payload');
+      }
+  
+      
+      await this.resGroupsService.remove(userId, ids);
+       
+    } catch (error) {
+      throw new UnauthorizedException('Request failed, please try again!');
     }
   }
 }

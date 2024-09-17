@@ -54,13 +54,11 @@ export class ResUserGroupsService {
     page: number = 1,
     limit: number = 10
   ): Promise<{ data: any[], total: number, totalPages: number }> {
-    // Kiểm tra xem người dùng có tồn tại không
     const user = await this.userService.findUserById(userId);
     if (!user) {
       throw new NotFoundException('User not found');
     }
   
-    // Tính toán số bản ghi cần bỏ qua và số bản ghi cần lấy
     const skip = (page - 1) * limit;
     const take = limit;
   
@@ -99,5 +97,13 @@ export class ResUserGroupsService {
   }
   
 
+  async remove(userId: number, ids: number[]): Promise<void> {
+    const user = await this.userService.findUserById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+  
+    await this.resUserGroupsRepository.delete(ids);
+  }
 
 }

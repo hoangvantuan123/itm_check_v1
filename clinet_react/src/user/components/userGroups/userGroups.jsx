@@ -17,17 +17,19 @@ import {
   message,
   Table,
   Popconfirm,
+  Tag,
 } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
+
 import { PostResGroups } from '../../../features/resGroups/postResGroups'
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons'
 import { PostResUserGroups } from '../../../features/resGroups/postResUserGroups'
 import ShowListUser from './modalListUser'
 import { GetAllResUserGroupsPageLimitID } from '../../../features/resGroups/getResUserGroupsID'
+import { DeleteResUserGroups } from '../../../features/resGroups/deleteResUserGroups'
 const { Title } = Typography
 const { Option } = Select
 const { TextArea } = Input
-
 
 export default function UserGroupsDrawer({ group, isModalVisible }) {
   const { t } = useTranslation()
@@ -44,39 +46,43 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
   const [limit, setLimit] = useState(10)
   const [total, setTotal] = useState(0)
   const [count, setCount] = useState(3)
-
-
+  const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const fetchData = async () => {
-    setLoading(true);
+    setLoading(true)
 
     try {
       // Gọi các API đồng thời
       const [response, responseAllResGroups] = await Promise.all([
         GetAllResUserGroupsPageLimitID(group?.id, page, limit),
-      ]);
+      ])
 
       if (response.success) {
-        setDataSource(response.data.data);
-        setTotal(response.data.total);
-        setTotalPages(response.data.totalPages);
-        setError(null);
+        setDataSource(response.data.data)
+        setTotal(response.data.total)
+        setTotalPages(response.data.totalPages)
+        setError(null)
       } else {
-        setError(response.message);
-        setDataSource([]);
+        setError(response.message)
+        setDataSource([])
       }
     } catch (error) {
-      setError(error.message || 'Đã xảy ra lỗi');
-      setDataSource([]);
+      setError(error.message || 'Đã xảy ra lỗi')
+      setDataSource([])
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
   useEffect(() => {
     if (isModalVisible === true) {
       fetchData()
     }
-  }, [page, limit, group?.id])
-
+    if (group) {
+      form.setFieldsValue({
+        name: group.name || '',
+        comment: group.comment || '',
+      })
+    }
+  }, [page, limit, group?.id, group, form])
 
   const handleAddRow = () => {
     setIsModalOpen(true)
@@ -85,51 +91,96 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
   const handleDelete = (key) => {
     setDataSource(dataSource.filter((item) => item.key !== key))
   }
+  const onSelectChange = (newSelectedRowKeys) => {
+    setSelectedRowKeys(newSelectedRowKeys)
+  }
+  const [visibleColumns, setVisibleColumns] = useState({
+    name: true,
+    login: true,
+    language: true,
+    active: true,
+  })
 
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+    selections: [
+      Table.SELECTION_ALL,
+      Table.SELECTION_INVERT,
+      Table.SELECTION_NONE,
+    ],
+  }
   const columns = [
     {
       title: t('Tên'),
       dataIndex: 'name',
       key: 'name',
       sorter: (a, b) => {
-        const nameA = a.name || ''; 
-        const nameB = b.name || '';
-        return nameA.localeCompare(nameB);
+        const nameA = a.name || ''
+        const nameB = b.name || ''
+        return nameA.localeCompare(nameB)
       },
+      ...(visibleColumns.name ? {} : { render: () => null }),
     },
     {
       title: t('Đăng nhập'),
       dataIndex: 'login',
       key: 'login',
       sorter: (a, b) => {
-        const loginA = a.login || ''; 
-        const loginB = b.login || '';
-        return loginA.localeCompare(loginB);
+        const loginA = a.login || ''
+        const loginB = b.login || ''
+        return loginA.localeCompare(loginB)
       },
+      ...(visibleColumns.login ? {} : { render: () => null }),
     },
     {
       title: t('Ngôn ngữ'),
       dataIndex: 'language',
       key: 'language',
-      sorter: (a, b) => a.language.localeCompare(b.language),
       sorter: (a, b) => {
-        const languageA = a.language || ''; 
-        const languageB = b.language || '';
-        return languageA.localeCompare(languageB);
+        const languageA = a.language || ''
+        const languageB = b.language || ''
+        return languageA.localeCompare(languageB)
       },
+      ...(visibleColumns.language ? {} : { render: () => null }),
     },
     {
-      title: t('Trạng thái'),
+      title: 'Trạng thái',
       dataIndex: 'active',
       key: 'active',
       sorter: (a, b) => {
         if (a.active === b.active) {
-          return 0;
+          return 0
         }
-        return a.active ? -1 : 1;
+        return a.active ? -1 : 1
       },
-    }
-  
+      render: (active) => {
+        let color
+        let displayText
+
+        if (active === true) {
+          color = 'success'
+          displayText = 'Đã kết nối'
+        } else if (active === false) {
+          color = 'error'
+          displayText = 'Chưa kết nối'
+        } else {
+          color = 'default'
+          displayText = 'Chưa xác định'
+        }
+
+        return (
+          <Tag
+            color={color}
+            key={active}
+            className="p-1 font-bold rounded-lg px-6"
+          >
+            {displayText} {/* Hiển thị văn bản thay vì {active} */}
+          </Tag>
+        )
+      },
+      ...(visibleColumns.active ? {} : { render: () => null }),
+    },
   ]
 
   const handleFinish = async (values) => {
@@ -158,7 +209,28 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
   const closeModal = () => {
     setIsModalOpen(false)
   }
+  const handleTableChange = (pagination) => {
+    setPage(pagination.current)
+    setLimit(pagination.pageSize)
+  }
+  const handleDeleteGroupsUser = async () => {
+    try {
+      const response = await DeleteResUserGroups(selectedRowKeys)
 
+      if (response.success) {
+        message.success('Xóa thành công')
+        setSelectedRowKeys([])
+        fetchData()
+      } else {
+        message.error(
+          `Xóa thất bại: Yêu cầu không thành công, vui lòng thử lại`,
+        )
+      }
+    } catch (error) {
+      console.error('Lỗi khi xóa:', error)
+      message.error('Có lỗi xảy ra, vui lòng thử lại')
+    }
+  }
   return (
     <div>
       <Form
@@ -183,23 +255,14 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
             rules={[{ required: true, message: t('Vui lòng nhập tên nhóm') }]}
             style={{ textAlign: 'left' }}
           >
-            <Input
-              size="large"
-              placeholder={t('Tên nhóm')}
-              defaultValue={group?.name}
-            />
+            <Input size="large" placeholder={t('Tên nhóm')} />
           </Form.Item>
           <Form.Item
             label={t('Ghi chú')}
             name="comment"
             style={{ textAlign: 'left' }}
           >
-            <TextArea
-              rows={4}
-              size="large"
-              placeholder={t('Ghi chú')}
-              defaultValue={group?.comment}
-            />
+            <TextArea rows={4} size="large" placeholder={t('Ghi chú')} />
           </Form.Item>
         </Card>
 
@@ -230,24 +293,50 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
             </summary>
 
             <div>
+              {selectedRowKeys != null && selectedRowKeys.length > 0 && (
+                <>
+                  <span
+                    className="inline-flex gap-2 mt-3 rounded bg-red-100 hover:bg-red-200 p-1 text-red-600 cursor-pointer px-4"
+                    onClick={() => {
+                      handleDeleteGroupsUser()
+                    }}
+                  >
+                    <DeleteOutlined className=' text-lg'/>
+                    Xoá
+                  </span>
+                </>
+              )}
               <Table
-                className="mt-3"
+                rowSelection={rowSelection}
+                className="mt-3 cursor-pointer"
                 dataSource={dataSource}
                 columns={columns}
-                rowSelection={{ type: 'checkbox' }}
+                rowKey="id"
                 pagination={{ pageSize: 10 }}
                 bordered
+                loading={loading}
                 footer={() => (
                   <span
                     type="primary"
                     icon={<PlusOutlined />}
                     onClick={handleAddRow}
-                    className="mt-2 max-w-md cursor-pointer text-pretty text-base text-indigo-500"
+                    className="mt-2 max-w-md cursor-pointer text-pretty text-base text-indigo-500 "
                     size="large"
                   >
                     Thêm hàng mới
                   </span>
                 )}
+                scroll={{ x: 'max-content', y: 400 }} 
+                pagination={{
+                  current: page,
+                  pageSize: limit,
+                  total: total,
+                  showSizeChanger: true,
+                  showTotal: (total) => `Tổng ${total} mục`,
+                  onChange: (page, pageSize) =>
+                    handleTableChange({ current: page, pageSize }),
+                }}
+                onChange={(pagination) => handleTableChange(pagination)}
               />
             </div>
           </details>
@@ -317,7 +406,12 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
           </details>
         </div>
       </Form>
-      <ShowListUser isOpen={isModalOpen} onClose={closeModal} group={group} fetchDataUserGroups={fetchData} />
+      <ShowListUser
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        group={group}
+        fetchDataUserGroups={fetchData}
+      />
     </div>
   )
 }

@@ -1,8 +1,10 @@
 import axios from 'axios'
 import { HOST_API_SERVER_P } from '../../services'
+import { accessToken } from '../../services/tokenService'
 
 export const DeleteResGroups = async (ids, token) => {
   try {
+    const token = accessToken()
     const response = await axios.delete(`${HOST_API_SERVER_P}/res_groups`, {
       // Truyền mảng ids qua data
       data: { ids },

@@ -17,7 +17,7 @@ export class AppService {
     return bcrypt.hash(password, saltRounds);
   }
   async registerUser(registrationData: RegistrationDto): Promise<Users> {
-    const { login, password, nameUser } = registrationData;
+    const { login, password, nameUser, language } = registrationData;
     const existingUser = await this.userService.findUserByEmail(login);
     if (existingUser) {
       throw new Error('User with this login already exists');
@@ -28,6 +28,7 @@ export class AppService {
     newUser.login = login;
     newUser.password = hashedPassword;
     newUser.nameUser = nameUser;
+    newUser.language = language;
 
     const savedUser = await this.userService.createUser(newUser);
     return savedUser;

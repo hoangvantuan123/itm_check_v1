@@ -2,9 +2,13 @@ import axios from 'axios'
 import { HOST_API_SERVER_P } from '../../services'
 import { accessToken } from '../../services/tokenService'
 
-export const GetAllResUserGroupsPageLimitID = async (groupId, page = 1, limit = 10) => {
+export const GetAllResUserGroupsPageLimitID = async (
+  groupId,
+  page = 1,
+  limit = 10,
+) => {
   try {
-    const token = accessToken();
+    const token = accessToken()
     const response = await axios.get(`${HOST_API_SERVER_P}/group/${groupId}`, {
       params: {
         page,

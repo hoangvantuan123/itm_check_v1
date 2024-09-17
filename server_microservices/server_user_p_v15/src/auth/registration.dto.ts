@@ -13,5 +13,9 @@ export class RegistrationDto {
 
   @IsString()
   nameUser: string;
+  @IsString()
+  language: string;
+
+
 
 }

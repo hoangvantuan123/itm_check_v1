@@ -13,8 +13,9 @@ export class Users {
   @Column({ nullable: true })
   partnerId: number;
 
-  @Column({ default: true })
+  @Column({ default: false })
   active: boolean;
+  
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createDate: Date;
@@ -66,6 +67,8 @@ export class Users {
   
   @Column({ nullable: true })
   nameUser: string;  
+
+  
   @Column({ nullable: true })
   language: string;  
 

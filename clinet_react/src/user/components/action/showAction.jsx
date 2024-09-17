@@ -33,27 +33,28 @@ export default function ShowAction({
   selectedRowKeys,
   setSelectedRowKeys,
   fetchData,
-
   fetchDataUser,
-  setActionUsers,
-  actionUsers
-
-
+  handleOnClickAction,
+  actionUsers,
+  setActionUsers
 }) {
+  console.log(actionUsers)
   const { t } = useTranslation()
   const [showDropdown, setShowDropdown] = useState(false)
   const [selectedMenuKey, setSelectedMenuKey] = useState('')
   const handleDeleteGroups = async () => {
-    const token = localStorage.getItem('token_1h')
     try {
-      const response = await DeleteResGroups(selectedRowKeys, token)
+      const response = await DeleteResGroups(selectedRowKeys)
 
       if (response.success) {
         message.success('Xóa thành công các nhóm')
         setSelectedRowKeys([])
+        setActionUsers('')
         fetchData()
       } else {
-        message.error(`Xóa thất bại: ${response.message}`)
+        message.error(
+          `Xóa thất bại: Yêu cầu không thành công, vui lòng thử lại`,
+        )
       }
     } catch (error) {
       console.error('Lỗi khi xóa nhóm:', error)
@@ -69,62 +70,64 @@ export default function ShowAction({
         message.success('Xóa thành công tài khoản')
         setSelectedRowKeys([])
         fetchDataUser()
-        setActionUsers(false)
+        setActionUsers('')
       } else {
-        message.error(`Xóa thất bại: ${response.message}`)
+        message.error(
+          `Xóa thất bại: Yêu cầu không thành công, vui lòng thử lại`,
+        )
       }
     } catch (error) {
       console.error('Lỗi khi xóa tài khoản:', error)
       message.error('Có lỗi xảy ra, vui lòng thử lại')
     }
   }
+
+
   const handleMenuClick = (e) => {
-    setSelectedMenuKey(e.key)
-    setShowDropdown(false)
-    setActionUsers(true)
-
-    if (e.key === 'action_show_5' && e.key === 'action_21') {
-      Modal.confirm({
-        title: 'Xác nhận xóa',
-        content: 'Bạn có chắc chắn muốn xóa các nhóm đã chọn?',
-        okText: 'Xóa',
-        cancelText: 'Hủy',
-        okButtonProps: {
-          style: {
-            backgroundColor: '#ff4d4f',
-            borderColor: '#ff4d4f',
-            color: '#fff',
-          },
+    setSelectedMenuKey(e.key);
+    setShowDropdown(false);
+  
+    // Cấu hình cho Modal
+    const modalConfig = {
+      title: 'Xác nhận xóa',
+      content: 'Bạn có chắc chắn muốn xóa các nhóm đã chọn?',
+      okText: 'Xóa',
+      cancelText: 'Hủy',
+      okButtonProps: {
+        style: {
+          backgroundColor: '#ff4d4f',
+          borderColor: '#ff4d4f',
+          color: '#fff',
         },
-        onOk: handleDeleteGroups,
-      })
+      },
+    };
+  
+    // Xử lý hành động dựa trên key và actionUsers
+    if (e.key === 'action_show_5') {
+      if (actionUsers === "actionGroups") {
+        Modal.confirm({
+          ...modalConfig,
+          onOk: handleDeleteGroups,
+        });
+      } else if (actionUsers === "actionUsers") {
+        Modal.confirm({
+          ...modalConfig,
+          onOk: handleDeleteUsers,
+        });
+      }
     }
-    
-    if (e.key === 'action_show_5' && actionUsers === true) {
-      Modal.confirm({
-        title: 'Xác nhận xóa',
-        content: 'Bạn có chắc chắn muốn xóa các nhóm đã chọn?',
-        okText: 'Xóa',
-        cancelText: 'Hủy',
-        okButtonProps: {
-          style: {
-            backgroundColor: '#ff4d4f',
-            borderColor: '#ff4d4f',
-            color: '#fff',
-          },
-        },
-        onOk: handleDeleteUsers,
-      })
-    }
-  }
-
+  };
+  
   const menu = (
     <Menu onClick={handleMenuClick}>
       <Menu.Item key="action_show_1">Nhập danh sách</Menu.Item>
       <Menu.Item key="action_show_2">Xuất danh sách</Menu.Item>
       <Menu.Item key="action_show_3">Lưu trữ</Menu.Item>
       <Menu.Item key="action_show_4">Bỏ lưu trữ</Menu.Item>
-      <Menu.Item key="action_show_5"> <span className="w-full text-red-700">Xóa</span></Menu.Item>
+      <Menu.Item key="action_show_5">
+        {' '}
+        <span className="w-full text-red-700">Xóa</span>
+      </Menu.Item>
     </Menu>
   )
 
@@ -133,7 +136,10 @@ export default function ShowAction({
       overlay={menu}
       trigger={['click']}
       visible={showDropdown}
-      onClick={() => setShowDropdown(!showDropdown)}
+      onClick={() => {
+        setShowDropdown(!showDropdown); 
+        handleOnClickAction(); 
+      }}
     >
       <button className="border-[1.3px] border-[#d9d9d9] rounded-lg p-[0.6rem] w-auto flex items-center space-x-2 bg-white hover:bg-gray-100">
         <SettingIcon />

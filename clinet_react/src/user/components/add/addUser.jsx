@@ -22,7 +22,7 @@ import { registerUser } from '../../../features/auth/API/registerAPI'
 const { Title } = Typography
 const { Option } = Select
 
-export default function AddUser({ isOpen, onClose }) {
+export default function AddUser({ isOpen, onClose, fetchData }) {
   const { t } = useTranslation()
   const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
   const userNameLogin = userFromLocalStorage?.login || 'none'
@@ -37,8 +37,10 @@ export default function AddUser({ isOpen, onClose }) {
         login: username,
         password: password,
         nameUser: fullname,
+        language: 'vi',
       })
       message.success(t('Đăng ký tài khoản thành công'))
+      fetchData()
       onClose()
     } catch (error) {
       message.error(t('Lỗi khi đăng ký tài khoản!'))

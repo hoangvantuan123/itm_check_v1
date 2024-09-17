@@ -1,14 +1,17 @@
-import { useState,useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Input, Modal, Typography, Button, Table,Tag,message } from 'antd'
+import { Input, Modal, Typography, Button, Table, Tag, message } from 'antd'
 import { GetAllResUsers } from '../../../features/resUsers/getResUsers'
 import { PostResUserGroups } from '../../../features/resGroups/postResUserGroups'
 
 const { Title } = Typography
 
-
-
-export default function ShowListUser({ isOpen, onClose, group , fetchDataUserGroups }) {
+export default function ShowListUser({
+  isOpen,
+  onClose,
+  group,
+  fetchDataUserGroups,
+}) {
   const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
   const userNameLogin = userFromLocalStorage?.login || 'none'
   const { t } = useTranslation()
@@ -20,35 +23,36 @@ export default function ShowListUser({ isOpen, onClose, group , fetchDataUserGro
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
   const [total, setTotal] = useState(0)
+ 
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const handleSearch = (e) => {
     setSearchValue(e.target.value)
   }
   const fetchData = async () => {
-    setLoading(true);
+    setLoading(true)
 
     try {
       // Gọi các API đồng thời
       const [response, responseAllResGroups] = await Promise.all([
         GetAllResUsers(page, limit),
-      ]);
+      ])
 
       if (response.success) {
-        setUserData(response.data.data);
-        setTotal(response.data.total);
-        setTotalPages(response.data.totalPages);
-        setError(null);
+        setUserData(response.data.data)
+        setTotal(response.data.total)
+        setTotalPages(response.data.totalPages)
+        setError(null)
       } else {
-        setError(response.message);
-        setUserData([]);
+        setError(response.message)
+        setUserData([])
       }
     } catch (error) {
-      setError(error.message || 'Đã xảy ra lỗi');
-      setUserData([]);
+      setError(error.message || 'Đã xảy ra lỗi')
+      setUserData([])
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
   useEffect(() => {
     fetchData()
   }, [page, limit])
@@ -78,9 +82,9 @@ export default function ShowListUser({ isOpen, onClose, group , fetchDataUserGro
       dataIndex: 'name',
       key: 'name',
       sorter: (a, b) => {
-        const nameA = a.name || '';
-        const nameB = b.name || '';
-        return nameA.localeCompare(nameB);
+        const nameA = a.name || ''
+        const nameB = b.name || ''
+        return nameA.localeCompare(nameB)
       },
       ...(visibleColumns.name ? {} : { render: () => null }),
     },
@@ -89,9 +93,9 @@ export default function ShowListUser({ isOpen, onClose, group , fetchDataUserGro
       dataIndex: 'login',
       key: 'login',
       sorter: (a, b) => {
-        const loginA = a.login || ''; 
-        const loginB = b.login || '';
-        return loginA.localeCompare(loginB);
+        const loginA = a.login || ''
+        const loginB = b.login || ''
+        return loginA.localeCompare(loginB)
       },
       ...(visibleColumns.login ? {} : { render: () => null }),
     },
@@ -100,10 +104,10 @@ export default function ShowListUser({ isOpen, onClose, group , fetchDataUserGro
       dataIndex: 'language',
       key: 'language',
       sorter: (a, b) => {
-        const languageA = a.language || '';
-        const languageB = b.language || '';
-    
-        return languageA.localeCompare(languageB);
+        const languageA = a.language || ''
+        const languageB = b.language || ''
+
+        return languageA.localeCompare(languageB)
       },
       ...(visibleColumns.language ? {} : { render: () => null }),
     },
@@ -111,6 +115,12 @@ export default function ShowListUser({ isOpen, onClose, group , fetchDataUserGro
       title: 'Trạng thái',
       dataIndex: 'active',
       key: 'active',
+      sorter: (a, b) => {
+        if (a.active === b.active) {
+          return 0
+        }
+        return a.active ? -1 : 1
+      },
       render: (active) => {
         let color
         let displayText
@@ -130,9 +140,9 @@ export default function ShowListUser({ isOpen, onClose, group , fetchDataUserGro
           <Tag
             color={color}
             key={active}
-            className="  p-1 font-bold rounded-lg px-6"
+            className="p-1 font-bold rounded-lg px-6"
           >
-            {active}
+            {displayText} 
           </Tag>
         )
       },
@@ -145,8 +155,8 @@ export default function ShowListUser({ isOpen, onClose, group , fetchDataUserGro
   }
   const handleFinish = async () => {
     try {
-      const groupId =  group?.id
-      const result = await PostResUserGroups(selectedRowKeys , groupId)
+      const groupId = group?.id
+      const result = await PostResUserGroups(selectedRowKeys, groupId)
       if (result.success) {
         fetchDataUserGroups()
         message.success('Cập nhật người dùng thành công')
@@ -164,7 +174,6 @@ export default function ShowListUser({ isOpen, onClose, group , fetchDataUserGro
       visible={isOpen}
       onCancel={onClose}
       width={1200}
-      
       height={500}
       footer={[
         <Button
@@ -184,27 +193,28 @@ export default function ShowListUser({ isOpen, onClose, group , fetchDataUserGro
       ]}
     >
       <Table
-          rowSelection={rowSelection}
-          bordered
-          columns={columns}
-          dataSource={userData}
-          rowKey="id"
-          className=" cursor-pointer pb-0"
-          pagination={{
-            current: page,
-            pageSize: limit,
-            total: total,
-            showSizeChanger: true,
-            showTotal: (total) => `Tổng ${total} mục`,
-            onChange: (page, pageSize) =>
-              handleTableChange({ current: page, pageSize }),
-          }}
-          onChange={(pagination) => handleTableChange(pagination)}
-      loading={loading}
-      scroll={{ y: 550 }} 
-          
-        />
-   
+        rowSelection={rowSelection}
+        bordered
+        columns={columns}
+        dataSource={userData}
+        rowKey="id"
+        className=" cursor-pointer pb-0"
+        scroll={{
+          x: 'max-content',
+          y: 450,
+        }}
+        pagination={{
+          current: page,
+          pageSize: limit,
+          total: total,
+          showSizeChanger: true,
+          showTotal: (total) => `Tổng ${total} mục`,
+          onChange: (page, pageSize) =>
+            handleTableChange({ current: page, pageSize }),
+        }}
+        onChange={(pagination) => handleTableChange(pagination)}
+        loading={loading}
+      />
     </Modal>
   )
 }

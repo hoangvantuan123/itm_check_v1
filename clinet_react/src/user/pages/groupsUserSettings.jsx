@@ -52,7 +52,10 @@ export default function GroupsUsersSettings() {
   const [phoneSettingUser, setPhoneSettingUser] = useState(null)
   const [showSttingActionDropdown, setShowSettingActionDropdown] =
     useState(false)
-
+    const [actionUsers, setActionUsers] = useState(null)
+    const handleOnClickAction = () =>{
+      setActionUsers("actionGroups");
+    }
   const fetchData = async () => {
     setLoading(true)
     const token = localStorage.getItem('token_1h')
@@ -160,9 +163,9 @@ export default function GroupsUsersSettings() {
       dataIndex: 'name',
       key: 'name',
       sorter: (a, b) => {
-        const nameA = a.name || ''; 
-        const nameB = b.name || '';
-        return nameA.localeCompare(nameB);
+        const nameA = a.name || ''
+        const nameB = b.name || ''
+        return nameA.localeCompare(nameB)
       },
       ...(visibleColumns.name ? {} : { render: () => null }),
     },
@@ -318,9 +321,12 @@ export default function GroupsUsersSettings() {
                     {selectedRowKeys != null && selectedRowKeys.length > 0 && (
                       <>
                         <ShowAction
+                          handleOnClickAction={handleOnClickAction}
                           selectedRowKeys={selectedRowKeys}
+                          setActionUsers={setActionUsers}
                           setSelectedRowKeys={setSelectedRowKeys}
                           fetchData={fetchData}
+                          actionUsers={actionUsers}
                         />
                       </>
                     )}
@@ -380,7 +386,10 @@ export default function GroupsUsersSettings() {
               </Button>,
             ]}
           >
-            <UserGroupsDrawer isModalVisible={isModalVisible} group={selectedGroupDetails} />
+            <UserGroupsDrawer
+              isModalVisible={isModalVisible}
+              group={selectedGroupDetails}
+            />
           </Drawer>
         </div>
       </div>

@@ -4,7 +4,7 @@ import { accessToken } from '../../services/tokenService'
 
 export const GetAllResUsers = async (page = 1, limit = 10) => {
   try {
-    const token = accessToken();
+    const token = accessToken()
     const response = await axios.get(`${HOST_API_SERVER_P}/res_users`, {
       params: {
         page,
