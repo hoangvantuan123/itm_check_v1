@@ -2,14 +2,14 @@ import axios from 'axios'
 import { HOST_API_SERVER_P } from '../../services'
 import { accessToken } from '../../services/tokenService'
 
-export const PostResUserGroups = async (userIds, groupId) => {
+export const PostPermissionsMenu = async (menuIds, menuId) => {
   try {
     const token = accessToken()
     const response = await axios.post(
-      `${HOST_API_SERVER_P}/res_user_groups`,
+      `${HOST_API_SERVER_P}/permission_menus`,
       {
-        userIds: userIds,
-        groupId: groupId,
+        menuIds: menuIds,
+        menuId: menuId,
       },
       {
         headers: {

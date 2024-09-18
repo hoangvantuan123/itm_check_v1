@@ -280,7 +280,6 @@ export default function GroupsUsersSettings() {
               <h1 className="text-xl font-bold text-gray-900 sm:text-xl ">
                 Nhóm người dùng
               </h1>
-              <div></div>
 
               {!isMobile && (
                 <span className="inline-flex overflow-hidden">

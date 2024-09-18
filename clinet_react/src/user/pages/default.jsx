@@ -18,6 +18,20 @@ export default function Default() {
   const page = 1
   const pageSize = 100
   const { t } = useTranslation()
+  const [isMobile, setIsMobile] = useState(false)
+  
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 820)
+    }
+
+    handleResize()
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
   return (
     <div className="w-full h-screen bg-slate-50">
       <Helmet>

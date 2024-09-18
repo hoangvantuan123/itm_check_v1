@@ -22,6 +22,7 @@ import UsersSettings from '../pages/usersSettings'
 import Default from '../pages/default'
 import { RefreshToken } from '../../features/auth/API/refreshToken'
 import TimeTracking from '../pages/TimeTracking'
+import TechniqueMenu from '../pages/techniqueMenu'
 
 const UserRouter = () => {
   const { t } = useTranslation()
@@ -62,6 +63,90 @@ const UserRouter = () => {
       navigate('/u/login')
     }
   }, [navigate])
+  const permissions = {
+    roles: ['admin', 'editor'], 
+
+    menu: {
+      home: {
+        view: true,   
+        edit: false, 
+        create: false,
+        delete: false  
+      },
+      notifications: {
+        view: true,
+        edit: false,
+        create: false,
+        delete: false
+      },
+      work: {
+        view: true,
+        edit: false,
+        create: false,
+        delete: false,
+        submenus: {
+          time_tracking: {
+            view: true,
+            edit: false,
+            create: false,
+            delete: false
+          },
+          payroll: {
+            view: true,
+            edit: false,
+            create: false,
+            delete: false
+          }
+        }
+      },
+      settings: {
+        view: true,
+        edit: false,
+        create: false,
+        delete: false,
+        submenus: {
+          general_settings: {
+            view: true,
+            edit: true,
+            create: false,
+            delete: false
+          },
+          users: {
+            view: true,
+            edit: true,
+            create: true,
+            delete: false
+          },
+          groups_users: {
+            view: false,
+            edit: false,
+            create: false,
+            delete: false
+          },
+          technique: {
+            view: true,
+            edit: false,
+            create: false,
+            delete: false,
+            submenus: {
+              technique_access: {
+                view: true,
+                edit: false,
+                create: false,
+                delete: false
+              },
+              technique_menu: {
+                view: false,
+                edit: false,
+                create: false,
+                delete: false
+              }
+            }
+          }
+        }
+      }
+    }
+  };
 
   return (
     <Routes>
@@ -72,7 +157,7 @@ const UserRouter = () => {
           path="/*"
           element={
             <Layout style={{ minHeight: '100vh' }}>
-              <Sidebar />
+              <Sidebar permissions={permissions} />
               <Layout>
                 <Content>
                   <Routes>
@@ -106,7 +191,7 @@ const UserRouter = () => {
                     />
                     <Route
                       path={`u/action=5/technique_menu`}
-                      element={<Default />}
+                      element={<TechniqueMenu />}
                     />
                   </Routes>
                 </Content>

@@ -2,22 +2,16 @@ import axios from 'axios'
 import { HOST_API_SERVER_P } from '../../services'
 import { accessToken } from '../../services/tokenService'
 
-export const PostResUserGroups = async (userIds, groupId) => {
+export const DeletePermissionsMenu = async (ids) => {
   try {
     const token = accessToken()
-    const response = await axios.post(
-      `${HOST_API_SERVER_P}/res_user_groups`,
-      {
-        userIds: userIds,
-        groupId: groupId,
+    const response = await axios.delete(`${HOST_API_SERVER_P}/permission_menus`, {
+      data: { ids },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      },
-    )
+    })
 
     if (response.status === 200 || response.status === 201) {
       return {
@@ -32,6 +26,7 @@ export const PostResUserGroups = async (userIds, groupId) => {
       }
     }
   } catch (error) {
+    // Xử lý lỗi tốt hơn
     return {
       success: false,
       message: error.response

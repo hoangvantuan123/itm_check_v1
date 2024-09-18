@@ -27,6 +27,7 @@ import { PostResUserGroups } from '../../../features/resGroups/postResUserGroups
 import ShowListUser from './modalListUser'
 import { GetAllResUserGroupsPageLimitID } from '../../../features/resGroups/getResUserGroupsID'
 import { DeleteResUserGroups } from '../../../features/resGroups/deleteResUserGroups'
+import ShowListMenu from './modalListmenu'
 const { Title } = Typography
 const { Option } = Select
 const { TextArea } = Input
@@ -37,6 +38,7 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
   const userNameLogin = userFromLocalStorage?.login || 'none'
 
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpenListMenu, setIsModalOpenListMenu] = useState(false)
   const [form] = Form.useForm()
   const [dataSource, setDataSource] = useState([])
   const [loading, setLoading] = useState(true)
@@ -86,6 +88,10 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
 
   const handleAddRow = () => {
     setIsModalOpen(true)
+  }
+
+  const handleAddRowListMenu = () => {
+    setIsModalOpenListMenu(true)
   }
 
   const handleDelete = (key) => {
@@ -209,6 +215,9 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
   const closeModal = () => {
     setIsModalOpen(false)
   }
+  const closeModalListMenu = () => {
+    setIsModalOpenListMenu(false)
+  }
   const handleTableChange = (pagination) => {
     setPage(pagination.current)
     setLimit(pagination.pageSize)
@@ -301,7 +310,7 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
                       handleDeleteGroupsUser()
                     }}
                   >
-                    <DeleteOutlined className=' text-lg'/>
+                    <DeleteOutlined className=' text-lg' />
                     Xoá
                   </span>
                 </>
@@ -312,7 +321,7 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
                 dataSource={dataSource}
                 columns={columns}
                 rowKey="id"
-                pagination={{ pageSize: 10 }}
+
                 bordered
                 loading={loading}
                 footer={() => (
@@ -326,7 +335,7 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
                     Thêm hàng mới
                   </span>
                 )}
-                scroll={{ x: 'max-content', y: 400 }} 
+                scroll={{ x: 'max-content', y: 400 }}
                 pagination={{
                   current: page,
                   pageSize: limit,
@@ -345,7 +354,7 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
             open
           >
             <summary className="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
-              <h2 className="  text-base font-medium">Menu</h2>
+              <h2 className="  text-base font-medium">Menu & Quyền truy cập</h2>
 
               <span className="relative size-5 shrink-0">
                 <svg
@@ -365,53 +374,54 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
               </span>
             </summary>
 
-            <p className="mt-4 px-4 leading-relaxed text-gray-700">
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ab hic
-              veritatis molestias culpa in, recusandae laboriosam neque aliquid
-              libero nesciunt voluptate dicta quo officiis explicabo
-              consequuntur distinctio corporis earum similique!
-            </p>
-          </details>
-          <details
-            className="group p-3 md:p-6 [&_summary::-webkit-details-marker]:hidden"
-            open
-          >
-            <summary className="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
-              <h2 className="  text-base font-medium">Quyền truy cập</h2>
+            <Table
+              rowSelection={rowSelection}
+              className="mt-3 cursor-pointer"
+              dataSource={dataSource}
+              columns={columns}
+              rowKey="id"
 
-              <span className="relative size-5 shrink-0">
-                <svg
-                  className="size-5 shrink-0 transition duration-300 group-open:-rotate-180"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+              bordered
+              loading={loading}
+              footer={() => (
+                <span
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  onClick={handleAddRowListMenu}
+                  className="mt-2 max-w-md cursor-pointer text-pretty text-base text-indigo-500 "
+                  size="large"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </span>
-            </summary>
-
-            <p className="mt-4 px-4 leading-relaxed text-gray-700">
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ab hic
-              veritatis molestias culpa in, recusandae laboriosam neque aliquid
-              libero nesciunt voluptate dicta quo officiis explicabo
-              consequuntur distinctio corporis earum similique!
-            </p>
+                  Thêm hàng mới
+                </span>
+              )}
+              scroll={{ x: 'max-content' }}
+              pagination={{
+                current: page,
+                pageSize: limit,
+                total: total,
+                showSizeChanger: true,
+                showTotal: (total) => `Tổng ${total} mục`,
+                onChange: (page, pageSize) =>
+                  handleTableChange({ current: page, pageSize }),
+              }}
+              onChange={(pagination) => handleTableChange(pagination)}
+            />
           </details>
+
         </div>
       </Form>
+
       <ShowListUser
         isOpen={isModalOpen}
         onClose={closeModal}
         group={group}
         fetchDataUserGroups={fetchData}
       />
+      <ShowListMenu   isOpen={isModalOpenListMenu}
+        onClose={closeModalListMenu}
+        group={group} 
+        fetchDataUserGroups={fetchData}
+        />
     </div>
   )
 }

@@ -2,14 +2,15 @@ import axios from 'axios'
 import { HOST_API_SERVER_P } from '../../services'
 import { accessToken } from '../../services/tokenService'
 
-export const PostResUserGroups = async (userIds, groupId) => {
+export const PostMenu = async (name, parent_id, sequence) => {
   try {
     const token = accessToken()
     const response = await axios.post(
-      `${HOST_API_SERVER_P}/res_user_groups`,
+      `${HOST_API_SERVER_P}/menu`,
       {
-        userIds: userIds,
-        groupId: groupId,
+        name,
+        sequence,
+        parent_id,
       },
       {
         headers: {
@@ -32,6 +33,7 @@ export const PostResUserGroups = async (userIds, groupId) => {
       }
     }
   } catch (error) {
+    // Xử lý lỗi tốt hơn
     return {
       success: false,
       message: error.response

@@ -301,7 +301,6 @@ export default function UsersSettings() {
               handleTableChange({ current: page, pageSize }),
           }}
           onChange={(pagination) => handleTableChange(pagination)}
-          loading={loading}
           scroll={{
             x: 'calc(100px + 50%)',
             y: 650,
