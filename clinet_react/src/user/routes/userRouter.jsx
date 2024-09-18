@@ -64,20 +64,20 @@ const UserRouter = () => {
     }
   }, [navigate])
   const permissions = {
-    roles: ['admin', 'editor'], 
+    roles: ['admin', 'editor'],
 
     menu: {
       home: {
-        view: true,   
-        edit: false, 
+        view: true,
+        edit: false,
         create: false,
-        delete: false  
+        delete: false,
       },
       notifications: {
         view: true,
         edit: false,
         create: false,
-        delete: false
+        delete: false,
       },
       work: {
         view: true,
@@ -89,15 +89,15 @@ const UserRouter = () => {
             view: true,
             edit: false,
             create: false,
-            delete: false
+            delete: false,
           },
           payroll: {
             view: true,
             edit: false,
             create: false,
-            delete: false
-          }
-        }
+            delete: false,
+          },
+        },
       },
       settings: {
         view: true,
@@ -109,19 +109,19 @@ const UserRouter = () => {
             view: true,
             edit: true,
             create: false,
-            delete: false
+            delete: false,
           },
           users: {
             view: true,
             edit: true,
             create: true,
-            delete: false
+            delete: false,
           },
           groups_users: {
             view: false,
             edit: false,
             create: false,
-            delete: false
+            delete: false,
           },
           technique: {
             view: true,
@@ -133,20 +133,20 @@ const UserRouter = () => {
                 view: true,
                 edit: false,
                 create: false,
-                delete: false
+                delete: false,
               },
               technique_menu: {
                 view: false,
                 edit: false,
                 create: false,
-                delete: false
-              }
-            }
-          }
-        }
-      }
-    }
-  };
+                delete: false,
+              },
+            },
+          },
+        },
+      },
+    },
+  }
 
   return (
     <Routes>

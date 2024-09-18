@@ -56,8 +56,8 @@ export default function UsersSettings() {
   const [limit, setLimit] = useState(10)
   const [total, setTotal] = useState(0)
   const [actionUsers, setActionUsers] = useState(null)
-  const handleOnClickAction = () =>{
-    setActionUsers("actionUsers");
+  const handleOnClickAction = () => {
+    setActionUsers('actionUsers')
   }
   const openModal = () => {
     setIsModalOpen(true)

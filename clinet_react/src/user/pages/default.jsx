@@ -19,7 +19,7 @@ export default function Default() {
   const pageSize = 100
   const { t } = useTranslation()
   const [isMobile, setIsMobile] = useState(false)
-  
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 820)

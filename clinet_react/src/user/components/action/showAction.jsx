@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Input, Modal, Typography, Dropdown, Menu, message } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
-import { DeleteResGroups } from '../../../features/resGroups/DeleteResGroups'
+import { DeleteResGroups } from '../../../features/resGroups/deleteResGroups'
 import { DeleteResUsers } from '../../../features/resUsers/deleteResUsers'
 const { Title } = Typography
 const SettingIcon = () => {
@@ -36,9 +36,8 @@ export default function ShowAction({
   fetchDataUser,
   handleOnClickAction,
   actionUsers,
-  setActionUsers
+  setActionUsers,
 }) {
-  console.log(actionUsers)
   const { t } = useTranslation()
   const [showDropdown, setShowDropdown] = useState(false)
   const [selectedMenuKey, setSelectedMenuKey] = useState('')
@@ -82,11 +81,10 @@ export default function ShowAction({
     }
   }
 
-
   const handleMenuClick = (e) => {
-    setSelectedMenuKey(e.key);
-    setShowDropdown(false);
-  
+    setSelectedMenuKey(e.key)
+    setShowDropdown(false)
+
     // Cấu hình cho Modal
     const modalConfig = {
       title: 'Xác nhận xóa',
@@ -100,24 +98,24 @@ export default function ShowAction({
           color: '#fff',
         },
       },
-    };
-  
+    }
+
     // Xử lý hành động dựa trên key và actionUsers
     if (e.key === 'action_show_5') {
-      if (actionUsers === "actionGroups") {
+      if (actionUsers === 'actionGroups') {
         Modal.confirm({
           ...modalConfig,
           onOk: handleDeleteGroups,
-        });
-      } else if (actionUsers === "actionUsers") {
+        })
+      } else if (actionUsers === 'actionUsers') {
         Modal.confirm({
           ...modalConfig,
           onOk: handleDeleteUsers,
-        });
+        })
       }
     }
-  };
-  
+  }
+
   const menu = (
     <Menu onClick={handleMenuClick}>
       <Menu.Item key="action_show_1">Nhập danh sách</Menu.Item>
@@ -137,8 +135,8 @@ export default function ShowAction({
       trigger={['click']}
       visible={showDropdown}
       onClick={() => {
-        setShowDropdown(!showDropdown); 
-        handleOnClickAction(); 
+        setShowDropdown(!showDropdown)
+        handleOnClickAction()
       }}
     >
       <button className="border-[1.3px] border-[#d9d9d9] rounded-lg p-[0.6rem] w-auto flex items-center space-x-2 bg-white hover:bg-gray-100">

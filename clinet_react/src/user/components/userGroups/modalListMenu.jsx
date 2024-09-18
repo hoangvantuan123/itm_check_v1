@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Input, Modal, Typography, Button, Table, Tag, message } from 'antd'
-import { GetAllResUsers } from '../../../features/resUsers/getResUsers'
-import { PostResUserGroups } from '../../../features/resGroups/postResUserGroups'
 import { GetMenuPageLimit } from '../../../features/menu/getMenuPageLimit'
 import { PostPermissionsMenu } from '../../../features/menu/postPermissionsMenu'
 const { Title } = Typography
@@ -55,8 +53,11 @@ export default function ShowListMenu({
     }
   }
   useEffect(() => {
-    fetchData()
-  }, [page, limit])
+    if(isOpen === true){
+
+      fetchData()
+    }
+  }, [page, limit, isOpen])
 
   const [visibleColumns, setVisibleColumns] = useState({
     name: true,
@@ -85,7 +86,7 @@ export default function ShowListMenu({
       sorter: (a, b) => {
         const A = a.id || 0
         const B = b.id || 0
-        return A - B;
+        return A - B
       },
       ...(visibleColumns.id ? {} : { id: () => null }),
     },
@@ -96,7 +97,7 @@ export default function ShowListMenu({
       sorter: (a, b) => {
         const A = a.sequence || 0
         const B = b.sequence || 0
-        return A - B;
+        return A - B
       },
       ...(visibleColumns.sequence ? {} : { sequence: () => null }),
     },
@@ -121,9 +122,8 @@ export default function ShowListMenu({
         return A.localeCompare(B)
       },
       ...(visibleColumns.parent_name ? {} : { parent_name: () => null }),
-    }
-
-  ];
+    },
+  ]
   const handleTableChange = (pagination) => {
     setPage(pagination.current)
     setLimit(pagination.pageSize)
@@ -167,9 +167,6 @@ export default function ShowListMenu({
         </Button>,
       ]}
     >
-
-
-
       <Table
         rowSelection={rowSelection}
         bordered

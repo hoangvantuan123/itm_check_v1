@@ -2,13 +2,20 @@ import axios from 'axios'
 import { HOST_API_SERVER_P } from '../../services'
 import { accessToken } from '../../services/tokenService'
 
-export const DeletePermissionsMenu = async (ids) => {
+export const GetPermisionMenuGroupID = async (
+  groupId,
+  page = 1,
+  limit = 10,
+) => {
   try {
     const token = accessToken()
-    const response = await axios.delete(
-      `${HOST_API_SERVER_P}/permission_menus`,
+    const response = await axios.get(
+      `${HOST_API_SERVER_P}/permission_menu/${groupId}`,
       {
-        data: { ids },
+        params: {
+          page,
+          limit,
+        },
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -16,20 +23,11 @@ export const DeletePermissionsMenu = async (ids) => {
       },
     )
 
-    if (response.status === 200 || response.status === 201) {
-      return {
-        success: true,
-        message: response.data.message || 'Operation successful',
-        data: response.data,
-      }
-    } else {
-      return {
-        success: false,
-        message: `Unexpected status code: ${response.status}`,
-      }
+    return {
+      success: true,
+      data: response.data,
     }
   } catch (error) {
-    // Xử lý lỗi tốt hơn
     return {
       success: false,
       message: error.response

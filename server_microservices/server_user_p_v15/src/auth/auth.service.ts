@@ -34,6 +34,8 @@ export class AppService {
     return savedUser;
   }
 
+
+
   async loginUser(loginData: LoginDto): Promise<{ success: boolean, data?: { user: Partial<Users>, token: string }, error?: string }> {
     const { login, password } = loginData;
 

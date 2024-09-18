@@ -16,7 +16,7 @@ export class PermissionsMenuService {
     async create(
         userId: number,
         menuIds: number[],
-        menuId: number
+        groupId: number
     ): Promise<{ success: boolean; message: string; data?: PermissionsMenu[] }> {
 
         const user = await this.userService.findUserById(userId);
@@ -27,9 +27,10 @@ export class PermissionsMenuService {
 
         const newMenus = menuIds.map(id => {
             return this.permissionsMenusRepository.create({
-                menu_id: menuId,
+                menu_id: id,
                 create_uid: userId,
                 write_uid: userId,
+                group_id: groupId
             });
         });
 
@@ -90,4 +91,64 @@ export class PermissionsMenuService {
         await this.permissionsMenusRepository.delete(ids);
     }
 
+
+    async findUsersByGroupId(
+        groupId: number,
+        userId: number,
+        page: number = 1,
+        limit: number = 10
+    ): Promise<{ data: any[], total: number, totalPages: number }> {
+        const user = await this.userService.findUserById(userId);
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+    
+        const skip = (page - 1) * limit;
+        const take = limit;
+    
+        const [permissions, total] = await this.permissionsMenusRepository
+            .createQueryBuilder('permissionsMenu')
+            .innerJoinAndSelect('permissionsMenu.menu', 'menu')  
+            .where('permissionsMenu.group_id = :groupId', { groupId })
+            .getManyAndCount();
+    
+        const paginatedPermissions = await this.permissionsMenusRepository
+            .createQueryBuilder('permissionsMenu')
+            .innerJoinAndSelect('permissionsMenu.menu', 'menu')
+            .where('permissionsMenu.group_id = :groupId', { groupId })
+            .select([
+                'permissionsMenu.id',
+                'permissionsMenu.create_date',
+                'permissionsMenu.menu_id',
+                'permissionsMenu.view',
+                'permissionsMenu.edit',
+                'permissionsMenu.create',
+                'permissionsMenu.delete',
+                "menu.name"
+            ])
+            .orderBy('permissionsMenu.create_date', 'DESC')
+            .skip(skip)
+            .take(take)
+            .getMany();
+    
+        // Tính tổng số trang
+        const totalPages = Math.ceil(total / limit);
+    
+        // Trả về dữ liệu đã phân trang
+        return {
+            data: paginatedPermissions.map(permission => ({
+                id: permission.id,
+                menuId: permission.menu_id,
+                createDate: permission.create_date,
+                view: permission.view,
+                edit: permission.edit,
+                create: permission.create,
+                delete: permission.delete,
+                name: permission.menu.name 
+            })),
+            total,
+            totalPages
+        };
+    }
+    
 }

@@ -12,7 +12,7 @@ export class PermissionMenuController {
   @Post('permission_menus')
   async create(
     @Req() req: Request,
-    @Body() body: { menuIds: number[]; menuId: number },
+    @Body() body: { menuIds: number[]; groupId: number},
     @Res() res: Response
   ): Promise<Response> {
     const authHeader = req.headers.authorization;
@@ -32,8 +32,8 @@ export class PermissionMenuController {
         throw new UnauthorizedException('Invalid token payload');
       }
 
-      const { menuIds, menuId } = body;
-      const result = await this.permissionsMenuService.create(userId, menuIds, menuId);
+      const { menuIds , groupId} = body;
+      const result = await this.permissionsMenuService.create(userId, menuIds, groupId);
       return res.status(HttpStatus.OK).json(result);
     } catch (error) {
       throw new UnauthorizedException('Request sending failed, please try again!');
@@ -97,6 +97,38 @@ export class PermissionMenuController {
        
     } catch (error) {
       throw new UnauthorizedException('Request failed, please try again!');
+    }
+  }
+
+
+  @Get('permission_menu/:groupId')
+  async findUsersByGroupId(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Param('groupId') groupId: number,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ): Promise<Response> {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      throw new UnauthorizedException('Authorization header missing');
+    }
+    const token = authHeader.split(' ')[1];
+    if (!token) {
+      throw new UnauthorizedException('The job version has expired. Please log in again to continue.');
+    }
+
+    try {
+      const decodedToken = jwt.verify(token, jwtConstants.secret);
+      const userId = (decodedToken as { id: number }).id;
+      if (!userId) {
+        throw new UnauthorizedException('Invalid token payload');
+      }
+
+      const result = await this.permissionsMenuService.findUsersByGroupId(groupId, userId, page, limit);
+      return res.status(HttpStatus.OK).json(result);
+    } catch (error) {
+      throw new UnauthorizedException('Request sending failed, please try again!');
     }
   }
 }

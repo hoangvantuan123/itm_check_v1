@@ -27,7 +27,8 @@ import { PostResUserGroups } from '../../../features/resGroups/postResUserGroups
 import ShowListUser from './modalListUser'
 import { GetAllResUserGroupsPageLimitID } from '../../../features/resGroups/getResUserGroupsID'
 import { DeleteResUserGroups } from '../../../features/resGroups/deleteResUserGroups'
-import ShowListMenu from './modalListmenu'
+import { GetPermisionMenuGroupID } from '../../../features/menu/getPermissionsMenuGroupID'
+import ShowListMenu from './modalListMenu'
 const { Title } = Typography
 const { Option } = Select
 const { TextArea } = Input
@@ -47,15 +48,39 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
   const [total, setTotal] = useState(0)
+
+  const [dataPermissionsMenu, setDataPermissionsMenu] = useState([])
+  const [loadingPermissionsMenu, setLoadingPermissionsMenu] = useState(true)
+  const [errorPermissionsMenu, setErrorPermissionsMenu] = useState(null)
+  const [totalPagesPermissionsMenu, setTotalPagesPermissionsMenu] = useState(0)
+  const [pagePermissionsMenu, setPagePermissionsMenu] = useState(1)
+  const [limitPermissionsMenu, setLimitPermissionsMenu] = useState(10)
+  const [totalPermissionsMenu, setTotalPermissionsMenu] = useState(0)
+
   const [count, setCount] = useState(3)
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
+  const [selectedRowKeysPM, setSelectedRowKeysPM] = useState([])
+
+  const handleCheckboxClick = (id, field, value) => {
+    const newData = dataPermissionsMenu.map((item) =>
+      item.id === id ? { ...item, [field]: value } : item
+    );
+    setDataPermissionsMenu(newData);
+
+  };
+
   const fetchData = async () => {
     setLoading(true)
+    setLoadingPermissionsMenu(true)
 
     try {
-      // Gọi các API đồng thời
-      const [response, responseAllResGroups] = await Promise.all([
-        GetAllResUserGroupsPageLimitID(group?.id, page, limit),
+      const [response, responsePermissionsMenu] = await Promise.all([
+        GetAllResUserGroupsPageLimitID(group?.id, page, limit), // API 1
+        GetPermisionMenuGroupID(
+          group?.id,
+          pagePermissionsMenu,
+          limitPermissionsMenu,
+        ), // API 2
       ])
 
       if (response.success) {
@@ -67,11 +92,25 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
         setError(response.message)
         setDataSource([])
       }
+
+      if (responsePermissionsMenu.success) {
+        setDataPermissionsMenu(responsePermissionsMenu.data.data)
+        setTotalPermissionsMenu(responsePermissionsMenu.data.total)
+        setTotalPagesPermissionsMenu(responsePermissionsMenu.data.totalPages)
+        setErrorPermissionsMenu(null)
+      } else {
+        setErrorPermissionsMenu(responsePermissionsMenu.message)
+        setDataPermissionsMenu([])
+      }
     } catch (error) {
-      setError(error.message || 'Đã xảy ra lỗi')
+      const errorMessage = error.message || 'Đã xảy ra lỗi'
+      setError(errorMessage)
+      setErrorPermissionsMenu(errorMessage)
       setDataSource([])
+      setDataPermissionsMenu([])
     } finally {
       setLoading(false)
+      setLoadingPermissionsMenu(false)
     }
   }
   useEffect(() => {
@@ -100,11 +139,17 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys)
   }
+  const onSelectChangePM = (newSelectedRowKeys) => {
+    setSelectedRowKeysPM(newSelectedRowKeys)
+  }
   const [visibleColumns, setVisibleColumns] = useState({
     name: true,
     login: true,
     language: true,
     active: true,
+  })
+  const [visibleColumnsPM, setVisibleColumnsPM] = useState({
+    name: true,
   })
 
   const rowSelection = {
@@ -188,6 +233,73 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
       ...(visibleColumns.active ? {} : { render: () => null }),
     },
   ]
+  const rowSelectionPM = {
+    selectedRowKeysPM,
+    onChange: onSelectChangePM,
+    selections: [
+      Table.SELECTION_ALL,
+      Table.SELECTION_INVERT,
+      Table.SELECTION_NONE,
+    ],
+  }
+  const columnsPM = [
+    {
+      title: 'Menu',
+      dataIndex: 'name',
+      key: 'name',
+      sorter: (a, b) => {
+        const A = a.name || ''
+        const B = b.name || ''
+        return A.localeCompare(B)
+      },
+      ...(visibleColumnsPM.name ? {} : { render: () => null }),
+    },
+    {
+      title: 'View',
+      dataIndex: 'view',
+      key: 'view',
+      render: (text, record) => (
+        <Checkbox
+          checked={record.view}
+          onChange={(e) => handleCheckboxClick(record.id, 'view', e.target.checked)}
+        />
+      ),
+    },
+    {
+      title: 'Edit',
+      dataIndex: 'edit',
+      key: 'edit',
+      render: (text, record) => (
+        <Checkbox
+          checked={record.edit}
+          onChange={(e) => handleCheckboxClick(record.id, 'edit', e.target.checked)}
+        />
+      ),
+    },
+    {
+      title: 'Create',
+      dataIndex: 'create',
+      key: 'create',
+      render: (text, record) => (
+        <Checkbox
+          checked={record.create}
+          onChange={(e) => handleCheckboxClick(record.id, 'create', e.target.checked)}
+        />
+      ),
+    },
+    {
+      title: 'Delete',
+      dataIndex: 'delete',
+      key: 'delete',
+      render: (text, record) => (
+        <Checkbox
+          checked={record.delete}
+          onChange={(e) => handleCheckboxClick(record.id, 'delete', e.target.checked)}
+        />
+      ),
+    },
+  ];
+
 
   const handleFinish = async (values) => {
     const { name, comment } = values
@@ -219,6 +331,10 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
     setIsModalOpenListMenu(false)
   }
   const handleTableChange = (pagination) => {
+    setPage(pagination.current)
+    setLimit(pagination.pageSize)
+  }
+  const handleTableChangePM = (pagination) => {
     setPage(pagination.current)
     setLimit(pagination.pageSize)
   }
@@ -310,7 +426,7 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
                       handleDeleteGroupsUser()
                     }}
                   >
-                    <DeleteOutlined className=' text-lg' />
+                    <DeleteOutlined className=" text-lg" />
                     Xoá
                   </span>
                 </>
@@ -321,7 +437,6 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
                 dataSource={dataSource}
                 columns={columns}
                 rowKey="id"
-
                 bordered
                 loading={loading}
                 footer={() => (
@@ -375,12 +490,12 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
             </summary>
 
             <Table
-              rowSelection={rowSelection}
+              rowSelection={rowSelectionPM}
+            
               className="mt-3 cursor-pointer"
-              dataSource={dataSource}
-              columns={columns}
+              dataSource={dataPermissionsMenu}
+              columns={columnsPM}
               rowKey="id"
-
               bordered
               loading={loading}
               footer={() => (
@@ -396,18 +511,17 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
               )}
               scroll={{ x: 'max-content' }}
               pagination={{
-                current: page,
-                pageSize: limit,
-                total: total,
+                current: pagePermissionsMenu,
+                pageSize: limitPermissionsMenu,
+                total: totalPermissionsMenu,
                 showSizeChanger: true,
                 showTotal: (total) => `Tổng ${total} mục`,
                 onChange: (page, pageSize) =>
-                  handleTableChange({ current: page, pageSize }),
+                  handleTableChangePM({ current: page, pageSize }),
               }}
-              onChange={(pagination) => handleTableChange(pagination)}
+              onChange={(pagination) => handleTableChangePM(pagination)}
             />
           </details>
-
         </div>
       </Form>
 
@@ -417,11 +531,12 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
         group={group}
         fetchDataUserGroups={fetchData}
       />
-      <ShowListMenu   isOpen={isModalOpenListMenu}
+      <ShowListMenu
+        isOpen={isModalOpenListMenu}
         onClose={closeModalListMenu}
-        group={group} 
+        group={group}
         fetchDataUserGroups={fetchData}
-        />
+      /> 
     </div>
   )
 }

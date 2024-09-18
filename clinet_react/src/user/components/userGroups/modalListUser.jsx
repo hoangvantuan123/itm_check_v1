@@ -23,7 +23,7 @@ export default function ShowListUser({
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
   const [total, setTotal] = useState(0)
- 
+
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const handleSearch = (e) => {
     setSearchValue(e.target.value)
@@ -54,8 +54,11 @@ export default function ShowListUser({
     }
   }
   useEffect(() => {
-    fetchData()
-  }, [page, limit])
+    if(isOpen === true){
+
+      fetchData()
+    }
+  }, [page, limit, isOpen])
 
   const [visibleColumns, setVisibleColumns] = useState({
     name: true,
@@ -142,7 +145,7 @@ export default function ShowListUser({
             key={active}
             className="p-1 font-bold rounded-lg px-6"
           >
-            {displayText} 
+            {displayText}
           </Tag>
         )
       },

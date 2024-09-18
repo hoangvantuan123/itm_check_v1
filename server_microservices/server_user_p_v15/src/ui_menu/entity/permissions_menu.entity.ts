@@ -42,4 +42,10 @@ export class PermissionsMenu {
     @JoinColumn({ name: 'menu_id' })
     menu: IrUiMenu;
 
+    @ManyToOne(() => ResGroups, { nullable: false })
+    @JoinColumn({ name: 'group_id' })
+    group: ResGroups;
+
+    
+
 }

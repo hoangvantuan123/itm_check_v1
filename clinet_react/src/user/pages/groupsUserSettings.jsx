@@ -52,10 +52,10 @@ export default function GroupsUsersSettings() {
   const [phoneSettingUser, setPhoneSettingUser] = useState(null)
   const [showSttingActionDropdown, setShowSettingActionDropdown] =
     useState(false)
-    const [actionUsers, setActionUsers] = useState(null)
-    const handleOnClickAction = () =>{
-      setActionUsers("actionGroups");
-    }
+  const [actionUsers, setActionUsers] = useState(null)
+  const handleOnClickAction = () => {
+    setActionUsers('actionGroups')
+  }
   const fetchData = async () => {
     setLoading(true)
     const token = localStorage.getItem('token_1h')
