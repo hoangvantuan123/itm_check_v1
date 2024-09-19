@@ -16,7 +16,7 @@
 
 @media (max-width: 768px) {
   :where(.css-dev-only-do-not-override-qnu6hi).ant-drawer-right
-  > .ant-drawer-content-wrapper {
+    > .ant-drawer-content-wrapper {
     padding: 0px; /* Thay đổi padding thành 0px */
     box-shadow: none;
   }
@@ -25,4 +25,3 @@
     border-radius: 0px; /* Vẫn giữ border-radius nếu cần */
   }
 }
-

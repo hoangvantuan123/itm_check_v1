@@ -11,7 +11,7 @@ export const PostMenu = async (name, parent_id, sequence, key) => {
         name,
         sequence,
         parent_id,
-        key
+        key,
       },
       {
         headers: {

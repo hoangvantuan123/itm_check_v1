@@ -153,9 +153,7 @@ export default function MenuDrawer({
             name="key"
             style={{ textAlign: 'left' }}
             className="w-full"
-            rules={[
-              { required: true, message: t('Vui lòng nhập Key') },
-            ]}
+            rules={[{ required: true, message: t('Vui lòng nhập Key') }]}
           >
             <Input size="large" placeholder={t('Nhập Key hiển thị')} />
           </Form.Item>

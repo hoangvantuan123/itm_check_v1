@@ -277,7 +277,7 @@ const Sidebar = ({ permissions }) => {
       setIsMobile(window.innerWidth <= 768)
     }
 
-    handleResize() // Gọi lần đầu tiên khi component mount
+    handleResize()
     window.addEventListener('resize', handleResize)
 
     return () => {
@@ -307,7 +307,7 @@ const Sidebar = ({ permissions }) => {
             defaultSelectedKeys={['home']}
             className="border-r-0"
           >
-            {checkMenuPermission(permissions, 'home',  'view') && (
+            {checkMenuPermission(permissions, 'home', 'view') && (
               <Menu.Item key="home">
                 <Link to="/u/home" className="flex items-center justify-start">
                   <span
@@ -315,59 +315,70 @@ const Sidebar = ({ permissions }) => {
                   >
                     <HomeIcon />
                   </span>
-                  {!collapsed && <span className="ml-3">Home</span>}
+                  {!collapsed && (
+                    <span className="ml-3">{t('side_bar.home')}</span>
+                  )}
                 </Link>
               </Menu.Item>
             )}
-            <Menu.Item key="notifications">
-              <Link
-                to="/u/notifications"
-                className="flex items-center justify-start"
-              >
-                <span
-                  className={`icon-wrapper ${collapsed ? ' justify-center mt-2' : ''}`}
+            {checkMenuPermission(permissions, 'notifications', 'view') && (
+              <Menu.Item key="notifications">
+                <Link
+                  to="/u/notifications"
+                  className="flex items-center justify-start"
                 >
-                  <NotificationIcon />
-                </span>
-                {!collapsed && (
-                  <span className="ml-3">{t('side_bar.notifications')}</span>
-                )}
-              </Link>
-            </Menu.Item>
-
-
-            <SubMenu
-              key="work"
-              title={
-                <span className="flex items-center gap-3">
                   <span
                     className={`icon-wrapper ${collapsed ? ' justify-center mt-2' : ''}`}
                   >
-                    <WorkIcon />
+                    <NotificationIcon />
                   </span>
-                  {!collapsed && <span>{t('side_bar.work')}</span>}
-                </span>
-              }
-            >
-              <Menu.Item key="work-1-1">
-                <Link
-                  to="/u/action=6/time_tracking"
-                  className="flex items-center justify-start"
-                >
-                  {t('side_bar.time_tracking')}
+                  {!collapsed && (
+                    <span className="ml-3">{t('side_bar.notifications')}</span>
+                  )}
                 </Link>
               </Menu.Item>
+            )}
 
-              <Menu.Item key="work-1-2">
-                <Link
-                  to="/u/action=7/payroll"
-                  className="flex items-center justify-start"
-                >
-                  {t('side_bar.payroll')}
-                </Link>
-              </Menu.Item>
-            </SubMenu>
-            <SubMenu
+            {checkMenuPermission(permissions, 'work', 'view') && (
+              <SubMenu
+                key="work"
+                title={
+                  <span className="flex items-center gap-3">
+                    <span
+                      className={`icon-wrapper ${collapsed ? ' justify-center mt-2' : ''}`}
+                    >
+                      <WorkIcon />
+                    </span>
+                    {!collapsed && <span>{t('side_bar.work')}</span>}
+                  </span>
+                }
+              >
+                {checkMenuPermission(permissions, 'work-1-1', 'view') && (
+                  <Menu.Item key="work-1-1">
+                    <Link
+                      to="/u/action=6/time_tracking"
+                      className="flex items-center justify-start"
+                    >
+                      {t('side_bar.time_tracking')}
+                    </Link>
+                  </Menu.Item>
+                )}
+
+                {checkMenuPermission(permissions, 'work-1-2', 'view') && (
+                  <Menu.Item key="work-1-2">
+                    <Link
+                      to="/u/action=7/payroll"
+                      className="flex items-center justify-start"
+                    >
+                      {t('side_bar.payroll')}
+                    </Link>
+                  </Menu.Item>
+                )}
+              </SubMenu>
+            )}
+
+            {checkMenuPermission(permissions, 'setting', 'view') && (
+              <SubMenu
                 key="setting"
                 title={
                   <span className="flex items-center gap-3">
@@ -380,7 +391,8 @@ const Sidebar = ({ permissions }) => {
                   </span>
                 }
               >
-                 <Menu.Item key="setting-1-1">
+                {checkMenuPermission(permissions, 'setting-1-1', 'view') && (
+                  <Menu.Item key="setting-1-1">
                     <Link
                       to="/u/action=1/general_settings"
                       className="flex items-center justify-start"
@@ -388,52 +400,73 @@ const Sidebar = ({ permissions }) => {
                       {t('side_bar.general_settings')}
                     </Link>
                   </Menu.Item>
+                )}
 
-                <Menu.Item key="setting-1-2">
-                  <Link
-                    to="/u/action=2/users"
-                    className="flex items-center justify-start"
-                  >
-                    {t('side_bar.users')}
-                  </Link>
-                </Menu.Item>
-                <Menu.Item key="setting-1-3">
-                  <Link
-                    to="/u/action=3/groups_users"
-                    className="flex items-center justify-start"
-                  >
-                    {t('side_bar.groups_users')}
-                  </Link>
-                </Menu.Item>
-
-                <SubMenu
-                  key="setting-2-1"
-                  title={
-                    <span className="flex items-center gap-3">
-                      {' '}
-                      {t('side_bar.technique')}
-                    </span>
-                  }
-                >
-                  <Menu.Item key="setting-2-1-1">
+                {checkMenuPermission(permissions, 'setting-1-2', 'view') && (
+                  <Menu.Item key="setting-1-2">
                     <Link
-                      to="/u/action=4/technique_access"
+                      to="/u/action=2/users"
                       className="flex items-center justify-start"
                     >
-                      {t('side_bar.technique_access')}
+                      {t('side_bar.users')}
                     </Link>
                   </Menu.Item>
+                )}
 
-                  <Menu.Item key="setting-2-1-2">
+                {checkMenuPermission(permissions, 'setting-1-3', 'view') && (
+                  <Menu.Item key="setting-1-3">
                     <Link
-                      to="/u/action=5/technique_menu"
+                      to="/u/action=3/groups_users"
                       className="flex items-center justify-start"
                     >
-                      {t('side_bar.technique_menu')}
+                      {t('side_bar.groups_users')}
                     </Link>
                   </Menu.Item>
-                </SubMenu>
+                )}
+
+                {checkMenuPermission(permissions, 'setting-2-1', 'view') && (
+                  <SubMenu
+                    key="setting-2-1"
+                    title={
+                      <span className="flex items-center gap-3">
+                        {' '}
+                        {t('side_bar.technique')}
+                      </span>
+                    }
+                  >
+                    {checkMenuPermission(
+                      permissions,
+                      'setting-2-1-1',
+                      'view',
+                    ) && (
+                      <Menu.Item key="setting-2-1-1">
+                        <Link
+                          to="/u/action=4/technique_access"
+                          className="flex items-center justify-start"
+                        >
+                          {t('side_bar.technique_access')}
+                        </Link>
+                      </Menu.Item>
+                    )}
+
+                    {checkMenuPermission(
+                      permissions,
+                      'setting-2-1-2',
+                      'view',
+                    ) && (
+                      <Menu.Item key="setting-2-1-2">
+                        <Link
+                          to="/u/action=5/technique_menu"
+                          className="flex items-center justify-start"
+                        >
+                          {t('side_bar.technique_menu')}
+                        </Link>
+                      </Menu.Item>
+                    )}
+                  </SubMenu>
+                )}
               </SubMenu>
+            )}
           </Menu>
         </Sider>
       ) : (

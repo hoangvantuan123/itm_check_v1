@@ -35,7 +35,7 @@ export default function ShowListUser({
     try {
       // Gọi các API đồng thời
       const [response, responseAllResGroups] = await Promise.all([
-        GetUsersGroupAvailableID(group?.id,page, limit),
+        GetUsersGroupAvailableID(group?.id, page, limit),
       ])
 
       if (response.success) {
@@ -55,7 +55,7 @@ export default function ShowListUser({
     }
   }
   useEffect(() => {
-    if(isOpen === true){
+    if (isOpen === true) {
       fetchData()
     }
   }, [page, limit, isOpen])

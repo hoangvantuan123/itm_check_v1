@@ -53,8 +53,7 @@ export default function ShowListMenu({
     }
   }
   useEffect(() => {
-    if(isOpen === true){
-
+    if (isOpen === true) {
       fetchData()
     }
   }, [page, limit, isOpen, group, group?.id])

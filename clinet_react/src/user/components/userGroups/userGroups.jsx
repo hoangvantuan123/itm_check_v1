@@ -65,17 +65,16 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
 
   const handleCheckboxClick = (id, field, value) => {
     const newData = dataPermissionsMenu.map((item) =>
-      item.id === id ? { ...item, [field]: value } : item
-    );
+      item.id === id ? { ...item, [field]: value } : item,
+    )
     const updateData = {
       id: id,
       field: field,
       value: value,
     }
     PutPermissionsID(updateData)
-    setDataPermissionsMenu(newData);
-
-  };
+    setDataPermissionsMenu(newData)
+  }
 
   const fetchData = async () => {
     setLoading(true)
@@ -122,54 +121,57 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
     }
   }
   const fetchUserGroups = async () => {
-    setLoading(true);
+    setLoading(true)
     try {
-      const response = await GetAllResUserGroupsPageLimitID(group?.id, page, limit); // API 1
+      const response = await GetAllResUserGroupsPageLimitID(
+        group?.id,
+        page,
+        limit,
+      ) // API 1
       if (response.success) {
-        setDataSource(response.data.data);
-        setTotal(response.data.total);
-        setTotalPages(response.data.totalPages);
-        setError(null);
+        setDataSource(response.data.data)
+        setTotal(response.data.total)
+        setTotalPages(response.data.totalPages)
+        setError(null)
       } else {
-        setError(response.message);
-        setDataSource([]);
+        setError(response.message)
+        setDataSource([])
       }
     } catch (error) {
-      const errorMessage = error.message || 'Đã xảy ra lỗi';
-      setError(errorMessage);
-      setDataSource([]);
+      const errorMessage = error.message || 'Đã xảy ra lỗi'
+      setError(errorMessage)
+      setDataSource([])
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const fetchPermissionsMenu = async () => {
-    setLoadingPermissionsMenu(true);
+    setLoadingPermissionsMenu(true)
     try {
       const responsePermissionsMenu = await GetPermisionMenuGroupID(
         group?.id,
         pagePermissionsMenu,
-        limitPermissionsMenu
-      ); // API 2
+        limitPermissionsMenu,
+      ) // API 2
 
       if (responsePermissionsMenu.success) {
-        setDataPermissionsMenu(responsePermissionsMenu.data.data);
-        setTotalPermissionsMenu(responsePermissionsMenu.data.total);
-        setTotalPagesPermissionsMenu(responsePermissionsMenu.data.totalPages);
-        setErrorPermissionsMenu(null);
+        setDataPermissionsMenu(responsePermissionsMenu.data.data)
+        setTotalPermissionsMenu(responsePermissionsMenu.data.total)
+        setTotalPagesPermissionsMenu(responsePermissionsMenu.data.totalPages)
+        setErrorPermissionsMenu(null)
       } else {
-        setErrorPermissionsMenu(responsePermissionsMenu.message);
-        setDataPermissionsMenu([]);
+        setErrorPermissionsMenu(responsePermissionsMenu.message)
+        setDataPermissionsMenu([])
       }
     } catch (error) {
-      const errorMessage = error.message || 'Đã xảy ra lỗi';
-      setErrorPermissionsMenu(errorMessage);
-      setDataPermissionsMenu([]);
+      const errorMessage = error.message || 'Đã xảy ra lỗi'
+      setErrorPermissionsMenu(errorMessage)
+      setDataPermissionsMenu([])
     } finally {
-      setLoadingPermissionsMenu(false);
+      setLoadingPermissionsMenu(false)
     }
-  };
-
+  }
 
   useEffect(() => {
     if (isModalVisible === true) {
@@ -181,14 +183,22 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
         comment: group.comment || '',
       })
     }
-    if(pagePermissionsMenu > 1 || limitPermissionsMenu >10) {
+    if (pagePermissionsMenu > 1 || limitPermissionsMenu > 10) {
       fetchPermissionsMenu()
     }
-    
-    if(page > 1 || limit >10) {
+
+    if (page > 1 || limit > 10) {
       fetchUserGroups()
     }
-  }, [page, limit ,pagePermissionsMenu,limitPermissionsMenu, group?.id, group, form])
+  }, [
+    page,
+    limit,
+    pagePermissionsMenu,
+    limitPermissionsMenu,
+    group?.id,
+    group,
+    form,
+  ])
 
   const handleAddRow = () => {
     setIsModalOpen(true)
@@ -326,7 +336,9 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
       render: (text, record) => (
         <Checkbox
           checked={record.view}
-          onChange={(e) => handleCheckboxClick(record.id, 'view', e.target.checked)}
+          onChange={(e) =>
+            handleCheckboxClick(record.id, 'view', e.target.checked)
+          }
         />
       ),
     },
@@ -337,7 +349,9 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
       render: (text, record) => (
         <Checkbox
           checked={record.edit}
-          onChange={(e) => handleCheckboxClick(record.id, 'edit', e.target.checked)}
+          onChange={(e) =>
+            handleCheckboxClick(record.id, 'edit', e.target.checked)
+          }
         />
       ),
     },
@@ -348,7 +362,9 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
       render: (text, record) => (
         <Checkbox
           checked={record.create}
-          onChange={(e) => handleCheckboxClick(record.id, 'create', e.target.checked)}
+          onChange={(e) =>
+            handleCheckboxClick(record.id, 'create', e.target.checked)
+          }
         />
       ),
     },
@@ -359,12 +375,13 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
       render: (text, record) => (
         <Checkbox
           checked={record.delete}
-          onChange={(e) => handleCheckboxClick(record.id, 'delete', e.target.checked)}
+          onChange={(e) =>
+            handleCheckboxClick(record.id, 'delete', e.target.checked)
+          }
         />
       ),
     },
-  ];
-
+  ]
 
   const handleFinish = async (values) => {
     const { name, comment } = values
@@ -410,7 +427,7 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
       if (response.success) {
         message.success('Xóa thành công')
         setSelectedRowKeys([])
-        await fetchUserGroups();
+        await fetchUserGroups()
       } else {
         message.error(
           `Xóa thất bại: Yêu cầu không thành công, vui lòng thử lại`,
@@ -427,7 +444,7 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
       if (response.success) {
         message.success('Xóa thành công')
         setSelectedRowKeysPM([])
-        await fetchPermissionsMenu();
+        await fetchPermissionsMenu()
       } else {
         message.error(
           `Xóa thất bại: Yêu cầu không thành công, vui lòng thử lại`,
@@ -586,7 +603,6 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
             )}
             <Table
               rowSelection={rowSelectionPM}
-
               className="mt-3 cursor-pointer"
               dataSource={dataPermissionsMenu}
               columns={columnsPM}

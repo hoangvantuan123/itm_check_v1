@@ -5,12 +5,16 @@ import { accessToken } from '../../services/tokenService'
 export const PutPermissionsID = async (data) => {
   try {
     const token = accessToken()
-    const response = await axios.put(`${HOST_API_SERVER_P}/permission_menus`, data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
+    const response = await axios.put(
+      `${HOST_API_SERVER_P}/permission_menus`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
       },
-    })
+    )
 
     // Kiểm tra status code
     if (response.status === 200 || response.status === 204) {

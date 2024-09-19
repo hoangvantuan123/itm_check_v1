@@ -61,7 +61,12 @@ export default function AddMenu({ isOpen, onClose, fetchTableData }) {
       key,
     }
     try {
-      const result = await PostMenu(data.name, data.sequence, data.parent_id, data.key)
+      const result = await PostMenu(
+        data.name,
+        data.sequence,
+        data.parent_id,
+        data.key,
+      )
       if (result.success) {
         message.success(t('Tạo menu thành công'))
         fetchTableData()
@@ -138,9 +143,7 @@ export default function AddMenu({ isOpen, onClose, fetchTableData }) {
             name="key"
             style={{ textAlign: 'left' }}
             className="w-full"
-            rules={[
-              { required: true, message: t('Vui lòng nhập Key') },
-            ]}
+            rules={[{ required: true, message: t('Vui lòng nhập Key') }]}
           >
             <Input size="large" placeholder={t('Nhập key hiển thị')} />
           </Form.Item>
