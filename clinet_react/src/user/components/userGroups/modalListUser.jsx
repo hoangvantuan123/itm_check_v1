@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Input, Modal, Typography, Button, Table, Tag, message } from 'antd'
 import { GetAllResUsers } from '../../../features/resUsers/getResUsers'
 import { PostResUserGroups } from '../../../features/resGroups/postResUserGroups'
+import { GetUsersGroupAvailableID } from '../../../features/resGroups/getUsersGroupAvailablePageLimitID'
 
 const { Title } = Typography
 
@@ -34,7 +35,7 @@ export default function ShowListUser({
     try {
       // Gọi các API đồng thời
       const [response, responseAllResGroups] = await Promise.all([
-        GetAllResUsers(page, limit),
+        GetUsersGroupAvailableID(group?.id,page, limit),
       ])
 
       if (response.success) {
@@ -55,7 +56,6 @@ export default function ShowListUser({
   }
   useEffect(() => {
     if(isOpen === true){
-
       fetchData()
     }
   }, [page, limit, isOpen])
@@ -181,6 +181,7 @@ export default function ShowListUser({
       footer={[
         <Button
           key="cancel"
+          onClick={onClose}
           style={{ backgroundColor: '#f5f5f5', borderColor: '#d9d9d9' }}
         >
           {t('Thoát')}

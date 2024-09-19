@@ -1,4 +1,12 @@
-import { Controller, Post, Body, Req, Res, HttpStatus, UnauthorizedException } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Req,
+  Res,
+  HttpStatus,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AppService } from './auth.service';
 import { UserService } from './user.service';
 import { RegistrationDto } from './registration.dto';
@@ -30,7 +38,7 @@ export class AppController {
   async changePassword(
     @Req() req: Request,
     @Body() changePasswordDto: ChangePasswordDto,
-    @Res() res: Response
+    @Res() res: Response,
   ) {
     const { oldPassword, newPassword } = changePasswordDto;
 
@@ -46,19 +54,25 @@ export class AppController {
       const userId = (decodedToken as { id: number }).id;
 
       await this.appService.changePassword(userId, oldPassword, newPassword);
-      return res.status(HttpStatus.OK).json({ message: 'You have successfully changed your password', decodedToken });
+      return res
+        .status(HttpStatus.OK)
+        .json({
+          message: 'You have successfully changed your password',
+          decodedToken,
+        });
     } catch (error) {
       throw new UnauthorizedException('Invalid or expired token');
     }
   }
-
 
   @Post('refresh-token')
   async refreshToken(@Req() req: Request, @Res() res: Response) {
     const token = req.headers['authorization']?.split(' ')[1];
 
     if (!token) {
-      return res.status(401).json({ success: false, error: 'Token is required' });
+      return res
+        .status(401)
+        .json({ success: false, error: 'Token is required' });
     }
 
     try {
@@ -69,7 +83,6 @@ export class AppController {
           token: newToken,
         },
       });
-
     } catch (error) {
       return res.status(401).json({ success: false, error: error.message });
     }

@@ -1,6 +1,3 @@
 import { IsEmail, IsString, MinLength } from 'class-validator';
 
-export class CreateResUsersGroupsDto {
-
-
-}
+export class CreateResUsersGroupsDto {}

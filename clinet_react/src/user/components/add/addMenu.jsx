@@ -53,14 +53,15 @@ export default function AddMenu({ isOpen, onClose, fetchTableData }) {
     setLoading(false)
   }
   const handleFinish = async (values) => {
-    const { name, sequence, parent_id } = values
+    const { name, sequence, parent_id, key } = values
     const data = {
       name,
       sequence,
       ...(parent_id !== undefined ? { parent_id } : null),
+      key,
     }
     try {
-      const result = await PostMenu(data.name, data.parent_id, data.sequence)
+      const result = await PostMenu(data.name, data.sequence, data.parent_id, data.key)
       if (result.success) {
         message.success(t('Tạo menu thành công'))
         fetchTableData()
@@ -133,28 +134,39 @@ export default function AddMenu({ isOpen, onClose, fetchTableData }) {
             />
           </Form.Item>
           <Form.Item
-            label="Menu cha"
-            name="parent_id"
+            label={t('Key')}
+            name="key"
             style={{ textAlign: 'left' }}
             className="w-full"
+            rules={[
+              { required: true, message: t('Vui lòng nhập Key') },
+            ]}
           >
-            <Select
-              showSearch
-              placeholder="Chọn menu"
-              optionFilterProp="children"
-              filterOption={(input, option) =>
-                option?.children?.toLowerCase().includes(input.toLowerCase())
-              }
-              size="large"
-            >
-              {menuOptions.map((item) => (
-                <Option key={item.id} value={item.id}>
-                  {item.name}
-                </Option>
-              ))}
-            </Select>
+            <Input size="large" placeholder={t('Nhập key hiển thị')} />
           </Form.Item>
         </div>
+        <Form.Item
+          label="Menu cha"
+          name="parent_id"
+          style={{ textAlign: 'left' }}
+          className="w-full"
+        >
+          <Select
+            showSearch
+            placeholder="Chọn menu"
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              option?.children?.toLowerCase().includes(input.toLowerCase())
+            }
+            size="large"
+          >
+            {menuOptions.map((item) => (
+              <Option key={item.id} value={item.id}>
+                {item.name}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
       </Form>
     </Drawer>
   )

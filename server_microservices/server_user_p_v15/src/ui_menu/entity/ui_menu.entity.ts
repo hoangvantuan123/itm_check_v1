@@ -1,48 +1,62 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
 import { PermissionsMenu } from './permissions_menu.entity';
 @Entity('ui_menu')
 export class IrUiMenu {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({ nullable: true })
-    parent_id: number;
+  @Column({ nullable: true })
+  parent_id: number;
 
-    @ManyToOne(() => IrUiMenu, { nullable: true })
-    @JoinColumn({ name: 'parent_id' })
-    parent: IrUiMenu | null;
+  @ManyToOne(() => IrUiMenu, { nullable: true })
+  @JoinColumn({ name: 'parent_id' })
+  parent: IrUiMenu | null;
 
-    @Column()
-    create_uid: number;
+  @Column()
+  create_uid: number;
 
-    @Column()
-    write_uid: number;
+  @Column()
+  write_uid: number;
 
-    @Column({ nullable: true })
-    parent_path: string;
+  @Column({ nullable: true })
+  parent_path: string;
 
-    @Column({ nullable: true })
-    web_icon: string;
+  @Column({ nullable: true })
+  web_icon: string;
 
-    @Column({ nullable: true })
-    action: string;
+  @Column({ nullable: true })
+  action: string;
 
-    @Column({ nullable: true })
-    sequence: number;
-
-    @Column()
-    name: string;
+  @Column({ nullable: true })
+  sequence: number;
 
 
-    @Column({ nullable: true })
-    name_parent_id: string;
+  @Column()
+  name: string;
 
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-    create_date: Date;
+  @Column({ nullable: true })
+  key: string;
 
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
-    write_date: Date;
+  @Column({ nullable: true })
+  name_parent_id: string;
 
-    @OneToMany(() => PermissionsMenu, permissionsMenu => permissionsMenu.menu)
-    permissions: PermissionsMenu[];
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  create_date: Date;
+
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
+  write_date: Date;
+
+  @OneToMany(() => PermissionsMenu, (permissionsMenu) => permissionsMenu.menu)
+  permissions: PermissionsMenu[];
 }

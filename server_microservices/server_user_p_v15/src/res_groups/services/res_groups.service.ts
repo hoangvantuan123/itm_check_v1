@@ -9,11 +9,14 @@ export class ResGroupsService {
   constructor(
     @InjectRepository(ResGroups)
     private readonly resGroupsRepository: Repository<ResGroups>,
-    private readonly userService: UserService
-  ) { }
+    private readonly userService: UserService,
+  ) {}
 
   // Tạo mới
-  async create(userId: number, createResGroupsDto: Partial<ResGroups>): Promise<{ success: boolean; message: string; data?: ResGroups }> {
+  async create(
+    userId: number,
+    createResGroupsDto: Partial<ResGroups>,
+  ): Promise<{ success: boolean; message: string; data?: ResGroups }> {
     const user = await this.userService.findUserById(userId);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -27,7 +30,11 @@ export class ResGroupsService {
     };
   }
 
-  async findAllPageLimit(userId: number, page: number = 1, limit: number = 10): Promise<{ data: ResGroups[], total: number, totalPages:number }> {
+  async findAllPageLimit(
+    userId: number,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{ data: ResGroups[]; total: number; totalPages: number }> {
     const user = await this.userService.findUserById(userId);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -45,10 +52,10 @@ export class ResGroupsService {
     return {
       data,
       total,
-      totalPages
+      totalPages,
     };
   }
-  async findAll(userId: number): Promise<{ data: ResGroups[], total: number}> {
+  async findAll(userId: number): Promise<{ data: ResGroups[]; total: number }> {
     const user = await this.userService.findUserById(userId);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -62,7 +69,7 @@ export class ResGroupsService {
 
     return {
       data,
-      total
+      total,
     };
   }
 
@@ -72,7 +79,10 @@ export class ResGroupsService {
   }
 
   // Cập nhật
-  async update(id: number, updateResGroupsDto: Partial<ResGroups>): Promise<ResGroups> {
+  async update(
+    id: number,
+    updateResGroupsDto: Partial<ResGroups>,
+  ): Promise<ResGroups> {
     await this.resGroupsRepository.update(id, updateResGroupsDto);
     return this.resGroupsRepository.findOneBy({ id });
   }
@@ -83,10 +93,7 @@ export class ResGroupsService {
     if (!user) {
       throw new NotFoundException('User not found');
     }
-  
-    // Xóa tất cả các `id` trong một truy vấn duy nhất
+
     await this.resGroupsRepository.delete(ids);
   }
-  
-  
 }

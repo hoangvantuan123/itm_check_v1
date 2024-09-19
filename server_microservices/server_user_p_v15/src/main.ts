@@ -8,14 +8,22 @@ async function bootstrap() {
   const server = express();
   const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
 
-  app.use(cors({
-    origin: ['http://localhost:3000', 'http://103.75.180.66:3000', 'http://103.75.180.66:4173', 'http://localhost:4173', 'http://localhost:3001'], 
-    credentials: true,
-    methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  }));
+  app.use(
+    cors({
+      origin: [
+        'http://localhost:3000',
+        'http://103.75.180.66:3000',
+        'http://103.75.180.66:4173',
+        'http://localhost:4173',
+        'http://localhost:3001',
+      ],
+      credentials: true,
+      methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
+    }),
+  );
 
-  const port = process.env.PORT || 5000; 
+  const port = process.env.PORT || 5000;
   await app.listen(port);
 }
 bootstrap();

@@ -1,4 +1,3 @@
-// src/auth/user.dto.ts
 export class UserDto {
   id: number;
   companyId?: number;

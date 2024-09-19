@@ -47,8 +47,11 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-
-  async findUserAll(userId: number, page: number = 1, limit: number = 10): Promise<{ data: UserDto[], total: number, totalPages:number }> {
+  async findUserAll(
+    userId: number,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{ data: UserDto[]; total: number; totalPages: number }> {
     const user = await this.findUserById(userId);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -62,34 +65,37 @@ export class UserService {
       },
     });
     const totalPages = Math.ceil(total / limit);
-    const userDtos = data.map(user => new UserDto({
-      id: user.id,
-      companyId: user.companyId,
-      partnerId: user.partnerId,
-      active: user.active,
-      createDate: user.createDate,
-      login: user.login,
-      actionId: user.actionId,
-      createUid: user.createUid,
-      writeUid: user.writeUid,
-      signature: user.signature,
-      share: user.share,
-      writeDate: user.writeDate,
-      totpSecret: user.totpSecret,
-      notificationType: user.notificationType,
-      status: user.status,
-      karma: user.karma,
-      rankId: user.rankId,
-      nextRankId: user.nextRankId,
-      employeeCode: user.employeeCode,
-      name: user.nameUser,
-      language: user.language,
-    }));
+    const userDtos = data.map(
+      (user) =>
+        new UserDto({
+          id: user.id,
+          companyId: user.companyId,
+          partnerId: user.partnerId,
+          active: user.active,
+          createDate: user.createDate,
+          login: user.login,
+          actionId: user.actionId,
+          createUid: user.createUid,
+          writeUid: user.writeUid,
+          signature: user.signature,
+          share: user.share,
+          writeDate: user.writeDate,
+          totpSecret: user.totpSecret,
+          notificationType: user.notificationType,
+          status: user.status,
+          karma: user.karma,
+          rankId: user.rankId,
+          nextRankId: user.nextRankId,
+          employeeCode: user.employeeCode,
+          name: user.nameUser,
+          language: user.language,
+        }),
+    );
 
     return {
       data: userDtos,
       total,
-      totalPages
+      totalPages,
     };
   }
 
@@ -98,10 +104,7 @@ export class UserService {
     if (!user) {
       throw new NotFoundException('User not found');
     }
-  
+
     await this.userRepository.delete(ids);
   }
-
-  
- 
 }

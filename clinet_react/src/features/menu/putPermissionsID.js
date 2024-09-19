@@ -2,26 +2,18 @@ import axios from 'axios'
 import { HOST_API_SERVER_P } from '../../services'
 import { accessToken } from '../../services/tokenService'
 
-export const PostMenu = async (name, parent_id, sequence, key) => {
+export const PutPermissionsID = async (data) => {
   try {
     const token = accessToken()
-    const response = await axios.post(
-      `${HOST_API_SERVER_P}/menu`,
-      {
-        name,
-        sequence,
-        parent_id,
-        key
+    const response = await axios.put(`${HOST_API_SERVER_P}/permission_menus`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      },
-    )
+    })
 
-    if (response.status === 200 || response.status === 201) {
+    // Kiểm tra status code
+    if (response.status === 200 || response.status === 204) {
       return {
         success: true,
         message: response.data.message || 'Operation successful',

@@ -1,4 +1,17 @@
-import { Controller, Req, Get, HttpStatus, Query, Res, Post, Body, Param, Put, Delete, UnauthorizedException } from '@nestjs/common';
+import {
+  Controller,
+  Req,
+  Get,
+  HttpStatus,
+  Query,
+  Res,
+  Post,
+  Body,
+  Param,
+  Put,
+  Delete,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { MenuService } from '../services/ui_menu.service';
 import { IrUiMenu } from '../entity/ui_menu.entity';
 import { jwtConstants } from 'src/config/config';
@@ -7,15 +20,17 @@ import * as jwt from 'jsonwebtoken';
 
 @Controller('api/p')
 export class MenuController {
-  constructor(private readonly menuService: MenuService) { }
+  constructor(private readonly menuService: MenuService) {}
 
   @Get('menu/all')
   async findAll(
-    @Req() req: Request
-  ): Promise<{ data: IrUiMenu[], total: number }> {
+    @Req() req: Request,
+  ): Promise<{ data: IrUiMenu[]; total: number }> {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
-      throw new UnauthorizedException('The job version has expired. Please log in again to continue.');
+      throw new UnauthorizedException(
+        'The job version has expired. Please log in again to continue.',
+      );
     }
 
     const token = authHeader.split(' ')[1];
@@ -24,7 +39,9 @@ export class MenuController {
     }
 
     try {
-      const decodedToken = jwt.verify(token, jwtConstants.secret) as { id: number };
+      const decodedToken = jwt.verify(token, jwtConstants.secret) as {
+        id: number;
+      };
       const userId = decodedToken.id;
 
       if (!userId) {
@@ -33,15 +50,17 @@ export class MenuController {
 
       return this.menuService.findAll(userId);
     } catch (error) {
-      throw new UnauthorizedException('Request sending failed, please try again!');
+      throw new UnauthorizedException(
+        'Request sending failed, please try again!',
+      );
     }
   }
   @Get('menu')
   async findAllPageLimit(
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
-    @Req() req: Request
-  ): Promise<{ data: IrUiMenu[], total: number }> {
+    @Req() req: Request,
+  ): Promise<{ data: IrUiMenu[]; total: number }> {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
       throw new UnauthorizedException('Authorization header missing');
@@ -53,7 +72,9 @@ export class MenuController {
     }
 
     try {
-      const decodedToken = jwt.verify(token, jwtConstants.secret) as { id: number };
+      const decodedToken = jwt.verify(token, jwtConstants.secret) as {
+        id: number;
+      };
       const userId = decodedToken.id;
 
       if (!userId) {
@@ -62,7 +83,9 @@ export class MenuController {
 
       return this.menuService.findAllPageLimit(userId, page, limit);
     } catch (error) {
-      throw new UnauthorizedException('Request sending failed, please try again!');
+      throw new UnauthorizedException(
+        'Request sending failed, please try again!',
+      );
     }
   }
   @Get('menu/:id')
@@ -71,7 +94,11 @@ export class MenuController {
   }
 
   @Post('menu')
-  async create(@Body() createUIMenu: IrUiMenu, @Req() req: Request, @Res() res: Response): Promise<Response> {
+  async create(
+    @Body() createUIMenu: IrUiMenu,
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<Response> {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
       throw new UnauthorizedException('Authorization header missing');
@@ -79,7 +106,9 @@ export class MenuController {
 
     const token = authHeader.split(' ')[1];
     if (!token) {
-      throw new UnauthorizedException('The job version has expired. Please log in again to continue.');
+      throw new UnauthorizedException(
+        'The job version has expired. Please log in again to continue.',
+      );
     }
     try {
       const decodedToken = jwt.verify(token, jwtConstants.secret);
@@ -92,7 +121,9 @@ export class MenuController {
       const result = await this.menuService.create(userId, createUIMenu);
       return res.status(HttpStatus.OK).json(result);
     } catch (error) {
-      throw new UnauthorizedException('Request sending failed, please try again!');
+      throw new UnauthorizedException(
+        'Request sending failed, please try again!',
+      );
     }
   }
 
@@ -101,9 +132,8 @@ export class MenuController {
     @Param('id') id: number,
     @Body() menu: Partial<IrUiMenu>,
     @Req() req: Request,
-    @Res() res: Response
+    @Res() res: Response,
   ): Promise<Response> {
-
     const authHeader = req.headers.authorization;
     if (!authHeader) {
       throw new UnauthorizedException('Authorization header missing');
@@ -111,7 +141,9 @@ export class MenuController {
 
     const token = authHeader.split(' ')[1];
     if (!token) {
-      throw new UnauthorizedException('Token missing');
+      throw new UnauthorizedException(
+        'The job version has expired. Please log in again to continue.',
+      );
     }
 
     try {
@@ -124,15 +156,52 @@ export class MenuController {
 
       const result = await this.menuService.update(userId, id, menu);
       return res.status(HttpStatus.OK).json(result);
-
     } catch (error) {
       throw new UnauthorizedException('Request failed, please try again!');
     }
   }
 
-
   @Delete('menu/:id')
   async remove(@Param('id') id: number): Promise<void> {
     return this.menuService.remove(id);
+  }
+
+  @Get('available')
+  async getAvailableMenus(
+    @Query('groupId') groupId: number,
+    @Req() req: Request,
+    @Res() res: Response,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ): Promise<Response> {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      throw new UnauthorizedException('Authorization header missing');
+    }
+    const token = authHeader.split(' ')[1];
+    if (!token) {
+      throw new UnauthorizedException(
+        'The job version has expired. Please log in again to continue.',
+      );
+    }
+
+    try {
+      const decodedToken = jwt.verify(token, jwtConstants.secret);
+
+      const userId = (decodedToken as { id: number }).id;
+      if (!userId) {
+        throw new UnauthorizedException('Invalid token payload');
+      }
+
+      const result = await this.menuService.getAvailableMenus(
+        groupId,
+        userId,
+        page,
+        limit,
+      );
+      return res.status(HttpStatus.OK).json(result);
+    } catch (error) {
+      throw new UnauthorizedException('Request failed, please try again!');
+    }
   }
 }

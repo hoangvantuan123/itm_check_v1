@@ -15,7 +15,4 @@ export class RegistrationDto {
   nameUser: string;
   @IsString()
   language: string;
-
-
-
 }

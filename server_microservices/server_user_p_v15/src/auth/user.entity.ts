@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert, OneToMany} from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  BeforeInsert,
+  OneToMany,
+} from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { ResUserGroups } from 'src/res_groups/entity/res_user_groups.entity';
 
@@ -15,7 +21,6 @@ export class Users {
 
   @Column({ default: false })
   active: boolean;
-  
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createDate: Date;
@@ -29,7 +34,7 @@ export class Users {
   @Column({ nullable: true })
   actionId: number;
 
-  @Column({ nullable: true })   
+  @Column({ nullable: true })
   createUid: number;
 
   @Column({ nullable: true })
@@ -63,20 +68,19 @@ export class Users {
   nextRankId: number;
 
   @Column({ nullable: true })
-  employeeCode: string;  
-  
-  @Column({ nullable: true })
-  nameUser: string;  
+  employeeCode: string;
 
-  
   @Column({ nullable: true })
-  language: string;  
+  nameUser: string;
+
+  @Column({ nullable: true })
+  language: string;
 
   beforeInsert() {
     this.hashPassword();
   }
 
-  @OneToMany(() => ResUserGroups, userGroups => userGroups.user)
+  @OneToMany(() => ResUserGroups, (userGroups) => userGroups.user)
   userGroups: ResUserGroups[];
 
   private hashPassword() {

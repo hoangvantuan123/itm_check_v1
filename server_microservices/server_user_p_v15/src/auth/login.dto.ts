@@ -4,5 +4,4 @@ export class LoginDto {
   @IsEmail()
   login: string;
   password: string;
-  
 }

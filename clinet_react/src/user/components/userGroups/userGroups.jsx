@@ -28,6 +28,8 @@ import ShowListUser from './modalListUser'
 import { GetAllResUserGroupsPageLimitID } from '../../../features/resGroups/getResUserGroupsID'
 import { DeleteResUserGroups } from '../../../features/resGroups/deleteResUserGroups'
 import { GetPermisionMenuGroupID } from '../../../features/menu/getPermissionsMenuGroupID'
+import { PutPermissionsID } from '../../../features/menu/putPermissionsID'
+import { DeletePermissionsMenu } from '../../../features/menu/deletePermissionsMenu'
 import ShowListMenu from './modalListMenu'
 const { Title } = Typography
 const { Option } = Select
@@ -65,6 +67,12 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
     const newData = dataPermissionsMenu.map((item) =>
       item.id === id ? { ...item, [field]: value } : item
     );
+    const updateData = {
+      id: id,
+      field: field,
+      value: value,
+    }
+    PutPermissionsID(updateData)
     setDataPermissionsMenu(newData);
 
   };
@@ -113,6 +121,56 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
       setLoadingPermissionsMenu(false)
     }
   }
+  const fetchUserGroups = async () => {
+    setLoading(true);
+    try {
+      const response = await GetAllResUserGroupsPageLimitID(group?.id, page, limit); // API 1
+      if (response.success) {
+        setDataSource(response.data.data);
+        setTotal(response.data.total);
+        setTotalPages(response.data.totalPages);
+        setError(null);
+      } else {
+        setError(response.message);
+        setDataSource([]);
+      }
+    } catch (error) {
+      const errorMessage = error.message || 'Đã xảy ra lỗi';
+      setError(errorMessage);
+      setDataSource([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchPermissionsMenu = async () => {
+    setLoadingPermissionsMenu(true);
+    try {
+      const responsePermissionsMenu = await GetPermisionMenuGroupID(
+        group?.id,
+        pagePermissionsMenu,
+        limitPermissionsMenu
+      ); // API 2
+
+      if (responsePermissionsMenu.success) {
+        setDataPermissionsMenu(responsePermissionsMenu.data.data);
+        setTotalPermissionsMenu(responsePermissionsMenu.data.total);
+        setTotalPagesPermissionsMenu(responsePermissionsMenu.data.totalPages);
+        setErrorPermissionsMenu(null);
+      } else {
+        setErrorPermissionsMenu(responsePermissionsMenu.message);
+        setDataPermissionsMenu([]);
+      }
+    } catch (error) {
+      const errorMessage = error.message || 'Đã xảy ra lỗi';
+      setErrorPermissionsMenu(errorMessage);
+      setDataPermissionsMenu([]);
+    } finally {
+      setLoadingPermissionsMenu(false);
+    }
+  };
+
+
   useEffect(() => {
     if (isModalVisible === true) {
       fetchData()
@@ -123,7 +181,14 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
         comment: group.comment || '',
       })
     }
-  }, [page, limit, group?.id, group, form])
+    if(pagePermissionsMenu > 1 || limitPermissionsMenu >10) {
+      fetchPermissionsMenu()
+    }
+    
+    if(page > 1 || limit >10) {
+      fetchUserGroups()
+    }
+  }, [page, limit ,pagePermissionsMenu,limitPermissionsMenu, group?.id, group, form])
 
   const handleAddRow = () => {
     setIsModalOpen(true)
@@ -335,8 +400,8 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
     setLimit(pagination.pageSize)
   }
   const handleTableChangePM = (pagination) => {
-    setPage(pagination.current)
-    setLimit(pagination.pageSize)
+    setPagePermissionsMenu(pagination.current)
+    setLimitPermissionsMenu(pagination.pageSize)
   }
   const handleDeleteGroupsUser = async () => {
     try {
@@ -345,7 +410,7 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
       if (response.success) {
         message.success('Xóa thành công')
         setSelectedRowKeys([])
-        fetchData()
+        await fetchUserGroups();
       } else {
         message.error(
           `Xóa thất bại: Yêu cầu không thành công, vui lòng thử lại`,
@@ -356,6 +421,24 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
       message.error('Có lỗi xảy ra, vui lòng thử lại')
     }
   }
+  const handleDeletePermissionsMenu = async () => {
+    try {
+      const response = await DeletePermissionsMenu(selectedRowKeysPM)
+      if (response.success) {
+        message.success('Xóa thành công')
+        setSelectedRowKeysPM([])
+        await fetchPermissionsMenu();
+      } else {
+        message.error(
+          `Xóa thất bại: Yêu cầu không thành công, vui lòng thử lại`,
+        )
+      }
+    } catch (error) {
+      console.error('Lỗi khi xóa:', error)
+      message.error('Có lỗi xảy ra, vui lòng thử lại')
+    }
+  }
+
   return (
     <div>
       <Form
@@ -488,10 +571,22 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
                 </svg>
               </span>
             </summary>
-
+            {selectedRowKeysPM != null && selectedRowKeysPM.length > 0 && (
+              <>
+                <span
+                  className="inline-flex gap-2 mt-3 rounded bg-red-100 hover:bg-red-200 p-1 text-red-600 cursor-pointer px-4"
+                  onClick={() => {
+                    handleDeletePermissionsMenu()
+                  }}
+                >
+                  <DeleteOutlined className=" text-lg" />
+                  Xoá
+                </span>
+              </>
+            )}
             <Table
               rowSelection={rowSelectionPM}
-            
+
               className="mt-3 cursor-pointer"
               dataSource={dataPermissionsMenu}
               columns={columnsPM}
@@ -536,7 +631,7 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
         onClose={closeModalListMenu}
         group={group}
         fetchDataUserGroups={fetchData}
-      /> 
+      />
     </div>
   )
 }

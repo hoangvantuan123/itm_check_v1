@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { Users } from './user.entity';
 import * as bcrypt from 'bcrypt';
@@ -9,8 +13,7 @@ import { jwtConstants } from 'src/config/config';
 
 @Injectable()
 export class AppService {
-  constructor(private readonly userService: UserService,
-  ) { }
+  constructor(private readonly userService: UserService) {}
 
   private async hashPassword(password: string): Promise<string> {
     const saltRounds = 10;
@@ -34,9 +37,13 @@ export class AppService {
     return savedUser;
   }
 
-
-
-  async loginUser(loginData: LoginDto): Promise<{ success: boolean, data?: { user: Partial<Users>, token: string }, error?: string }> {
+  async loginUser(
+    loginData: LoginDto,
+  ): Promise<{
+    success: boolean;
+    data?: { user: Partial<Users>; token: string };
+    error?: string;
+  }> {
     const { login, password } = loginData;
 
     try {
@@ -58,11 +65,14 @@ export class AppService {
         };
       }
 
-      const token = jwt.sign({
-        id: user.id,
-        login: user.login,
-        partnerId: user.partnerId,
-      }, jwtConstants.secret);
+      const token = jwt.sign(
+        {
+          id: user.id,
+          login: user.login,
+          partnerId: user.partnerId,
+        },
+        jwtConstants.secret,
+      );
 
       const userResponse: Partial<Users> = {
         login: user.login,
@@ -76,7 +86,6 @@ export class AppService {
           token,
         },
       };
-
     } catch (error) {
       return {
         success: false,
@@ -85,10 +94,12 @@ export class AppService {
     }
   }
 
-
-
   /* Đổi pass */
-  async changePassword(userId: number, oldPassword: string, newPassword: string): Promise<{ success: boolean, message: string }> {
+  async changePassword(
+    userId: number,
+    oldPassword: string,
+    newPassword: string,
+  ): Promise<{ success: boolean; message: string }> {
     const user = await this.userService.findUserById(userId);
 
     if (!user) {
@@ -112,7 +123,6 @@ export class AppService {
     };
   }
 
-
   async refreshToken(token: string): Promise<{ token: string }> {
     try {
       const decoded: any = jwt.verify(token, jwtConstants.secret);
@@ -129,20 +139,18 @@ export class AppService {
           partnerId: user.partnerId,
         },jwtConstants.secret, { expiresIn: '2h' });
    */
-      const newToken = jwt.sign({
-        id: user.id,
-        login: user.login,
-        partnerId: user.partnerId,
-      }, jwtConstants.secret);
+      const newToken = jwt.sign(
+        {
+          id: user.id,
+          login: user.login,
+          partnerId: user.partnerId,
+        },
+        jwtConstants.secret,
+      );
 
       return { token: newToken };
-
     } catch (error) {
       throw new UnauthorizedException('Invalid token');
     }
   }
-
-
-
-  
 }

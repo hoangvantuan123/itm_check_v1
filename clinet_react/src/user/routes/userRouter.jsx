@@ -23,12 +23,14 @@ import Default from '../pages/default'
 import { RefreshToken } from '../../features/auth/API/refreshToken'
 import TimeTracking from '../pages/TimeTracking'
 import TechniqueMenu from '../pages/techniqueMenu'
+import { GetUserPermissions } from '../../features/auth/API/getPermissions'
 
 const UserRouter = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const intervalRef = useRef(null)
+  const [userPermissions, setUserPermissions] = useState([]);
   useEffect(() => {
     const refreshInterval = 1000 * 60 * 40
 
@@ -54,7 +56,6 @@ const UserRouter = () => {
   useEffect(() => {
     const token = localStorage.getItem('token_1h')
     const userInfo = localStorage.getItem('userInfo')
-
     if (token && userInfo) {
       setIsLoggedIn(true)
     } else {
@@ -63,101 +64,33 @@ const UserRouter = () => {
       navigate('/u/login')
     }
   }, [navigate])
-  const permissions = {
-    roles: ['admin', 'editor'],
 
-    menu: {
-      home: {
-        view: true,
-        edit: false,
-        create: false,
-        delete: false,
-      },
-      notifications: {
-        view: true,
-        edit: false,
-        create: false,
-        delete: false,
-      },
-      work: {
-        view: true,
-        edit: false,
-        create: false,
-        delete: false,
-        submenus: {
-          time_tracking: {
-            view: true,
-            edit: false,
-            create: false,
-            delete: false,
-          },
-          payroll: {
-            view: true,
-            edit: false,
-            create: false,
-            delete: false,
-          },
-        },
-      },
-      settings: {
-        view: true,
-        edit: false,
-        create: false,
-        delete: false,
-        submenus: {
-          general_settings: {
-            view: true,
-            edit: true,
-            create: false,
-            delete: false,
-          },
-          users: {
-            view: true,
-            edit: true,
-            create: true,
-            delete: false,
-          },
-          groups_users: {
-            view: false,
-            edit: false,
-            create: false,
-            delete: false,
-          },
-          technique: {
-            view: true,
-            edit: false,
-            create: false,
-            delete: false,
-            submenus: {
-              technique_access: {
-                view: true,
-                edit: false,
-                create: false,
-                delete: false,
-              },
-              technique_menu: {
-                view: false,
-                edit: false,
-                create: false,
-                delete: false,
-              },
-            },
-          },
-        },
-      },
-    },
+
+  const fetchData = async () => {
+    const response = await GetUserPermissions()
+    if (response.success) {
+      setUserPermissions(response.data)
+    } else {
+      setError(response.message)
+      setUserPermissions([])
+    }
   }
+  useEffect(() => {
+    fetchData()
+
+  }, [])
+ 
 
   return (
     <Routes>
       <Route path="u/login" element={<Login />} />
-      <Route path="u/register" element={<Register />} />
+      <Route path="u/register/Q9xT7ZvJ3KpF5Rm8" element={<Register />} />
       {isLoggedIn && (
         <Route
           path="/*"
           element={
             <Layout style={{ minHeight: '100vh' }}>
-              <Sidebar permissions={permissions} />
+              <Sidebar permissions={userPermissions} />
               <Layout>
                 <Content>
                   <Routes>

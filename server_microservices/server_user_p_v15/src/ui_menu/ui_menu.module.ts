@@ -10,8 +10,13 @@ import { PermissionsMenu } from './entity/permissions_menu.entity';
 import { PermissionMenuController } from './controller/permissions_menu.controller';
 
 @Module({
-  imports: [DatabaseModule,AuthModule, TypeOrmModule.forFeature([IrUiMenu, PermissionsMenu])],
+  imports: [
+    DatabaseModule,
+    AuthModule,
+    TypeOrmModule.forFeature([IrUiMenu, PermissionsMenu]),
+  ],
   providers: [MenuService, PermissionsMenuService],
   controllers: [MenuController, PermissionMenuController],
+  exports: [],
 })
 export class MenuModule {}

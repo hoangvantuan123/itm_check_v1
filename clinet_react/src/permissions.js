@@ -1,35 +1,31 @@
 // permissions.js
 
+const findMenuByKey = (permissions, menuKey) => {
+  return permissions.find(menu => menu.key_name === menuKey) || null;
+};
+
 export const checkMenuPermission = (
   permissions,
   menuKey,
-  action = 'view',
-  submenuKey = null,
+  action = 'view'
 ) => {
-  if (!permissions.menu[menuKey]) return false
+  // Tìm menu dựa trên menuKey
+  const menu = findMenuByKey(permissions, menuKey);
+  
+  if (!menu) return false; 
 
-  if (submenuKey) {
-    if (
-      permissions.menu[menuKey].submenus &&
-      permissions.menu[menuKey].submenus[submenuKey]
-    ) {
-      return permissions.menu[menuKey].submenus[submenuKey][action] ?? false
-    } else {
-      return false
-    }
-  }
-
-  return permissions.menu[menuKey][action] ?? false
-}
+  const permissionKey = `pm_${action}`;
+  return menu[permissionKey] ?? false;
+};
 
 export const checkActionPermission = (
   permissions,
   menuKey,
-  actionKey,
-  submenuKey = null,
+  actionKey
 ) => {
-  return checkMenuPermission(permissions, menuKey, actionKey, submenuKey)
-}
+  return checkMenuPermission(permissions, menuKey, actionKey);
+};
+
 
 /* {checkActionPermission(permissions, 'settings', 'edit', 'users') && (
     <button className="action-button">Edit Users</button>

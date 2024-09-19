@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Input, Modal, Typography, Button, Table, Tag, message } from 'antd'
-import { GetMenuPageLimit } from '../../../features/menu/getMenuPageLimit'
+import { GetMenuAvailableID } from '../../../features/menu/getMenuAvailablePageLimitID'
 import { PostPermissionsMenu } from '../../../features/menu/postPermissionsMenu'
 const { Title } = Typography
 
@@ -33,7 +33,7 @@ export default function ShowListMenu({
     try {
       // Gọi các API đồng thời
       const [response, responseAllResGroups] = await Promise.all([
-        GetMenuPageLimit(page, limit),
+        GetMenuAvailableID(group?.id, page, limit),
       ])
 
       if (response.success) {
@@ -57,7 +57,7 @@ export default function ShowListMenu({
 
       fetchData()
     }
-  }, [page, limit, isOpen])
+  }, [page, limit, isOpen, group, group?.id])
 
   const [visibleColumns, setVisibleColumns] = useState({
     name: true,
@@ -153,6 +153,7 @@ export default function ShowListMenu({
       footer={[
         <Button
           key="cancel"
+          onClick={onClose}
           style={{ backgroundColor: '#f5f5f5', borderColor: '#d9d9d9' }}
         >
           {t('Thoát')}

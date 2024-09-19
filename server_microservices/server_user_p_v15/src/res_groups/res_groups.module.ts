@@ -8,10 +8,15 @@ import { AuthModule } from 'src/auth/auth.module';
 import { ResUserGroupsController } from './controller/res_user_groups.controller';
 import { ResUserGroups } from './entity/res_user_groups.entity';
 import { ResUserGroupsService } from './services/res_user_groups.services';
+import { Users } from 'src/auth/user.entity';
 
 @Module({
-    imports: [DatabaseModule,AuthModule, TypeOrmModule.forFeature([ResGroups, ResUserGroups])],
-    controllers: [ResGroupsController, ResUserGroupsController],
-    providers: [ResGroupsService , ResUserGroupsService ],
-  })
-export class ResGroupsModule { }
+  imports: [
+    DatabaseModule,
+    AuthModule,
+    TypeOrmModule.forFeature([ResGroups, ResUserGroups, Users]),
+  ],
+  controllers: [ResGroupsController, ResUserGroupsController],
+  providers: [ResGroupsService, ResUserGroupsService],
+})
+export class ResGroupsModule {}

@@ -307,7 +307,7 @@ const Sidebar = ({ permissions }) => {
             defaultSelectedKeys={['home']}
             className="border-r-0"
           >
-            {checkMenuPermission(permissions, 'home') && (
+            {checkMenuPermission(permissions, 'home',  'view') && (
               <Menu.Item key="home">
                 <Link to="/u/home" className="flex items-center justify-start">
                   <span
@@ -335,7 +335,6 @@ const Sidebar = ({ permissions }) => {
               </Link>
             </Menu.Item>
 
-            {/* Menu có nhiều cấp */}
 
             <SubMenu
               key="work"
@@ -368,8 +367,7 @@ const Sidebar = ({ permissions }) => {
                 </Link>
               </Menu.Item>
             </SubMenu>
-            {checkMenuPermission(permissions, 'settings') && (
-              <SubMenu
+            <SubMenu
                 key="setting"
                 title={
                   <span className="flex items-center gap-3">
@@ -382,13 +380,7 @@ const Sidebar = ({ permissions }) => {
                   </span>
                 }
               >
-                {checkMenuPermission(
-                  permissions,
-                  'settings',
-                  'view',
-                  'general_settings',
-                ) && (
-                  <Menu.Item key="setting-1-1">
+                 <Menu.Item key="setting-1-1">
                     <Link
                       to="/u/action=1/general_settings"
                       className="flex items-center justify-start"
@@ -396,7 +388,6 @@ const Sidebar = ({ permissions }) => {
                       {t('side_bar.general_settings')}
                     </Link>
                   </Menu.Item>
-                )}
 
                 <Menu.Item key="setting-1-2">
                   <Link
@@ -443,7 +434,6 @@ const Sidebar = ({ permissions }) => {
                   </Menu.Item>
                 </SubMenu>
               </SubMenu>
-            )}
           </Menu>
         </Sider>
       ) : (

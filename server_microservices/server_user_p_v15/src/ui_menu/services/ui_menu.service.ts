@@ -3,17 +3,19 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { IrUiMenu } from '../entity/ui_menu.entity';
 import { UserService } from 'src/auth/user.service';
+import { PermissionsMenu } from '../entity/permissions_menu.entity';
 
 @Injectable()
 export class MenuService {
   constructor(
     @InjectRepository(IrUiMenu)
     private readonly menuRepository: Repository<IrUiMenu>,
-    private readonly userService: UserService
+    @InjectRepository(PermissionsMenu)
+    private readonly permissionsMenuRepository: Repository<PermissionsMenu>,
+    private readonly userService: UserService,
   ) { }
 
-
-  async findAll(userId: number): Promise<{ data: any[], total: number }> {
+  async findAll(userId: number): Promise<{ data: any[]; total: number }> {
     const user = await this.userService.findUserById(userId);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -27,13 +29,14 @@ export class MenuService {
       relations: ['parent'],
     });
 
-    const dataWithParentName = data.map(menu => ({
+    const dataWithParentName = data.map((menu) => ({
       id: menu.id,
       parent_id: menu.parent_id,
       sequence: menu.sequence,
       name: menu.name,
+      key_name: menu.key,
       create_date: menu.create_date,
-      parent_name: menu.parent ? menu.parent.name : null
+      parent_name: menu.parent ? menu.parent.name : null,
     }));
 
     return {
@@ -41,34 +44,39 @@ export class MenuService {
       total,
     };
   }
-  async findAllPageLimit(userId: number, page: number = 1, limit: number = 10): Promise<{ data: any[], total: number, totalPages: number }> {
+  async findAllPageLimit(
+    userId: number,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{ data: any[]; total: number; totalPages: number }> {
     const user = await this.userService.findUserById(userId);
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
     const [data, total] = await this.menuRepository.findAndCount({
-      select: ['id', 'name', 'sequence', 'create_date', 'parent_id'],
+      select: ['id', 'name', 'sequence', 'create_date', 'parent_id', 'key'],
       order: {
         create_date: 'DESC',
       },
       relations: ['parent'],
     });
 
-    const dataWithParentName = data.map(menu => ({
+    const dataWithParentName = data.map((menu) => ({
       id: menu.id,
       parent_id: menu.parent_id,
       sequence: menu.sequence,
       name: menu.name,
+      key_name: menu.key,
       create_date: menu.create_date,
-      parent_name: menu.parent ? menu.parent.name : null
+      parent_name: menu.parent ? menu.parent.name : null,
     }));
     const totalPages = Math.ceil(total / limit);
 
     return {
       data: dataWithParentName,
       total,
-      totalPages
+      totalPages,
     };
   }
 
@@ -76,7 +84,10 @@ export class MenuService {
     return this.menuRepository.findOneBy({ id });
   }
 
-  async create(userId: number, createUIMenu: Partial<IrUiMenu>): Promise<{ success: boolean; message: string; data?: IrUiMenu }> {
+  async create(
+    userId: number,
+    createUIMenu: Partial<IrUiMenu>,
+  ): Promise<{ success: boolean; message: string; data?: IrUiMenu }> {
     const user = await this.userService.findUserById(userId);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -84,7 +95,7 @@ export class MenuService {
     const newData = {
       ...createUIMenu,
       create_uid: userId,
-      write_uid: userId
+      write_uid: userId,
     };
 
     const menu = this.menuRepository.create(newData);
@@ -92,32 +103,101 @@ export class MenuService {
     return {
       success: true,
       message: 'created successfully',
-
     };
   }
 
-  async update(userId: number, id: number, menu: Partial<IrUiMenu>): Promise<{ success: boolean; message: string; data?: IrUiMenu }> {
+  async update(
+    userId: number,
+    id: number,
+    menu: Partial<IrUiMenu>,
+  ): Promise<{ success: boolean; message: string; data?: IrUiMenu }> {
     const user = await this.userService.findUserById(userId);
     if (!user) {
-        throw new NotFoundException('User not found');
+      throw new NotFoundException('User not found');
     }
 
     await this.menuRepository.update(id, menu);
     const updatedMenu = await this.menuRepository.findOneBy({ id });
 
     if (!updatedMenu) {
-        throw new NotFoundException('Menu not found');
+      throw new NotFoundException('Menu not found');
     }
 
     return {
-        success: true,
-        message: 'Updated successfully',
-        data: updatedMenu,
+      success: true,
+      message: 'Updated successfully',
+      data: updatedMenu,
     };
-}
-
+  }
 
   async remove(id: number): Promise<void> {
     await this.menuRepository.delete(id);
   }
+
+  async getAvailableMenus(
+    groupId: number,
+    userId: number,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{
+    success: boolean;
+    message: string;
+    data?: IrUiMenu[];
+    total?: number;
+    totalPages?: number;
+  }> {
+    // Kiểm tra xem người dùng có tồn tại không
+    const user = await this.userService.findUserById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const menuIdsWithPermissions = await this.permissionsMenuRepository
+      .createQueryBuilder('permissions')
+      .select('permissions.menu_id')
+      .where('permissions.group_id = :groupId', { groupId })
+      .getRawMany();
+
+    const menuIdsWithPermissionsArray = menuIdsWithPermissions
+      .map((row) => row.permissions_menu_id)
+      .filter((id) => id != null);
+
+    const offset = (page - 1) * limit;
+
+    // Create query builder for fetching menus
+    let queryBuilder = this.menuRepository
+      .createQueryBuilder('menu')
+      .skip(offset)
+      .take(limit);
+
+    // Only apply exclusion if menuIdsWithPermissionsArray has values
+    if (menuIdsWithPermissionsArray.length > 0) {
+      queryBuilder = queryBuilder.where('menu.id NOT IN (:...menuIds)', {
+        menuIds: menuIdsWithPermissionsArray,
+      });
+    }
+
+    const [availableMenus, total] = await queryBuilder.getManyAndCount();
+
+    const totalPages = Math.ceil(total / limit);
+
+    if (availableMenus.length === 0) {
+      return {
+        success: true,
+        message: 'No available menus found',
+        data: [],
+        total,
+        totalPages,
+      };
+    }
+
+    return {
+      success: true,
+      message: 'Available menus retrieved successfully',
+      data: availableMenus,
+      total,
+      totalPages,
+    };
+  }
+
 }

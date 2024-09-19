@@ -126,6 +126,17 @@ export default function TechniqueMenu() {
       ...(visibleColumns.name ? {} : { name: () => null }),
     },
     {
+      title: 'Key',
+      dataIndex: 'key_name',
+      key: 'key_name',
+      sorter: (a, b) => {
+        const A = a.key_name || ''
+        const B = b.key_name || ''
+        return A.localeCompare(B)
+      },
+      ...(visibleColumns.key_name ? {} : { key_name: () => null }),
+    },
+    {
       title: 'Menu Cha',
       dataIndex: 'parent_name',
       key: 'parent_name',
