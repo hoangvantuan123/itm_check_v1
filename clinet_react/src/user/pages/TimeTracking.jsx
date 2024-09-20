@@ -80,7 +80,6 @@ export default function TimeTracking() {
     },
   ]
 
-  // Hàm xử lý khi người dùng chọn ngày trên lịch
   const onSelect = (newValue) => {
     const selectedDate = newValue.tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD')
     setValue(newValue)
@@ -91,41 +90,50 @@ export default function TimeTracking() {
     setDrawerVisible(true) // Mở Drawer khi chọn ngày
   }
 
-  // Hàm tùy chỉnh ô lịch để hiển thị icon màu sắc dưới số ngày
   const dateCellRender = (date) => {
     const selectedDate = date.tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD')
     const record = sampleData.find((item) => item.date === selectedDate)
-
-    if (!record) return <div>{date.date()}</div> // Hiển thị ngày nếu không có dữ liệu
-
-    // Kiểm tra trạng thái của ngày để hiển thị màu và icon phù hợp
+  
+    if (!record) return <div></div> 
+  
     const icons = record.records.map((r, index) => {
       let icon = null
       if (r.status === 'Absent') {
         icon = (
-          <CloseCircleOutlined style={{ color: 'red', fontSize: '16px' }} />
+          <> 
+            <CloseCircleOutlined style={{ color: 'red', fontSize: '16px' }} />
+          </>
         )
       } else if (r.status === 'Late') {
         icon = (
-          <ExclamationCircleOutlined
-            style={{ color: 'yellow', fontSize: '16px' }}
-          />
+          <>
+            <ExclamationCircleOutlined style={{ color: 'yellow', fontSize: '16px' }} />
+          </>
         )
       } else {
         icon = (
-          <CheckCircleOutlined style={{ color: 'green', fontSize: '16px' }} />
+          <>
+            <CheckCircleOutlined style={{ color: 'green', fontSize: '16px' }} />
+          </>
         )
       }
-      return <div key={index}>{icon}</div>
+      
+      // Hiển thị thêm timeIn
+      return (
+        <div key={index} className="flex items-center gap-2">
+          {icon}
+          <span>{r.timeIn}</span> 
+        </div>
+      )
     })
-
+  
     return (
       <div className="flex flex-col items-center">
-        <div>{date.date()}</div>
         {icons}
       </div>
     )
   }
+  
 
   // Cột cho bảng chấm công
   const columns = [
@@ -201,12 +209,12 @@ export default function TimeTracking() {
                   : t('View List')}
             </Button>
           </Dropdown>
-          <button
+          {/* <button
             onClick={() => setMiniCalendarVisible(!miniCalendarVisible)}
             className="mb-2"
           >
             Icon
-          </button>
+          </button> */}
         </div>
         <div className="flex border-t">
           {viewMode === 'calendar' && (

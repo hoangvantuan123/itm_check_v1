@@ -117,10 +117,9 @@ export default function UserProfile({ user, isModalVisible, handleCancel, fetchD
   const [error, setError] = useState(null)
   const { t } = useTranslation()
   const [form] = Form.useForm()
-  const [deleteUserGroupId, setDeleteUserGroupId] = useState([])
-  const [postUserGroupId, setPostUserGroupID] = useState([])
-  console.log("deleteUserGroupId", deleteUserGroupId)
-  console.log("postUserGroupId", postUserGroupId)
+  const [selectedGroups, setSelectedGroups] = useState([]); 
+  const [deletedGroups, setDeletedGroups] = useState([])
+
 
   const fetchDataGroupStatus = async (e) => {
     setLoading(true)
@@ -150,28 +149,33 @@ export default function UserProfile({ user, isModalVisible, handleCancel, fetchD
       <Menu.Item key="privacy">Tra cứu quyền riêng tư</Menu.Item>
     </Menu>
   )
-  const onFinish = async (values) => {
-
-    const { nameUser, login, language, active } = values
+  const onFinish = (values) => {
+    const { nameUser, login, language, active } = values;
     const data = {
       nameUser,
       login,
       language,
       active,
-    }
-
-    try {
-      const result = await PutUserID(user?.id, data)
-
-      if (result.success) {
-        message.success(t('Cập nhật giá trị thành công'))
-      } else {
-        message.error(result.message || 'Lỗi khi cập nhật!')
-      }
-    } catch (error) {
-      message.error(error.message || t('Lỗi khi cập nhật!'))
-    }
+    };
+  
+    Promise.all([
+      PutUserID(user?.id, data),
+      DeleteResUserGroups(deletedGroups),
+    ])
+      .then(([result]) => {
+        if (result.success) {
+          setDeletedGroups([])
+          fetchDataGroupStatus(user?.id)
+          message.success(t('Cập nhật giá trị thành công'));
+        } else {
+          message.error(result.message || 'Lỗi khi cập nhật!');
+        }
+      })
+      .catch((error) => {
+        message.error(error.message || t('Lỗi khi cập nhật!'));
+      });
   };
+  
   useEffect(() => {
     if (isModalVisible === true) {
       fetchDataGroupStatus(user?.id)
@@ -194,20 +198,29 @@ export default function UserProfile({ user, isModalVisible, handleCancel, fetchD
   const onChange = (checkedValues) => {
     setSelectedIds(checkedValues);
   };
+
   const handleCheckboxClick = async (group_id, user_group_id, value) => {
     const newData = groupStatus.map((item) =>
       item.group_id === group_id ? { ...item, status: value } : item
     );
-    if (value === false || value === null) {
-      setDeleteUserGroupId(user_group_id)
-      /*   await DeleteResUserGroups([user_group_id]) */
-    }
-    if (value === true) {
-      setPostUserGroupID(user?.id)
-      /* await PostResUserGroups([user?.id], group_id) */
-    }
     setGroupStatus(newData);
+    if (value && user_group_id === null) {
+      setSelectedGroups((prevSelected) => [...prevSelected, group_id]);
+    } else {
+      setSelectedGroups((prevSelected) =>
+        prevSelected.filter((id) => id !== group_id)
+      );
+    } 
+    if( user_group_id !== null && value === false){
+      setDeletedGroups(user_group_id)
+    }else {
+      setDeletedGroups([])
+    }
   };
+  const handleTestClick = () => {
+   
+  };
+         
 
   return (
     <Drawer
@@ -329,7 +342,6 @@ export default function UserProfile({ user, isModalVisible, handleCancel, fetchD
                   </Form.Item>
                 </Col>
 
-
               </Row>
             </Form>
           </Col>
@@ -342,7 +354,7 @@ export default function UserProfile({ user, isModalVisible, handleCancel, fetchD
       <Card>
         <div className="mb-3">
           <Title level={5}>{t('Loại người dùng')}</Title>
-
+      <button onClick={handleTestClick}>OnClick</button>
           <Radio.Group>
             <Space direction="vertical">
               <Radio value="admin">{t('Người dùng nội bộ')}</Radio>
