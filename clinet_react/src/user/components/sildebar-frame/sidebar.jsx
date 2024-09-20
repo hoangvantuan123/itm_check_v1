@@ -266,12 +266,12 @@ const Sidebar = ({ permissions }) => {
   const [isMobile, setIsMobile] = useState(false)
   const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState('home')
+  const [currentAction, setCurrentAction] = useState(sessionStorage.getItem('current_action'))
 
   const toggleSidebar = () => {
     setCollapsed(!collapsed)
   }
 
-  // Xử lý responsive
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768)
@@ -288,7 +288,10 @@ const Sidebar = ({ permissions }) => {
   if (location.pathname === '/u/login') {
     return null
   }
-
+  const handleOnClickMenuItem = (e) => {
+    sessionStorage.setItem('current_action', e.key);
+    setCurrentAction(e.key)
+  }
   return (
     <>
       {!isMobile ? (
@@ -304,8 +307,9 @@ const Sidebar = ({ permissions }) => {
           <Menu
             style={menuStyle}
             mode="inline"
-            defaultSelectedKeys={['home']}
+            defaultSelectedKeys={[`${currentAction}`]}
             className="border-r-0"
+            onClick={(e) => handleOnClickMenuItem(e)}
           >
             {checkMenuPermission(permissions, 'home', 'view') && (
               <Menu.Item key="home">
@@ -439,30 +443,30 @@ const Sidebar = ({ permissions }) => {
                       'setting-2-1-1',
                       'view',
                     ) && (
-                      <Menu.Item key="setting-2-1-1">
-                        <Link
-                          to="/u/action=4/technique_access"
-                          className="flex items-center justify-start"
-                        >
-                          {t('side_bar.technique_access')}
-                        </Link>
-                      </Menu.Item>
-                    )}
+                        <Menu.Item key="setting-2-1-1">
+                          <Link
+                            to="/u/action=4/technique_access"
+                            className="flex items-center justify-start"
+                          >
+                            {t('side_bar.technique_access')}
+                          </Link>
+                        </Menu.Item>
+                      )}
 
                     {checkMenuPermission(
                       permissions,
                       'setting-2-1-2',
                       'view',
                     ) && (
-                      <Menu.Item key="setting-2-1-2">
-                        <Link
-                          to="/u/action=5/technique_menu"
-                          className="flex items-center justify-start"
-                        >
-                          {t('side_bar.technique_menu')}
-                        </Link>
-                      </Menu.Item>
-                    )}
+                        <Menu.Item key="setting-2-1-2">
+                          <Link
+                            to="/u/action=5/technique_menu"
+                            className="flex items-center justify-start"
+                          >
+                            {t('side_bar.technique_menu')}
+                          </Link>
+                        </Menu.Item>
+                      )}
                   </SubMenu>
                 )}
               </SubMenu>
@@ -481,9 +485,8 @@ const Sidebar = ({ permissions }) => {
               >
                 {activeTab === 'home' ? <ActiveHomeIcon /> : <HomeIcon />}
                 <span
-                  className={`mt-2 text-xs ${
-                    activeTab === 'home' ? 'text-blue-500' : 'text-gray-500'
-                  }`}
+                  className={`mt-2 text-xs ${activeTab === 'home' ? 'text-blue-500' : 'text-gray-500'
+                    }`}
                 >
                   {t('footer_app.home')}
                 </span>
@@ -498,9 +501,8 @@ const Sidebar = ({ permissions }) => {
               >
                 {activeTab === 'work' ? <ActiveWorkIcon /> : <WorkIcon />}
                 <span
-                  className={`mt-2 text-xs ${
-                    activeTab === 'work' ? 'text-blue-500' : 'text-gray-500'
-                  }`}
+                  className={`mt-2 text-xs ${activeTab === 'work' ? 'text-blue-500' : 'text-gray-500'
+                    }`}
                 >
                   {t('side_bar.work')}
                 </span>
@@ -519,11 +521,10 @@ const Sidebar = ({ permissions }) => {
                   <NotificationIcon />
                 )}
                 <span
-                  className={`mt-2 text-xs ${
-                    activeTab === 'notifications'
-                      ? 'text-blue-500'
-                      : 'text-gray-500'
-                  }`}
+                  className={`mt-2 text-xs ${activeTab === 'notifications'
+                    ? 'text-blue-500'
+                    : 'text-gray-500'
+                    }`}
                 >
                   {t('side_bar.notifications')}
                 </span>
@@ -538,9 +539,8 @@ const Sidebar = ({ permissions }) => {
               >
                 {activeTab === 'profile' ? <ActiveUserIcon /> : <UserIcon />}
                 <span
-                  className={`mt-2 text-xs ${
-                    activeTab === 'profile' ? 'text-blue-500' : 'text-gray-500'
-                  }`}
+                  className={`mt-2 text-xs ${activeTab === 'profile' ? 'text-blue-500' : 'text-gray-500'
+                    }`}
                 >
                   {t('footer_app.profile')}
                 </span>

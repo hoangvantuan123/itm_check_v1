@@ -369,27 +369,12 @@ export default function GroupsUsersSettings() {
             </Layout>
           </Layout>
 
-          <Drawer
-            title={
-              <Title level={4} style={{ textAlign: 'center' }}>
-                {selectedGroupDetails?.name}
-              </Title>
-            }
-            open={isModalVisible}
-            onClose={handleCancel}
-            width={900}
-            closable={false}
-            footer={[
-              <Button key="cancel" onClick={handleCancel}>
-                {t('Thoát')}
-              </Button>,
-            ]}
-          >
-            <UserGroupsDrawer
-              isModalVisible={isModalVisible}
-              group={selectedGroupDetails}
-            />
-          </Drawer>
+          
+          <UserGroupsDrawer
+            isModalVisible={isModalVisible}
+            group={selectedGroupDetails}
+            handleCancel={handleCancel}
+          />
         </div>
       </div>
     </div>

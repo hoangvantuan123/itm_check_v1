@@ -40,6 +40,7 @@ export default function AddUser({ isOpen, onClose, fetchData }) {
         language: 'vi',
       })
       message.success(t('Đăng ký tài khoản thành công'))
+      form.resetFields()
       fetchData()
       onClose()
     } catch (error) {
@@ -116,7 +117,6 @@ export default function AddUser({ isOpen, onClose, fetchData }) {
             <Input.Password size="large" placeholder={t('Nhập mật khẩu')} />
           </Form.Item>
 
-          {/* Thêm trường tài khoản liên kết đến nhân viên */}
           <Form.Item
             label={t('Tài khoản liên kết đến nhân viên')}
             name="employeeAccount"
@@ -144,34 +144,6 @@ export default function AddUser({ isOpen, onClose, fetchData }) {
               <Option value="employee5">{t('Nhân viên 5')}</Option>
             </Select>
           </Form.Item>
-        </Card>
-
-        <Title level={5}>{t('Quyền truy cập')}</Title>
-
-        {/* Chọn nhóm truy cập */}
-        <Card>
-          <div className="mb-3">
-            <Title level={5}>{t('Loại người dùng')}</Title>
-
-            <Radio.Group>
-              <Space direction="vertical">
-                <Radio value="admin">{t('Người dùng nội bộ')}</Radio>
-                <Radio value="editor">{t('Cổng thông tin')}</Radio>
-                <Radio value="viewer">{t('Công khai')}</Radio>
-              </Space>
-            </Radio.Group>
-          </div>
-          <div>
-            <Title level={5}>{t('Nhóm truy cập & quyền')}</Title>
-
-            <Checkbox.Group>
-              <Space direction="vertical">
-                <Checkbox value="admin">{t('Quản trị viên')}</Checkbox>
-                <Checkbox value="editor">{t('Biên tập viên')}</Checkbox>
-                <Checkbox value="viewer">{t('Người xem')}</Checkbox>
-              </Space>
-            </Checkbox.Group>
-          </div>
         </Card>
       </Form>
     </Drawer>

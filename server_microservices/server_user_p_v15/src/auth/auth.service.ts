@@ -13,7 +13,7 @@ import { jwtConstants } from 'src/config/config';
 
 @Injectable()
 export class AppService {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   private async hashPassword(password: string): Promise<string> {
     const saltRounds = 10;
@@ -65,6 +65,11 @@ export class AppService {
         };
       }
 
+      if (!user.active) {
+        user.active = true;
+        await this.userService.updateUser(user);
+      }
+
       const token = jwt.sign(
         {
           id: user.id,
@@ -77,6 +82,8 @@ export class AppService {
       const userResponse: Partial<Users> = {
         login: user.login,
         partnerId: user.partnerId,
+        language: user.language,
+        active: user.active, 
       };
 
       return {
@@ -93,6 +100,7 @@ export class AppService {
       };
     }
   }
+
 
   /* Đổi pass */
   async changePassword(

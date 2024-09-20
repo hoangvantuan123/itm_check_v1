@@ -17,10 +17,11 @@ import { jwtConstants } from 'src/config/config';
 import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { UserDto } from '../auth/users.dto';
+import { Users } from 'src/auth/user.entity';
 
 @Controller('api/p')
 export class ResUsersController {
-  constructor(private readonly resUsersService: UserService) {}
+  constructor(private readonly resUsersService: UserService) { }
 
   @Get('res_users')
   async findAll(
@@ -85,4 +86,39 @@ export class ResUsersController {
       throw new UnauthorizedException('Request failed, please try again!');
     }
   }
+
+
+  @Put('user/:id')
+  async update(
+    @Param('id') id: number,
+    @Body() updateResGroupsDto: Partial<Users>,
+    @Req() req: Request,
+  ): Promise<{ success: boolean; message: string }> {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      throw new UnauthorizedException('Authorization header missing');
+    }
+
+    const token = authHeader.split(' ')[1];
+    if (!token) {
+      throw new UnauthorizedException('Token is missing or expired');
+    }
+
+    try {
+      const decodedToken = jwt.verify(token, jwtConstants.secret) as { id: number };
+      const userId = decodedToken.id;
+
+      if (!userId) {
+        throw new UnauthorizedException('Invalid token payload');
+      }
+
+      await this.resUsersService.updateUserID(userId, id, updateResGroupsDto);
+
+      return { success: true, message: 'User updated successfully' };
+    } catch (error) {
+      throw new UnauthorizedException('Failed to authenticate. Please try again.');
+    }
+
+  }
+
 }

@@ -34,6 +34,7 @@ import ImportAction from '../components/action/importAction'
 import { GetAllResUsers } from '../../features/resUsers/getResUsers'
 import { GetAllResGroups } from '../../features/resGroups/getAllResGroups'
 import { registerUser } from '../../features/auth/API/registerAPI'
+import { GetUserGroupsPageLimitID } from '../../features/resUsers/getUserGroupsPageLimitID'
 const { Option } = Select
 const { Title } = Typography
 export default function UsersSettings() {
@@ -92,7 +93,7 @@ export default function UsersSettings() {
     try {
       // Gọi các API đồng thời
       const [response, responseAllResGroups] = await Promise.all([
-        GetAllResUsers(page, limit, token),
+        GetAllResUsers(page, limit),
         GetAllResGroups(token),
       ])
 
@@ -115,15 +116,59 @@ export default function UsersSettings() {
       setLoading(false)
     }
   }
+  const fetchDataResAllUser = async () => {
+    setLoading(true)
+
+    try {
+      const response = await GetAllResUsers(page, limit)
+      if (response.success) {
+        setUserData(response.data.data)
+        setTotal(response.data.total)
+        setError(null)
+      } else {
+        setError(response.message)
+        setUserData([])
+      }
+    } catch (error) {
+      setError(error.message || 'Đã xảy ra lỗi')
+      setUserData([])
+    } finally {
+      setLoading(false)
+    }
+  }
+  const fetchDataOnClick = async (e) => {
+    setLoading(true)
+    try {
+      const response = await GetUserGroupsPageLimitID(e.key, page, limit)
+      if (response.success) {
+        setUserData(response.data.data)
+        setTotal(response.data.total)
+
+        setError(null)
+      } else {
+        setError(response.message)
+        setUserData([])
+      }
+    } catch (error) {
+      setError(error.message || 'Đã xảy ra lỗi')
+      setUserData([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
 
   const handleTableChange = (pagination) => {
     setPage(pagination.current)
     setLimit(pagination.pageSize)
   }
-  useEffect(() => {
-    fetchData()
-  }, [page, limit])
 
+
+  useEffect(() => {
+    if (selectedGroup === 'all') {
+      fetchData()
+    }
+  }, [page, limit, selectedGroup])
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 820)
@@ -347,6 +392,15 @@ export default function UsersSettings() {
   const handleShowActionClick = () => {
     setActionUsers(true)
   }
+  const handleOnClickGroupID = (e) => {
+    setSelectedGroup(e.key)
+    if (e.key !== "all") {
+      fetchDataOnClick(e);
+    } else {
+      fetchDataResAllUser();
+    }
+
+  }
   return (
     <div className="w-full h-screen bg-slate-50">
       <Helmet>
@@ -377,7 +431,7 @@ export default function UsersSettings() {
               </h1>
 
               {!isMobile && (
-                <span class="inline-flex overflow-hidden  ">
+                <span className="inline-flex overflow-hidden  ">
                   <div className="flex items-center gap-2">
                     <Button
                       onClick={openModalAddUser}
@@ -399,7 +453,7 @@ export default function UsersSettings() {
             </div>
             {!isMobile && (
               <div className="p-2 mb flex items-center justify-between">
-                <span class="inline-flex overflow-hidden  ">
+                <span className="inline-flex overflow-hidden  ">
                   <div className="flex items-center gap-2">
                     <Select
                       defaultValue="Tùy chọn"
@@ -459,7 +513,7 @@ export default function UsersSettings() {
                   mode="inline"
                   defaultSelectedKeys={['all']}
                   style={{ height: '100%', borderRight: 0 }}
-                  onClick={(e) => setSelectedGroup(e.id)}
+                  onClick={(e) => handleOnClickGroupID(e)}
                 >
                   <Menu.Item key="all">All</Menu.Item>
                   {groupsData.map((group) => (
@@ -480,25 +534,8 @@ export default function UsersSettings() {
                 {isMobile ? renderKanban() : renderTable()}
               </Content>
             </Layout>
-
-            <Drawer
-              title={
-                <Title level={4} style={{ textAlign: 'center' }}>
-                  {t('Thông tin người dùng')}
-                </Title>
-              }
-              open={isModalVisible}
-              onClose={handleCancel}
-              width={900}
-              closable={false}
-              footer={[
-                <Button key="cancel" onClick={handleCancel}>
-                  {t('Thoát')}
-                </Button>,
-              ]}
-            >
-              <UserProfile user={selectedUser} />
-            </Drawer>
+            <UserProfile groupsData={groupsData} isModalVisible={isModalVisible} user={selectedUser} handleCancel={handleCancel}  setSelectedGroup={setSelectedGroup} fetchDataResAllUser={fetchDataResAllUser} />
+         
           </Layout>
         </div>
       </div>

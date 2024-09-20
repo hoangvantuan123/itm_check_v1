@@ -61,9 +61,9 @@ export default function FieldAction({ isOpen, onClose }) {
 
   return (
     <Dropdown
-      overlay={menu}
+    overlay={menu}
       trigger={['click']}
-      visible={showDropdown}
+      open={showDropdown}
       onClick={() => setShowDropdown(!showDropdown)}
     >
       <button className="border-[1.3px] border-[#d9d9d9] rounded-lg p-[0.6rem] w-auto flex items-center space-x-2 bg-white hover:bg-gray-100">

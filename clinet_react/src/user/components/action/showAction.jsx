@@ -133,7 +133,7 @@ export default function ShowAction({
     <Dropdown
       overlay={menu}
       trigger={['click']}
-      visible={showDropdown}
+      open={showDropdown}
       onClick={() => {
         setShowDropdown(!showDropdown)
         handleOnClickAction()

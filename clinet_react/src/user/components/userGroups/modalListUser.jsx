@@ -174,7 +174,7 @@ export default function ShowListUser({
   return (
     <Modal
       title="Người dùng"
-      visible={isOpen}
+      open={isOpen}
       onCancel={onClose}
       width={1200}
       height={500}

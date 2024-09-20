@@ -261,7 +261,7 @@ export default function TimeTracking() {
 
         <Drawer
           title={t('Check-in Details')}
-          visible={drawerVisible}
+          open={drawerVisible}
           onClose={() => setDrawerVisible(false)}
           width={800}
         >

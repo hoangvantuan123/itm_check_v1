@@ -31,7 +31,7 @@ export default function Search({ isOpen, onClose }) {
   return (
     <Modal
       title="Tìm kiếm"
-      visible={isOpen}
+      open={isOpen}
       onCancel={onClose}
       style={{ top: 20 }}
       width={1500}

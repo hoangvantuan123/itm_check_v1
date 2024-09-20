@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Card,
@@ -15,8 +15,12 @@ import {
   Typography,
   Table,
   Radio,
+  Form,
+  Input,
+  Drawer,
+  Select,
+  message
 } from 'antd'
-import { EditOutlined, MoreOutlined } from '@ant-design/icons'
 import {
   TeamOutlined,
   SafetyOutlined,
@@ -24,8 +28,13 @@ import {
   UserOutlined,
 } from '@ant-design/icons'
 import DefaultAvatar from '../../../assets/default-avatar.png'
+import { PutUserID } from '../../../features/resUsers/putUserId'
+import { GetUserGroupStatusID } from '../../../features/resGroups/getUserGroupStatusId'
+import { DeleteResUserGroups } from '../../../features/resGroups/deleteResUserGroups'
+import { PostResUserGroups } from '../../../features/resGroups/postResUserGroups'
 const { Title } = Typography
 
+const { Option } = Select;
 const columns = [
   {
     title: 'Thiết bị',
@@ -99,11 +108,38 @@ const SettingIcon = () => {
   )
 }
 
-export default function UserProfile({ user }) {
+export default function UserProfile({ user, isModalVisible, handleCancel, fetchDataResAllUser, setSelectedGroup }) {
   const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
   const userNameLogin = userFromLocalStorage?.login || 'none'
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [groupStatus, setGroupStatus] = useState([]);
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
   const { t } = useTranslation()
+  const [form] = Form.useForm()
+  const [deleteUserGroupId, setDeleteUserGroupId] = useState([])
+  const [postUserGroupId, setPostUserGroupID] = useState([])
+  console.log("deleteUserGroupId", deleteUserGroupId)
+  console.log("postUserGroupId", postUserGroupId)
 
+  const fetchDataGroupStatus = async (e) => {
+    setLoading(true)
+    try {
+      const response = await GetUserGroupStatusID(e)
+      if (response.success) {
+        setGroupStatus(response?.data)
+        setError(null)
+      } else {
+        setError(response.message)
+        setGroupStatus([])
+      }
+    } catch (error) {
+      setError(error.message || 'Đã xảy ra lỗi')
+      setGroupStatus([])
+    } finally {
+      setLoading(false)
+    }
+  }
   const menu = (
     <Menu>
       <Menu.Item key="edit">Chỉnh sửa thông tin</Menu.Item>
@@ -114,10 +150,90 @@ export default function UserProfile({ user }) {
       <Menu.Item key="privacy">Tra cứu quyền riêng tư</Menu.Item>
     </Menu>
   )
+  const onFinish = async (values) => {
+
+    const { nameUser, login, language, active } = values
+    const data = {
+      nameUser,
+      login,
+      language,
+      active,
+    }
+
+    try {
+      const result = await PutUserID(user?.id, data)
+
+      if (result.success) {
+        message.success(t('Cập nhật giá trị thành công'))
+      } else {
+        message.error(result.message || 'Lỗi khi cập nhật!')
+      }
+    } catch (error) {
+      message.error(error.message || t('Lỗi khi cập nhật!'))
+    }
+  };
+  useEffect(() => {
+    if (isModalVisible === true) {
+      fetchDataGroupStatus(user?.id)
+    }
+    if (user) {
+      form.setFieldsValue({
+        nameUser: user?.name,
+        login: user?.login,
+        language: user?.language,
+        active: user?.active,
+      })
+    }
+
+
+  }, [
+    isModalVisible,
+    user,
+    form
+  ])
+  const onChange = (checkedValues) => {
+    setSelectedIds(checkedValues);
+  };
+  const handleCheckboxClick = async (group_id, user_group_id, value) => {
+    const newData = groupStatus.map((item) =>
+      item.group_id === group_id ? { ...item, status: value } : item
+    );
+    if (value === false || value === null) {
+      setDeleteUserGroupId(user_group_id)
+      /*   await DeleteResUserGroups([user_group_id]) */
+    }
+    if (value === true) {
+      setPostUserGroupID(user?.id)
+      /* await PostResUserGroups([user?.id], group_id) */
+    }
+    setGroupStatus(newData);
+  };
 
   return (
-    <div>
-      {/* Nút actions ở trên cùng màn hình */}
+    <Drawer
+      title={
+        <Title level={4} style={{ textAlign: 'center' }}>
+          {t('Thông tin người dùng')}
+        </Title>
+      }
+      open={isModalVisible}
+      onClose={handleCancel}
+      width={900}
+      closable={false}
+      footer={[
+        <Button key="cancel" onClick={handleCancel}>
+          {t('Thoát')}
+        </Button>,
+        <Button
+          key="submit"
+          type="primary"
+          className=" ml-2 border-gray-200  bg-indigo-600 text-white  shadow-sm text-sm"
+          onClick={() => form.submit()}
+        >
+          {t('Lưu')}
+        </Button>,
+      ]}
+    >
       <Row
         justify="start"
         style={{ marginBottom: '20px' }}
@@ -136,7 +252,6 @@ export default function UserProfile({ user }) {
           </button>
         </Dropdown>
 
-        {/* Nhóm nút khác */}
         <span className="inline-flex -space-x-px overflow-hidden rounded-md border border-[#d9d9d9] bg-white shadow-sm">
           <button className="inline-block p-[0.6rem]  border-e md:text-sm text-xs font-medium text-gray-700 hover:bg-gray-50 focus:relative">
             <TeamOutlined style={{ fontSize: '16px' }} className="mr-2" />
@@ -163,46 +278,60 @@ export default function UserProfile({ user }) {
       <Card>
         <Row
           gutter={16}
-          justify="center"
           align="top"
           className="flex-col md:flex-row"
         >
-          {/* Cột cho ảnh avatar */}
           <Col
             xs={24}
             md={6}
-            style={{ display: 'flex', justifyContent: 'center' }}
-            className="pb-5 md:pb-0"
+            style={{ display: 'flex' }}
+            className=" md:pb-0"
           >
             <Avatar shape="square" size={128} src={DefaultAvatar} />
           </Col>
-
           <Col xs={24} md={18}>
-            <Row gutter={[16, 16]} className="pb-4">
-              <Col xs={24} md={12}>
-                <p>
-                  <strong>Tên:</strong> {user?.name}
-                </p>
-              </Col>
-              <Col xs={24} md={12}>
-                <p>
-                  <strong>Email:</strong> {user?.email}
-                </p>
-              </Col>
-            </Row>
-            <Row gutter={[16, 16]}>
-              <Col xs={24} md={12}>
-                <p>
-                  <strong>Ngôn ngữ:</strong> {user?.language}
-                </p>
-              </Col>
-              <Col xs={24} md={12}>
-                <p>
-                  <strong>Trạng thái:</strong>{' '}
-                  {user?.status === 'active' ? 'Hoạt động' : 'Không hoạt động'}
-                </p>
-              </Col>
-            </Row>
+            <Form form={form} onFinish={onFinish} layout="vertical" className='pt-5 md:mt-0'>
+              <Row gutter={[16, 16]} className="pb-4">
+                <Col xs={24} md={24}>
+                  <Form.Item
+                    label="Họ và Tên"
+                    name="nameUser"
+                    initialValue={user?.name}
+                    rules={[{ required: true, message: 'Vui lòng nhập tên!' }]}
+                  >
+                    <Input size="large" />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} md={24}>
+                  <Form.Item
+                    label="Tên đăng nhập"
+                    name="login"
+                    initialValue={user?.login}
+                    rules={[{ required: true, message: 'Vui lòng nhập tên đăng nhập!' }]}
+                  >
+                    <Input size="large" />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={[16, 16]}>
+                <Col xs={24} md={12}>
+                  <Form.Item
+                    label="Ngôn ngữ"
+                    name="language"
+                    initialValue={user?.language}
+                    rules={[{ required: true, message: 'Vui lòng chọn ngôn ngữ!' }]}
+                  >
+                    <Select size="large">
+                      <Option value="vi">Tiếng Việt</Option>
+                      <Option value="en">Tiếng Anh</Option>
+                      <Option value="fr">Tiếng Pháp</Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+
+
+              </Row>
+            </Form>
           </Col>
         </Row>
       </Card>
@@ -224,14 +353,17 @@ export default function UserProfile({ user }) {
         </div>
         <div>
           <Title level={5}>{t('Nhóm truy cập & quyền')}</Title>
-
-          <Checkbox.Group>
-            <Space direction="vertical">
-              <Checkbox value="admin">{t('Quản trị viên')}</Checkbox>
-              <Checkbox value="editor">{t('Biên tập viên')}</Checkbox>
-              <Checkbox value="viewer">{t('Người xem')}</Checkbox>
-            </Space>
-          </Checkbox.Group>
+          <Row gutter={[16, 16]}>
+            {groupStatus?.map((item) => (
+              <Col xs={12} sm={8} key={item?.group_id}>
+                <Checkbox value={item?.group_id} checked={item.status} onChange={(e) =>
+                  handleCheckboxClick(item.group_id, item.user_group_id, e.target.checked)
+                } >
+                  {item?.name}
+                </Checkbox>
+              </Col>
+            ))}
+          </Row>
         </div>
       </Card>
       <Title className="mt-5" level={5}>
@@ -254,6 +386,8 @@ export default function UserProfile({ user }) {
           </Button>
         </div>
       </Card>
-    </div>
+    </Drawer>
+
+
   )
 }

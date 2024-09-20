@@ -48,9 +48,9 @@ export default function PhoneSettingAction({
   )
   return (
     <Dropdown
-      overlay={menu}
+    overlay={menu}
       trigger={['click']}
-      visible={showSttingActionDropdown}
+      open={showSttingActionDropdown}
       onClick={() => setShowSettingActionDropdown(!showSttingActionDropdown)}
     >
       <button className="   p-[0.6rem] w-auto flex items-center space-x-2">

@@ -19,7 +19,7 @@ export default function Unauthorized() {
         <title>ITM - {t('Unauthorized')}</title>
       </Helmet>
 
-      <div className="grid h-screen place-content-center bg-px-4">
+    {/*   <div className="grid h-screen place-content-center bg-px-4">
         <div className="text-center flex flex-col  justify-center items-center">
           <svg
             className="  w-96 h-96"
@@ -27,7 +27,7 @@ export default function Unauthorized() {
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <g clip-path="url(#clip0_6_870)">
+            <g clipPath="url(#clip0_6_870)">
               <path
                 d="M169.3 157.8C163.6 170.2 162.4 184.3 162.9 197.9C163.4 213.6 166 229.6 173.6 243.5C181.2 257.3 194.3 268.7 209.9 271.2C224.9 273.6 240.5 267.5 251.6 257.1C262.7 246.7 269.6 232.4 273.4 217.7C279.1 195.7 277.8 170.9 265.1 152.1C242 118 187 119.6 169.3 157.8Z"
                 fill="white"
@@ -90,7 +90,7 @@ export default function Unauthorized() {
             )}
           </p>
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }

@@ -88,7 +88,6 @@ export class ResGroupsService {
   }
 
   async remove(userId: number, ids: number[]): Promise<void> {
-    // Kiểm tra người dùng tồn tại hay không
     const user = await this.userService.findUserById(userId);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -96,4 +95,10 @@ export class ResGroupsService {
 
     await this.resGroupsRepository.delete(ids);
   }
+
+
+
+
+
+
 }

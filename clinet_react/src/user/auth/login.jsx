@@ -15,6 +15,7 @@ import {
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import { loginAuth } from '../../features/auth/API/authAPI'
 import decodeJWT from '../../utils/decode-JWT'
+import Cookies from 'js-cookie';
 
 const { Title, Text } = Typography
 
@@ -27,28 +28,32 @@ export default function Login() {
   const [loading, setLoading] = useState(false)
 
   const onFinish = async (values) => {
-    const { login, password } = values
+    const { login, password } = values;
 
     try {
-      setLoading(true)
-      setError(null)
+      setLoading(true);
+      setError(null);
 
-      const response = await loginAuth({ login, password })
+      const response = await loginAuth({ login, password });
 
       if (response.success) {
-        localStorage.setItem('userInfo', JSON.stringify(response.data.user))
-        localStorage.setItem('token_1h', response.data.token)
+        localStorage.setItem('userInfo', JSON.stringify(response.data.user));
+        localStorage.setItem('language', response.data.user.language);
 
-        window.location.href = '/u/home'
+        localStorage.setItem('token_1h', response.data.token);
+        Cookies.set('accessToken', response.data.token);
+
+        window.location.href = '/u/home';
       } else {
-        setError(response.error)
+        setError(response.error);
       }
     } catch (error) {
-      setError(error.message)
+      setError(error.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
+
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search)

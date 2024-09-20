@@ -5,12 +5,15 @@ import { ResUserGroups } from '../entity/res_user_groups.entity';
 import { UserService } from 'src/auth/user.service';
 import { UserDto } from 'src/auth/users.dto';
 import { Users } from 'src/auth/user.entity';
+import { ResGroups } from '../entity/res_groups.entity';
 
 @Injectable()
 export class ResUserGroupsService {
   constructor(
     @InjectRepository(ResUserGroups)
     private readonly resUserGroupsRepository: Repository<ResUserGroups>,
+    @InjectRepository(ResGroups)
+    private readonly groupsRepository: Repository<ResGroups>,
     @InjectRepository(Users)
     private readonly resUsersRepository: Repository<Users>,
 
@@ -205,5 +208,93 @@ export class ResUserGroupsService {
       totalPages,
     };
   }
+
+  async findUsersGroupById(
+    userId: number,
+    groupId: number,
+    page: number = 1,
+    limit: number = 10
+  ): Promise<{ data: any[]; total: number; totalPages: number }> {
+    const user = await this.userService.findUserById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    // Get total count
+    const total = await this.resUserGroupsRepository
+      .createQueryBuilder('rug')
+      .where('rug.group_id = :groupId', { groupId })
+      .getCount();
+
+    // Get data
+    const data = await this.resUserGroupsRepository
+      .createQueryBuilder('rug')
+      .leftJoinAndSelect('rug.group', 'g')
+      .leftJoinAndSelect('rug.user', 'u')
+      .where('rug.group_id = :groupId', { groupId })
+      .orderBy('u.createDate', 'DESC')
+      .skip((page - 1) * limit)
+      .take(limit)
+      .select([
+        'g.id AS group_id',
+        'g.name AS group_name',
+        'u.login AS login',
+        'u.id AS id',
+        'u.companyId AS companyId',
+        'u.partnerId AS partnerId',
+        'u.active AS active',
+        'u.createDate AS createDate',
+        'u.actionId AS actionId',
+        'u.createUid AS createUid',
+        'u.writeUid AS writeUid',
+        'u.signature AS signature',
+        'u.share AS share',
+        'u.writeDate AS writeDate',
+        'u.totpSecret AS totpSecret',
+        'u.notificationType AS notificationType',
+        'u.status AS status',
+        'u.karma AS karma',
+        'u.rankId AS rankId',
+        'u.nextRankId AS nextRankId',
+        'u.employeeCode AS employeeCode',
+        'u.nameUser AS name',
+        'u.language AS language',
+      ])
+      .getRawMany();
+
+    const totalPages = Math.ceil(total / limit);
+    return {
+      data,
+      total,
+      totalPages,
+    };
+  }
+
+  async getUserGroupsWithStatus(userId: number, id: number): Promise<any[]> {
+    const user = await this.userService.findUserById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const allGroups = await this.groupsRepository.find();
+    const userGroups = await this.resUserGroupsRepository.find({
+      where: { user_id: id },
+      select: ['group_id', 'id'],
+    });
+
+    const userGroupMap = new Map<number, number>();
+    userGroups.forEach(group => {
+      userGroupMap.set(group.group_id, group.id);
+    });
+
+    return allGroups.map(group => ({
+      group_id: group.id,
+      name: group.name,
+      user_group_id: userGroupMap.get(group.id) || null,
+      status: userGroupMap.has(group.id),
+    }));
+  }
+
+
 
 }

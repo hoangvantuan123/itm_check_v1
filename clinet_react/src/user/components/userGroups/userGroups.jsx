@@ -35,7 +35,7 @@ const { Title } = Typography
 const { Option } = Select
 const { TextArea } = Input
 
-export default function UserGroupsDrawer({ group, isModalVisible }) {
+export default function UserGroupsDrawer({ group, isModalVisible, handleCancel }) {
   const { t } = useTranslation()
   const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
   const userNameLogin = userFromLocalStorage?.login || 'none'
@@ -384,24 +384,7 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
   ]
 
   const handleFinish = async (values) => {
-    const { name, comment } = values
-    try {
-      const token = localStorage.getItem('token_1h')
-      if (!token) {
-        message.error('Token không tồn tại. Vui lòng đăng nhập lại.')
-        return
-      }
-
-      if (result.success) {
-        fetchData()
-        message.success('Nhóm được tạo thành công')
-        onClose()
-      } else {
-        message.error(result.message || 'Lỗi khi tạo nhóm!')
-      }
-    } catch (error) {
-      message.error('Lỗi khi tạo nhóm!')
-    }
+   handleCancel()
   }
   const openModal = () => {
     setIsModalOpen(true)
@@ -457,7 +440,30 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
   }
 
   return (
-    <div>
+    <Drawer
+      title={
+        <Title level={4} style={{ textAlign: 'center' }}>
+          {group?.name}
+        </Title>
+      }
+      open={isModalVisible}
+      onClose={handleCancel}
+      width={900}
+      closable={false}
+      footer={[
+        <Button key="cancel" onClick={handleCancel}>
+          {t('Thoát')}
+        </Button>,
+        <Button
+          key="submit"
+          type="primary"
+          className=" ml-2 border-gray-200  bg-indigo-600 text-white  shadow-sm text-sm"
+          onClick={() => form.submit()}
+        >
+          {t('Lưu')}
+        </Button>,
+      ]}
+    >
       <Form
         form={form}
         layout="vertical"
@@ -648,6 +654,7 @@ export default function UserGroupsDrawer({ group, isModalVisible }) {
         group={group}
         fetchDataUserGroups={fetchData}
       />
-    </div>
+    </Drawer>
+
   )
 }

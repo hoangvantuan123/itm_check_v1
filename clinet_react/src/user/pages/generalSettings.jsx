@@ -14,7 +14,6 @@ import {
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 const { Search } = Input
-import decodeJWT from '../../utils/decode-JWT'
 const { Title, Text } = Typography
 const { TabPane } = Tabs
 import { UsergroupAddOutlined } from '@ant-design/icons'
@@ -89,25 +88,25 @@ export default function GeneralSettings() {
               <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8 mt-5">
                 <div className="h-auto rounded-lg  p-2">
                   <label
-                    for="Option1"
-                    class="flex cursor-pointer items-start gap-4 rounded-lg  transition  "
+                    htmlFor="Option1"
+                    className="flex cursor-pointer items-start gap-4 rounded-lg  transition  "
                   >
-                    <div class="flex items-center">
+                    <div className="flex items-center">
                       &#8203;
                       <input
                         type="checkbox"
-                        class="size-4 rounded border-gray-300"
+                        className="size-4 rounded border-gray-300"
                         id="Option1"
                       />
                     </div>
 
                     <div>
-                      <strong class="font-medium text-gray-900">
+                      <strong className="font-medium text-gray-900">
                         {' '}
                         Chỉnh hồ sơ nhân viên{' '}
                       </strong>
 
-                      <p class="mt-1 text-pretty text-sm text-gray-700">
+                      <p className="mt-1 text-pretty text-sm text-gray-700">
                         Cho phép nhân viên cập nhật dữ liệu của chính họ.
                       </p>
                     </div>
@@ -216,18 +215,18 @@ export default function GeneralSettings() {
               <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8 mt-5">
                 <div className="h-auto rounded-lg  p-2">
                   <div>
-                    <strong class="font-medium text-gray-900">
+                    <strong className="font-medium text-gray-900">
                       {' '}
                       Công ty A{' '}
                     </strong>
 
-                    <p class="mt-1 text-pretty text-sm text-gray-700">
+                    <p className="mt-1 text-pretty text-sm text-gray-700">
                       Địa chỉ A
                     </p>
-                    <p class="mt-1 text-pretty text-sm text-gray-700">
+                    <p className="mt-1 text-pretty text-sm text-gray-700">
                       Địa chỉ B
                     </p>
-                    <p class="mt-1 text-pretty text-sm text-gray-700">
+                    <p className="mt-1 text-pretty text-sm text-gray-700">
                       Việt Nam
                     </p>
                     <p className="mt-2 max-w-md cursor-pointer text-pretty text-sm text-indigo-500">
@@ -237,7 +236,7 @@ export default function GeneralSettings() {
                 </div>
                 <div className="h-auto rounded-lg  p-2">
                   <div>
-                    <strong class="font-medium text-gray-900">
+                    <strong className="font-medium text-gray-900">
                       {' '}
                       1 Công ty
                     </strong>
@@ -277,25 +276,25 @@ export default function GeneralSettings() {
               <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8 mt-5">
                 <div className="h-auto rounded-lg  p-2">
                   <label
-                    for="Option1"
-                    class="flex cursor-pointer items-start gap-4 rounded-lg  transition  "
+                    htmlFor="Option1"
+                    className="flex cursor-pointer items-start gap-4 rounded-lg  transition  "
                   >
-                    <div class="flex items-center">
+                    <div className="flex items-center">
                       &#8203;
                       <input
                         type="checkbox"
-                        class="size-4 rounded border-gray-300"
+                        className="size-4 rounded border-gray-300"
                         id="Option1"
                       />
                     </div>
 
                     <div>
-                      <strong class="font-medium text-gray-900">
+                      <strong className="font-medium text-gray-900">
                         {' '}
                         Tài khoản khách hàng{' '}
                       </strong>
 
-                      <p class="mt-1 text-pretty text-sm text-gray-700">
+                      <p className="mt-1 text-pretty text-sm text-gray-700">
                         Cho phép khách hàng đăng nhập để xem các tài liệu của họ
                       </p>
 
@@ -309,25 +308,25 @@ export default function GeneralSettings() {
               <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8 mt-5">
                 <div className="h-auto rounded-lg  p-2">
                   <label
-                    for="Option1"
-                    class="flex cursor-pointer items-start gap-4 rounded-lg  transition  "
+                    htmlFor="Option1"
+                    className="flex cursor-pointer items-start gap-4 rounded-lg  transition  "
                   >
-                    <div class="flex items-center">
+                    <div className="flex items-center">
                       &#8203;
                       <input
                         type="checkbox"
-                        class="size-4 rounded border-gray-300"
+                        className="size-4 rounded border-gray-300"
                         id="Option1"
                       />
                     </div>
 
                     <div>
-                      <strong class="font-medium text-gray-900">
+                      <strong className="font-medium text-gray-900">
                         {' '}
                         Đặt lại mật khẩu{' '}
                       </strong>
 
-                      <p class="mt-1 text-pretty text-sm text-gray-700">
+                      <p className="mt-1 text-pretty text-sm text-gray-700">
                         Cho phép đặt lại mật khẩu từ trang Đăng nhập
                       </p>
                     </div>

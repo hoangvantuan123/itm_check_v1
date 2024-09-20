@@ -107,4 +107,21 @@ export class UserService {
 
     await this.userRepository.delete(ids);
   }
+
+
+
+  async updateUserID(
+    userId: number,
+    id: number,
+    updateUser: Partial<Users>,
+  ): Promise<Users> {
+
+    const user = await this.findUserById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    await this.userRepository.update(id, updateUser);
+    return this.userRepository.findOneBy({ id });
+  }
 }

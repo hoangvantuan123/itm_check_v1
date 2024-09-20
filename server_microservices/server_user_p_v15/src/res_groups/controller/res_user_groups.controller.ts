@@ -18,7 +18,7 @@ import { jwtConstants } from 'src/config/config';
 
 @Controller('api/p')
 export class ResUserGroupsController {
-  constructor(private readonly resGroupsService: ResUserGroupsService) {}
+  constructor(private readonly resGroupsService: ResUserGroupsService) { }
 
   @Post('res_user_groups')
   async create(
@@ -128,9 +128,6 @@ export class ResUserGroupsController {
   }
 
 
-
-
-
   @Get('available_users')
   async getAvailableMenus(
     @Query('groupId') groupId: number,
@@ -169,4 +166,72 @@ export class ResUserGroupsController {
       throw new UnauthorizedException('Request failed, please try again!');
     }
   }
+
+  @Get('res_user_groups/:groupId')
+  async getUserGroupsId(
+    @Param('groupId') groupId: number,
+    @Req() req: Request,
+    @Res() res: Response,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ) {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      throw new UnauthorizedException('Authorization header missing');
+    }
+    const token = authHeader.split(' ')[1];
+    if (!token) {
+      throw new UnauthorizedException(
+        'The job version has expired. Please log in again to continue.',
+      );
+    }
+    try {
+      const decodedToken = jwt.verify(token, jwtConstants.secret);
+
+      const userId = (decodedToken as { id: number }).id;
+      if (!userId) {
+        throw new UnauthorizedException('Invalid token payload');
+      }
+
+      const result = await this.resGroupsService.findUsersGroupById(
+        userId,
+        groupId,
+        page,
+        limit,
+      );
+      return res.status(HttpStatus.OK).json(result);
+    } catch (error) {
+      throw new UnauthorizedException('Request failed, please try again!');
+    }
+  }
+
+
+  @Get('user_group/status/:id')
+  async getUserGroups(@Param('id') id: number, @Req() req: Request,
+    @Res() res: Response) {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      throw new UnauthorizedException('Authorization header missing');
+    }
+    const token = authHeader.split(' ')[1];
+    if (!token) {
+      throw new UnauthorizedException(
+        'The job version has expired. Please log in again to continue.',
+      );
+    }
+    try {
+      const decodedToken = jwt.verify(token, jwtConstants.secret);
+
+      const userId = (decodedToken as { id: number }).id;
+      if (!userId) {
+        throw new UnauthorizedException('Invalid token payload');
+      }
+      const result = await this.resGroupsService.getUserGroupsWithStatus(userId, id);
+      return res.status(HttpStatus.OK).json(result);
+    } catch (error) {
+      throw new UnauthorizedException('Request failed, please try again!');
+    }
+
+  }
+
 }

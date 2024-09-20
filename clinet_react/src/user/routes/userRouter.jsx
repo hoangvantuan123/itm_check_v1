@@ -5,6 +5,7 @@ import {
   Route,
   useNavigate,
   Navigate,
+  useLocation
 } from 'react-router-dom'
 import { Layout } from 'antd'
 import Sidebar from '../components/sildebar-frame/sidebar'
@@ -27,13 +28,19 @@ import TechniqueMenu from '../pages/techniqueMenu'
 import { GetUserPermissions } from '../../features/auth/API/getPermissions'
 import { checkActionPermission } from '../../permissions'
 import Unauthorized from '../pages/unauthorized'
+import Spinner from '../pages/load'
+import ErrorServer from '../pages/errorServer'
 const UserRouter = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const location = useLocation()
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const intervalRef = useRef(null)
   const [userPermissions, setUserPermissions] = useState([])
-  useEffect(() => {
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [showSpinner, setShowSpinner] = useState(false); 
+ /*  useEffect(() => {
     const refreshInterval = 1000 * 60 * 40
 
     const refreshToken = async () => {
@@ -53,7 +60,7 @@ const UserRouter = () => {
     intervalRef.current = setInterval(refreshToken, refreshInterval)
 
     return () => clearInterval(intervalRef.current)
-  }, [])
+  }, []) */
   useEffect(() => {
     const token = localStorage.getItem('token_1h')
     const userInfo = localStorage.getItem('userInfo')
@@ -66,18 +73,43 @@ const UserRouter = () => {
     }
   }, [navigate])
 
-  const fetchData = async () => {
-    const response = await GetUserPermissions()
-    setUserPermissions(response.data)
-  }
-  useEffect(() => {
-    fetchData()
-  }, [])
 
+
+  const fetchData = async () => {
+    setLoading(true);
+    setShowSpinner(false);  
+  
+    try {
+      const response = await GetUserPermissions();
+      if (response.success) {
+        setUserPermissions(response.data);
+        setError(null);
+      } else {
+        setError(response.message);
+      }
+    } catch (error) {
+      setError(error.message || 'Đã xảy ra lỗi');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    if (isLoggedIn === true) {
+      fetchData()
+    }
+  }, [isLoggedIn ])
+
+  if (loading) {
+    return <Spinner />
+  }
+  if (error) {
+    return <ErrorServer />;
+  }
   return (
     <Routes>
       <Route path="u/login" element={<Login />} />
-      <Route path="u/register/Q9xT7ZvJ3KpF5Rm8" element={<Register />} />
+      {/*  <Route path="u/register/Q9xT7ZvJ3KpF5Rm8" element={<Register />} /> */}
       {isLoggedIn && (
         <Route
           path="/*"

@@ -145,7 +145,7 @@ export default function ShowListMenu({
   return (
     <Modal
       title="Menu"
-      visible={isOpen}
+      open={isOpen}
       onCancel={onClose}
       width={1200}
       height={500}
