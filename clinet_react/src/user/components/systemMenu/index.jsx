@@ -104,7 +104,7 @@ export default function MenuDrawer({
       onClose={handleCancel}
       width={900}
       closable={false}
-      footer={[
+      extra={[
         <Button key="cancel" onClick={handleCancel}>
           {t('Thoát')}
         </Button>,

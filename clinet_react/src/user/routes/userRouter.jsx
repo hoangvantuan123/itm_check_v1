@@ -5,7 +5,7 @@ import {
   Route,
   useNavigate,
   Navigate,
-  useLocation
+  useLocation,
 } from 'react-router-dom'
 import { Layout } from 'antd'
 import Sidebar from '../components/sildebar-frame/sidebar'
@@ -30,6 +30,9 @@ import { checkActionPermission } from '../../permissions'
 import Unauthorized from '../pages/unauthorized'
 import Spinner from '../pages/load'
 import ErrorServer from '../pages/errorServer'
+import Cookies from 'js-cookie'
+import PhoneWork from '../pages/phoneWork'
+
 const UserRouter = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -39,8 +42,8 @@ const UserRouter = () => {
   const [userPermissions, setUserPermissions] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
-  const [showSpinner, setShowSpinner] = useState(false); 
- /*  useEffect(() => {
+  const [showSpinner, setShowSpinner] = useState(false)
+  /*  useEffect(() => {
     const refreshInterval = 1000 * 60 * 40
 
     const refreshToken = async () => {
@@ -62,35 +65,35 @@ const UserRouter = () => {
     return () => clearInterval(intervalRef.current)
   }, []) */
   useEffect(() => {
-    const token = localStorage.getItem('token_1h')
+    const token = Cookies.get('accessToken')
     const userInfo = localStorage.getItem('userInfo')
     if (token && userInfo) {
       setIsLoggedIn(true)
     } else {
-      localStorage.removeItem('token_1h')
+      Cookies.remove('accessToken')
       localStorage.removeItem('userInfo')
       navigate('/u/login')
     }
   }, [navigate])
 
-
-
   const fetchData = async () => {
-    setLoading(true);
-    setShowSpinner(false);  
-  
+    setLoading(true)
+    setShowSpinner(false)
+
     try {
-      const response = await GetUserPermissions();
+      const response = await GetUserPermissions()
       if (response.success) {
-        setUserPermissions(response.data);
-        setError(null);
+        setUserPermissions(response.data)
+        setError(null)
       } else {
-        setError(response.message);
+        setError(response.message)
+        Cookies.remove('accessToken')
+        localStorage.removeItem('userInfo')
       }
     } catch (error) {
-      setError(error.message || 'Đã xảy ra lỗi');
+      setError(error.message || 'Đã xảy ra lỗi')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   }
 
@@ -98,13 +101,13 @@ const UserRouter = () => {
     if (isLoggedIn === true) {
       fetchData()
     }
-  }, [isLoggedIn ])
+  }, [isLoggedIn])
 
   if (loading) {
     return <Spinner />
   }
   if (error) {
-    return <ErrorServer />;
+    return <ErrorServer />
   }
   return (
     <Routes>
@@ -195,7 +198,7 @@ const UserRouter = () => {
                       }
                     />
 
-                    <Route path={`u/phone/work`} element={<Default />} />
+                    <Route path={`u/phone/work`} element={<PhoneWork />} />
 
                     <Route
                       path="u/action=6/time_tracking"

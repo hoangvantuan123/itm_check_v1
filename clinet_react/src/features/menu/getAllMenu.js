@@ -2,7 +2,7 @@ import axios from 'axios'
 import { HOST_API_SERVER_P } from '../../services'
 import { accessToken } from '../../services/tokenService'
 
-export const GetAllMenu = async (token) => {
+export const GetAllMenu = async () => {
   try {
     const token = accessToken()
     const response = await axios.get(`${HOST_API_SERVER_P}/menu/all`, {

@@ -2,11 +2,11 @@ import axios from 'axios'
 import { HOST_API_SERVER_P } from '../../services'
 import { accessToken } from '../../services/tokenService'
 
-export const PutPermissionsID = async (data) => {
+export const PutGroupId = async (id, data) => {
   try {
     const token = accessToken()
     const response = await axios.put(
-      `${HOST_API_SERVER_P}/permission_menus`,
+      `${HOST_API_SERVER_P}/res_groups/${id}`,
       data,
       {
         headers: {
@@ -29,6 +29,7 @@ export const PutPermissionsID = async (data) => {
       }
     }
   } catch (error) {
+    // Xử lý lỗi tốt hơn
     return {
       success: false,
       message: error.response

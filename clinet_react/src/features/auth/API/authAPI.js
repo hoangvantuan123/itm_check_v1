@@ -1,11 +1,6 @@
-import {
-  HOST_API_SERVER_P
-} from '../../../services'
+import { HOST_API_SERVER_P } from '../../../services'
 
-export const loginAuth = async ({
-  login,
-  password
-}) => {
+export const loginAuth = async ({ login, password }) => {
   try {
     const response = await fetch(`${HOST_API_SERVER_P}/login`, {
       method: 'POST',
@@ -14,7 +9,7 @@ export const loginAuth = async ({
       },
       body: JSON.stringify({
         login,
-        password
+        password,
       }),
       credentials: 'same-origin',
     })

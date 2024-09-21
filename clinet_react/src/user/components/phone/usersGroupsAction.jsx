@@ -45,7 +45,7 @@ export default function PhoneUserGroupsAction({
   )
   return (
     <Dropdown
-    overlay={menu}
+      overlay={menu}
       trigger={['click']}
       open={showSttingActionDropdown}
       onClick={() => setShowSettingActionDropdown(!showSttingActionDropdown)}

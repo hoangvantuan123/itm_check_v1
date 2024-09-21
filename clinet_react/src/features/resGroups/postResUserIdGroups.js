@@ -2,12 +2,15 @@ import axios from 'axios'
 import { HOST_API_SERVER_P } from '../../services'
 import { accessToken } from '../../services/tokenService'
 
-export const PutPermissionsID = async (data) => {
+export const PostResUserIdGroups = async (userId, groupIds) => {
   try {
     const token = accessToken()
-    const response = await axios.put(
-      `${HOST_API_SERVER_P}/permission_menus`,
-      data,
+    const response = await axios.post(
+      `${HOST_API_SERVER_P}/res_user_groups/groups`,
+      {
+        userId: userId,
+        groupIds: groupIds,
+      },
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -16,7 +19,7 @@ export const PutPermissionsID = async (data) => {
       },
     )
 
-    if (response.status === 200 || response.status === 204) {
+    if (response.status === 200 || response.status === 201) {
       return {
         success: true,
         message: response.data.message || 'Operation successful',

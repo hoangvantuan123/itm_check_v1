@@ -1,8 +1,10 @@
 import axios from 'axios'
 import { HOST_API_SERVER_P } from '../../services'
+import { accessToken } from '../../services/tokenService'
 
-export const GetAllResGroups = async (token) => {
+export const GetAllResGroups = async () => {
   try {
+    const token = accessToken()
     const response = await axios.get(`${HOST_API_SERVER_P}/res_groups/all`, {
       params: {},
       headers: {

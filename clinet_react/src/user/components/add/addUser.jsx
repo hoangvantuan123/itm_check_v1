@@ -58,7 +58,7 @@ export default function AddUser({ isOpen, onClose, fetchData }) {
       open={isOpen}
       closable={false}
       width={900}
-      footer={[
+      extra={[
         <Button key="cancel" onClick={onClose}>
           {t('Hủy')}
         </Button>,
@@ -76,12 +76,7 @@ export default function AddUser({ isOpen, onClose, fetchData }) {
         form={form}
         layout="vertical"
         onFinish={handleFinish}
-        initialValues={{
-          language: 'vi',
-          timezone: 'GMT+7',
-          notifications: true,
-          security: false,
-        }}
+      
         style={{ textAlign: 'left' }}
       >
         <Title level={5}>{t('Thông tin cơ bản')}</Title>

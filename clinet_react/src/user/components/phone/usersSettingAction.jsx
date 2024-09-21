@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Input, Modal, Typography, Dropdown, Menu } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
+import ImportForm from '../import'
 
 const { Title } = Typography
 const SettingIcon = () => {
@@ -34,7 +35,14 @@ export default function PhoneSettingAction({
 }) {
   const { t } = useTranslation()
   const [showDropdown, setShowDropdown] = useState(false)
-
+  const [isModalOpenImportPhone, setIsModalOpenImportPhone] = useState(false)
+  const handleOnClickOpenImport = () => {
+    setIsModalOpenImportPhone(true)
+    setShowSettingActionDropdown(false)
+  }
+  const handleOnClickCloseImportPhone = () => {
+    setIsModalOpenImportPhone(false)
+  }
   const menu = (
     <Menu
       style={{ width: '200px', marginRight: '20px' }}
@@ -43,19 +51,25 @@ export default function PhoneSettingAction({
       <Menu.Item key="action_setting_1">Thêm người dùng</Menu.Item>
       <Menu.Item key="action_setting_2">Tùy chọn</Menu.Item>
       <Menu.Item key="action_setting_3">Hành động</Menu.Item>
+      <Menu.Item key="action_setting_4" onClick={handleOnClickOpenImport}>Import Data</Menu.Item>
       <Menu.Item key="4">Fields</Menu.Item>
     </Menu>
   )
+ 
   return (
-    <Dropdown
-    overlay={menu}
-      trigger={['click']}
-      open={showSttingActionDropdown}
-      onClick={() => setShowSettingActionDropdown(!showSttingActionDropdown)}
-    >
-      <button className="   p-[0.6rem] w-auto flex items-center space-x-2">
-        <SettingIcon />
-      </button>
-    </Dropdown>
+    <div>
+
+      <Dropdown
+        overlay={menu}
+        trigger={['click']}
+        open={showSttingActionDropdown}
+        onClick={() => setShowSettingActionDropdown(!showSttingActionDropdown)}
+      >
+        <button className="   p-[0.6rem] w-auto flex items-center space-x-2">
+          <SettingIcon />
+        </button>
+      </Dropdown>
+      <ImportForm isOpen={isModalOpenImportPhone} onClose={handleOnClickCloseImportPhone} />
+    </div>
   )
 }

@@ -94,7 +94,7 @@ export default function AddMenu({ isOpen, onClose, fetchTableData }) {
       open={isOpen}
       closable={false}
       width={900}
-      footer={[
+      extra={[
         <Button key="cancel" onClick={onClose}>
           {t('Hủy')}
         </Button>,

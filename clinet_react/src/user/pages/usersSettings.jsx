@@ -20,7 +20,7 @@ import {
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet'
 import 'moment/locale/vi'
-import './static/css/drawer_cusstom.css'
+
 const { Sider, Content } = Layout
 import { PlusOutlined } from '@ant-design/icons'
 import { SearchOutlined } from '@ant-design/icons'
@@ -35,6 +35,9 @@ import { GetAllResUsers } from '../../features/resUsers/getResUsers'
 import { GetAllResGroups } from '../../features/resGroups/getAllResGroups'
 import { registerUser } from '../../features/auth/API/registerAPI'
 import { GetUserGroupsPageLimitID } from '../../features/resUsers/getUserGroupsPageLimitID'
+import './static/css/scroll_container.css'
+import './static/css/drawer_cusstom.css'
+import ImportForm from '../components/import'
 const { Option } = Select
 const { Title } = Typography
 export default function UsersSettings() {
@@ -47,6 +50,7 @@ export default function UsersSettings() {
   const [phoneSettingUser, setPhoneSettingUser] = useState(null)
   const [showSttingActionDropdown, setShowSettingActionDropdown] =
     useState(false)
+
   /* GET */
   const [userData, setUserData] = useState([])
   const [groupsData, setGroupsData] = useState([])
@@ -60,6 +64,8 @@ export default function UsersSettings() {
   const handleOnClickAction = () => {
     setActionUsers('actionUsers')
   }
+
+
   const openModal = () => {
     setIsModalOpen(true)
   }
@@ -88,13 +94,12 @@ export default function UsersSettings() {
 
   const fetchData = async () => {
     setLoading(true)
-    const token = localStorage.getItem('token_1h')
 
     try {
       // Gọi các API đồng thời
       const [response, responseAllResGroups] = await Promise.all([
         GetAllResUsers(page, limit),
-        GetAllResGroups(token),
+        GetAllResGroups(),
       ])
 
       if (response.success) {
@@ -157,12 +162,10 @@ export default function UsersSettings() {
     }
   }
 
-
   const handleTableChange = (pagination) => {
     setPage(pagination.current)
     setLimit(pagination.pageSize)
   }
-
 
   useEffect(() => {
     if (selectedGroup === 'all') {
@@ -362,8 +365,13 @@ export default function UsersSettings() {
           <Col span={24} key={user.login} style={{ marginBottom: 16 }}>
             <Card
               title={user.name}
-              extra={<Button onClick={() => showUserForm(user)}>Sửa</Button>}
-              style={{ width: '100%' }}
+              /* extra={
+                <div className=" flex gap-3 items-center">
+                  <Button onClick={() => showUserForm(user)}>Xem</Button>
+                  <Button onClick={() => showUserForm(user)}>Xóa</Button>
+                </div>
+              } */
+              onClick={() => showUserForm(user)}
             >
               <p>
                 <strong>Đăng nhập:</strong> {user.login}
@@ -394,12 +402,11 @@ export default function UsersSettings() {
   }
   const handleOnClickGroupID = (e) => {
     setSelectedGroup(e.key)
-    if (e.key !== "all") {
-      fetchDataOnClick(e);
+    if (e.key !== 'all') {
+      fetchDataOnClick(e)
     } else {
-      fetchDataResAllUser();
+      fetchDataResAllUser()
     }
-
   }
   return (
     <div className="w-full h-screen bg-slate-50">
@@ -423,8 +430,10 @@ export default function UsersSettings() {
               <AddUser
                 isOpen={isModalOpenAddUser}
                 onClose={closeModalAddUser}
+                fetchData={fetchData}
               />
             )}
+
             <div className="p-2 flex items-center justify-between">
               <h1 className="text-xl font-bold text-gray-900 sm:text-xl ">
                 Người dùng
@@ -508,11 +517,14 @@ export default function UsersSettings() {
 
           <Layout className="h-screen lg:pb-[70px] ">
             {!isMobile && (
-              <Sider width={200} className="bg-slate-50 border-r border-t">
+              <Sider
+                width={200}
+                className="bg-slate-50 border-r border-t h-screen"
+              >
                 <Menu
                   mode="inline"
                   defaultSelectedKeys={['all']}
-                  style={{ height: '100%', borderRight: 0 }}
+                  className=" pb-32 scroll-container h-full overflow-auto"
                   onClick={(e) => handleOnClickGroupID(e)}
                 >
                   <Menu.Item key="all">All</Menu.Item>
@@ -534,8 +546,14 @@ export default function UsersSettings() {
                 {isMobile ? renderKanban() : renderTable()}
               </Content>
             </Layout>
-            <UserProfile groupsData={groupsData} isModalVisible={isModalVisible} user={selectedUser} handleCancel={handleCancel}  setSelectedGroup={setSelectedGroup} fetchDataResAllUser={fetchDataResAllUser} />
-         
+            <UserProfile
+              groupsData={groupsData}
+              isModalVisible={isModalVisible}
+              user={selectedUser}
+              handleCancel={handleCancel}
+              setSelectedGroup={setSelectedGroup}
+              fetchDataResAllUser={fetchDataResAllUser}
+            />
           </Layout>
         </div>
       </div>

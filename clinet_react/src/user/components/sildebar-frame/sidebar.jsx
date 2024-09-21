@@ -265,8 +265,10 @@ const Sidebar = ({ permissions }) => {
   const [collapsed, setCollapsed] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const { t } = useTranslation()
-  const [activeTab, setActiveTab] = useState('home')
-  const [currentAction, setCurrentAction] = useState(sessionStorage.getItem('current_action'))
+  const [activeTab, setActiveTab] = useState( sessionStorage.getItem('current_action_phone'))
+  const [currentAction, setCurrentAction] = useState(
+    sessionStorage.getItem('current_action')
+  )
 
   const toggleSidebar = () => {
     setCollapsed(!collapsed)
@@ -289,8 +291,13 @@ const Sidebar = ({ permissions }) => {
     return null
   }
   const handleOnClickMenuItem = (e) => {
-    sessionStorage.setItem('current_action', e.key);
+    sessionStorage.setItem('current_action', e.key)
     setCurrentAction(e.key)
+  }
+
+  const handleOnClickMenuItemPhone = (e) => {
+    sessionStorage.setItem('current_action_phone', e)
+    setActiveTab(e)
   }
   return (
     <>
@@ -443,30 +450,30 @@ const Sidebar = ({ permissions }) => {
                       'setting-2-1-1',
                       'view',
                     ) && (
-                        <Menu.Item key="setting-2-1-1">
-                          <Link
-                            to="/u/action=4/technique_access"
-                            className="flex items-center justify-start"
-                          >
-                            {t('side_bar.technique_access')}
-                          </Link>
-                        </Menu.Item>
-                      )}
+                      <Menu.Item key="setting-2-1-1">
+                        <Link
+                          to="/u/action=4/technique_access"
+                          className="flex items-center justify-start"
+                        >
+                          {t('side_bar.technique_access')}
+                        </Link>
+                      </Menu.Item>
+                    )}
 
                     {checkMenuPermission(
                       permissions,
                       'setting-2-1-2',
                       'view',
                     ) && (
-                        <Menu.Item key="setting-2-1-2">
-                          <Link
-                            to="/u/action=5/technique_menu"
-                            className="flex items-center justify-start"
-                          >
-                            {t('side_bar.technique_menu')}
-                          </Link>
-                        </Menu.Item>
-                      )}
+                      <Menu.Item key="setting-2-1-2">
+                        <Link
+                          to="/u/action=5/technique_menu"
+                          className="flex items-center justify-start"
+                        >
+                          {t('side_bar.technique_menu')}
+                        </Link>
+                      </Menu.Item>
+                    )}
                   </SubMenu>
                 )}
               </SubMenu>
@@ -481,12 +488,13 @@ const Sidebar = ({ permissions }) => {
               <Link
                 to="/u/home"
                 className="flex flex-col items-center"
-                onClick={() => setActiveTab('home')}
+                onClick={() => handleOnClickMenuItemPhone('home')}
               >
                 {activeTab === 'home' ? <ActiveHomeIcon /> : <HomeIcon />}
                 <span
-                  className={`mt-2 text-xs ${activeTab === 'home' ? 'text-blue-500' : 'text-gray-500'
-                    }`}
+                  className={`mt-2 text-xs ${
+                    activeTab === 'home' ? 'text-blue-500' : 'text-gray-500'
+                  }`}
                 >
                   {t('footer_app.home')}
                 </span>
@@ -497,12 +505,13 @@ const Sidebar = ({ permissions }) => {
               <Link
                 to="/u/phone/work"
                 className="flex flex-col items-center"
-                onClick={() => setActiveTab('work')}
+                onClick={() => handleOnClickMenuItemPhone('work')}
               >
                 {activeTab === 'work' ? <ActiveWorkIcon /> : <WorkIcon />}
                 <span
-                  className={`mt-2 text-xs ${activeTab === 'work' ? 'text-blue-500' : 'text-gray-500'
-                    }`}
+                  className={`mt-2 text-xs ${
+                    activeTab === 'work' ? 'text-blue-500' : 'text-gray-500'
+                  }`}
                 >
                   {t('side_bar.work')}
                 </span>
@@ -513,7 +522,7 @@ const Sidebar = ({ permissions }) => {
               <Link
                 to="/u/notifications"
                 className="flex flex-col items-center"
-                onClick={() => setActiveTab('notifications')}
+                onClick={() => handleOnClickMenuItemPhone('notifications')}
               >
                 {activeTab === 'notifications' ? (
                   <ActiveNotificationIcon />
@@ -521,10 +530,11 @@ const Sidebar = ({ permissions }) => {
                   <NotificationIcon />
                 )}
                 <span
-                  className={`mt-2 text-xs ${activeTab === 'notifications'
-                    ? 'text-blue-500'
-                    : 'text-gray-500'
-                    }`}
+                  className={`mt-2 text-xs ${
+                    activeTab === 'notifications'
+                      ? 'text-blue-500'
+                      : 'text-gray-500'
+                  }`}
                 >
                   {t('side_bar.notifications')}
                 </span>
@@ -535,12 +545,13 @@ const Sidebar = ({ permissions }) => {
               <Link
                 to={`u/profile/${userNameLogin}`}
                 className="flex flex-col items-center"
-                onClick={() => setActiveTab('profile')}
+                onClick={() => handleOnClickMenuItemPhone('profile')}
               >
                 {activeTab === 'profile' ? <ActiveUserIcon /> : <UserIcon />}
                 <span
-                  className={`mt-2 text-xs ${activeTab === 'profile' ? 'text-blue-500' : 'text-gray-500'
-                    }`}
+                  className={`mt-2 text-xs ${
+                    activeTab === 'profile' ? 'text-blue-500' : 'text-gray-500'
+                  }`}
                 >
                   {t('footer_app.profile')}
                 </span>

@@ -1,8 +1,10 @@
 import axios from 'axios'
 import { HOST_API_SERVER_P } from '../../services'
+import { accessToken } from '../../services/tokenService'
 
-export const DeleteResUsers = async (ids, token) => {
+export const DeleteResUsers = async (ids) => {
   try {
+    const token = accessToken()
     const response = await axios.delete(`${HOST_API_SERVER_P}/res_users`, {
       data: { ids },
       headers: {

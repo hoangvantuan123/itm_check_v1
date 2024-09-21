@@ -58,6 +58,44 @@ export class ResUserGroupsController {
       );
     }
   }
+  @Post('res_user_groups/groups')
+  async createUserGroups(
+    @Req() req: Request,
+    @Body() body: { userId: number; groupIds: number[] },
+    @Res() res: Response,
+  ): Promise<Response> {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      throw new UnauthorizedException('Authorization header missing');
+    }
+
+    const token = authHeader.split(' ')[1];
+    if (!token) {
+      throw new UnauthorizedException(
+        'The job version has expired. Please log in again to continue.',
+      );
+    }
+
+    try {
+      const decodedToken = jwt.verify(token, jwtConstants.secret);
+      const tokenId = (decodedToken as { id: number }).id;
+      if (!tokenId) {
+        throw new UnauthorizedException('Invalid token payload');
+      }
+
+      const { userId, groupIds } = body;
+      const result = await this.resGroupsService.createUserGroups(
+        tokenId,
+        userId,
+        groupIds,
+      );
+      return res.status(HttpStatus.OK).json(result);
+    } catch (error) {
+      throw new UnauthorizedException(
+        'Request sending failed, please try again!',
+      );
+    }
+  }
 
   @Get('group/:groupId')
   async findUsersByGroupId(

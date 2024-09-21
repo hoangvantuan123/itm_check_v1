@@ -9,16 +9,19 @@ export const GetUserGroupsPageLimitID = async (
 ) => {
   try {
     const token = accessToken()
-    const response = await axios.get(`${HOST_API_SERVER_P}/res_user_groups/${groupId}`, {
-      params: {
-        page,
-        limit,
+    const response = await axios.get(
+      `${HOST_API_SERVER_P}/res_user_groups/${groupId}`,
+      {
+        params: {
+          page,
+          limit,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
       },
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    })
+    )
     return {
       success: true,
       data: response.data,

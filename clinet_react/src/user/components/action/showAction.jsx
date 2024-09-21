@@ -61,9 +61,8 @@ export default function ShowAction({
     }
   }
   const handleDeleteUsers = async () => {
-    const token = localStorage.getItem('token_1h')
     try {
-      const response = await DeleteResUsers(selectedRowKeys, token)
+      const response = await DeleteResUsers(selectedRowKeys)
 
       if (response.success) {
         message.success('Xóa thành công tài khoản')

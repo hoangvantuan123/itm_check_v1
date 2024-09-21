@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Input, Modal, Typography, Dropdown, Menu } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
+import ImportForm from '../import'
 
 const { Title } = Typography
 const ImportIcon = () => {
@@ -125,10 +126,17 @@ export default function ImportAction({ isOpen, onClose }) {
   const userNameLogin = userFromLocalStorage?.login || 'none'
   const { t } = useTranslation()
   const [showDropdown, setShowDropdown] = useState(false)
-
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const handleOnClickOpenImport = () => {
+    setShowDropdown(false)
+    setIsModalOpen(true)
+  }
+  const handleOnClickCloseImport = () => {
+    setIsModalOpen(false)
+  }
   const menu = (
     <Menu>
-      <Menu.Item key="import_data">
+      <Menu.Item key="import_data" onClick={handleOnClickOpenImport}>
         {' '}
         <span className=" flex items-center gap-2">
           {' '}
@@ -140,16 +148,19 @@ export default function ImportAction({ isOpen, onClose }) {
   )
 
   return (
-    <Dropdown
-    overlay={menu}
-      trigger={['click']}
-      open={showDropdown}
-      onClick={() => setShowDropdown(!showDropdown)}
-    >
-      <button className="border-[1.3px] border-[#d9d9d9] rounded-lg p-[0.6rem] w-auto flex items-center space-x-2 bg-white hover:bg-gray-100">
-        <DataIcon />
-        <span className="text-gray-500">Data</span>
-      </button>
-    </Dropdown>
+    <>
+      <Dropdown
+        overlay={menu}
+        trigger={['click']}
+        open={showDropdown}
+        onClick={() => setShowDropdown(!showDropdown)}
+      >
+        <button className="border-[1.3px] border-[#d9d9d9] rounded-lg p-[0.6rem] w-auto flex items-center space-x-2 bg-white hover:bg-gray-100">
+          <DataIcon />
+          <span className="text-gray-500">Data</span>
+        </button>
+      </Dropdown>
+      <ImportForm isOpen={isModalOpen} onClose={handleOnClickCloseImport} />
+    </>
   )
 }

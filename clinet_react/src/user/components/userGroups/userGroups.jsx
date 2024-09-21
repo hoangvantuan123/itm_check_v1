@@ -30,12 +30,18 @@ import { DeleteResUserGroups } from '../../../features/resGroups/deleteResUserGr
 import { GetPermisionMenuGroupID } from '../../../features/menu/getPermissionsMenuGroupID'
 import { PutPermissionsID } from '../../../features/menu/putPermissionsID'
 import { DeletePermissionsMenu } from '../../../features/menu/deletePermissionsMenu'
+import { PutGroupId } from '../../../features/resGroups/putGroupsId'
 import ShowListMenu from './modalListMenu'
 const { Title } = Typography
 const { Option } = Select
 const { TextArea } = Input
 
-export default function UserGroupsDrawer({ group, isModalVisible, handleCancel }) {
+export default function UserGroupsDrawer({
+  group,
+  isModalVisible,
+  handleCancel,
+  fetchDataGroups,
+}) {
   const { t } = useTranslation()
   const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
   const userNameLogin = userFromLocalStorage?.login || 'none'
@@ -59,7 +65,6 @@ export default function UserGroupsDrawer({ group, isModalVisible, handleCancel }
   const [limitPermissionsMenu, setLimitPermissionsMenu] = useState(10)
   const [totalPermissionsMenu, setTotalPermissionsMenu] = useState(0)
 
-  const [count, setCount] = useState(3)
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const [selectedRowKeysPM, setSelectedRowKeysPM] = useState([])
 
@@ -384,8 +389,43 @@ export default function UserGroupsDrawer({ group, isModalVisible, handleCancel }
   ]
 
   const handleFinish = async (values) => {
-   handleCancel()
+    const { name, comment } = values
+
+    const data = {
+      name,
+      comment,
+    }
+
+    const promises = [PutGroupId(group?.id, data)]
+    message.loading(t('Đang cập nhật...'))
+
+    Promise.all(promises)
+      .then((results) => {
+        let success = true
+        let errorMessage = ''
+
+        results.forEach((result) => {
+          if (!result.success) {
+            success = false
+            errorMessage = result.message || 'Lỗi khi cập nhật!'
+          }
+        })
+
+        if (success) {
+          fetchDataGroups()
+          message.success(t('Cập nhật giá trị thành công'))
+        } else {
+          message.error(errorMessage)
+        }
+      })
+      .catch((error) => {
+        message.error(error.message || t('Lỗi khi cập nhật!'))
+      })
+      .finally(() => {
+        message.destroy()
+      })
   }
+
   const openModal = () => {
     setIsModalOpen(true)
   }
@@ -450,7 +490,7 @@ export default function UserGroupsDrawer({ group, isModalVisible, handleCancel }
       onClose={handleCancel}
       width={900}
       closable={false}
-      footer={[
+      extra={[
         <Button key="cancel" onClick={handleCancel}>
           {t('Thoát')}
         </Button>,
@@ -655,6 +695,5 @@ export default function UserGroupsDrawer({ group, isModalVisible, handleCancel }
         fetchDataUserGroups={fetchData}
       />
     </Drawer>
-
   )
 }

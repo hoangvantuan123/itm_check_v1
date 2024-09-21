@@ -61,7 +61,7 @@ export default function FieldAction({ isOpen, onClose }) {
 
   return (
     <Dropdown
-    overlay={menu}
+      overlay={menu}
       trigger={['click']}
       open={showDropdown}
       onClick={() => setShowDropdown(!showDropdown)}

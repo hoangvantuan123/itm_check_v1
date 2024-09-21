@@ -19,7 +19,7 @@ import {
   Input,
   Drawer,
   Select,
-  message
+  message,
 } from 'antd'
 import {
   TeamOutlined,
@@ -29,12 +29,12 @@ import {
 } from '@ant-design/icons'
 import DefaultAvatar from '../../../assets/default-avatar.png'
 import { PutUserID } from '../../../features/resUsers/putUserId'
-import { GetUserGroupStatusID } from '../../../features/resGroups/getUserGroupStatusId'
+import { GetUserGroupStatusID } from '../../../features/resGroups/getUserGroupStatusID'
 import { DeleteResUserGroups } from '../../../features/resGroups/deleteResUserGroups'
-import { PostResUserGroups } from '../../../features/resGroups/postResUserGroups'
+import { PostResUserIdGroups } from '../../../features/resGroups/postResUserIdGroups'
 const { Title } = Typography
 
-const { Option } = Select;
+const { Option } = Select
 const columns = [
   {
     title: 'Thiết bị',
@@ -108,18 +108,20 @@ const SettingIcon = () => {
   )
 }
 
-export default function UserProfile({ user, isModalVisible, handleCancel, fetchDataResAllUser, setSelectedGroup }) {
-  const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
-  const userNameLogin = userFromLocalStorage?.login || 'none'
-  const [selectedIds, setSelectedIds] = useState([]);
-  const [groupStatus, setGroupStatus] = useState([]);
+export default function UserProfile({
+  user,
+  isModalVisible,
+  handleCancel,
+  fetchDataResAllUser,
+  setSelectedGroup,
+}) {
+  const [groupStatus, setGroupStatus] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const { t } = useTranslation()
   const [form] = Form.useForm()
-  const [selectedGroups, setSelectedGroups] = useState([]); 
+  const [selectedGroups, setSelectedGroups] = useState([])
   const [deletedGroups, setDeletedGroups] = useState([])
-
 
   const fetchDataGroupStatus = async (e) => {
     setLoading(true)
@@ -150,32 +152,56 @@ export default function UserProfile({ user, isModalVisible, handleCancel, fetchD
     </Menu>
   )
   const onFinish = (values) => {
-    const { nameUser, login, language, active } = values;
+    const { nameUser, login, language, active } = values
+
     const data = {
       nameUser,
       login,
       language,
       active,
-    };
-  
-    Promise.all([
-      PutUserID(user?.id, data),
-      DeleteResUserGroups(deletedGroups),
-    ])
-      .then(([result]) => {
-        if (result.success) {
+    }
+
+    const promises = [PutUserID(user?.id, data)]
+
+    if (selectedGroups.length > 0) {
+      promises.push(PostResUserIdGroups(user?.id, selectedGroups))
+    }
+    if (deletedGroups.length > 0) {
+      promises.push(DeleteResUserGroups(deletedGroups))
+    }
+
+    // Thông báo cho người dùng rằng quá trình đang diễn ra
+    message.loading(t('Đang cập nhật...'))
+
+    Promise.all(promises)
+      .then((results) => {
+        let success = true
+        let errorMessage = ''
+
+        results.forEach((result) => {
+          if (!result.success) {
+            success = false
+            errorMessage = result.message || 'Lỗi khi cập nhật!'
+          }
+        })
+
+        if (success) {
           setDeletedGroups([])
+          setSelectedGroups([])
           fetchDataGroupStatus(user?.id)
-          message.success(t('Cập nhật giá trị thành công'));
+          message.success(t('Cập nhật giá trị thành công'))
         } else {
-          message.error(result.message || 'Lỗi khi cập nhật!');
+          message.error(errorMessage)
         }
       })
       .catch((error) => {
-        message.error(error.message || t('Lỗi khi cập nhật!'));
-      });
-  };
-  
+        message.error(error.message || t('Lỗi khi cập nhật!'))
+      })
+      .finally(() => {
+        message.destroy()
+      })
+  }
+
   useEffect(() => {
     if (isModalVisible === true) {
       fetchDataGroupStatus(user?.id)
@@ -188,39 +214,28 @@ export default function UserProfile({ user, isModalVisible, handleCancel, fetchD
         active: user?.active,
       })
     }
-
-
-  }, [
-    isModalVisible,
-    user,
-    form
-  ])
-  const onChange = (checkedValues) => {
-    setSelectedIds(checkedValues);
-  };
+  }, [isModalVisible, user, form])
 
   const handleCheckboxClick = async (group_id, user_group_id, value) => {
     const newData = groupStatus.map((item) =>
-      item.group_id === group_id ? { ...item, status: value } : item
-    );
-    setGroupStatus(newData);
+      item.group_id === group_id ? { ...item, status: value } : item,
+    )
+    setGroupStatus(newData)
     if (value && user_group_id === null) {
-      setSelectedGroups((prevSelected) => [...prevSelected, group_id]);
+      setSelectedGroups((prevSelected) => [...prevSelected, group_id])
     } else {
       setSelectedGroups((prevSelected) =>
-        prevSelected.filter((id) => id !== group_id)
-      );
-    } 
-    if( user_group_id !== null && value === false){
-      setDeletedGroups(user_group_id)
-    }else {
-      setDeletedGroups([])
+        prevSelected.filter((id) => id !== group_id),
+      )
     }
-  };
-  const handleTestClick = () => {
-   
-  };
-         
+    if (user_group_id !== null && value === false) {
+      setDeletedGroups((prevSelected) => [...prevSelected, user_group_id])
+    } else {
+      setDeletedGroups((prevSelected) =>
+        prevSelected.filter((id) => id !== user_group_id),
+      )
+    }
+  }
 
   return (
     <Drawer
@@ -233,7 +248,7 @@ export default function UserProfile({ user, isModalVisible, handleCancel, fetchD
       onClose={handleCancel}
       width={900}
       closable={false}
-      footer={[
+      extra={[
         <Button key="cancel" onClick={handleCancel}>
           {t('Thoát')}
         </Button>,
@@ -289,21 +304,17 @@ export default function UserProfile({ user, isModalVisible, handleCancel, fetchD
       </Row>
 
       <Card>
-        <Row
-          gutter={16}
-          align="top"
-          className="flex-col md:flex-row"
-        >
-          <Col
-            xs={24}
-            md={6}
-            style={{ display: 'flex' }}
-            className=" md:pb-0"
-          >
+        <Row gutter={16} align="top" className="flex-col md:flex-row">
+          <Col xs={24} md={6} style={{ display: 'flex' }} className=" md:pb-0">
             <Avatar shape="square" size={128} src={DefaultAvatar} />
           </Col>
           <Col xs={24} md={18}>
-            <Form form={form} onFinish={onFinish} layout="vertical" className='pt-5 md:mt-0'>
+            <Form
+              form={form}
+              onFinish={onFinish}
+              layout="vertical"
+              className="pt-5 md:mt-0"
+            >
               <Row gutter={[16, 16]} className="pb-4">
                 <Col xs={24} md={24}>
                   <Form.Item
@@ -320,7 +331,12 @@ export default function UserProfile({ user, isModalVisible, handleCancel, fetchD
                     label="Tên đăng nhập"
                     name="login"
                     initialValue={user?.login}
-                    rules={[{ required: true, message: 'Vui lòng nhập tên đăng nhập!' }]}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Vui lòng nhập tên đăng nhập!',
+                      },
+                    ]}
                   >
                     <Input size="large" />
                   </Form.Item>
@@ -332,7 +348,9 @@ export default function UserProfile({ user, isModalVisible, handleCancel, fetchD
                     label="Ngôn ngữ"
                     name="language"
                     initialValue={user?.language}
-                    rules={[{ required: true, message: 'Vui lòng chọn ngôn ngữ!' }]}
+                    rules={[
+                      { required: true, message: 'Vui lòng chọn ngôn ngữ!' },
+                    ]}
                   >
                     <Select size="large">
                       <Option value="vi">Tiếng Việt</Option>
@@ -341,7 +359,6 @@ export default function UserProfile({ user, isModalVisible, handleCancel, fetchD
                     </Select>
                   </Form.Item>
                 </Col>
-
               </Row>
             </Form>
           </Col>
@@ -354,7 +371,6 @@ export default function UserProfile({ user, isModalVisible, handleCancel, fetchD
       <Card>
         <div className="mb-3">
           <Title level={5}>{t('Loại người dùng')}</Title>
-      <button onClick={handleTestClick}>OnClick</button>
           <Radio.Group>
             <Space direction="vertical">
               <Radio value="admin">{t('Người dùng nội bộ')}</Radio>
@@ -368,9 +384,17 @@ export default function UserProfile({ user, isModalVisible, handleCancel, fetchD
           <Row gutter={[16, 16]}>
             {groupStatus?.map((item) => (
               <Col xs={12} sm={8} key={item?.group_id}>
-                <Checkbox value={item?.group_id} checked={item.status} onChange={(e) =>
-                  handleCheckboxClick(item.group_id, item.user_group_id, e.target.checked)
-                } >
+                <Checkbox
+                  value={item?.group_id}
+                  checked={item.status}
+                  onChange={(e) =>
+                    handleCheckboxClick(
+                      item.group_id,
+                      item.user_group_id,
+                      e.target.checked,
+                    )
+                  }
+                >
                   {item?.name}
                 </Checkbox>
               </Col>
@@ -399,7 +423,5 @@ export default function UserProfile({ user, isModalVisible, handleCancel, fetchD
         </div>
       </Card>
     </Drawer>
-
-
   )
 }

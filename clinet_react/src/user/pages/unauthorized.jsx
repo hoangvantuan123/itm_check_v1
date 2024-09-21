@@ -19,7 +19,7 @@ export default function Unauthorized() {
         <title>ITM - {t('Unauthorized')}</title>
       </Helmet>
 
-    {/*   <div className="grid h-screen place-content-center bg-px-4">
+      {/*   <div className="grid h-screen place-content-center bg-px-4">
         <div className="text-center flex flex-col  justify-center items-center">
           <svg
             className="  w-96 h-96"

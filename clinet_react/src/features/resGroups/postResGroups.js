@@ -1,8 +1,10 @@
 import axios from 'axios'
 import { HOST_API_SERVER_P } from '../../services'
+import { accessToken } from '../../services/tokenService'
 
-export const PostResGroups = async (name, comment, token) => {
+export const PostResGroups = async (name, comment) => {
   try {
+    const token = accessToken()
     const response = await axios.post(
       `${HOST_API_SERVER_P}/res_groups`,
       {

@@ -54,6 +54,37 @@ export class ResUserGroupsService {
       message: 'Successfully created/updated groups for users',
     };
   }
+  async createUserGroups(
+    tokenId: number,
+    userId: number,
+    groupIds: number[],
+  ): Promise<{ success: boolean; message: string; data?: ResUserGroups[] }> {
+    const user = await this.userService.findUserById(tokenId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const newGroups = groupIds.map((id) => {
+      return this.resUserGroupsRepository.create({
+        group_id: id,
+        user_id: userId,
+        create_uid: tokenId,
+        write_uid: tokenId,
+      });
+    });
+
+    await this.resUserGroupsRepository
+      .createQueryBuilder()
+      .insert()
+      .into(ResUserGroups)
+      .values(newGroups)
+      .execute();
+
+    return {
+      success: true,
+      message: 'Successfully created/updated groups for users',
+    };
+  }
 
   async findUsersByGroupId(
     groupId: number,

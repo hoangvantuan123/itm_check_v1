@@ -21,6 +21,7 @@ import utc from 'dayjs/plugin/utc'
 import { useTranslation } from 'react-i18next'
 
 import { Helmet } from 'react-helmet'
+import ListView from '../components/work/viewList'
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -93,21 +94,23 @@ export default function TimeTracking() {
   const dateCellRender = (date) => {
     const selectedDate = date.tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD')
     const record = sampleData.find((item) => item.date === selectedDate)
-  
-    if (!record) return <div></div> 
-  
+
+    if (!record) return <div></div>
+
     const icons = record.records.map((r, index) => {
       let icon = null
       if (r.status === 'Absent') {
         icon = (
-          <> 
+          <>
             <CloseCircleOutlined style={{ color: 'red', fontSize: '16px' }} />
           </>
         )
       } else if (r.status === 'Late') {
         icon = (
           <>
-            <ExclamationCircleOutlined style={{ color: 'yellow', fontSize: '16px' }} />
+            <ExclamationCircleOutlined
+              style={{ color: 'yellow', fontSize: '16px' }}
+            />
           </>
         )
       } else {
@@ -117,23 +120,18 @@ export default function TimeTracking() {
           </>
         )
       }
-      
+
       // Hiển thị thêm timeIn
       return (
         <div key={index} className="flex items-center gap-2">
           {icon}
-          <span>{r.timeIn}</span> 
+          <span>{r.timeIn}</span>
         </div>
       )
     })
-  
-    return (
-      <div className="flex flex-col items-center">
-        {icons}
-      </div>
-    )
+
+    return <div className="flex flex-col items-center">{icons}</div>
   }
-  
 
   // Cột cho bảng chấm công
   const columns = [
@@ -179,7 +177,6 @@ export default function TimeTracking() {
     })),
   )
 
-  // Xử lý khi người dùng chọn một chế độ hiển thị từ menu
   const handleMenuClick = (e) => {
     setViewMode(e.key)
   }
@@ -251,18 +248,7 @@ export default function TimeTracking() {
           )}
           {viewMode === 'list' && (
             <div className="flex flex-col">
-              <List
-                dataSource={listData}
-                renderItem={(item) => (
-                  <List.Item>
-                    <Typography.Text>
-                      {item.date} - {item.timeIn} - {item.timeOut} -{' '}
-                      {item.status}
-                    </Typography.Text>
-                  </List.Item>
-                )}
-                bordered
-              />
+              <ListView listData={listData} />
             </div>
           )}
         </div>

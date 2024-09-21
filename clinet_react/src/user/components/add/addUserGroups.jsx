@@ -31,21 +31,14 @@ export default function AddUserGroups({ isOpen, onClose, fetchData }) {
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
   const [form] = Form.useForm()
-  
+
   const [count, setCount] = useState(3)
 
   const handleFinish = async (values) => {
     const { name, comment } = values
     try {
-      const token = localStorage.getItem('token_1h')
-      if (!token) {
-        message.error(
-          'Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại để tiếp tục.',
-        )
-        return
-      }
 
-      const result = await PostResGroups(name, comment, token)
+      const result = await PostResGroups(name, comment)
 
       if (result.success) {
         fetchData()
@@ -70,7 +63,7 @@ export default function AddUserGroups({ isOpen, onClose, fetchData }) {
       open={isOpen}
       closable={false}
       width={900}
-      footer={[
+      extra={[
         <Button key="cancel" onClick={onClose}>
           {t('Hủy')}
         </Button>,
@@ -116,7 +109,6 @@ export default function AddUserGroups({ isOpen, onClose, fetchData }) {
             <TextArea rows={4} size="large" placeholder={t('Ghi chú')} />
           </Form.Item>
         </Card>
-
       </Form>
     </Drawer>
   )

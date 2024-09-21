@@ -1,22 +1,17 @@
 import axios from 'axios'
-import {
-  HOST_API_SERVER_P
-} from '../../services'
-import {
-  accessToken
-} from '../../services/tokenService'
-import {
-  accessTokenCookie
-} from '../../services/tokenService'
+import { HOST_API_SERVER_P } from '../../services'
+import { accessToken } from '../../services/tokenService'
 
 export const PostResUserGroups = async (userIds, groupId) => {
   try {
-    const token = accessTokenCookie()
+    const token = accessToken()
     const response = await axios.post(
-      `${HOST_API_SERVER_P}/res_user_groups`, {
+      `${HOST_API_SERVER_P}/res_user_groups`,
+      {
         userIds: userIds,
         groupId: groupId,
-      }, {
+      },
+      {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -39,8 +34,9 @@ export const PostResUserGroups = async (userIds, groupId) => {
   } catch (error) {
     return {
       success: false,
-      message: error.response ?
-        error.response.data.message || 'Có lỗi xảy ra' : 'Không thể kết nối tới server',
+      message: error.response
+        ? error.response.data.message || 'Có lỗi xảy ra'
+        : 'Không thể kết nối tới server',
     }
   }
 }

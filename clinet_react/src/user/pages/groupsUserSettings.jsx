@@ -58,8 +58,7 @@ export default function GroupsUsersSettings() {
   }
   const fetchData = async () => {
     setLoading(true)
-    const token = localStorage.getItem('token_1h')
-    const response = await GetAllResGroupsPageLimit(page, limit, token)
+    const response = await GetAllResGroupsPageLimit(page, limit)
     if (response.success) {
       setData(response.data.data)
       setTotal(response.data.total)
@@ -138,15 +137,8 @@ export default function GroupsUsersSettings() {
     const comment =
       'Vui lòng cấu hình quyền truy cập cho nhóm mới theo yêu cầu.'
     try {
-      const token = localStorage.getItem('token_1h')
-      if (!token) {
-        message.error(
-          'Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại để tiếp tục.',
-        )
-        return
-      }
-
-      const result = await PostResGroups(name, comment, token)
+      
+      const result = await PostResGroups(name, comment)
 
       if (result.success) {
         fetchData()
@@ -369,11 +361,11 @@ export default function GroupsUsersSettings() {
             </Layout>
           </Layout>
 
-          
           <UserGroupsDrawer
             isModalVisible={isModalVisible}
             group={selectedGroupDetails}
             handleCancel={handleCancel}
+            fetchDataGroups={fetchData}
           />
         </div>
       </div>

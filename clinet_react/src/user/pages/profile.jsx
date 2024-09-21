@@ -32,6 +32,8 @@ import PhoneGeneralSettings from './phoneGeneralSettings'
 import KeyMenu02 from '../components/auth/menu-key/key-02'
 import { Link } from 'react-router-dom'
 import KeyMenu03 from '../components/auth/menu-key/key-03'
+import Cookies from 'js-cookie'
+
 const SettingIcon = () => {
   return (
     <svg
@@ -185,7 +187,7 @@ export default function Profile() {
   }
   const handleLogout = () => {
     localStorage.removeItem('userInfo')
-    localStorage.removeItem('token_1h')
+    Cookies.removeItem('accessToken')
     window.location.href = '/u/login'
   }
   // Menu items
