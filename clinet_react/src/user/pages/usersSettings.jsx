@@ -65,7 +65,6 @@ export default function UsersSettings() {
     setActionUsers('actionUsers')
   }
 
-
   const openModal = () => {
     setIsModalOpen(true)
   }

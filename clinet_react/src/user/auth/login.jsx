@@ -72,7 +72,7 @@ export default function Login() {
       <Helmet>
         <title>{t('auth.login')}</title>
       </Helmet>
-      <div className="min-h-screen overflow-hidden flex items-center justify-center">
+      <div className="min-h-screen flex flex-col lg:flex-row items-center justify-center overflow-hidden bg-gray-50">
         {/* Cột chứa ảnh */}
         <div className="hidden lg:flex lg:w-1/2 h-full bg-gray-100 items-center justify-center">
           <img
@@ -83,22 +83,31 @@ export default function Login() {
         </div>
 
         {/* Cột chứa form login */}
-        <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-5 lg:p-0">
-          <div className="mx-auto max-w-lg text-center mb-5">
-            <h1 className="text-2xl font-bold sm:text-3xl">
-              Get started today!
+        <div className="w-full lg:w-1/2 flex flex-col items-center justify-center px-5 py-10 lg:p-20 bg-gray-50">
+          <div className="flex flex-col items-center top-20  absolute">
+            <img
+              src="https://via.placeholder.com/150" // Thay bằng link logo của bạn
+              alt="Company Logo"
+              className="h-16 w-16 mb-4 rounded-md"
+            />
+            <h1 className="text-xl font-semibold text-gray-700">
+              ITM Semiconductor CO., Ltd.
             </h1>
+          </div>
 
-            <p className="mt-4 text-gray-500">
-              ITM Semiconductor Inc, a company that gives trust to customers and
-              happiness to employees, value shared growth to shareholders.
+          <div className="mx-auto max-w-lg text-center mb-5">
+            <h1 className="text-2xl font-bold sm:text-3xl">Welcome Back!</h1>
+            <p className="mt-4 text-gray-500 text-xs">
+              ITM Semiconductor CO., Ltd, a company that gives trust to
+              customers and happiness to employees, value shared growth to
+              shareholders.
             </p>
           </div>
 
           <Form
             onFinish={onFinish}
             layout="vertical"
-            className="w-full sm:w-1/2 md:w-1/3 lg:w-1/2 xl:w-1/3 p-5 lg:p-0"
+            className="w-full sm:w-2/3 md:w-1/2 lg:w-2/3 xl:w-1/2"
           >
             <Form.Item
               name="login"
@@ -107,7 +116,7 @@ export default function Login() {
               ]}
             >
               <Input
-                className="w-full rounded-lg border-gray-200 p-4 text-sm shadow-sm"
+                className="w-full rounded-lg border-gray-200 bg-gray-50 p-4 text-sm shadow-sm"
                 size="large"
                 prefix={<UserOutlined className="site-form-item-icon" />}
                 placeholder="Employee ID"
@@ -120,7 +129,7 @@ export default function Login() {
               ]}
             >
               <Input.Password
-                className="w-full rounded-lg border-gray-200 p-4 text-sm shadow-sm"
+                className="w-full rounded-lg border-gray-200 bg-gray-50 p-4 text-sm shadow-sm"
                 size="large"
                 prefix={<LockOutlined className="site-form-item-icon" />}
                 placeholder="Password"
@@ -134,7 +143,7 @@ export default function Login() {
             <Form.Item>
               <Button
                 htmlType="submit"
-                className="w-full rounded-lg h-full border-gray-200 bg-indigo-600 text-white p-4 shadow-sm text-sm"
+                className="w-full rounded-lg h-full bg-indigo-600 text-white p-4 shadow-sm text-sm"
                 size="large"
               >
                 Log in

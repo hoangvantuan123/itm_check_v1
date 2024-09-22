@@ -137,7 +137,6 @@ export default function GroupsUsersSettings() {
     const comment =
       'Vui lòng cấu hình quyền truy cập cho nhóm mới theo yêu cầu.'
     try {
-      
       const result = await PostResGroups(name, comment)
 
       if (result.success) {

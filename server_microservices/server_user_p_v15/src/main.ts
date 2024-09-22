@@ -12,10 +12,8 @@ async function bootstrap() {
     cors({
       origin: [
         'http://localhost:3000',
-        'http://103.75.180.66:3000',
-        'http://103.75.180.66:4173',
-        'http://localhost:4173',
-        'http://localhost:3001',
+        'https://devbeta.online',
+        'https://www.devbeta.online',
       ],
       credentials: true,
       methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],

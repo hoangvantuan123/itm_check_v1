@@ -37,7 +37,6 @@ export default function AddUserGroups({ isOpen, onClose, fetchData }) {
   const handleFinish = async (values) => {
     const { name, comment } = values
     try {
-
       const result = await PostResGroups(name, comment)
 
       if (result.success) {

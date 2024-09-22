@@ -76,7 +76,6 @@ export default function AddUser({ isOpen, onClose, fetchData }) {
         form={form}
         layout="vertical"
         onFinish={handleFinish}
-      
         style={{ textAlign: 'left' }}
       >
         <Title level={5}>{t('Thông tin cơ bản')}</Title>

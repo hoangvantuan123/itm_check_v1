@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Input, Modal, Typography, Dropdown, Menu } from 'antd'
+import { Input, Modal, Typography, Dropdown, Menu, Button } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
 import ImportForm from '../import'
 
@@ -51,25 +51,29 @@ export default function PhoneSettingAction({
       <Menu.Item key="action_setting_1">Thêm người dùng</Menu.Item>
       <Menu.Item key="action_setting_2">Tùy chọn</Menu.Item>
       <Menu.Item key="action_setting_3">Hành động</Menu.Item>
-      <Menu.Item key="action_setting_4" onClick={handleOnClickOpenImport}>Import Data</Menu.Item>
+      <Menu.Item key="action_setting_4" onClick={handleOnClickOpenImport}>
+        Import Data
+      </Menu.Item>
       <Menu.Item key="4">Fields</Menu.Item>
     </Menu>
   )
- 
+
   return (
     <div>
-
       <Dropdown
         overlay={menu}
         trigger={['click']}
         open={showSttingActionDropdown}
         onClick={() => setShowSettingActionDropdown(!showSttingActionDropdown)}
       >
-        <button className="   p-[0.6rem] w-auto flex items-center space-x-2">
+        <Button className=" border-none p-2 bg-none shadow-none">
           <SettingIcon />
-        </button>
+        </Button>
       </Dropdown>
-      <ImportForm isOpen={isModalOpenImportPhone} onClose={handleOnClickCloseImportPhone} />
+      <ImportForm
+        isOpen={isModalOpenImportPhone}
+        onClose={handleOnClickCloseImportPhone}
+      />
     </div>
   )
 }
