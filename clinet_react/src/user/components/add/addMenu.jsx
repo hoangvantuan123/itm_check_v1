@@ -130,6 +130,7 @@ export default function AddMenu({ isOpen, onClose, fetchTableData }) {
             label={t('Thứ tự')}
             name="sequence"
             style={{ textAlign: 'left' }}
+            rules={[{ required: true, message: t('Vui lòng số thứ tự') }]}
           >
             <InputNumber
               type="number"

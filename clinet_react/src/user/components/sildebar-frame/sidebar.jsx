@@ -478,6 +478,48 @@ const Sidebar = ({ permissions }) => {
                     )}
                   </SubMenu>
                 )}
+
+                {checkMenuPermission(permissions, 'setting-3-1', 'view') && (
+                  <SubMenu
+                    key="setting-3-1"
+                    title={
+                      <span className="flex items-center gap-3">
+                        {' '}
+                        {t('Mô hình')}
+                      </span>
+                    }
+                  >
+                    {checkMenuPermission(
+                      permissions,
+                      'setting-3-1-1',
+                      'view',
+                    ) && (
+                      <Menu.Item key="setting-3-1-1">
+                        <Link
+                          to="/a/action=8/personnel"
+                          className="flex items-center justify-start"
+                        >
+                          {t('Nhân viên')}
+                        </Link>
+                      </Menu.Item>
+                    )}
+
+                    {checkMenuPermission(
+                      permissions,
+                      'setting-3-1-2',
+                      'view',
+                    ) && (
+                      <Menu.Item key="setting-3-1-2">
+                        <Link
+                          to="/a/action=9/working_time"
+                          className="flex items-center justify-start"
+                        >
+                          {t('Thời gian làm việc')}
+                        </Link>
+                      </Menu.Item>
+                    )}
+                  </SubMenu>
+                )}
               </SubMenu>
             )}
           </Menu>

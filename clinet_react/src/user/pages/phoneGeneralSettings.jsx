@@ -345,21 +345,25 @@ export default function PhoneGeneralSettings() {
             </summary>
 
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-8 mt-5">
-              <div className="h-32 rounded-lg ">
+              <div className="h-auto rounded-lg ">
                 <h3 className="mt-2 max-w-md cursor-pointer text-pretty  mb-4 text-base">
                   Người sử dụng
                 </h3>
                 <p className="mt-2 max-w-md cursor-pointer text-pretty text-sm text-indigo-500">
-                  Quản lý người dùng
-                </p>
-                <p className="mt-2 max-w-md cursor-pointer text-pretty text-sm text-indigo-500">
-                  <Link to="/u/action=3/groups_users">
-                    Quản lý nhóm người dùng
-                  </Link>
+                  <Link to="/u/action=2/users">Quản lý người dùng</Link>
                 </p>
 
                 <p className="mt-2 max-w-md cursor-pointer text-pretty text-sm text-indigo-500">
-                  Hồ sơ người dùng
+                  <Link to="/u/action=3/groups_users"> Quản lý nhóm người dùng</Link>
+                </p>
+                <p className="mt-2 max-w-md cursor-pointer text-pretty text-sm text-indigo-500">
+                  <Link to="/a/action=8/personnel">Quản lý nhân viên</Link>
+                </p>
+                <p className="mt-2 max-w-md cursor-pointer text-pretty text-sm text-indigo-500">
+                  <Link >Quản lý thời gian làm việc</Link>
+                </p>
+                <p className="mt-2 max-w-md cursor-pointer text-pretty text-sm text-indigo-500">
+                  <Link >Quản lý phòng ban</Link>
                 </p>
               </div>
               <div className="h-32 rounded-lg ">
@@ -370,7 +374,7 @@ export default function PhoneGeneralSettings() {
                   Quản lý quyền truy cập
                 </p>
                 <p className="mt-2 max-w-md cursor-pointer text-pretty text-sm text-indigo-500">
-                  Quản lý Menu
+                  <Link to="/u/action=5/technique_menu">Quản lý menu</Link>
                 </p>
                 <p className="mt-2 max-w-md cursor-pointer text-pretty text-sm text-indigo-500">
                   Hồ sơ mô-đun

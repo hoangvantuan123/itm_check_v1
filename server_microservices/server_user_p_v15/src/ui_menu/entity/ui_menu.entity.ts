@@ -34,14 +34,14 @@ export class IrUiMenu {
   @Column({ nullable: true })
   action: string;
 
-  @Column({ nullable: true })
+  @Column()
   sequence: number;
 
 
   @Column()
   name: string;
 
-  @Column({ nullable: true })
+  @Column()
   key: string;
 
   @Column({ nullable: true })

@@ -44,6 +44,8 @@ export default function TechniqueMenu() {
   const [limit, setLimit] = useState(10)
   const [total, setTotal] = useState(0)
   const [selectedDetails, setSelectedDetails] = useState(null)
+  const [actionUsers, setActionUsers] = useState(null)
+
   const fetchData = async () => {
     setLoading(true)
     const response = await GetMenuPageLimit(page, limit)
@@ -200,11 +202,34 @@ export default function TechniqueMenu() {
       onChange={(pagination) => handleTableChange(pagination)}
     />
   )
+  const renderKanban = () => {
+    return (
+      <Row gutter={16} className="bg-slate-50  pb-32">
+        {tableData.map((item) => (
+          <Col span={24} key={item.id} style={{ marginBottom: 16 }}>
+            <Card
+              title={item.name}
+              onClick={() => handleViewDetails(item)}
+            >
+              <strong>Trình tự:</strong> {item.sequence} <br />
+              <strong>Key:</strong> {item.key_name} <br />
+
+
+            </Card>
+          </Col>
+        ))}
+      </Row>
+    )
+  }
   const openModalAddMenu = () => {
     setIsModalOpenMenu(true)
   }
   const closeModalAddMenu = () => {
     setIsModalOpenMenu(false)
+  }
+
+  const handleOnClickAction = () => {
+    setActionUsers('actionMenu')
   }
   return (
     <div className="w-full h-screen bg-slate-50">
@@ -249,6 +274,18 @@ export default function TechniqueMenu() {
                   <Option value="3">List</Option>
                 </Select>
                 <ImportAction />
+                {selectedRowKeys != null && selectedRowKeys.length > 0 && (
+                  <>
+                    <ShowAction
+                      handleOnClickAction={handleOnClickAction}
+                      actionUsers={actionUsers}
+                      setActionUsers={setActionUsers}
+                      setSelectedRowKeys={setSelectedRowKeys}
+                      selectedRowKeys={selectedRowKeys}
+                      fetchData={fetchData}
+                    />
+                  </>
+                )}
               </div>
             </span>
             <button className="border-[1.3px] border-[#d9d9d9] rounded-lg p-[0.6rem] w-52 flex items-center space-x-2 bg-white hover:bg-gray-100">
@@ -267,7 +304,7 @@ export default function TechniqueMenu() {
           className="h-full p-2 overflow-auto scrollable-content"
         >
           <Content className="bg-slate-50">
-            {isMobile ? <>view</> : renderTable()}
+            {isMobile ? renderKanban() : renderTable()}
           </Content>
         </Layout>
       </Layout>

@@ -171,32 +171,32 @@ export default function TableView() {
 
   return (
     <div className="w-full h-screen overflow-auto  pb-36 p-3">
-   <Row gutter={[16, 16]} className="mb-4">
-  <Col xs={12} sm={6}>
-    <div className="border border-gray-300 rounded-lg bg-white p-4 text-center">
-      <strong>{t('Total Working Hours')}</strong>
-      <div>{totalWorkingHours.toFixed(2)}h</div>
-    </div>
-  </Col>
-  <Col xs={12} sm={6}>
-    <div className="border border-gray-300 rounded-lg bg-white p-4 text-center">
-      <strong>{t('Total Late Days')}</strong>
-      <div>{totalLateDays}</div>
-    </div>
-  </Col>
-  <Col xs={12} sm={6}>
-    <div className="border border-gray-300 rounded-lg bg-white p-4 text-center">
-      <strong>{t('Total Absent Days')}</strong>
-      <div>{totalAbsentDays}</div>
-    </div>
-  </Col>
-  <Col xs={12} sm={6}>
-    <div className="border border-gray-300 rounded-lg bg-white p-4 text-center">
-      <strong>{t('Total Days')}</strong>
-      <div>{filteredData.length}</div>
-    </div>
-  </Col>
-</Row>
+      <Row gutter={[16, 16]} className="mb-4">
+        <Col xs={12} sm={6}>
+          <div className="border border-gray-300 rounded-lg bg-white p-4 text-center">
+            <strong>{t('Total Working Hours')}</strong>
+            <div>{totalWorkingHours.toFixed(2)}h</div>
+          </div>
+        </Col>
+        <Col xs={12} sm={6}>
+          <div className="border border-gray-300 rounded-lg bg-white p-4 text-center">
+            <strong>{t('Total Late Days')}</strong>
+            <div>{totalLateDays}</div>
+          </div>
+        </Col>
+        <Col xs={12} sm={6}>
+          <div className="border border-gray-300 rounded-lg bg-white p-4 text-center">
+            <strong>{t('Total Absent Days')}</strong>
+            <div>{totalAbsentDays}</div>
+          </div>
+        </Col>
+        <Col xs={12} sm={6}>
+          <div className="border border-gray-300 rounded-lg bg-white p-4 text-center">
+            <strong>{t('Total Days')}</strong>
+            <div>{filteredData.length}</div>
+          </div>
+        </Col>
+      </Row>
       <Row style={{ marginBottom: 16 }}>
         <Col span={24}>
           <Input

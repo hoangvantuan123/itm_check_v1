@@ -161,9 +161,38 @@ export class MenuController {
     }
   }
 
-  @Delete('menu/:id')
-  async remove(@Param('id') id: number): Promise<void> {
+/*   @Delete('menu/:id') */
+ /*  async remove(@Param('id') id: number): Promise<void> {
     return this.menuService.remove(id);
+  }
+ */
+
+  @Delete('menu')
+  async remove(@Body('ids') ids: number[], @Req() req: Request): Promise<void> {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) {
+      throw new UnauthorizedException('Authorization header missing');
+    }
+
+    const token = authHeader.split(' ')[1];
+    if (!token) {
+      throw new UnauthorizedException(
+        'The job version has expired. Please log in again to continue.',
+      );
+    }
+
+    try {
+      const decodedToken = jwt.verify(token, jwtConstants.secret);
+      const userId = (decodedToken as { id: number }).id;
+      if (!userId) {
+        throw new UnauthorizedException('Invalid token payload');
+      }
+
+      await this.menuService.remove(userId, ids);
+    } catch (error) {
+      throw new UnauthorizedException('Request failed, please try again!');
+    }
   }
 
   @Get('available')

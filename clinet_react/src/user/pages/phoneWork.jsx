@@ -376,7 +376,7 @@ export default function PhoneWork() {
     <Menu>
       <Menu.Item key="calendar" onClick={() => setViewMode('calendar')}>
         <span className="flex items-center gap-2">
-        <CalendarIcon2 />
+          <CalendarIcon2 />
           {t('Calendar')}
         </span>
       </Menu.Item>
@@ -394,12 +394,16 @@ export default function PhoneWork() {
         <title>ITM - {t('Công việc')}</title>
       </Helmet>
       <div className="w-full p-2 flex items-center justify-end bg-slate-50">
-        {isMobile && (<><Button
-          className=" border-none  p-2 bg-none shadow-none"
-          onClick={toggleViewModeList}
-        >
-          <KeyOpenIcon />
-        </Button></>)}
+        {isMobile && (
+          <>
+            <Button
+              className=" border-none  p-2 bg-none shadow-none"
+              onClick={toggleViewModeList}
+            >
+              <KeyOpenIcon />
+            </Button>
+          </>
+        )}
 
         <Dropdown overlay={menuNotifications} trigger={['click']}>
           <Button className=" border-none  p-2 bg-none shadow-none">
@@ -414,7 +418,10 @@ export default function PhoneWork() {
       </div>
       <div>
         {viewMode === 'calendar' ? (
-          <ListView viewModeList={viewModeList} setViewModeList={setViewModeList} />
+          <ListView
+            viewModeList={viewModeList}
+            setViewModeList={setViewModeList}
+          />
         ) : (
           <TableView />
         )}

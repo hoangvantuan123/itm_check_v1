@@ -4,10 +4,11 @@ import { ResGroupsModule } from './res_groups/res_groups.module';
 import { ResUsersModule } from './users/users.module';
 import { MenuModule } from './ui_menu/ui_menu.module';
 import { TableModule } from './table/table.module';
+import { HrEmployeeModule } from './hr/hr_employee.module';
 import * as cors from 'cors';
 
 @Module({
-  imports: [AuthModule, ResGroupsModule, ResUsersModule, MenuModule, TableModule],
+  imports: [AuthModule, ResGroupsModule, ResUsersModule, MenuModule, TableModule, HrEmployeeModule],
   providers: [],
 })
 export class AppModule {

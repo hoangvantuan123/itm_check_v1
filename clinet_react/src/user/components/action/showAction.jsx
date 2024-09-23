@@ -4,6 +4,8 @@ import { Input, Modal, Typography, Dropdown, Menu, message } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
 import { DeleteResGroups } from '../../../features/resGroups/deleteResGroups'
 import { DeleteResUsers } from '../../../features/resUsers/deleteResUsers'
+import { DeleteMenus } from '../../../features/menu/deleteMenu'
+import { DeleteHrEmployeeIds } from '../../../features/hr/deleteHrEmployeeIds'
 const { Title } = Typography
 const SettingIcon = () => {
   return (
@@ -28,8 +30,6 @@ const SettingIcon = () => {
   )
 }
 export default function ShowAction({
-  isOpen,
-  onClose,
   selectedRowKeys,
   setSelectedRowKeys,
   fetchData,
@@ -80,6 +80,45 @@ export default function ShowAction({
     }
   }
 
+  const handleDeleteMenus = async () => {
+    try {
+      const response = await DeleteMenus(selectedRowKeys)
+
+      if (response.success) {
+        message.success('Xóa thành công các nhóm')
+        setSelectedRowKeys([])
+        setActionUsers('')
+        fetchData()
+      } else {
+        message.error(
+          `Xóa thất bại: Yêu cầu không thành công, vui lòng thử lại`,
+        )
+      }
+    } catch (error) {
+      console.error('Lỗi khi xóa nhóm:', error)
+      message.error('Có lỗi xảy ra, vui lòng thử lại')
+    }
+  }
+  const handleDeleteHrEmployees = async () => {
+    try {
+      const response = await DeleteHrEmployeeIds(selectedRowKeys)
+
+      if (response.success) {
+        message.success('Xóa thành công các nhóm')
+        setSelectedRowKeys([])
+        setActionUsers('')
+        fetchDataUser()
+      } else {
+        message.error(
+          `Xóa thất bại: Yêu cầu không thành công, vui lòng thử lại`,
+        )
+      }
+    } catch (error) {
+      console.error('Lỗi khi xóa nhóm:', error)
+      message.error('Có lỗi xảy ra, vui lòng thử lại')
+    }
+  }
+
   const handleMenuClick = (e) => {
     setSelectedMenuKey(e.key)
     setShowDropdown(false)
@@ -99,18 +138,22 @@ export default function ShowAction({
       },
     }
 
-    // Xử lý hành động dựa trên key và actionUsers
     if (e.key === 'action_show_5') {
-      if (actionUsers === 'actionGroups') {
-        Modal.confirm({
-          ...modalConfig,
-          onOk: handleDeleteGroups,
-        })
-      } else if (actionUsers === 'actionUsers') {
-        Modal.confirm({
-          ...modalConfig,
-          onOk: handleDeleteUsers,
-        })
+      switch (actionUsers) {
+        case 'actionGroups':
+          Modal.confirm({ ...modalConfig, onOk: handleDeleteGroups })
+          break
+        case 'actionUsers':
+          Modal.confirm({ ...modalConfig, onOk: handleDeleteUsers })
+          break
+        case 'actionMenu':
+          Modal.confirm({ ...modalConfig, onOk: handleDeleteMenus })
+          break
+        case 'actionPersonnel':
+          Modal.confirm({ ...modalConfig, onOk: handleDeleteHrEmployees })
+          break
+        default:
+          break
       }
     }
   }

@@ -303,8 +303,7 @@ export default function UserProfile({
         </span>
       </Row>
 
-      <Card>
-        <Row gutter={16} align="top" className="flex-col md:flex-row">
+      <Row gutter={16} align="top" className="flex-col md:flex-row">
           <Col xs={24} md={6} style={{ display: 'flex' }} className=" md:pb-0">
             <Avatar shape="square" size={128} src={DefaultAvatar} />
           </Col>
@@ -363,12 +362,10 @@ export default function UserProfile({
             </Form>
           </Col>
         </Row>
-      </Card>
 
       <Title className="mt-5" level={5}>
         {t('Quyền truy cập')}
       </Title>
-      <Card>
         <div className="mb-3">
           <Title level={5}>{t('Loại người dùng')}</Title>
           <Radio.Group>
@@ -401,11 +398,9 @@ export default function UserProfile({
             ))}
           </Row>
         </div>
-      </Card>
       <Title className="mt-5" level={5}>
         {t('Bảo mật tài khoản')}
       </Title>
-      <Card>
         <Title className="mt-5" level={5}>
           {t('Thiết bị đáng tin cậy')}
         </Title>
@@ -421,7 +416,6 @@ export default function UserProfile({
             {t('personal_settings_key_menu_03.sign_out_of_all_devices')}
           </Button>
         </div>
-      </Card>
     </Drawer>
   )
 }

@@ -84,7 +84,7 @@ export default function Login() {
 
         {/* Cột chứa form login */}
         <div className="w-full lg:w-1/2 flex flex-col items-center justify-center px-5 py-10 lg:p-20 bg-gray-50">
-          <div className="flex flex-col items-center top-20  absolute">
+         {/*  <div className="flex flex-col items-center top-20  absolute">
             <img
               src="https://via.placeholder.com/150" // Thay bằng link logo của bạn
               alt="Company Logo"
@@ -93,7 +93,7 @@ export default function Login() {
             <h1 className="text-xl font-semibold text-gray-700">
               ITM Semiconductor CO., Ltd.
             </h1>
-          </div>
+          </div> */}
 
           <div className="mx-auto max-w-lg text-center mb-5">
             <h1 className="text-2xl font-bold sm:text-3xl">Welcome Back!</h1>

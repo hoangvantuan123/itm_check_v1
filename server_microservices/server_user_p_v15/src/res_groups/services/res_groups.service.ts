@@ -55,6 +55,8 @@ export class ResGroupsService {
       totalPages,
     };
   }
+
+  
   async findAll(userId: number): Promise<{ data: ResGroups[]; total: number }> {
     const user = await this.userService.findUserById(userId);
     if (!user) {

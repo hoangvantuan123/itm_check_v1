@@ -100,7 +100,7 @@ const FileIcon = () => {
       <path
         d="M12.5 2H15.2C16.8802 2 17.7202 2 18.362 2.32698C18.9265 2.6146 19.3854 3.07354 19.673 3.63803C20 4.27976 20 5.11984 20 6.8V17.2C20 18.8802 20 19.7202 19.673 20.362C19.3854 20.9265 18.9265 21.3854 18.362 21.673C17.7202 22 16.8802 22 15.2 22H8.8C7.11984 22 6.27976 22 5.63803 21.673C5.07354 21.3854 4.6146 20.9265 4.32698 20.362C4 19.7202 4 18.8802 4 17.2V16.5M16 13H11.5M16 9H12.5M16 17H8M6 10V4.5C6 3.67157 6.67157 3 7.5 3C8.32843 3 9 3.67157 9 4.5V10C9 11.6569 7.65685 13 6 13C4.34315 13 3 11.6569 3 10V6"
         stroke="black"
-        strokewidth="2"
+        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -116,6 +116,34 @@ export default function ImportForm({ isOpen, onClose }) {
   const [selectedColumns, setSelectedColumns] = useState([])
   const [selectedTable, setSelectedTable] = useState(null)
   const [connectValues, setConnectValues] = useState({})
+
+  const handleCheck = () => {
+    if (!selectedTable || Object.keys(connectValues).length === 0) {
+      message.error(t('Vui lòng chọn bảng và ít nhất một cột để kiểm tra'))
+      return
+    }
+
+    // Chuẩn bị dữ liệu ánh xạ dựa trên cột liên kết
+    const mappedData = selectedTable.data.map((row) => {
+      const newRow = {}
+      selectedTable.columns.forEach((col) => {
+        const mappedColumn = connectValues[col]
+        if (mappedColumn) {
+          newRow[mappedColumn] = row[col]
+        }
+      })
+      return newRow
+    })
+
+    const payload = {
+      method: 'execute_import',
+      model: 'base_import.import',
+      data: mappedData,
+    }
+
+    console.log('Mapped Data:', payload)
+  }
+
   const handleFileChange = (info) => {
     const { file, fileList } = info
     const isCsvOrXlsx =
@@ -130,17 +158,31 @@ export default function ImportForm({ isOpen, onClose }) {
     setFileName(file.name)
     setFileList(fileList)
     setTables([])
-
     if (file.type === 'text/csv') {
-      Papa.parse(file.originFileObj, {
-        complete: (result) => {
-          const columns = Object.keys(result.data[0])
-          setTables([{ name: 'CSV Data', columns, data: result.data }])
-          message.success(t('Tải lên thành công tệp CSV'))
-        },
-        header: true,
-        skipEmptyLines: true,
-      })
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        const csvData = e.target.result
+        Papa.parse(csvData, {
+          complete: (result) => {
+            if (result.errors.length) {
+              console.error('Errors:', result.errors)
+            }
+
+            if (!result.data || result.data.length === 0) {
+              message.error(t('Không có dữ liệu trong tệp CSV'))
+              return
+            }
+
+            const columns = Object.keys(result.data[0])
+            setTables([{ name: 'CSV Data', columns, data: result.data }])
+            message.success(t('Tải lên thành công tệp CSV'))
+          },
+          header: true,
+          skipEmptyLines: true,
+        })
+      }
+
+      reader.readAsText(file)
     } else if (
       file.type ===
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
@@ -465,7 +507,14 @@ export default function ImportForm({ isOpen, onClose }) {
               </div>
               <Button
                 size="large"
-                className=" w-full mt-5 border-gray-200  bg-indigo-600  text-white  shadow-sm text-sm"
+                className="w-full mt-5 border-gray-300 bg-blue-500 text-white text-sm hover:bg-blue-600"
+              >
+                {t('Nhập')}
+              </Button>
+              <Button
+                size="large"
+                onClick={handleCheck}
+                className="w-full mt-5 border-gray-300 text-black   text-sm hover:bg-gray-600"
               >
                 {t('Kiểm tra')}
               </Button>

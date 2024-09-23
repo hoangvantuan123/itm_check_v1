@@ -130,8 +130,14 @@ export class MenuService {
     };
   }
 
-  async remove(id: number): Promise<void> {
-    await this.menuRepository.delete(id);
+
+  async remove(userId: number, ids: number[]): Promise<void> {
+    const user = await this.userService.findUserById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    await this.menuRepository.delete(ids);
   }
 
   async getAvailableMenus(

@@ -482,7 +482,7 @@ export default function UserGroupsDrawer({
   return (
     <Drawer
       title={
-        <Title level={4} style={{ textAlign: 'center' }}>
+        <Title level={4}>
           {group?.name}
         </Title>
       }

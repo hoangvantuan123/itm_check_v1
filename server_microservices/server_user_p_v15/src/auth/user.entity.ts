@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { ResUserGroups } from 'src/res_groups/entity/res_user_groups.entity';
+import { HrEmployeeEntity } from 'src/hr/entity/hr_employee.entity';
 
 @Entity('users')
 export class Users {
@@ -82,6 +83,10 @@ export class Users {
 
   @OneToMany(() => ResUserGroups, (userGroups) => userGroups.user)
   userGroups: ResUserGroups[];
+
+  @OneToMany(() => HrEmployeeEntity, hrEmployee => hrEmployee.user)
+  hrEmployees: HrEmployeeEntity[];
+
 
   private hashPassword() {
     const saltRounds = 10;

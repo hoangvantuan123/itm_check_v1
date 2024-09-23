@@ -95,7 +95,7 @@ export default function ListView({ setViewModeList, viewModeList }) {
             {weekDates.map((date, index) => (
               <div
                 key={index}
-                 className={`flex-1 text-center p-2  m-1 rounded-lg ${date.isSame(moment(), 'day') ? 'bg-blue-100 text-blue-600' : ''} ${date.isSame(highlightedDate, 'day') ? 'bg-blue-100' : ''}`} 
+                className={`flex-1 text-center p-2  m-1 rounded-lg ${date.isSame(moment(), 'day') ? 'bg-blue-100 text-blue-600' : ''} ${date.isSame(highlightedDate, 'day') ? 'bg-blue-100' : ''}`}
                 onClick={() => handleDateChange(date)}
               >
                 <span className="text-xs text-gray-500">

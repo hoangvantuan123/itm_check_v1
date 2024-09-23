@@ -32,6 +32,7 @@ import Spinner from '../pages/load'
 import ErrorServer from '../pages/errorServer'
 import Cookies from 'js-cookie'
 import PhoneWork from '../pages/phoneWork'
+import Personnel from '../pages/personnel'
 
 const UserRouter = () => {
   const { t } = useTranslation()
@@ -251,6 +252,20 @@ const UserRouter = () => {
                           'view',
                         ) ? (
                           <TechniqueMenu />
+                        ) : (
+                          <Unauthorized />
+                        )
+                      }
+                    />
+                    <Route
+                      path="/a/action=8/personnel"
+                      element={
+                        checkActionPermission(
+                          userPermissions,
+                          'setting-2-1-2',
+                          'view',
+                        ) ? (
+                          <Personnel />
                         ) : (
                           <Unauthorized />
                         )

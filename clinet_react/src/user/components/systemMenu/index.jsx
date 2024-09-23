@@ -96,7 +96,7 @@ export default function MenuDrawer({
   return (
     <Drawer
       title={
-        <Title level={4} style={{ textAlign: 'center' }}>
+        <Title level={4} >
           {selectedDetails?.name}
         </Title>
       }

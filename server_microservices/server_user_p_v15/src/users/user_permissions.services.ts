@@ -77,7 +77,6 @@ export class UsersPermissionsService {
 
       return acc;
     }, {});
-
     return Object.values(mergedData);
   }
 }

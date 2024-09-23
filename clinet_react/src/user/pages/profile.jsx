@@ -187,7 +187,7 @@ export default function Profile() {
   }
   const handleLogout = () => {
     localStorage.removeItem('userInfo')
-    Cookies.removeItem('accessToken')
+    Cookies.remove('accessToken')
     window.location.href = '/u/login'
   }
   // Menu items
