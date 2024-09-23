@@ -7,16 +7,13 @@ import { accessToken } from '../../services/tokenService'
 export const DeleteHrEmployeeIds = async (ids) => {
   try {
     const token = accessToken()
-    const response = await axios.delete(
-      `${HOST_API_SERVER_P}/hr_employee`,
-      {
-        data: { ids },
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
+    const response = await axios.delete(`${HOST_API_SERVER_P}/hr_employee`, {
+      data: { ids },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
-    )
+    })
 
     // Kiểm tra status code
     if (response.status === 200 || response.status === 201) {

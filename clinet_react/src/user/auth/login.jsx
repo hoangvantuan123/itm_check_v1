@@ -84,7 +84,7 @@ export default function Login() {
 
         {/* Cột chứa form login */}
         <div className="w-full lg:w-1/2 flex flex-col items-center justify-center px-5 py-10 lg:p-20 bg-gray-50">
-         {/*  <div className="flex flex-col items-center top-20  absolute">
+          {/*  <div className="flex flex-col items-center top-20  absolute">
             <img
               src="https://via.placeholder.com/150" // Thay bằng link logo của bạn
               alt="Company Logo"

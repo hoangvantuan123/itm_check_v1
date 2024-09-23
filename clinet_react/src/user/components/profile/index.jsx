@@ -304,118 +304,118 @@ export default function UserProfile({
       </Row>
 
       <Row gutter={16} align="top" className="flex-col md:flex-row">
-          <Col xs={24} md={6} style={{ display: 'flex' }} className=" md:pb-0">
-            <Avatar shape="square" size={128} src={DefaultAvatar} />
-          </Col>
-          <Col xs={24} md={18}>
-            <Form
-              form={form}
-              onFinish={onFinish}
-              layout="vertical"
-              className="pt-5 md:mt-0"
-            >
-              <Row gutter={[16, 16]} className="pb-4">
-                <Col xs={24} md={24}>
-                  <Form.Item
-                    label="Họ và Tên"
-                    name="nameUser"
-                    initialValue={user?.name}
-                    rules={[{ required: true, message: 'Vui lòng nhập tên!' }]}
-                  >
-                    <Input size="large" />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} md={24}>
-                  <Form.Item
-                    label="Tên đăng nhập"
-                    name="login"
-                    initialValue={user?.login}
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Vui lòng nhập tên đăng nhập!',
-                      },
-                    ]}
-                  >
-                    <Input size="large" />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row gutter={[16, 16]}>
-                <Col xs={24} md={12}>
-                  <Form.Item
-                    label="Ngôn ngữ"
-                    name="language"
-                    initialValue={user?.language}
-                    rules={[
-                      { required: true, message: 'Vui lòng chọn ngôn ngữ!' },
-                    ]}
-                  >
-                    <Select size="large">
-                      <Option value="vi">Tiếng Việt</Option>
-                      <Option value="en">Tiếng Anh</Option>
-                      <Option value="fr">Tiếng Pháp</Option>
-                    </Select>
-                  </Form.Item>
-                </Col>
-              </Row>
-            </Form>
-          </Col>
-        </Row>
+        <Col xs={24} md={6} style={{ display: 'flex' }} className=" md:pb-0">
+          <Avatar shape="square" size={128} src={DefaultAvatar} />
+        </Col>
+        <Col xs={24} md={18}>
+          <Form
+            form={form}
+            onFinish={onFinish}
+            layout="vertical"
+            className="pt-5 md:mt-0"
+          >
+            <Row gutter={[16, 16]} className="pb-4">
+              <Col xs={24} md={24}>
+                <Form.Item
+                  label="Họ và Tên"
+                  name="nameUser"
+                  initialValue={user?.name}
+                  rules={[{ required: true, message: 'Vui lòng nhập tên!' }]}
+                >
+                  <Input size="large" />
+                </Form.Item>
+              </Col>
+              <Col xs={24} md={24}>
+                <Form.Item
+                  label="Tên đăng nhập"
+                  name="login"
+                  initialValue={user?.login}
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Vui lòng nhập tên đăng nhập!',
+                    },
+                  ]}
+                >
+                  <Input size="large" />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={[16, 16]}>
+              <Col xs={24} md={12}>
+                <Form.Item
+                  label="Ngôn ngữ"
+                  name="language"
+                  initialValue={user?.language}
+                  rules={[
+                    { required: true, message: 'Vui lòng chọn ngôn ngữ!' },
+                  ]}
+                >
+                  <Select size="large">
+                    <Option value="vi">Tiếng Việt</Option>
+                    <Option value="en">Tiếng Anh</Option>
+                    <Option value="fr">Tiếng Pháp</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+        </Col>
+      </Row>
 
       <Title className="mt-5" level={5}>
         {t('Quyền truy cập')}
       </Title>
-        <div className="mb-3">
-          <Title level={5}>{t('Loại người dùng')}</Title>
-          <Radio.Group>
-            <Space direction="vertical">
-              <Radio value="admin">{t('Người dùng nội bộ')}</Radio>
-              <Radio value="editor">{t('Cổng thông tin')}</Radio>
-              <Radio value="viewer">{t('Công khai')}</Radio>
-            </Space>
-          </Radio.Group>
-        </div>
-        <div>
-          <Title level={5}>{t('Nhóm truy cập & quyền')}</Title>
-          <Row gutter={[16, 16]}>
-            {groupStatus?.map((item) => (
-              <Col xs={12} sm={8} key={item?.group_id}>
-                <Checkbox
-                  value={item?.group_id}
-                  checked={item.status}
-                  onChange={(e) =>
-                    handleCheckboxClick(
-                      item.group_id,
-                      item.user_group_id,
-                      e.target.checked,
-                    )
-                  }
-                >
-                  {item?.name}
-                </Checkbox>
-              </Col>
-            ))}
-          </Row>
-        </div>
+      <div className="mb-3">
+        <Title level={5}>{t('Loại người dùng')}</Title>
+        <Radio.Group>
+          <Space direction="vertical">
+            <Radio value="admin">{t('Người dùng nội bộ')}</Radio>
+            <Radio value="editor">{t('Cổng thông tin')}</Radio>
+            <Radio value="viewer">{t('Công khai')}</Radio>
+          </Space>
+        </Radio.Group>
+      </div>
+      <div>
+        <Title level={5}>{t('Nhóm truy cập & quyền')}</Title>
+        <Row gutter={[16, 16]}>
+          {groupStatus?.map((item) => (
+            <Col xs={12} sm={8} key={item?.group_id}>
+              <Checkbox
+                value={item?.group_id}
+                checked={item.status}
+                onChange={(e) =>
+                  handleCheckboxClick(
+                    item.group_id,
+                    item.user_group_id,
+                    e.target.checked,
+                  )
+                }
+              >
+                {item?.name}
+              </Checkbox>
+            </Col>
+          ))}
+        </Row>
+      </div>
       <Title className="mt-5" level={5}>
         {t('Bảo mật tài khoản')}
       </Title>
-        <Title className="mt-5" level={5}>
-          {t('Thiết bị đáng tin cậy')}
-        </Title>
-        <Table columns={columns} dataSource={data} />
-        <Title className="mt-5" level={5}>
-          {t('Các thiết bị khác')}
-        </Title>
-        <div className="mt-4">
-          <Button
-            size="large"
-            className="rounded-lg border-gray-200 bg-indigo-600 text-white p-4 shadow-sm text-sm"
-          >
-            {t('personal_settings_key_menu_03.sign_out_of_all_devices')}
-          </Button>
-        </div>
+      <Title className="mt-5" level={5}>
+        {t('Thiết bị đáng tin cậy')}
+      </Title>
+      <Table columns={columns} dataSource={data} />
+      <Title className="mt-5" level={5}>
+        {t('Các thiết bị khác')}
+      </Title>
+      <div className="mt-4">
+        <Button
+          size="large"
+          className="rounded-lg border-gray-200 bg-indigo-600 text-white p-4 shadow-sm text-sm"
+        >
+          {t('personal_settings_key_menu_03.sign_out_of_all_devices')}
+        </Button>
+      </div>
     </Drawer>
   )
 }

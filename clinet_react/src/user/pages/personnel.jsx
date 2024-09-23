@@ -209,9 +209,7 @@ export default function Personnel() {
     ],
   }
 
-  const handleAddRow = async () => {
-
-  }
+  const handleAddRow = async () => {}
   const renderTable = () => {
     const columns = [
       {
@@ -253,7 +251,6 @@ export default function Personnel() {
         key: 'mobile_phone',
         ...(visibleColumns.mobile_phone ? {} : { render: () => null }),
       },
-
     ]
 
     return (
@@ -305,10 +302,7 @@ export default function Personnel() {
       <Row gutter={16} className="bg-slate-50 pb-60">
         {userData.map((user) => (
           <Col span={24} key={user.login} style={{ marginBottom: 16 }}>
-            <Card
-              title={user.name}
-              onClick={() => showUserForm(user)}
-            >
+            <Card title={user.name} onClick={() => showUserForm(user)}>
               <Row gutter={[16, 16]}>
                 <Col span={5}>
                   <Avatar shape="square" size={64} icon={<UserOutlined />} />
@@ -320,8 +314,6 @@ export default function Personnel() {
                   <strong>Email công việc:</strong> {user.work_email} <br />
                 </Col>
               </Row>
-
-
             </Card>
           </Col>
         ))}

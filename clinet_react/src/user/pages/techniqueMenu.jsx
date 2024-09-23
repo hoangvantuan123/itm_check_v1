@@ -207,14 +207,9 @@ export default function TechniqueMenu() {
       <Row gutter={16} className="bg-slate-50  pb-32">
         {tableData.map((item) => (
           <Col span={24} key={item.id} style={{ marginBottom: 16 }}>
-            <Card
-              title={item.name}
-              onClick={() => handleViewDetails(item)}
-            >
+            <Card title={item.name} onClick={() => handleViewDetails(item)}>
               <strong>Trình tự:</strong> {item.sequence} <br />
               <strong>Key:</strong> {item.key_name} <br />
-
-
             </Card>
           </Col>
         ))}

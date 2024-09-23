@@ -481,11 +481,7 @@ export default function UserGroupsDrawer({
 
   return (
     <Drawer
-      title={
-        <Title level={4}>
-          {group?.name}
-        </Title>
-      }
+      title={<Title level={4}>{group?.name}</Title>}
       open={isModalVisible}
       onClose={handleCancel}
       width={900}

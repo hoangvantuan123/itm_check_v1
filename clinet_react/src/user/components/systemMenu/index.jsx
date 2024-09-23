@@ -95,11 +95,7 @@ export default function MenuDrawer({
 
   return (
     <Drawer
-      title={
-        <Title level={4} >
-          {selectedDetails?.name}
-        </Title>
-      }
+      title={<Title level={4}>{selectedDetails?.name}</Title>}
       open={isModalVisible}
       onClose={handleCancel}
       width={900}

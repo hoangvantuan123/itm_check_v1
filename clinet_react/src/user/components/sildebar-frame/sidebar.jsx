@@ -564,7 +564,7 @@ const Sidebar = ({ permissions }) => {
 
             <div className="flex-1 text-center">
               <Link
-                to="/u/notifications"
+                to="/u/phone/notifications"
                 className="flex flex-col items-center"
                 onClick={() => handleOnClickMenuItemPhone('notifications')}
               >

@@ -33,6 +33,7 @@ import ErrorServer from '../pages/errorServer'
 import Cookies from 'js-cookie'
 import PhoneWork from '../pages/phoneWork'
 import Personnel from '../pages/personnel'
+import PhoneNotifications from '../pages/phoneNotifications'
 
 const UserRouter = () => {
   const { t } = useTranslation()
@@ -164,10 +165,16 @@ const UserRouter = () => {
                           'notifications',
                           'view',
                         ) ? (
-                          <Default />
+                          <Notifications />
                         ) : (
                           <Unauthorized />
                         )
+                      }
+                    />
+                    <Route
+                      path="u/phone/notifications"
+                      element={
+                        <PhoneNotifications />
                       }
                     />
                     <Route

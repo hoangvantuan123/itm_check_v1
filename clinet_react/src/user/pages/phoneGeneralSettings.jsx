@@ -354,16 +354,19 @@ export default function PhoneGeneralSettings() {
                 </p>
 
                 <p className="mt-2 max-w-md cursor-pointer text-pretty text-sm text-indigo-500">
-                  <Link to="/u/action=3/groups_users"> Quản lý nhóm người dùng</Link>
+                  <Link to="/u/action=3/groups_users">
+                    {' '}
+                    Quản lý nhóm người dùng
+                  </Link>
                 </p>
                 <p className="mt-2 max-w-md cursor-pointer text-pretty text-sm text-indigo-500">
                   <Link to="/a/action=8/personnel">Quản lý nhân viên</Link>
                 </p>
                 <p className="mt-2 max-w-md cursor-pointer text-pretty text-sm text-indigo-500">
-                  <Link >Quản lý thời gian làm việc</Link>
+                  <Link>Quản lý thời gian làm việc</Link>
                 </p>
                 <p className="mt-2 max-w-md cursor-pointer text-pretty text-sm text-indigo-500">
-                  <Link >Quản lý phòng ban</Link>
+                  <Link>Quản lý phòng ban</Link>
                 </p>
               </div>
               <div className="h-32 rounded-lg ">

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 import {
   ClockCircleOutlined,
@@ -10,7 +11,47 @@ import {
 import { Tag, Button } from 'antd'
 import moment from 'moment'
 
+const ArrowRightIcon = () => {
+  return (
+    <svg
+      className="w-4 h-4"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M8.91003 19.9201L15.43 13.4001C16.2 12.6301 16.2 11.3701 15.43 10.6001L8.91003 4.08008"
+        stroke="#292D32"
+        stroke-width="1.5"
+        stroke-miterlimit="10"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  )
+}
+const ArrowLeftIcon = () => {
+  return (
+    <svg
+      className="w-4 h-4"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M15 19.9201L8.47997 13.4001C7.70997 12.6301 7.70997 11.3701 8.47997 10.6001L15 4.08008"
+        stroke="#292D32"
+        stroke-width="1.5"
+        stroke-miterlimit="10"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  )
+}
 export default function ListView({ setViewModeList, viewModeList }) {
+  const { t } = useTranslation()
+
   const [groupBy, setGroupBy] = useState('day')
   const [selectedDate, setSelectedDate] = useState(moment())
   const [showListContent, setListContent] = useState(false)
@@ -66,12 +107,46 @@ export default function ListView({ setViewModeList, viewModeList }) {
     return monthDates
   }
 
+  const handlePrevMonth = () => {
+    setSelectedDate((prevDate) => prevDate.clone().subtract(1, 'month'))
+  }
+
+  const handleNextMonth = () => {
+    setSelectedDate((prevDate) => prevDate.clone().add(1, 'month'))
+  }
+
   const weekDates = getWeekDates(selectedDate)
   const monthDates = getMonthDates(selectedDate)
 
   return (
     <div className="h-screen overflow-hidden bg-gray-50">
       <div className="p-2">
+        {/* Thêm nút điều hướng tháng */}
+        {viewModeList === 'month' && (
+          <div className="flex justify-between mb-4">
+            <span className="font-semibold">
+              {' '}
+              {t(`months.${selectedDate.format('M')}`)}{' '}
+              {selectedDate.format('YYYY')}
+            </span>
+
+            <div className="flex items-center gap-2">
+              <Button
+                className=" border-none  p-2  bg-white shadow-none"
+                onClick={handlePrevMonth}
+              >
+                <ArrowLeftIcon />
+              </Button>
+              <Button
+                className=" border-none  p-2  bg-white shadow-none"
+                onClick={handleNextMonth}
+              >
+                <ArrowRightIcon />
+              </Button>
+            </div>
+          </div>
+        )}
+
         {viewModeList === 'month' ? (
           <div className="grid grid-cols-7 gap-2">
             {monthDates.map((date, index) => (
