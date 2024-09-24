@@ -5,7 +5,6 @@ import { TableService } from '../services/table.services';
 export class TableController {
   constructor(private readonly tableService: TableService) {}
 
-  // API để lấy danh sách tên các bảng kèm cột
   @Get("tables")
   async getTables() {
     return  await this.tableService.getTables();

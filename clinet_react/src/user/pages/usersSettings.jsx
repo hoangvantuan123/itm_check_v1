@@ -38,9 +38,11 @@ import { GetUserGroupsPageLimitID } from '../../features/resUsers/getUserGroupsP
 import './static/css/scroll_container.css'
 import './static/css/drawer_cusstom.css'
 import ImportForm from '../components/import'
+import { checkActionPermission } from '../../permissions'
+
 const { Option } = Select
 const { Title } = Typography
-export default function UsersSettings() {
+export default function UsersSettings({ permissions }) {
   const [selectedGroup, setSelectedGroup] = useState('all')
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [selectedUser, setSelectedUser] = useState(null)
@@ -61,6 +63,12 @@ export default function UsersSettings() {
   const [limit, setLimit] = useState(10)
   const [total, setTotal] = useState(0)
   const [actionUsers, setActionUsers] = useState(null)
+  const canCreate = checkActionPermission(permissions, 'setting-1-2', 'create');
+  const canEdit = checkActionPermission(permissions, 'setting-1-2', 'edit');
+  const canDelete = checkActionPermission(permissions, 'setting-1-2', 'delete');
+  const canView = checkActionPermission(permissions, 'setting-1-2', 'view');
+
+
   const handleOnClickAction = () => {
     setActionUsers('actionUsers')
   }
@@ -290,13 +298,13 @@ export default function UsersSettings() {
 
           if (active === true) {
             color = 'success'
-            displayText = 'Đã kết nối'
+            displayText = `${t('Đã kết nối')}`
           } else if (active === false) {
             color = 'error'
-            displayText = 'Chưa kết nối'
+            displayText = `${t('Chưa kết nối')}`
           } else {
             color = 'default'
-            displayText = 'Chưa xác định'
+            displayText =  `${t('Chưa xác định')}`
           }
 
           return (
@@ -305,7 +313,7 @@ export default function UsersSettings() {
               key={active}
               className="p-1 font-bold rounded-lg px-6"
             >
-              {displayText} {/* Hiển thị văn bản thay vì {active} */}
+              {displayText} 
             </Tag>
           )
         },
@@ -329,14 +337,15 @@ export default function UsersSettings() {
           })}
           loading={loading}
           footer={() => (
-            <span
-              onClick={handleAddRow}
+            canCreate && (<span
               type="primary"
               className="mt-2 max-w-md cursor-pointer text-pretty text-base text-indigo-500"
               size="large"
+              onClick={handleAddRow}
             >
               Thêm hàng mới
-            </span>
+            </span>)
+    
           )}
           pagination={{
             current: page,
@@ -364,22 +373,17 @@ export default function UsersSettings() {
           <Col span={24} key={user.login} style={{ marginBottom: 16 }}>
             <Card
               title={user.name}
-              /* extra={
-                <div className=" flex gap-3 items-center">
-                  <Button onClick={() => showUserForm(user)}>Xem</Button>
-                  <Button onClick={() => showUserForm(user)}>Xóa</Button>
-                </div>
-              } */
+              
               onClick={() => showUserForm(user)}
             >
               <p>
-                <strong>Đăng nhập:</strong> {user.login}
+                <strong>{t("Đăng nhập")}:</strong> {user.login}
               </p>
               <p>
-                <strong>Ngôn ngữ:</strong> {user.language}
+                <strong>{t("Ngôn ngữ")}:</strong> {user.language}
               </p>
               <p>
-                <strong>Trạng thái:</strong> {user.status}
+                <strong>{t("Trạng thái")}:</strong> {user.status}
               </p>
             </Card>
           </Col>
@@ -416,9 +420,10 @@ export default function UsersSettings() {
       <div className="h-full">
         <div className="h-full">
           <div>
-            {isMobile && (
+            {isMobile  && (
               <div className=" flex items-center justify-end">
                 <PhoneSettingAction
+                canCreate={canCreate}
                   handleMenuShowActionClick={handleMenuShowActionClick}
                   showSttingActionDropdown={showSttingActionDropdown}
                   setShowSettingActionDropdown={setShowSettingActionDropdown}
@@ -435,29 +440,38 @@ export default function UsersSettings() {
 
             <div className="p-2 flex items-center justify-between">
               <h1 className="text-xl font-bold text-gray-900 sm:text-xl ">
-                Người dùng
+               {t(" Người dùng")}
               </h1>
 
               {!isMobile && (
                 <span className="inline-flex overflow-hidden  ">
                   <div className="flex items-center gap-2">
-                    <Button
-                      onClick={openModalAddUser}
-                      type="primary"
-                      icon={<PlusOutlined />}
-                      className="w-full rounded-lg h-full border-gray-200  bg-indigo-600 text-white  shadow-sm text-sm"
-                      size="large"
-                    >
-                      Thêm
-                    </Button>
+                    {canCreate && (
+                      <Button
+                        onClick={openModalAddUser}
+                        type="primary"
+                        icon={<PlusOutlined />}
+                        className="w-full rounded-lg h-full border-gray-200 bg-indigo-600 text-white shadow-sm text-sm"
+                        size="large"
+                      >
+                        {t("Thêm")}
+                      </Button>
+                    )}
+
+
                   </div>
                 </span>
               )}
-              <AddUser
-                isOpen={isModalOpenAddUser}
-                onClose={closeModalAddUser}
-                fetchData={fetchData}
-              />
+
+              {canCreate && (
+                <AddUser
+                  isOpen={isModalOpenAddUser}
+                  onClose={closeModalAddUser}
+                  fetchData={fetchData}
+                />
+              )}
+
+
             </div>
             {!isMobile && (
               <div className="p-2 mb flex items-center justify-between">
@@ -468,11 +482,15 @@ export default function UsersSettings() {
                       className=" w-28"
                       size="large"
                     >
-                      <Option value="1">Table</Option>
-                      <Option value="2">Grid</Option>
-                      <Option value="3">List</Option>
+                      <Option value="1">{t("Table")}</Option>
+                      <Option value="2">{t("Grid")}</Option>
+                      <Option value="3">{t("List")}</Option>
                     </Select>
-                    <ImportAction />
+                    {canCreate && (
+                      <ImportAction />
+                    )}
+
+
                     {selectedRowKeys != null && selectedRowKeys.length > 0 && (
                       <>
                         <ShowAction
@@ -482,6 +500,8 @@ export default function UsersSettings() {
                           setSelectedRowKeys={setSelectedRowKeys}
                           selectedRowKeys={selectedRowKeys}
                           fetchDataUser={fetchData}
+                          canDelete={canDelete}
+                          userData={userData}
                         />
                       </>
                     )}
@@ -494,7 +514,7 @@ export default function UsersSettings() {
                   onClick={openModal}
                 >
                   <SearchOutlined />
-                  <span className="text-gray-500">Tìm kiếm</span>
+                  <span className="text-gray-500">{t("Tìm kiếm")}</span>
                 </button>
                 <Search isOpen={isModalOpen} onClose={closeModal} />
               </div>
@@ -507,7 +527,7 @@ export default function UsersSettings() {
                   onClick={openModal}
                 >
                   <SearchOutlined />
-                  <span className="text-gray-500">Tìm kiếm</span>
+                  <span className="text-gray-500">{t("Tìm kiếm")}</span>
                 </button>
                 <Search isOpen={isModalOpen} onClose={closeModal} />
               </div>
@@ -526,7 +546,7 @@ export default function UsersSettings() {
                   className=" pb-32 scroll-container h-full overflow-auto"
                   onClick={(e) => handleOnClickGroupID(e)}
                 >
-                  <Menu.Item key="all">All</Menu.Item>
+                  <Menu.Item key="all">{t("All")}</Menu.Item>
                   {groupsData.map((group) => (
                     <Menu.Item key={group.id}>{group.name}</Menu.Item>
                   ))}
@@ -552,6 +572,8 @@ export default function UsersSettings() {
               handleCancel={handleCancel}
               setSelectedGroup={setSelectedGroup}
               fetchDataResAllUser={fetchDataResAllUser}
+              permissions={permissions}
+              canEdit={canEdit}
             />
           </Layout>
         </div>

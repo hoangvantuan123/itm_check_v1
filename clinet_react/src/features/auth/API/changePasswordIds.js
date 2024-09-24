@@ -1,15 +1,13 @@
 import axios from 'axios'
 import { HOST_API_SERVER_P } from '../../../services'
 import { accessToken } from '../../../services/tokenService'
-
-export const changePassword = async (oldPassword, newPassword) => {
-  
+export const changePasswordIds = async (userIds, newPassword) => {
   try {
     const token = accessToken()
-    const response = await axios.post(
-      `${HOST_API_SERVER_P}/change-password`,
+    const response = await axios.put(
+      `${HOST_API_SERVER_P}/bulk-update-password`,
       {
-        oldPassword: oldPassword,
+        userIds: userIds,
         newPassword: newPassword,
       },
       {

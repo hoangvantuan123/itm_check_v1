@@ -265,6 +265,7 @@ const Sidebar = ({ permissions }) => {
   const [collapsed, setCollapsed] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const { t } = useTranslation()
+  
   const [activeTab, setActiveTab] = useState(
     sessionStorage.getItem('current_action_phone'),
   )

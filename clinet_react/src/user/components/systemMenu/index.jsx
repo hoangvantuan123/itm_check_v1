@@ -29,6 +29,7 @@ export default function MenuDrawer({
   selectedDetails,
   isModalVisible,
   handleCancel,
+  canEdit
 }) {
   const { t } = useTranslation()
   const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
@@ -104,15 +105,17 @@ export default function MenuDrawer({
         <Button key="cancel" onClick={handleCancel}>
           {t('Thoát')}
         </Button>,
-        <Button
-          key="submit"
-          type="primary"
-          className=" ml-2 border-gray-200  bg-indigo-600 text-white  shadow-sm text-sm"
-          onClick={() => form.submit()}
-        >
-          {t('Lưu')}
-        </Button>,
-      ]}
+        canEdit && (
+          <Button
+            key="submit"
+            type="primary"
+            className="ml-2 border-gray-200 bg-indigo-600 text-white shadow-sm text-sm"
+            onClick={() => form.submit()}
+          >
+            {t('Lưu')}
+          </Button>
+        ),
+      ].filter(Boolean)}
     >
       <Form
         form={form}
@@ -129,7 +132,7 @@ export default function MenuDrawer({
           ]}
           style={{ textAlign: 'left' }}
         >
-          <Input size="large" placeholder={t('Nhập menu hiển thị')} />
+          <Input size="large" placeholder={t('Nhập menu hiển thị')}  disabled={!canEdit}/>
         </Form.Item>
         <div className="flex items-center gap-2 w-full">
           <Form.Item
@@ -141,7 +144,7 @@ export default function MenuDrawer({
               type="number"
               className="w-full"
               size="large"
-              placeholder={t('Nhập thứ tự hiển thị')}
+              placeholder={t('Nhập thứ tự hiển thị')}  disabled={!canEdit}
             />
           </Form.Item>
           <Form.Item
@@ -151,7 +154,7 @@ export default function MenuDrawer({
             className="w-full"
             rules={[{ required: true, message: t('Vui lòng nhập Key') }]}
           >
-            <Input size="large" placeholder={t('Nhập Key hiển thị')} />
+            <Input size="large" placeholder={t('Nhập Key hiển thị')}   disabled={!canEdit}/>
           </Form.Item>
         </div>
         <Form.Item
@@ -167,6 +170,7 @@ export default function MenuDrawer({
             filterOption={(input, option) =>
               option?.children?.toLowerCase().includes(input.toLowerCase())
             }
+            disabled={!canEdit}
             size="large"
           >
             {menuOptions.map((item) => (

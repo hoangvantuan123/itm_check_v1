@@ -3,6 +3,8 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { UserService } from './user.service';
 import { Users } from './user.entity';
 import * as bcrypt from 'bcrypt';
@@ -13,7 +15,9 @@ import { jwtConstants } from 'src/config/config';
 
 @Injectable()
 export class AppService {
-  constructor(private readonly userService: UserService) { }
+
+  constructor(private readonly userService: UserService, @InjectRepository(Users)
+  private readonly userRepository: Repository<Users>) { }
 
   private async hashPassword(password: string): Promise<string> {
     const saltRounds = 10;
@@ -83,7 +87,7 @@ export class AppService {
         login: user.login,
         partnerId: user.partnerId,
         language: user.language,
-        active: user.active, 
+        active: user.active,
       };
 
       return {
@@ -102,7 +106,7 @@ export class AppService {
   }
 
 
-  /* Đổi pass */
+  /* Đổi pass 1 */
   async changePassword(
     userId: number,
     oldPassword: string,
@@ -130,6 +134,32 @@ export class AppService {
       message: 'Password changed successfully',
     };
   }
+
+
+  /* Đổi  Pass nhiều tài khonar */
+  async bulkUpdatePassword(userId: number, userIds: number[], newPassword: string): Promise<void> {
+    const user = await this.userService.findUserById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    const saltRounds = 10;
+    const hashedPassword = bcrypt.hashSync(newPassword, saltRounds);
+
+    const users = await this.userRepository.findByIds(userIds);
+
+    if (!users || users.length === 0) {
+      throw new Error('Không tìm thấy người dùng nào');
+    }
+
+    for (const user of users) {
+      user.password = hashedPassword;
+    }
+
+    await this.userRepository.save(users);
+  }
+
+
+  
 
   async refreshToken(token: string): Promise<{ token: string }> {
     try {

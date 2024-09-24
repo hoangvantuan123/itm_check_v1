@@ -25,6 +25,8 @@ export class UserService {
       throw new NotFoundException(`User with login ${login} not found`);
     }
   }
+
+
   async saveUser(user: Users): Promise<Users> {
     return this.userRepository.save(user);
   }
@@ -124,4 +126,7 @@ export class UserService {
     await this.userRepository.update(id, updateUser);
     return this.userRepository.findOneBy({ id });
   }
+
+
+
 }

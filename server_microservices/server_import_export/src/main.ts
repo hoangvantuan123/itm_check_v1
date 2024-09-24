@@ -8,6 +8,7 @@ async function bootstrap() {
   const server = express();
   const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
 
+  // Cấu hình cors
   app.use(
     cors({
       origin: [
@@ -20,6 +21,9 @@ async function bootstrap() {
       allowedHeaders: ['Content-Type', 'Authorization'],
     }),
   );
+
+  server.use(express.json({ limit: '10mb' })); 
+  server.use(express.urlencoded({ limit: '10mb', extended: true })); 
 
   const port = process.env.PORT || 4000;
   await app.listen(port);

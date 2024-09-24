@@ -53,7 +53,7 @@ export default function PhoneGeneralSettings() {
 
         <div className="divide-y divide-gray-100 rounded-xl border border-gray-100 bg-white">
           <details
-            className="group p-6 [&_summary::-webkit-details-marker]:hidden"
+            className="group p-3 [&_summary::-webkit-details-marker]:hidden"
             open
           >
             <summary className="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
@@ -122,7 +122,7 @@ export default function PhoneGeneralSettings() {
           </details>
 
           <details
-            className="group p-6 [&_summary::-webkit-details-marker]:hidden"
+            className="group p-3 [&_summary::-webkit-details-marker]:hidden"
             open
           >
             <summary className="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
@@ -181,7 +181,7 @@ export default function PhoneGeneralSettings() {
             </div>
           </details>
           <details
-            className="group p-6 [&_summary::-webkit-details-marker]:hidden"
+            className="group p-3 [&_summary::-webkit-details-marker]:hidden"
             open
           >
             <summary className="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
@@ -234,7 +234,7 @@ export default function PhoneGeneralSettings() {
             </div>
           </details>
           <details
-            className="group p-6 [&_summary::-webkit-details-marker]:hidden"
+            className="group p-3 [&_summary::-webkit-details-marker]:hidden"
             open
           >
             <summary className="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
@@ -320,7 +320,7 @@ export default function PhoneGeneralSettings() {
             </div>
           </details>
           <details
-            className="group p-6 [&_summary::-webkit-details-marker]:hidden"
+            className="group p-3 [&_summary::-webkit-details-marker]:hidden"
             open
           >
             <summary className="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">

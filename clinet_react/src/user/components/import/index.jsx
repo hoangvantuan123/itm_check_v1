@@ -14,10 +14,12 @@ import {
   Row,
   Col,
   Dropdown,
+  Spin
 } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import * as XLSX from 'xlsx'
 import Papa from 'papaparse'
+import { importData } from '../../../features/import/import'
 
 const { Title } = Typography
 const { Sider, Content } = Layout
@@ -25,68 +27,219 @@ const { Option } = Select
 
 const DataTable = {
   name: 'Bảng Nhóm',
-  columns: [
+  "columns": [
     {
-      name: 'id',
-      type: 'integer',
-      isNullable: 'NO',
-      default: "nextval('res_groups_id_seq'::regclass)",
+      "name": "id",
+      "type": "integer",
+      "isNullable": "NO",
+      "default": "nextval('base_import_id_seq'::regclass)"
     },
     {
-      name: 'name',
-      type: 'character varying',
-      isNullable: 'NO',
-      default: null,
+      "name": "name",
+      "type": "character varying",
+      "isNullable": "NO",
+      "default": null
     },
     {
-      name: 'category_id',
-      type: 'integer',
-      isNullable: 'YES',
-      default: null,
+      "name": "job_title",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
     },
     {
-      name: 'color',
-      type: 'character varying',
-      isNullable: 'YES',
-      default: null,
+      "name": "work_phone",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
     },
     {
-      name: 'create_uid',
-      type: 'integer',
-      isNullable: 'YES',
-      default: null,
+      "name": "mobile_phone",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
     },
     {
-      name: 'write_uid',
-      type: 'integer',
-      isNullable: 'YES',
-      default: null,
+      "name": "work_email",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
     },
     {
-      name: 'comment',
-      type: 'text',
-      isNullable: 'YES',
-      default: null,
+      "name": "private_street",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
     },
     {
-      name: 'share',
-      type: 'boolean',
-      isNullable: 'NO',
-      default: 'false',
+      "name": "private_street2",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
     },
     {
-      name: 'create_date',
-      type: 'timestamp without time zone',
-      isNullable: 'NO',
-      default: 'now()',
+      "name": "private_city",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
     },
     {
-      name: 'write_date',
-      type: 'timestamp without time zone',
-      isNullable: 'NO',
-      default: 'now()',
+      "name": "private_zip",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
     },
-  ],
+    {
+      "name": "private_phone",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
+    },
+    {
+      "name": "private_email",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
+    },
+    {
+      "name": "lang",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
+    },
+    {
+      "name": "gender",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
+    },
+    {
+      "name": "marital",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
+    },
+    {
+      "name": "spouse_complete_name",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
+    },
+    {
+      "name": "place_of_birth",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
+    },
+    {
+      "name": "ssnid",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
+    },
+    {
+      "name": "sinid",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
+    },
+    {
+      "name": "identification_id",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
+    },
+    {
+      "name": "passport_id",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
+    },
+    {
+      "name": "permit_no",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
+    },
+    {
+      "name": "visa_no",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
+    },
+    {
+      "name": "certificate",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
+    },
+    {
+      "name": "study_field",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
+    },
+    {
+      "name": "study_school",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
+    },
+    {
+      "name": "emergency_contact",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
+    },
+    {
+      "name": "emergency_phone",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
+    },
+    {
+      "name": "employee_type",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
+    },
+    {
+      "name": "employee_id",
+      "type": "character varying",
+      "isNullable": "NO",
+      "default": null
+    },
+    {
+      "name": "pin",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
+    },
+    {
+      "name": "private_car_plate",
+      "type": "character varying",
+      "isNullable": "YES",
+      "default": null
+    },
+    {
+      "name": "spouse_birthdate",
+      "type": "timestamp without time zone",
+      "isNullable": "YES",
+      "default": null
+    },
+    {
+      "name": "birthday",
+      "type": "timestamp without time zone",
+      "isNullable": "YES",
+      "default": null
+    },
+    {
+      "name": "visa_expire",
+      "type": "timestamp without time zone",
+      "isNullable": "YES",
+      "default": null
+    }
+  ]
+
 }
 
 const FileIcon = () => {
@@ -116,40 +269,62 @@ export default function ImportForm({ isOpen, onClose }) {
   const [selectedColumns, setSelectedColumns] = useState([])
   const [selectedTable, setSelectedTable] = useState(null)
   const [connectValues, setConnectValues] = useState({})
-
-  const handleCheck = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const handleCheck = async () => {
     if (!selectedTable || Object.keys(connectValues).length === 0) {
-      message.error(t('Vui lòng chọn bảng và ít nhất một cột để kiểm tra'))
-      return
+      message.error(t('Vui lòng chọn bảng và ít nhất một cột để kiểm tra'));
+      return;
     }
 
-    // Chuẩn bị dữ liệu ánh xạ dựa trên cột liên kết
-    const mappedData = selectedTable.data.map((row) => {
-      const newRow = {}
-      selectedTable.columns.forEach((col) => {
-        const mappedColumn = connectValues[col]
-        if (mappedColumn) {
-          newRow[mappedColumn] = row[col]
-        }
-      })
-      return newRow
-    })
+    // Hiển thị loading và khóa giao diện
+    setIsLoading(true);
 
-    const payload = {
-      method: 'execute_import',
-      model: 'base_import.import',
-      data: mappedData,
+    try {
+      // Chuẩn bị dữ liệu ánh xạ dựa trên cột liên kết
+      const mappedData = selectedTable.data.map((row) => {
+        const newRow = {};
+        selectedTable.columns.forEach((col) => {
+          const mappedColumn = connectValues[col];
+          if (mappedColumn) {
+            newRow[mappedColumn] = row[col];
+          }
+        });
+        return newRow;
+      });
+
+      const batchSize = 1000;
+      const totalRows = mappedData.length;
+      const promises = [];
+
+      for (let i = 0; i < totalRows; i += batchSize) {
+        const batch = mappedData.slice(i, i + batchSize);
+
+        const data = {
+          method: 'execute_import',
+          model: 'base_import.import',
+          data: batch,
+        };
+
+        promises.push(importData(data));
+      }
+
+      await Promise.all(promises);
+
+      message.success(t('Dữ liệu đã được nhập thành công!'));
+    } catch (error) {
+      message.error(t('Đã xảy ra lỗi trong quá trình nhập dữ liệu'));
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    console.log('Mapped Data:', payload)
-  }
 
   const handleFileChange = (info) => {
     const { file, fileList } = info
     const isCsvOrXlsx =
       file.type === 'text/csv' ||
       file.type ===
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 
     if (!isCsvOrXlsx) {
       message.error(t('Chỉ hỗ trợ tệp CSV hoặc XLSX'))
@@ -290,13 +465,13 @@ export default function ImportForm({ isOpen, onClose }) {
   }, [isOpen])
   const dataSource = selectedTable
     ? selectedTable.columns.map((col) => ({
-        key: col,
-        name: col,
-        connect: connectValues[col] || '',
-        note: `Ghi chú cho ${col}`,
-        span:
-          selectedTable.data.length > 0 ? selectedTable.data[0][col] || '' : '',
-      }))
+      key: col,
+      name: col,
+      connect: connectValues[col] || '',
+      note: `Ghi chú cho ${col}`,
+      span:
+        selectedTable.data.length > 0 ? selectedTable.data[0][col] || '' : '',
+    }))
     : []
   return (
     <Drawer
@@ -465,7 +640,7 @@ export default function ImportForm({ isOpen, onClose }) {
           </>
         ))}
 
-      {tables.length > 0 && (
+      <Spin spinning={isLoading}> {tables.length > 0 && (
         <Row
           gutter={[16, 16]}
           className="  h-[calc(100vh-120px)] overflow-hidden"
@@ -542,7 +717,8 @@ export default function ImportForm({ isOpen, onClose }) {
             </div>
           </Col>
         </Row>
-      )}
+      )}</Spin>
+
     </Drawer>
   )
 }

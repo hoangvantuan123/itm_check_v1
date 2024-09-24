@@ -27,12 +27,13 @@ import PhoneUserGroupsAction from '../components/phone/usersGroupsAction'
 import ImportAction from '../components/action/importAction'
 import ShowAction from '../components/action/showAction'
 import { PostResGroups } from '../../features/resGroups/postResGroups'
+import { checkActionPermission } from '../../permissions'
 const { Content } = Layout
 const { Option } = Select
 const { Text } = Typography
 const { Title } = Typography
 
-export default function GroupsUsersSettings() {
+export default function GroupsUsersSettings({ permissions }) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [selectedGroupDetails, setSelectedGroupDetails] = useState(null)
@@ -56,6 +57,11 @@ export default function GroupsUsersSettings() {
   const handleOnClickAction = () => {
     setActionUsers('actionGroups')
   }
+
+  const canCreate = checkActionPermission(permissions, 'setting-1-3', 'create');
+  const canEdit = checkActionPermission(permissions, 'setting-1-3', 'edit');
+  const canDelete = checkActionPermission(permissions, 'setting-1-3', 'delete');
+
   const fetchData = async () => {
     setLoading(true)
     const response = await GetAllResGroupsPageLimit(page, limit)
@@ -218,10 +224,10 @@ export default function GroupsUsersSettings() {
             <Card
               title={item.name}
               extra={
-                <Button onClick={() => handleViewDetails(item)}>View</Button>
+                <Button onClick={() => handleViewDetails(item)}>{t("View")}</Button>
               }
             >
-              <p>Comment: {item.comment}</p>
+              <p>{t("Comment")}: {item.comment}</p>
             </Card>
           </Col>
         ))}
@@ -269,30 +275,31 @@ export default function GroupsUsersSettings() {
 
             <div className="p-2 flex items-center justify-between">
               <h1 className="text-xl font-bold text-gray-900 sm:text-xl ">
-                Nhóm người dùng
+                {t("Nhóm người dùng")}
               </h1>
 
               {!isMobile && (
                 <span className="inline-flex overflow-hidden">
                   <div className="flex items-center gap-2">
-                    <Button
+                    {canCreate && <Button
                       onClick={openModalAddUserGroups}
                       type="primary"
                       icon={<PlusOutlined />}
                       className="w-full rounded-lg h-full border-gray-200 bg-indigo-600 text-white shadow-sm text-sm"
                       size="large"
                     >
-                      Thêm
-                    </Button>
+                      {t("Thêm")}
+                    </Button>}
+
                   </div>
                 </span>
               )}
-
-              <AddUserGroups
+              {canCreate && <AddUserGroups
                 isOpen={isModalOpenAddUserGroups}
                 onClose={closeModalAddUserGroups}
                 fetchData={fetchData}
-              />
+              />}
+
             </div>
             {!isMobile && (
               <div className="p-2 mb flex items-center justify-between">
@@ -303,11 +310,12 @@ export default function GroupsUsersSettings() {
                       className="w-28"
                       size="large"
                     >
-                      <Option value="1">Table</Option>
-                      <Option value="2">Grid</Option>
-                      <Option value="3">List</Option>
+                      <Option value="1">{t("Table")}</Option>
+                      <Option value="2">{t("Grid")}</Option>
+                      <Option value="3">{t("List")}</Option>
                     </Select>
-                    <ImportAction />
+                    {canCreate &&    <ImportAction />}
+                 
                     {selectedRowKeys != null && selectedRowKeys.length > 0 && (
                       <>
                         <ShowAction
@@ -317,6 +325,7 @@ export default function GroupsUsersSettings() {
                           setSelectedRowKeys={setSelectedRowKeys}
                           fetchData={fetchData}
                           actionUsers={actionUsers}
+                          canDelete={canDelete}
                         />
                       </>
                     )}
@@ -327,7 +336,7 @@ export default function GroupsUsersSettings() {
                   onClick={openModal}
                 >
                   <SearchOutlined />
-                  <span className="text-gray-500">Tìm kiếm</span>
+                  <span className="text-gray-500">{t("Tìm kiếm")}</span>
                 </button>
                 <Search isOpen={isModalOpen} onClose={closeModal} />
               </div>
@@ -339,7 +348,7 @@ export default function GroupsUsersSettings() {
                   onClick={openModal}
                 >
                   <SearchOutlined />
-                  <span className="text-gray-500">Tìm kiếm</span>
+                  <span className="text-gray-500">{t("Tìm kiếm")}</span>
                 </button>
                 <Search isOpen={isModalOpen} onClose={closeModal} />
               </div>
@@ -361,6 +370,8 @@ export default function GroupsUsersSettings() {
           </Layout>
 
           <UserGroupsDrawer
+          canEdit={canEdit}
+          canDelete={canDelete}
             isModalVisible={isModalVisible}
             group={selectedGroupDetails}
             handleCancel={handleCancel}

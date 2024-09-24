@@ -6,6 +6,7 @@ import {
   Res,
   HttpStatus,
   UnauthorizedException,
+  Put
 } from '@nestjs/common';
 import { AppService } from './auth.service';
 import { UserService } from './user.service';
@@ -86,5 +87,41 @@ export class AppController {
     } catch (error) {
       return res.status(401).json({ success: false, error: error.message });
     }
+  }
+
+
+  @Put('bulk-update-password')
+  async bulkUpdatePassword(   @Req() req: Request, @Body() body: { userIds: number[], newPassword: string }): Promise<void> {
+    const authHeader = req.headers.authorization;
+      if (!authHeader) {
+        throw new UnauthorizedException('Authorization header missing');
+      }
+    const { userIds, newPassword } = body;
+    const token = authHeader.split(' ')[1];
+    if (!token) {
+      throw new UnauthorizedException('Token missing');
+    }
+
+    if (!userIds || !newPassword) {
+      throw new Error('ID người dùng và mật khẩu mới là bắt buộc');
+    }
+
+    try {
+      const decodedToken = jwt.verify(token, jwtConstants.secret) as {
+        id: number;
+      };
+      const userId = decodedToken.id;
+
+      if (!userId) {
+        throw new UnauthorizedException('Invalid token payload');
+      }
+
+      return await this.appService.bulkUpdatePassword(userId, userIds, newPassword);
+    } catch (error) {
+      throw new UnauthorizedException(
+        'Request sending failed, please try again!',
+      );
+    }
+
   }
 }

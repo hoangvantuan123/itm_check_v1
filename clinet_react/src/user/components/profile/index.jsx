@@ -32,6 +32,8 @@ import { PutUserID } from '../../../features/resUsers/putUserId'
 import { GetUserGroupStatusID } from '../../../features/resGroups/getUserGroupStatusID'
 import { DeleteResUserGroups } from '../../../features/resGroups/deleteResUserGroups'
 import { PostResUserIdGroups } from '../../../features/resGroups/postResUserIdGroups'
+import { checkActionPermission } from '../../../permissions'
+import ChangePass from './changePass'
 const { Title } = Typography
 
 const { Option } = Select
@@ -114,6 +116,8 @@ export default function UserProfile({
   handleCancel,
   fetchDataResAllUser,
   setSelectedGroup,
+  permissions,
+  canEdit
 }) {
   const [groupStatus, setGroupStatus] = useState([])
   const [loading, setLoading] = useState(true)
@@ -122,7 +126,16 @@ export default function UserProfile({
   const [form] = Form.useForm()
   const [selectedGroups, setSelectedGroups] = useState([])
   const [deletedGroups, setDeletedGroups] = useState([])
+  const [openShow, setOpenShow] = useState(null)
+  const [isOpen, setIsOpen] = useState(false)
 
+  const handleOnClickOpenShow = (e) => {
+    setOpenShow(e.key)
+    setIsOpen(true)
+  }
+  const handleCancelOpenDrawer = () => {
+    setIsOpen(false)
+  }
   const fetchDataGroupStatus = async (e) => {
     setLoading(true)
     try {
@@ -142,7 +155,7 @@ export default function UserProfile({
     }
   }
   const menu = (
-    <Menu>
+    <Menu onClick={(e) => handleOnClickOpenShow(e)}>
       <Menu.Item key="edit">Chỉnh sửa thông tin</Menu.Item>
       <Menu.Item key="archive">Lưu trữ</Menu.Item>
       <Menu.Item key="duplicate">Nhân bản</Menu.Item>
@@ -252,15 +265,18 @@ export default function UserProfile({
         <Button key="cancel" onClick={handleCancel}>
           {t('Thoát')}
         </Button>,
-        <Button
-          key="submit"
-          type="primary"
-          className=" ml-2 border-gray-200  bg-indigo-600 text-white  shadow-sm text-sm"
-          onClick={() => form.submit()}
-        >
-          {t('Lưu')}
-        </Button>,
-      ]}
+        canEdit && (
+          <Button
+            key="submit"
+            type="primary"
+            className="ml-2 border-gray-200 bg-indigo-600 text-white shadow-sm text-sm"
+            onClick={() => form.submit()}
+          >
+            {t('Lưu')}
+          </Button>
+        ),
+      ].filter(Boolean)}
+
     >
       <Row
         justify="start"
@@ -322,7 +338,7 @@ export default function UserProfile({
                   initialValue={user?.name}
                   rules={[{ required: true, message: 'Vui lòng nhập tên!' }]}
                 >
-                  <Input size="large" />
+                  <Input size="large" disabled={!canEdit} />
                 </Form.Item>
               </Col>
               <Col xs={24} md={24}>
@@ -337,7 +353,7 @@ export default function UserProfile({
                     },
                   ]}
                 >
-                  <Input size="large" />
+                  <Input size="large" disabled={!canEdit} />
                 </Form.Item>
               </Col>
             </Row>
@@ -351,7 +367,7 @@ export default function UserProfile({
                     { required: true, message: 'Vui lòng chọn ngôn ngữ!' },
                   ]}
                 >
-                  <Select size="large">
+                  <Select size="large" disabled={!canEdit}>
                     <Option value="vi">Tiếng Việt</Option>
                     <Option value="en">Tiếng Anh</Option>
                     <Option value="fr">Tiếng Pháp</Option>
@@ -416,6 +432,8 @@ export default function UserProfile({
           {t('personal_settings_key_menu_03.sign_out_of_all_devices')}
         </Button>
       </div>
+      {openShow === 'change-password' && <ChangePass openShow={openShow} handleCancelOpenDrawer={handleCancelOpenDrawer} isOpen={isOpen} setIsOpen={setIsOpen} />}
+
     </Drawer>
   )
 }

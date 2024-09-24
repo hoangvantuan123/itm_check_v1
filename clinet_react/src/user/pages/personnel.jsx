@@ -275,7 +275,7 @@ export default function Personnel() {
               className="mt-2 max-w-md cursor-pointer text-pretty text-base text-indigo-500"
               size="large"
             >
-              Thêm hàng mới
+             {t(" Thêm hàng mới")}
             </span>
           )}
           pagination={{
@@ -309,9 +309,9 @@ export default function Personnel() {
                 </Col>
 
                 <Col span={19}>
-                  <strong>Mã nhân viên:</strong> {user.employee_id} <br />
-                  <strong>Số điện thoại:</strong> {user.mobile_phone} <br />
-                  <strong>Email công việc:</strong> {user.work_email} <br />
+                  <strong>{t("Mã nhân viên")}:</strong> {user.employee_id} <br />
+                  <strong>{t("Số điện thoại")}:</strong> {user.mobile_phone} <br />
+                  <strong>{t("Email công việc:")}</strong> {user.work_email} <br />
                 </Col>
               </Row>
             </Card>
@@ -381,7 +381,7 @@ export default function Personnel() {
                       className="w-full rounded-lg h-full border-gray-200  bg-indigo-600 text-white  shadow-sm text-sm"
                       size="large"
                     >
-                      Thêm
+                      {t("Thêm")}
                     </Button>
                   </div>
                 </span>
@@ -401,7 +401,7 @@ export default function Personnel() {
                       className=" w-28"
                       size="large"
                     >
-                      <Option value="1">Table</Option>
+                      <Option value="1">{t("Table")}</Option>
                       <Option value="2">Grid</Option>
                       <Option value="3">List</Option>
                     </Select>

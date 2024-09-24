@@ -69,6 +69,14 @@ export class HrEmployeeService {
 
     await this.resHrEmployeRepository.delete(ids);
   }
+  
+  async update(
+    id: number,
+    data: Partial<HrEmployeeEntity>,
+  ): Promise<HrEmployeeEntity> {
+    await this.resHrEmployeRepository.update(id, data);
+    return this.resHrEmployeRepository.findOneBy({ id });
+  }
 
 
 

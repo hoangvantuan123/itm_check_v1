@@ -41,6 +41,8 @@ export default function UserGroupsDrawer({
   isModalVisible,
   handleCancel,
   fetchDataGroups,
+  canEdit,
+  canDelete
 }) {
   const { t } = useTranslation()
   const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
@@ -77,8 +79,11 @@ export default function UserGroupsDrawer({
       field: field,
       value: value,
     }
-    PutPermissionsID(updateData)
-    setDataPermissionsMenu(newData)
+    if (canEdit) {
+
+      PutPermissionsID(updateData)
+      setDataPermissionsMenu(newData)
+    }
   }
 
   const fetchData = async () => {
@@ -490,15 +495,17 @@ export default function UserGroupsDrawer({
         <Button key="cancel" onClick={handleCancel}>
           {t('Thoát')}
         </Button>,
-        <Button
-          key="submit"
-          type="primary"
-          className=" ml-2 border-gray-200  bg-indigo-600 text-white  shadow-sm text-sm"
-          onClick={() => form.submit()}
-        >
-          {t('Lưu')}
-        </Button>,
-      ]}
+        canEdit && (
+          <Button
+            key="submit"
+            type="primary"
+            className="ml-2 border-gray-200 bg-indigo-600 text-white shadow-sm text-sm"
+            onClick={() => form.submit()}
+          >
+            {t('Lưu')}
+          </Button>
+        ),
+      ].filter(Boolean)}
     >
       <Form
         form={form}
@@ -515,27 +522,25 @@ export default function UserGroupsDrawer({
         <Title level={5}>{t('Thông tin nhóm')}</Title>
 
         {/* Thông tin cơ bản */}
-        <Card style={{ marginBottom: '20px' }}>
           <Form.Item
             label={t('Tên nhóm')}
             name="name"
             rules={[{ required: true, message: t('Vui lòng nhập tên nhóm') }]}
             style={{ textAlign: 'left' }}
           >
-            <Input size="large" placeholder={t('Tên nhóm')} />
+            <Input size="large" placeholder={t('Tên nhóm')} disabled={!canEdit} />
           </Form.Item>
           <Form.Item
             label={t('Ghi chú')}
             name="comment"
             style={{ textAlign: 'left' }}
           >
-            <TextArea rows={4} size="large" placeholder={t('Ghi chú')} />
+            <TextArea rows={4} size="large" placeholder={t('Ghi chú')} disabled={!canEdit} />
           </Form.Item>
-        </Card>
 
         <div className="divide-y divide-gray-100 rounded-xl border border-gray-100 bg-white">
           <details
-            className="group p-3 md:p-6 [&_summary::-webkit-details-marker]:hidden"
+            className="group  p-2 [&_summary::-webkit-details-marker]:hidden"
             open
           >
             <summary className="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
@@ -560,7 +565,7 @@ export default function UserGroupsDrawer({
             </summary>
 
             <div>
-              {selectedRowKeys != null && selectedRowKeys.length > 0 && (
+              {selectedRowKeys != null && selectedRowKeys.length > 0 && canDelete && canEdit && (
                 <>
                   <span
                     className="inline-flex gap-2 mt-3 rounded bg-red-100 hover:bg-red-200 p-1 text-red-600 cursor-pointer px-4"
@@ -582,15 +587,17 @@ export default function UserGroupsDrawer({
                 bordered
                 loading={loading}
                 footer={() => (
-                  <span
-                    type="primary"
-                    icon={<PlusOutlined />}
-                    onClick={handleAddRow}
-                    className="mt-2 max-w-md cursor-pointer text-pretty text-base text-indigo-500 "
-                    size="large"
-                  >
-                    Thêm hàng mới
-                  </span>
+                  canEdit && (
+                    <span
+                      type="primary"
+                      icon={<PlusOutlined />}
+                      onClick={handleAddRow}
+                      className="mt-2 max-w-md cursor-pointer text-pretty text-base text-indigo-500"
+                      size="large"
+                    >
+                      Thêm hàng mới
+                    </span>
+                  )
                 )}
                 scroll={{ x: 'max-content', y: 400 }}
                 pagination={{
@@ -607,7 +614,7 @@ export default function UserGroupsDrawer({
             </div>
           </details>
           <details
-            className="group p-3 md:p-6 [&_summary::-webkit-details-marker]:hidden"
+            className="group p-2 [&_summary::-webkit-details-marker]:hidden"
             open
           >
             <summary className="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
@@ -630,7 +637,7 @@ export default function UserGroupsDrawer({
                 </svg>
               </span>
             </summary>
-            {selectedRowKeysPM != null && selectedRowKeysPM.length > 0 && (
+            {selectedRowKeysPM != null && selectedRowKeysPM.length > 0 && canDelete && canEdit && (
               <>
                 <span
                   className="inline-flex gap-2 mt-3 rounded bg-red-100 hover:bg-red-200 p-1 text-red-600 cursor-pointer px-4"
@@ -652,7 +659,7 @@ export default function UserGroupsDrawer({
               bordered
               loading={loading}
               footer={() => (
-                <span
+                canEdit && (<span
                   type="primary"
                   icon={<PlusOutlined />}
                   onClick={handleAddRowListMenu}
@@ -660,7 +667,8 @@ export default function UserGroupsDrawer({
                   size="large"
                 >
                   Thêm hàng mới
-                </span>
+                </span>)
+
               )}
               scroll={{ x: 'max-content' }}
               pagination={{

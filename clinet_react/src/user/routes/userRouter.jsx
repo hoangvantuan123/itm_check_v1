@@ -140,7 +140,7 @@ const UserRouter = () => {
                     />
                     <Route
                       path={`u/profile/${JSON.parse(localStorage.getItem('userInfo'))?.login || 'none'}`}
-                      element={<Profile />}
+                      element={<Profile permissions={userPermissions} />}
                     />
                     <Route
                       path="u/action=1/general_settings"
@@ -150,7 +150,7 @@ const UserRouter = () => {
                           'setting',
                           'view',
                         ) ? (
-                          <GeneralSettings />
+                          <GeneralSettings  permissions={userPermissions}/>
                         ) : (
                           <Unauthorized />
                         )
@@ -185,7 +185,7 @@ const UserRouter = () => {
                           'setting-1-2',
                           'view',
                         ) ? (
-                          <UsersSettings />
+                          <UsersSettings permissions={userPermissions} />
                         ) : (
                           <Unauthorized />
                         )
@@ -199,7 +199,7 @@ const UserRouter = () => {
                           'setting-1-3',
                           'view',
                         ) ? (
-                          <GroupsUsersSettings />
+                          <GroupsUsersSettings  permissions={userPermissions}/>
                         ) : (
                           <Unauthorized />
                         )
@@ -258,7 +258,7 @@ const UserRouter = () => {
                           'setting-2-1-2',
                           'view',
                         ) ? (
-                          <TechniqueMenu />
+                          <TechniqueMenu permissions={userPermissions} />
                         ) : (
                           <Unauthorized />
                         )

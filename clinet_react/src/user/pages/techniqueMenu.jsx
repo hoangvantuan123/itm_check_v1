@@ -29,8 +29,9 @@ const { Content } = Layout
 const { Option } = Select
 const { Text } = Typography
 const { Title } = Typography
+import { checkActionPermission } from '../../permissions'
 
-export default function TechniqueMenu() {
+export default function TechniqueMenu({ permissions }) {
   const [tableData, setTableData] = useState([])
   const { t } = useTranslation()
   const [isMobile, setIsMobile] = useState(false)
@@ -45,6 +46,9 @@ export default function TechniqueMenu() {
   const [total, setTotal] = useState(0)
   const [selectedDetails, setSelectedDetails] = useState(null)
   const [actionUsers, setActionUsers] = useState(null)
+  const canCreate = checkActionPermission(permissions, 'setting-2-1-2', 'create');
+  const canEdit = checkActionPermission(permissions, 'setting-2-1-2', 'edit');
+  const canDelete = checkActionPermission(permissions, 'setting-2-1-2', 'delete');
 
   const fetchData = async () => {
     setLoading(true)
@@ -182,13 +186,14 @@ export default function TechniqueMenu() {
       }}
       rowKey="id"
       footer={() => (
-        <span
+        canCreate && (<span
           type="primary"
           className="mt-2 max-w-md cursor-pointer text-pretty text-base text-indigo-500"
           size="large"
         >
           Thêm hàng mới
-        </span>
+        </span>)
+
       )}
       pagination={{
         current: page,
@@ -239,7 +244,7 @@ export default function TechniqueMenu() {
         {!isMobile && (
           <span className="inline-flex overflow-hidden">
             <div className="flex items-center gap-2">
-              <Button
+              {canCreate && <Button
                 onClick={openModalAddMenu}
                 type="primary"
                 icon={<PlusOutlined />}
@@ -247,7 +252,8 @@ export default function TechniqueMenu() {
                 size="large"
               >
                 Thêm
-              </Button>
+              </Button>}
+
             </div>
           </span>
         )}
@@ -268,7 +274,8 @@ export default function TechniqueMenu() {
                   <Option value="2">Grid</Option>
                   <Option value="3">List</Option>
                 </Select>
-                <ImportAction />
+                {canCreate && <ImportAction />}
+
                 {selectedRowKeys != null && selectedRowKeys.length > 0 && (
                   <>
                     <ShowAction
@@ -278,6 +285,7 @@ export default function TechniqueMenu() {
                       setSelectedRowKeys={setSelectedRowKeys}
                       selectedRowKeys={selectedRowKeys}
                       fetchData={fetchData}
+                      canDelete={canDelete}
                     />
                   </>
                 )}
@@ -305,6 +313,7 @@ export default function TechniqueMenu() {
       </Layout>
 
       <MenuDrawer
+        canEdit={canEdit}
         selectedDetails={selectedDetails}
         isModalVisible={isModalVisible}
         handleCancel={handleCancel}
