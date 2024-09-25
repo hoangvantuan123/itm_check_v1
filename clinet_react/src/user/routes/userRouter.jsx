@@ -34,6 +34,9 @@ import Cookies from 'js-cookie'
 import PhoneWork from '../pages/phoneWork'
 import Personnel from '../pages/personnel'
 import PhoneNotifications from '../pages/phoneNotifications'
+import PassFormPage from '../pages/passFormPage'
+import MultiStepFormPage from '../pages/multiStepFormPage'
+
 
 const UserRouter = () => {
   const { t } = useTranslation()
@@ -45,6 +48,8 @@ const UserRouter = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [showSpinner, setShowSpinner] = useState(false)
+  const skippedRoutes = ['/u/apply/request-phone', '/u/apply/candidate-application/view=form'];
+
   /*  useEffect(() => {
     const refreshInterval = 1000 * 60 * 40
 
@@ -66,17 +71,21 @@ const UserRouter = () => {
 
     return () => clearInterval(intervalRef.current)
   }, []) */
-  useEffect(() => {
-    const token = Cookies.get('accessToken')
-    const userInfo = localStorage.getItem('userInfo')
-    if (token && userInfo) {
-      setIsLoggedIn(true)
-    } else {
-      Cookies.remove('accessToken')
-      localStorage.removeItem('userInfo')
-      navigate('/u/login')
+ useEffect(() => {
+    // Only perform check if the current route is NOT in the skippedRoutes
+    if (!skippedRoutes.includes(location.pathname)) {
+      const token = Cookies.get('accessToken');
+      const userInfo = localStorage.getItem('userInfo');
+
+      if (token && userInfo) {
+        setIsLoggedIn(true);
+      } else {
+        Cookies.remove('accessToken');
+        localStorage.removeItem('userInfo');
+        navigate('/u/login');
+      }
     }
-  }, [navigate])
+  }, [navigate, location.pathname]); 
 
   const fetchData = async () => {
     setLoading(true)
@@ -114,6 +123,21 @@ const UserRouter = () => {
   return (
     <Routes>
       <Route path="u/login" element={<Login />} />
+      <Route
+        path="/u/apply/request-phone"
+        element={
+          <PassFormPage />
+        }
+
+      />
+      <Route
+        path="/u/apply/candidate-application/view=form"
+        element={
+          <MultiStepFormPage />
+        }
+
+      />
+
       {/*  <Route path="u/register/Q9xT7ZvJ3KpF5Rm8" element={<Register />} /> */}
       {isLoggedIn && (
         <Route
@@ -150,7 +174,7 @@ const UserRouter = () => {
                           'setting',
                           'view',
                         ) ? (
-                          <GeneralSettings  permissions={userPermissions}/>
+                          <GeneralSettings permissions={userPermissions} />
                         ) : (
                           <Unauthorized />
                         )
@@ -199,7 +223,7 @@ const UserRouter = () => {
                           'setting-1-3',
                           'view',
                         ) ? (
-                          <GroupsUsersSettings  permissions={userPermissions}/>
+                          <GroupsUsersSettings permissions={userPermissions} />
                         ) : (
                           <Unauthorized />
                         )
@@ -277,7 +301,11 @@ const UserRouter = () => {
                           <Unauthorized />
                         )
                       }
+
                     />
+
+
+
                   </Routes>
                 </Content>
               </Layout>
