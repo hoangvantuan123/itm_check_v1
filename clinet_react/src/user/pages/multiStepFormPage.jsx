@@ -15,18 +15,25 @@ const { Step } = Steps;
 const MultiStepFormPage = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSupplier, setIsSupplier] = useState(false);
-  const [showIsSupplier, setShowIsSupplier] = useState(null);
   const [form] = Form.useForm();
+
+  // State để lưu dữ liệu của tất cả các bước
+  const [formData, setFormData] = useState({
+    familyData: {},
+    educationData: {},
+    officeSkillsData: {
+      officeSkills: [],
+      softwareSkills: [],
+    },
+    workExperienceData: {},
+    applicationData: {},
+  });
+
   const handleCheckboxChange = (event) => {
     const selectedValue = event.target.value; 
-    setShowIsSupplier(selectedValue);
-
-    if (selectedValue === 'Supplier') {
-      setIsSupplier(true);
-    } else {
-      setIsSupplier(false);
-    }
+    setIsSupplier(selectedValue === 'Supplier');
   };
+
   const validateCurrentStep = async () => {
     try {
       await form.validateFields();
@@ -40,12 +47,40 @@ const MultiStepFormPage = () => {
   const nextStep = async () => {
     const isValid = await validateCurrentStep();
     if (isValid) {
-      setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
+      const currentValues = form.getFieldsValue(); 
+
+      // Lưu dữ liệu của bước hiện tại vào state tương ứng
+      const updatedData = { ...formData };
+      if (currentStep === 0) {
+        updatedData.familyData = currentValues; 
+      } else if (currentStep === 1) {
+        updatedData.educationData = currentValues; 
+        updatedData.officeSkillsData = {
+          officeSkills: currentValues.officeSkills,
+          softwareSkills: currentValues.softwareSkills,
+        }; // Lưu dữ liệu kỹ năng vào formData
+      } else if (currentStep === 2) {
+        updatedData.applicationData = currentValues; 
+      }
+
+      setFormData(updatedData); 
+
+      console.log('Tổng hợp dữ liệu các trang trước:', updatedData);
+
+      setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1)); 
     }
   };
 
   const prevStep = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 0));
+  };
+
+  const handleSubmit = async () => {
+    const isValid = await validateCurrentStep();
+    if (isValid) {
+      const finalData = { ...formData, ...form.getFieldsValue() };
+      console.log("Dữ liệu cuối cùng gửi đi:", finalData);
+    }
   };
 
   const steps = [
@@ -63,9 +98,9 @@ const MultiStepFormPage = () => {
       title: 'Học vấn và Kỹ năng',
       content: (
         <>
-          <EducationLanguageTable form={form} /> {/* Pass form instance */}
-          <OfficeSkillsTable form={form} /> {/* Pass form instance */}
-          <WorkExperienceTable form={form} /> {/* Pass form instance */}
+          <EducationLanguageTable form={form} />
+          <OfficeSkillsTable form={form} formData={formData} /> 
+          <WorkExperienceTable form={form} />
         </>
       ),
     },
@@ -73,15 +108,12 @@ const MultiStepFormPage = () => {
       title: 'Vị trí ứng tuyển',
       content: (
         <>
-          <ApplicationInformation form={form} /> {/* Pass form instance */}
-          <IntroducedRelativeTable form={form} /> {/* Pass form instance */}
+          <ApplicationInformation form={form} />
+          <IntroducedRelativeTable form={form} />
         </>
       ),
     },
   ];
-  const handleSubmit = (values) => {
-    console.log('Submitted values:', values); // Log all form values
-  };
 
   return (
     <div className="flex items-center justify-center h-screen overflow-auto p-3">
@@ -95,7 +127,7 @@ const MultiStepFormPage = () => {
           ))}
         </Steps>
 
-        <Form form={form} onFinish={handleSubmit} layout="vertical" className="pb-10">
+        <Form form={form} layout="vertical" className="pb-10">
           {steps[currentStep].content}
           <Form.Item className="mt-4">
             <Button type="default" onClick={prevStep} disabled={currentStep === 0}>
@@ -103,8 +135,7 @@ const MultiStepFormPage = () => {
             </Button>
             <Button
               className="ml-2 border-gray-200 bg-indigo-600 text-white shadow-sm text-sm"
-              /*   onClick={nextStep} */
-              onClick={() => form.submit()}
+              onClick={currentStep === steps.length - 1 ? handleSubmit : nextStep}
             >
               {currentStep === steps.length - 1 ? 'Gửi thông tin' : 'Tiếp Theo'}
             </Button>

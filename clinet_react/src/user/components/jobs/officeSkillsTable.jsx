@@ -1,56 +1,64 @@
-import { useState } from 'react';
-import { Table, Checkbox } from 'antd';
+import { Form, Table, Radio } from 'antd';
+import { useEffect, useState } from 'react';
 
-const OfficeSkillsTable = () => {
-  const [officeSkills, setOfficeSkills] = useState([
-    { key: 0, skill: 'Excel', good: false, average: false, poor: false },
-    { key: 1, skill: 'Word', good: false, average: false, poor: false },
-    { key: 2, skill: 'PowerPoint', good: false, average: false, poor: false },
-  ]);
+const OfficeSkillsTable = ({ form, formData }) => {
+  // Danh sách kỹ năng
+  const initialOfficeSkills = [
+    { key: 0, skill: 'Excel', level: formData.officeSkillsData.officeSkills?.[0]?.level || null },
+    { key: 1, skill: 'Word', level: formData.officeSkillsData.officeSkills?.[1]?.level || null },
+    { key: 2, skill: 'PowerPoint', level: formData.officeSkillsData.officeSkills?.[2]?.level || null },
+  ];
 
-  const [softwareSkills, setSoftwareSkills] = useState([
-    { key: 0, skill: 'AutoCAD', good: false, average: false, poor: false },
-    { key: 1, skill: 'SolidWorks', good: false, average: false, poor: false },
-    { key: 2, skill: 'ERP', good: false, average: false, poor: false },
-    { key: 3, skill: 'MES', good: false, average: false, poor: false },
-  ]);
+  const initialSoftwareSkills = [
+    { key: 0, skill: 'AutoCAD', level: formData.officeSkillsData.softwareSkills?.[0]?.level || null },
+    { key: 1, skill: 'SolidWorks', level: formData.officeSkillsData.softwareSkills?.[1]?.level || null },
+    { key: 2, skill: 'ERP', level: formData.officeSkillsData.softwareSkills?.[2]?.level || null },
+    { key: 3, skill: 'MES', level: formData.officeSkillsData.softwareSkills?.[3]?.level || null },
+  ];
 
-  const handleSkillsChange = (key, field, value, isOfficeSkill = true) => {
-    const updatedSkills = (isOfficeSkill ? officeSkills : softwareSkills).map(skill =>
-      skill.key === key ? { ...skill, [field]: value } : skill
-    );
-    isOfficeSkill ? setOfficeSkills(updatedSkills) : setSoftwareSkills(updatedSkills);
+  const [officeSkills, setOfficeSkills] = useState(initialOfficeSkills);
+  const [softwareSkills, setSoftwareSkills] = useState(initialSoftwareSkills);
+
+  // Effect để đồng bộ dữ liệu với form
+  useEffect(() => {
+    form.setFieldsValue({
+      officeSkills: officeSkills,
+      softwareSkills: softwareSkills,
+    });
+  }, [officeSkills, softwareSkills, form]);
+
+  // Hàm thay đổi giá trị kỹ năng
+  const handleSkillsChange = (key, value, isOfficeSkill = true) => {
+    const updatedSkills = (isOfficeSkill ? officeSkills : softwareSkills).map(skill => {
+      if (skill.key === key) {
+        return { ...skill, level: value }; // Chỉ cập nhật hàng hiện tại
+      }
+      return skill;
+    });
+
+    if (isOfficeSkill) {
+      setOfficeSkills(updatedSkills);
+      formData.officeSkillsData.officeSkills = updatedSkills; // Cập nhật dữ liệu vào formData
+    } else {
+      setSoftwareSkills(updatedSkills);
+      formData.officeSkillsData.softwareSkills = updatedSkills; // Cập nhật dữ liệu vào formData
+    }
   };
 
-  const renderCheckboxColumns = (isOfficeSkill = true) => [
+  // Hàm render cột Radio
+  const renderRadioColumns = (isOfficeSkill = true) => [
     {
-      title: 'Tốt',
-      dataIndex: 'good',
-      render: (text, record) => (
-        <Checkbox
-          checked={text}
-          onChange={(e) => handleSkillsChange(record.key, 'good', e.target.checked, isOfficeSkill)}
-        />
-      ),
-    },
-    {
-      title: 'TB',
-      dataIndex: 'average',
-      render: (text, record) => (
-        <Checkbox
-          checked={text}
-          onChange={(e) => handleSkillsChange(record.key, 'average', e.target.checked, isOfficeSkill)}
-        />
-      ),
-    },
-    {
-      title: 'Kém',
-      dataIndex: 'poor',
-      render: (text, record) => (
-        <Checkbox
-          checked={text}
-          onChange={(e) => handleSkillsChange(record.key, 'poor', e.target.checked, isOfficeSkill)}
-        />
+      title: 'Đánh giá',
+      dataIndex: 'level',
+      render: (_, record) => (
+        <Radio.Group
+          value={record.level}
+          onChange={e => handleSkillsChange(record.key, e.target.value, isOfficeSkill)}
+        >
+          <Radio value="good">Tốt</Radio>
+          <Radio value="average">TB</Radio>
+          <Radio value="poor">Kém</Radio>
+        </Radio.Group>
       ),
     },
   ];
@@ -61,7 +69,7 @@ const OfficeSkillsTable = () => {
       dataIndex: 'skill',
       render: text => <span>{text}</span>,
     },
-    ...renderCheckboxColumns(true),
+    ...renderRadioColumns(true),
   ];
 
   const softwareSkillsColumns = [
@@ -70,34 +78,38 @@ const OfficeSkillsTable = () => {
       dataIndex: 'skill',
       render: text => <span>{text}</span>,
     },
-    ...renderCheckboxColumns(false),
+    ...renderRadioColumns(false),
   ];
 
   return (
-    <div >
+    <div>
       <h2 className="text-2xl font-semibold mb-6 mt-5">Công việc văn phòng</h2>
-      
-      {/* Office Skills Table */}
-      <h3 className="text-xl font-semibold mb-4">Kỹ năng văn phòng</h3>
-      <Table
-        dataSource={officeSkills}
-        columns={officeSkillsColumns}
-        pagination={false}
-        rowKey="key"
-        scroll={{ x: true }}
-       bordered
-      />
 
-      {/* Software Skills Table */}
+      {/* Bảng kỹ năng văn phòng */}
+      <h3 className="text-xl font-semibold mb-4">Kỹ năng văn phòng</h3>
+      <Form.Item name="officeSkills">
+        <Table
+          dataSource={officeSkills}
+          columns={officeSkillsColumns}
+          pagination={false}
+          rowKey="key"
+          scroll={{ x: true }}
+          bordered
+        />
+      </Form.Item>
+
+      {/* Bảng kỹ năng phần mềm */}
       <h3 className="text-xl font-semibold mb-4 mt-5">Kỹ năng phần mềm</h3>
-      <Table
-        dataSource={softwareSkills}
-        columns={softwareSkillsColumns}
-        pagination={false}
-        rowKey="key"
-        scroll={{ x: true }}
-        bordered
-      />
+      <Form.Item name="softwareSkills">
+        <Table
+          dataSource={softwareSkills}
+          columns={softwareSkillsColumns}
+          pagination={false}
+          rowKey="key"
+          scroll={{ x: true }}
+          bordered
+        />
+      </Form.Item>
     </div>
   );
 };
