@@ -1,11 +1,13 @@
 import { Button } from 'antd';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+
 const SuccessNotification = () => {
     return (
-        <div className="w-full h-screen bg-slate-50 flex items-center justify-center">
+        <div className="flex h-screen items-center justify-center bg-white px-4">
             <div className="text-center">
-                <h1 className="text-2xl font-bold">Gửi Thành Công</h1>
-                <p className="mt-2 text-lg">Bạn đã gửi thông tin thành công!</p>
+                <div className="w-20 h-20 rounded-lg bg-slate-500 mx-auto"></div>
+                <h1 className="mt-6 text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">Thông Tin Đã Được Gửi!</h1>
+                <p className="mt-4 text-gray-500">Cảm ơn bạn đã hoàn thành việc khai báo thông tin cá nhân.</p>
             </div>
         </div>
     );

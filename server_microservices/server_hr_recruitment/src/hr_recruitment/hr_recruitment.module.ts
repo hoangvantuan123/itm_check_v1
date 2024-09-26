@@ -11,7 +11,8 @@ import { HrRecruitmentServices } from './services/hr_recruitment.services';
 @Module({
   imports: [
     DatabaseModule,
-    TypeOrmModule.forFeature([Family, Personnel, Language,Experience,Education  ])
+    TypeOrmModule.forFeature([Family, Personnel, Language,Experience,Education  ]),
+   
   ],
   providers: [HrRecruitmentServices],
   controllers: [HrRecruitmentController],

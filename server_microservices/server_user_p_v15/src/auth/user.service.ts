@@ -52,54 +52,58 @@ export class UserService {
   async findUserAll(
     userId: number,
     page: number = 1,
-    limit: number = 10,
+    limit: number = 50,
   ): Promise<{ data: UserDto[]; total: number; totalPages: number }> {
+    // Check if the user exists
     const user = await this.findUserById(userId);
     if (!user) {
       throw new NotFoundException('User not found');
     }
-
+  
+    // Fetch paginated user data
     const [data, total] = await this.userRepository.findAndCount({
-      skip: (page - 1) * limit,
-      take: limit,
+      skip: (page - 1) * limit, // Pagination offset
+      take: limit, // Limit number of results
       order: {
-        createDate: 'DESC',
+        createDate: 'DESC', // Order by creation date
       },
     });
+  
+    // Map user entities to UserDto
+    const userDtos = data.map((user) => new UserDto({
+      id: user.id,
+      companyId: user.companyId,
+      partnerId: user.partnerId,
+      active: user.active,
+      createDate: user.createDate,
+      login: user.login,
+      actionId: user.actionId,
+      createUid: user.createUid,
+      writeUid: user.writeUid,
+      signature: user.signature,
+      share: user.share,
+      writeDate: user.writeDate,
+      totpSecret: user.totpSecret,
+      notificationType: user.notificationType,
+      status: user.status,
+      karma: user.karma,
+      rankId: user.rankId,
+      nextRankId: user.nextRankId,
+      employeeCode: user.employeeCode,
+      name: user.nameUser,
+      language: user.language,
+    }));
+  
+    // Calculate total pages
     const totalPages = Math.ceil(total / limit);
-    const userDtos = data.map(
-      (user) =>
-        new UserDto({
-          id: user.id,
-          companyId: user.companyId,
-          partnerId: user.partnerId,
-          active: user.active,
-          createDate: user.createDate,
-          login: user.login,
-          actionId: user.actionId,
-          createUid: user.createUid,
-          writeUid: user.writeUid,
-          signature: user.signature,
-          share: user.share,
-          writeDate: user.writeDate,
-          totpSecret: user.totpSecret,
-          notificationType: user.notificationType,
-          status: user.status,
-          karma: user.karma,
-          rankId: user.rankId,
-          nextRankId: user.nextRankId,
-          employeeCode: user.employeeCode,
-          name: user.nameUser,
-          language: user.language,
-        }),
-    );
-
+  
     return {
       data: userDtos,
       total,
       totalPages,
     };
   }
+  
 
   async remove(userId: number, ids: number[]): Promise<void> {
     const user = await this.findUserById(userId);

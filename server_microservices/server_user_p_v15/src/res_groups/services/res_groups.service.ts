@@ -35,27 +35,31 @@ export class ResGroupsService {
     page: number = 1,
     limit: number = 10,
   ): Promise<{ data: ResGroups[]; total: number; totalPages: number }> {
+    // Check if the user exists
     const user = await this.userService.findUserById(userId);
     if (!user) {
       throw new NotFoundException('User not found');
     }
-
+  
+    // Fetch paginated resource groups
     const [data, total] = await this.resGroupsRepository.findAndCount({
-      skip: (page - 1) * limit,
-      take: limit,
+      skip: (page - 1) * limit, // Pagination offset
+      take: limit, // Limit the number of results
       order: {
-        create_date: 'DESC',
+        create_date: 'DESC', // Order by creation date
       },
     });
+  
+    // Calculate total pages
     const totalPages = Math.ceil(total / limit);
-
+  
     return {
       data,
       total,
       totalPages,
     };
   }
-
+  
   
   async findAll(userId: number): Promise<{ data: ResGroups[]; total: number }> {
     const user = await this.userService.findUserById(userId);

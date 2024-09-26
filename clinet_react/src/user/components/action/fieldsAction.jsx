@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Input, Modal, Button, DatePicker, Select, Checkbox } from 'antd';
+import { Input, Button, DatePicker, Select, Checkbox, Drawer } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
@@ -47,9 +47,11 @@ const FieldIcon = () => (
 
 export default function FieldAction() {
   const { t } = useTranslation();
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const [dateRange, setDateRange] = useState([null, null]);
   const [filterValue, setFilterValue] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [address, setAddress] = useState('');
   const [status, setStatus] = useState('');
   const [additionalFilters, setAdditionalFilters] = useState({
     urgent: false,
@@ -64,6 +66,14 @@ export default function FieldAction() {
     setFilterValue(e.target.value);
   };
 
+  const handlePhoneNumberChange = (e) => {
+    setPhoneNumber(e.target.value);
+  };
+
+  const handleAddressChange = (e) => {
+    setAddress(e.target.value);
+  };
+
   const handleStatusChange = (value) => {
     setStatus(value);
   };
@@ -76,86 +86,103 @@ export default function FieldAction() {
   };
 
   const handleApplyFilter = () => {
-    // Process filters here
     console.log('Filters applied:', {
       dateRange,
       filterValue,
+      phoneNumber,
+      address,
       status,
       additionalFilters,
     });
-    setIsModalVisible(false); // Close modal after applying filters
+    setIsDrawerVisible(false);
   };
 
   return (
     <>
-      <button
-        className="border-[1.3px] border-[#d9d9d9] rounded-lg p-[0.6rem] w-auto flex items-center space-x-2 bg-white hover:bg-gray-100"
-        onClick={() => setIsModalVisible(true)}
-      >
-        <FieldIcon />
-        <span className="text-gray-500">Filter</span>
-      </button>
-
-      <Modal
-        title="Advanced Filter"
-        visible={isModalVisible}
-        onCancel={() => setIsModalVisible(false)}
-        footer={null}
-        width={900}
-      >
-        <div className="">
-          <div className="mb-3">
-            <label className="block mb-1">Time Range:</label>
-            <RangePicker
-              value={dateRange}
-              onChange={handleDateRangeChange}
-              format="YYYY-MM-DD"
-              className="w-full"
-            />
-          </div>
-          <div className="mb-3">
-            <label className="block mb-1">Filter Field:</label>
-            <Input
-              value={filterValue}
-              onChange={handleFilterChange}
-              placeholder="Enter filter value"
-            />
-          </div>
-          <div className="mb-3">
-            <label className="block mb-1">Status:</label>
-            <Select
-              value={status}
-              onChange={handleStatusChange}
-              placeholder="Select status"
-              style={{ width: '100%' }}
-            >
-              <Option value="active">Active</Option>
-              <Option value="inactive">Inactive</Option>
-              <Option value="pending">Pending</Option>
-            </Select>
-          </div>
-          <div className="mb-3">
-            <label className="block mb-1">Additional Filters:</label>
-            <Checkbox
-              name="urgent"
-              checked={additionalFilters.urgent}
-              onChange={handleCheckboxChange}
-            >
-              Urgent
-            </Checkbox>
-            <Checkbox
-              name="completed"
-              checked={additionalFilters.completed}
-              onChange={handleCheckboxChange}
-            >
-              Completed
-            </Checkbox>
-          </div>
-          <Button type="text" onClick={handleApplyFilter} className="w-full">
-            Apply Filters
-          </Button>
+      <div className="flex flex-col items-start">
+        <div className="flex items-center space-x-2">
+          <RangePicker
+            value={dateRange}
+            onChange={handleDateRangeChange}
+            format="YYYY-MM-DD"
+            className=" cursor-pointer"
+            size="large"
+          />
+          <button
+            className="border-[1.3px] border-[#d9d9d9] rounded-lg p-[0.6rem] w-auto flex items-center space-x-2 bg-white hover:bg-gray-100"
+            onClick={() => setIsDrawerVisible(true)}
+          >
+            <FieldIcon />
+            <span className="text-gray-500">Filter</span>
+          </button>
         </div>
-      </Modal>
+      </div>
+
+      <Drawer
+        title="Filter Options"
+        placement="right"
+        onClose={() => setIsDrawerVisible(false)}
+        visible={isDrawerVisible}
+        width={500} 
+      >
+        <div className="mb-3">
+          <label className="block mb-1">Name:</label>
+          <Input
+            value={filterValue}
+            onChange={handleFilterChange}
+            placeholder="Enter name"
+          />
+        </div>
+        <div className="mb-3">
+          <label className="block mb-1">Phone Number:</label>
+          <Input
+            value={phoneNumber}
+            onChange={handlePhoneNumberChange}
+            placeholder="Enter phone number"
+          />
+        </div>
+        <div className="mb-3">
+          <label className="block mb-1">Address:</label>
+          <Input
+            value={address}
+            onChange={handleAddressChange}
+            placeholder="Enter address"
+          />
+        </div>
+        <div className="mb-3">
+          <label className="block mb-1">Status:</label>
+          <Select
+            value={status}
+            onChange={handleStatusChange}
+            placeholder="Select status"
+            style={{ width: '100%' }}
+          >
+            <Option value="active">Active</Option>
+            <Option value="inactive">Inactive</Option>
+            <Option value="pending">Pending</Option>
+          </Select>
+        </div>
+        <div className="mb-3">
+          <label className="block mb-1">Additional Filters:</label>
+          <Checkbox
+            name="urgent"
+            checked={additionalFilters.urgent}
+            onChange={handleCheckboxChange}
+          >
+            Urgent
+          </Checkbox>
+          <Checkbox
+            name="completed"
+            checked={additionalFilters.completed}
+            onChange={handleCheckboxChange}
+          >
+            Completed
+          </Checkbox>
+        </div>
+        <Button type="primary" onClick={handleApplyFilter} className="w-full">
+          Apply Filters
+        </Button>
+      </Drawer>
     </>
   );
 }

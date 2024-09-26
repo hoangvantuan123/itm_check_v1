@@ -1,4 +1,4 @@
-import { Body, Controller, Post, HttpException, HttpStatus, UsePipes, ValidationPipe, Logger } from '@nestjs/common';
+import { Body, Controller, Post, HttpException, HttpStatus,Put, UsePipes,Param,Delete, ValidationPipe, Logger, Get, Query } from '@nestjs/common';
 import { CreatePersonnelWithDetailsDto } from '../dto/create-personnel-with-details.dto';
 import { HrRecruitmentServices } from '../services/hr_recruitment.services';
 
@@ -40,5 +40,30 @@ export class HrRecruitmentController {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+
+  @Get('hr-recruitment/personnel')
+  async findAll(
+    @Query('filter') filter: any, 
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 20,
+  ): Promise<{ data: any[]; total: number; totalPages: number }> {
+    return this.personnelService.findAllPageLimit(filter, page, limit);
+  }
+
+
+
+  @Put(':id')
+  async update(
+    @Param('id') id: number,
+    @Body() updatePersonnelWithDetailsDto: CreatePersonnelWithDetailsDto,
+  ): Promise<{ success: boolean; message: string; data?: any }> {
+    return await this.personnelService.update(id, updatePersonnelWithDetailsDto);
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: number): Promise<{ success: boolean; message: string }> {
+    return await this.personnelService.delete(id);
   }
 }

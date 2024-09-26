@@ -49,19 +49,24 @@ export class MenuService {
     page: number = 1,
     limit: number = 10,
   ): Promise<{ data: any[]; total: number; totalPages: number }> {
+    // Check if the user exists
     const user = await this.userService.findUserById(userId);
     if (!user) {
       throw new NotFoundException('User not found');
     }
-
+  
+    // Calculate the offset for pagination
     const [data, total] = await this.menuRepository.findAndCount({
       select: ['id', 'name', 'sequence', 'create_date', 'parent_id', 'key'],
       order: {
         create_date: 'DESC',
       },
       relations: ['parent'],
+      skip: (page - 1) * limit, // Pagination offset
+      take: limit, // Limit number of results
     });
-
+  
+    // Map the data to include parent name
     const dataWithParentName = data.map((menu) => ({
       id: menu.id,
       parent_id: menu.parent_id,
@@ -71,15 +76,17 @@ export class MenuService {
       create_date: menu.create_date,
       parent_name: menu.parent ? menu.parent.name : null,
     }));
+  
+    // Calculate total pages
     const totalPages = Math.ceil(total / limit);
-
+  
     return {
       data: dataWithParentName,
       total,
       totalPages,
     };
   }
-
+  
   async findOne(id: number): Promise<IrUiMenu> {
     return this.menuRepository.findOneBy({ id });
   }
