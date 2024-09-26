@@ -3,7 +3,6 @@ import { HOST_API_SERVER_P } from '../../../services'
 import { accessToken } from '../../../services/tokenService'
 
 export const changePassword = async (oldPassword, newPassword) => {
-  
   try {
     const token = accessToken()
     const response = await axios.post(

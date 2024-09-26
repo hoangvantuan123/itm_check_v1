@@ -36,7 +36,11 @@ import Personnel from '../pages/personnel'
 import PhoneNotifications from '../pages/phoneNotifications'
 import PassFormPage from '../pages/passFormPage'
 import MultiStepFormPage from '../pages/multiStepFormPage'
-
+import WorkerDeclarationPassForm from '../pages/workerDeclarationPassForm'
+import WorkerDeclarationMultiStepForm from '../pages/workerDeclarationMultiStepForm'
+import EmployeeRecruitment from '../pages/employeeRecruitment'
+import WorkerRecruitmentPage from '../pages/workerRecruitment'
+import SuccessNotification from '../pages/successNotification'
 
 const UserRouter = () => {
   const { t } = useTranslation()
@@ -48,7 +52,13 @@ const UserRouter = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [showSpinner, setShowSpinner] = useState(false)
-  const skippedRoutes = ['/u/apply/request-phone', '/u/apply/candidate-application/view=form'];
+  const skippedRoutes = [
+    '/apply/request-phone',
+    '/apply/candidate-application/view=form',
+    '/apply/worker-declaration-form/request-phone',
+    '/apply/worker-declaration-form/view=form',
+    '/apply/thong-bao'
+  ]
 
   /*  useEffect(() => {
     const refreshInterval = 1000 * 60 * 40
@@ -71,21 +81,21 @@ const UserRouter = () => {
 
     return () => clearInterval(intervalRef.current)
   }, []) */
- useEffect(() => {
+  useEffect(() => {
     // Only perform check if the current route is NOT in the skippedRoutes
     if (!skippedRoutes.includes(location.pathname)) {
-      const token = Cookies.get('accessToken');
-      const userInfo = localStorage.getItem('userInfo');
+      const token = Cookies.get('accessToken')
+      const userInfo = localStorage.getItem('userInfo')
 
       if (token && userInfo) {
-        setIsLoggedIn(true);
+        setIsLoggedIn(true)
       } else {
-        Cookies.remove('accessToken');
-        localStorage.removeItem('userInfo');
-        navigate('/u/login');
+        Cookies.remove('accessToken')
+        localStorage.removeItem('userInfo')
+        navigate('/u/login')
       }
     }
-  }, [navigate, location.pathname]); 
+  }, [navigate, location.pathname])
 
   const fetchData = async () => {
     setLoading(true)
@@ -123,21 +133,21 @@ const UserRouter = () => {
   return (
     <Routes>
       <Route path="u/login" element={<Login />} />
+      <Route path="/apply/request-phone" element={<PassFormPage />} />
       <Route
-        path="/u/apply/request-phone"
-        element={
-          <PassFormPage />
-        }
-
-      />
-      <Route
-        path="/u/apply/candidate-application/view=form"
-        element={
-          <MultiStepFormPage />
-        }
-
+        path="/apply/worker-declaration-form/request-phone"
+        element={<WorkerDeclarationPassForm />}
       />
 
+      <Route
+        path="/apply/candidate-application/view=form"
+        element={<MultiStepFormPage />}
+      />
+      <Route
+        path="/apply/worker-declaration-form/view=form"
+        element={<WorkerDeclarationMultiStepForm />}
+      />
+   <Route path="/apply/thong-bao" element={<SuccessNotification />} />
       {/*  <Route path="u/register/Q9xT7ZvJ3KpF5Rm8" element={<Register />} /> */}
       {isLoggedIn && (
         <Route
@@ -197,9 +207,7 @@ const UserRouter = () => {
                     />
                     <Route
                       path="u/phone/notifications"
-                      element={
-                        <PhoneNotifications />
-                      }
+                      element={<PhoneNotifications />}
                     />
                     <Route
                       path="u/action=2/users"
@@ -301,11 +309,35 @@ const UserRouter = () => {
                           <Unauthorized />
                         )
                       }
-
                     />
-
-
-
+                    <Route
+                      path="/u/action=17/employee-recruitment-data"
+                      element={
+                        checkActionPermission(
+                          userPermissions,
+                          'hr-recruitment-1-1',
+                          'view',
+                        ) ? (
+                          <EmployeeRecruitment permissions={userPermissions} />
+                        ) : (
+                          <Unauthorized />
+                        )
+                      }
+                    />
+                    <Route
+                      path="/u/action=18/worker-recruitment-data"
+                      element={
+                        checkActionPermission(
+                          userPermissions,
+                          'hr-recruitment-1-1',
+                          'view',
+                        ) ? (
+                          <WorkerRecruitmentPage permissions={userPermissions} />
+                        ) : (
+                          <Unauthorized />
+                        )
+                      }
+                    />
                   </Routes>
                 </Content>
               </Layout>

@@ -2,7 +2,7 @@ import axios from 'axios'
 import { HOST_API_SERVER_P } from '../../services'
 import { accessToken } from '../../services/tokenService'
 
-export const PostMenu = async (name, parent_id, sequence, key) => {
+export const PostMenu = async (name, sequence , parent_id, key) => {
   try {
     const token = accessToken()
     const response = await axios.post(

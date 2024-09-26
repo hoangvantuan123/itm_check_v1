@@ -153,7 +153,7 @@ export default function Notifications() {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 820)
     }
-   
+
     handleResize()
     window.addEventListener('resize', handleResize)
 
@@ -210,12 +210,11 @@ export default function Notifications() {
             {isMobile && (
               <div className="flex items-center justify-end">
                 <Button
-                onClick={() => setDrawerVisible(true)}
-                className="mb-4 text-xl border-none  p-2 bg-none shadow-none"
-                
-              >
-                <SearchOutlined />
-              </Button>
+                  onClick={() => setDrawerVisible(true)}
+                  className="mb-4 text-xl border-none  p-2 bg-none shadow-none"
+                >
+                  <SearchOutlined />
+                </Button>
               </div>
             )}
             {isMobile && (
@@ -234,16 +233,16 @@ export default function Notifications() {
                 />
               </Space>
             ) : (
-              <div className="flex gap-2 mb-2 " >
-<span className="whitespace-nowrap rounded-full bg-slate-200 px-2.5 py-1 text-sm ">
-notifications
-</span>
-<span className="whitespace-nowrap rounded-full bg-slate-200 px-2.5 py-1 text-sm ">
-unread
-</span>
-<span className="whitespace-nowrap rounded-full bg-slate-200 px-2.5 py-1 text-sm ">
-filters
-</span>
+              <div className="flex gap-2 mb-2 ">
+                <span className="whitespace-nowrap rounded-full bg-slate-200 px-2.5 py-1 text-sm ">
+                  notifications
+                </span>
+                <span className="whitespace-nowrap rounded-full bg-slate-200 px-2.5 py-1 text-sm ">
+                  unread
+                </span>
+                <span className="whitespace-nowrap rounded-full bg-slate-200 px-2.5 py-1 text-sm ">
+                  filters
+                </span>
               </div>
             )}
             <div className="pb-36">

@@ -32,7 +32,7 @@ export default function PhoneSettingAction({
   handleMenuShowActionClick,
   setShowSettingActionDropdown,
   showSttingActionDropdown,
-  canCreate
+  canCreate,
 }) {
   const { t } = useTranslation()
   const [showDropdown, setShowDropdown] = useState(false)
@@ -49,14 +49,18 @@ export default function PhoneSettingAction({
       style={{ width: '200px', marginRight: '20px' }}
       onClick={handleMenuShowActionClick}
     >
-      {canCreate &&    <Menu.Item key="action_setting_1">Thêm người dùng</Menu.Item>}
-    
+      {canCreate && (
+        <Menu.Item key="action_setting_1">Thêm người dùng</Menu.Item>
+      )}
+
       <Menu.Item key="action_setting_2">Tùy chọn</Menu.Item>
       <Menu.Item key="action_setting_3">Hành động</Menu.Item>
-      {canCreate &&     <Menu.Item key="action_setting_4" onClick={handleOnClickOpenImport}>
-        Import Data
-      </Menu.Item>}
-     
+      {canCreate && (
+        <Menu.Item key="action_setting_4" onClick={handleOnClickOpenImport}>
+          Import Data
+        </Menu.Item>
+      )}
+
       <Menu.Item key="4">Fields</Menu.Item>
     </Menu>
   )

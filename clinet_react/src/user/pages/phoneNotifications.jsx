@@ -42,7 +42,7 @@ export default function PhoneNotifications() {
   const [searchValue, setSearchValue] = useState('')
 
   const handleSearch = (value) => {
-    setDrawerVisible(false) 
+    setDrawerVisible(false)
   }
   const [selectedMenu, setSelectedMenu] = useState('inbox')
   const [notifications, setNotifications] = useState([])
@@ -154,7 +154,7 @@ export default function PhoneNotifications() {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 820)
     }
-    
+
     handleResize()
     window.addEventListener('resize', handleResize)
 
@@ -184,20 +184,17 @@ export default function PhoneNotifications() {
         <title>ITM - {t('page_notifications.notifications')}</title>
       </Helmet>
       <Layout className="h-full">
-       
-
         <Layout className="h-screen overflow-auto ">
           <Content className="p-3  pb-14 bg-slate-50">
             {/* Display 'Inbox' title only if on mobile */}
             {isMobile && (
               <div className="flex items-center justify-end">
                 <Button
-                onClick={() => setDrawerVisible(true)}
-                className="mb-4 text-xl border-none  p-2 bg-none shadow-none"
-                
-              >
-                <SearchOutlined />
-              </Button>
+                  onClick={() => setDrawerVisible(true)}
+                  className="mb-4 text-xl border-none  p-2 bg-none shadow-none"
+                >
+                  <SearchOutlined />
+                </Button>
               </div>
             )}
             {isMobile && (
@@ -206,97 +203,97 @@ export default function PhoneNotifications() {
               </div>
             )}
 
-<div className="flex gap-2 mb-2 " >
-<span className="whitespace-nowrap rounded-full bg-slate-200 px-2.5 py-1 text-sm ">
-notifications
-</span>
-<span className="whitespace-nowrap rounded-full bg-slate-200 px-2.5 py-1 text-sm ">
-unread
-</span>
-<span className="whitespace-nowrap rounded-full bg-slate-200 px-2.5 py-1 text-sm ">
-filters
-</span>
-              </div>
+            <div className="flex gap-2 mb-2 ">
+              <span className="whitespace-nowrap rounded-full bg-slate-200 px-2.5 py-1 text-sm ">
+                notifications
+              </span>
+              <span className="whitespace-nowrap rounded-full bg-slate-200 px-2.5 py-1 text-sm ">
+                unread
+              </span>
+              <span className="whitespace-nowrap rounded-full bg-slate-200 px-2.5 py-1 text-sm ">
+                filters
+              </span>
+            </div>
             <div className="pb-36">
-            <List
-                  itemLayout="horizontal"
-                  dataSource={notifications}
-                  renderItem={(item) => (
-                    <List.Item
-                      key={item.key}
-                      onClick={() => message.info(`Nội dung: ${item.content}`)}
-                      className="border-b  p-4  cursor-pointer"
-                    >
-                      <List.Item.Meta
-                        title={
-                          <div className="flex justify-between w-full">
-                            <Text strong>{item.title}</Text>
-                            <Text type="secondary">{item.time}</Text>
-                          </div>
-                        }
-                        description={item.content}
-                      />
-                    </List.Item>
-                  )}
-                />
+              <List
+                itemLayout="horizontal"
+                dataSource={notifications}
+                renderItem={(item) => (
+                  <List.Item
+                    key={item.key}
+                    onClick={() => message.info(`Nội dung: ${item.content}`)}
+                    className="border-b  p-4  cursor-pointer"
+                  >
+                    <List.Item.Meta
+                      title={
+                        <div className="flex justify-between w-full">
+                          <Text strong>{item.title}</Text>
+                          <Text type="secondary">{item.time}</Text>
+                        </div>
+                      }
+                      description={item.content}
+                    />
+                  </List.Item>
+                )}
+              />
             </div>
           </Content>
         </Layout>
         <Drawer
-              placement="bottom"
-              closable={false}
-              onClose={() => setDrawerVisible(false)}
-              visible={drawerVisible}
-              height="95%"
-              bodyStyle={{ padding: '16px' }} // Thêm padding cho nội dung
-            >
-              <div className="flex  items-center gap-2">
-                <div className="relative w-full">
-                  <label htmlFor="Search" className="sr-only w-full ">
-                    {' '}
-                    Search{' '}
-                  </label>
+          placement="bottom"
+          closable={false}
+          onClose={() => setDrawerVisible(false)}
+          visible={drawerVisible}
+          height="95%"
+          bodyStyle={{ padding: '16px' }} // Thêm padding cho nội dung
+        >
+          <div className="flex  items-center gap-2">
+            <div className="relative w-full">
+              <label htmlFor="Search" className="sr-only w-full ">
+                {' '}
+                Search{' '}
+              </label>
 
-                  <input
-                    type="text"
-                    id="Search"
-                    placeholder="Search for..."
-                    className="w-full rounded-md border-gray-200  px-2 border py-1 pe-10 shadow-sm sm:text-sm"
-                  />
+              <input
+                type="text"
+                id="Search"
+                placeholder="Search for..."
+                className="w-full rounded-md border-gray-200  px-2 border py-1 pe-10 shadow-sm sm:text-sm"
+              />
 
-                  <span className="absolute inset-y-0 end-0 grid w-10 place-content-center">
-                    <button
-                      type="button"
-                      className="text-gray-600 hover:text-gray-700"
-                    >
-                      <span className="sr-only">Search</span>
-
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        className="size-4"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                        />
-                      </svg>
-                    </button>
-                  </span>
-                </div>
-                <Button
-                  onClick={() => setDrawerVisible(false)}
-                  style={{ width: '20%' }}
-                  className="border-none hover:border-none shadow-none p-0"
+              <span className="absolute inset-y-0 end-0 grid w-10 place-content-center">
+                <button
+                  type="button"
+                  className="text-gray-600 hover:text-gray-700"
                 >
-                  Cancel
-                </Button>
-              </div>
-            </Drawer>
+                  <span className="sr-only">Search</span>
+
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="currentColor"
+                    className="size-4"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                    />
+                  </svg>
+                </button>
+              </span>
+            </div>
+            <Button
+              onClick={() => setDrawerVisible(false)}
+              style={{ width: '20%' }}
+              className="border-none hover:border-none shadow-none p-0"
+            >
+              Cancel
+            </Button>
+          </div>
+        </Drawer>
       </Layout>
     </div>
   )

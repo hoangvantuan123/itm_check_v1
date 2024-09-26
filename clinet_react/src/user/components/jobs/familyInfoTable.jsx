@@ -1,17 +1,69 @@
-import { useState } from 'react';
-import { Form, Table, Input, Button, Checkbox, InputNumber } from 'antd';
+import { useState } from 'react'
+import { Form, Table, Input, Button, Checkbox, InputNumber } from 'antd'
 
 const FamilyInfoTable = () => {
-  
   const initialFamilyMembers = [
-    { key: 0, relationship: 'Bố', name_family: '', birthYear: '', workplace: '', job: '', phoneNumber: '', livingTogether: false },
-    { key: 1, relationship: 'Mẹ', name_family: '', birthYear: '', workplace: '', job: '', phoneNumber: '', livingTogether: false },
-    { key: 2, relationship: 'Vợ/chồng', name_family: '', birthYear: '', workplace: '', job: '', phoneNumber: '', livingTogether: false },
-    { key: 3, relationship: 'Anh/Em/Con', name_family: '', birthYear: '', workplace: '', job: '', phoneNumber: '', livingTogether: false },
-    { key: 4, relationship: 'Anh/Em/Con', name_family: '', birthYear: '', workplace: '', job: '', phoneNumber: '', livingTogether: false },
-    { key: 5, relationship: 'Anh/Em/Con', name_family: '', birthYear: '', workplace: '', job: '', phoneNumber: '', livingTogether: false },
-  ];
-
+    {
+      key: 0,
+      relationship: 'Bố',
+      name_family: '',
+      birthYear: '',
+      workplace: '',
+      job: '',
+      phoneNumber: '',
+      livingTogether: false,
+    },
+    {
+      key: 1,
+      relationship: 'Mẹ',
+      name_family: '',
+      birthYear: '',
+      workplace: '',
+      job: '',
+      phoneNumber: '',
+      livingTogether: false,
+    },
+    {
+      key: 2,
+      relationship: 'Vợ/chồng',
+      name_family: '',
+      birthYear: '',
+      workplace: '',
+      job: '',
+      phoneNumber: '',
+      livingTogether: false,
+    },
+    {
+      key: 3,
+      relationship: 'Anh/Em/Con',
+      name_family: '',
+      birthYear: '',
+      workplace: '',
+      job: '',
+      phoneNumber: '',
+      livingTogether: false,
+    },
+    {
+      key: 4,
+      relationship: 'Anh/Em/Con',
+      name_family: '',
+      birthYear: '',
+      workplace: '',
+      job: '',
+      phoneNumber: '',
+      livingTogether: false,
+    },
+    {
+      key: 5,
+      relationship: 'Anh/Em/Con',
+      name_family: '',
+      birthYear: '',
+      workplace: '',
+      job: '',
+      phoneNumber: '',
+      livingTogether: false,
+    },
+  ]
 
   const columns = [
     {
@@ -23,7 +75,7 @@ const FamilyInfoTable = () => {
       title: 'Họ tên',
       dataIndex: 'name_family',
       render: (text, record, index) => (
-        <Form.Item name={['familyMembers', index, 'name_family']} >
+        <Form.Item name={['familyMembers', index, 'name_family']}>
           <Input className="border-none w-[200px]" />
         </Form.Item>
       ),
@@ -32,7 +84,7 @@ const FamilyInfoTable = () => {
       title: 'Năm sinh',
       dataIndex: 'birthYear',
       render: (text, record, index) => (
-        <Form.Item name={['familyMembers', index, 'birthYear']} >
+        <Form.Item name={['familyMembers', index, 'birthYear']}>
           <InputNumber className="border-none w-28" />
         </Form.Item>
       ),
@@ -68,12 +120,15 @@ const FamilyInfoTable = () => {
       title: 'Sống chung',
       dataIndex: 'livingTogether',
       render: (text, record, index) => (
-        <Form.Item name={['familyMembers', index, 'livingTogether']} valuePropName="checked">
+        <Form.Item
+          name={['familyMembers', index, 'livingTogether']}
+          valuePropName="checked"
+        >
           <Checkbox />
         </Form.Item>
       ),
     },
-  ];
+  ]
 
   return (
     <>
@@ -87,7 +142,7 @@ const FamilyInfoTable = () => {
         scroll={{ x: true }}
       />
     </>
-  );
-};
+  )
+}
 
-export default FamilyInfoTable;
+export default FamilyInfoTable

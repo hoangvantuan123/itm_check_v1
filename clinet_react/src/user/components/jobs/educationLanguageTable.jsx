@@ -1,23 +1,69 @@
-import { useState } from 'react';
-import { Table, Input, DatePicker, InputNumber, Form, Button } from 'antd';
+import { useState } from 'react'
+import { Table, Input, DatePicker, InputNumber, Form, Button } from 'antd'
 
 const EducationLanguageTable = ({ form }) => {
   const [educationData, setEducationData] = useState([
-    { key: 0, schoolName: '', major: '', years: '', startYear: '', endYear: '', grade: '' },
-  ]);
+    {
+      key: 0,
+      schoolName: '',
+      major: '',
+      years: '',
+      startYear: '',
+      endYear: '',
+      grade: '',
+    },
+  ])
 
   const [languageData] = useState([
-    { key: 0, language: 'Tiếng Hàn', certificateType: '', score: '', level: '', startDate: '', endDate: '', note: '' },
-    { key: 1, language: 'Tiếng Anh', certificateType: '', score: '', level: '', startDate: '', endDate: '', note: '' },
-    { key: 2, language: 'Ngôn ngữ khác', certificateType: '', score: '', level: '', startDate: '', endDate: '', note: '' },
-  ]);
+    {
+      key: 0,
+      language: 'Tiếng Hàn',
+      certificateType: '',
+      score: '',
+      level: '',
+      startDate: '',
+      endDate: '',
+      note: '',
+    },
+    {
+      key: 1,
+      language: 'Tiếng Anh',
+      certificateType: '',
+      score: '',
+      level: '',
+      startDate: '',
+      endDate: '',
+      note: '',
+    },
+    {
+      key: 2,
+      language: 'Ngôn ngữ khác',
+      certificateType: '',
+      score: '',
+      level: '',
+      startDate: '',
+      endDate: '',
+      note: '',
+    },
+  ])
 
   // Hàm để thêm hàng giáo dục mới
   const addEducationRow = () => {
-    const newKey = educationData.length > 0 ? educationData[educationData.length - 1].key + 1 : 0;
-    const newRow = { key: newKey, schoolName: '', major: '', years: '', startYear: '', endYear: '', grade: '' };
-    setEducationData([...educationData, newRow]);
-  };
+    const newKey =
+      educationData.length > 0
+        ? educationData[educationData.length - 1].key + 1
+        : 0
+    const newRow = {
+      key: newKey,
+      schoolName: '',
+      major: '',
+      years: '',
+      startYear: '',
+      endYear: '',
+      grade: '',
+    }
+    setEducationData([...educationData, newRow])
+  }
 
   const educationColumns = [
     {
@@ -74,7 +120,7 @@ const EducationLanguageTable = ({ form }) => {
         </Form.Item>
       ),
     },
-  ];
+  ]
 
   const languageColumns = [
     {
@@ -136,7 +182,7 @@ const EducationLanguageTable = ({ form }) => {
         </Form.Item>
       ),
     },
-  ];
+  ]
 
   return (
     <>
@@ -150,7 +196,11 @@ const EducationLanguageTable = ({ form }) => {
         scroll={{ x: true }}
         bordered
       />
-      <Button type="primary" onClick={addEducationRow} style={{ marginTop: 16 }}>
+      <Button
+        type="primary"
+        onClick={addEducationRow}
+        style={{ marginTop: 16 }}
+      >
         Thêm hàng
       </Button>
 
@@ -165,7 +215,7 @@ const EducationLanguageTable = ({ form }) => {
         scroll={{ x: true }}
       />
     </>
-  );
-};
+  )
+}
 
-export default EducationLanguageTable;
+export default EducationLanguageTable

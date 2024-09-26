@@ -46,9 +46,17 @@ export default function TechniqueMenu({ permissions }) {
   const [total, setTotal] = useState(0)
   const [selectedDetails, setSelectedDetails] = useState(null)
   const [actionUsers, setActionUsers] = useState(null)
-  const canCreate = checkActionPermission(permissions, 'setting-2-1-2', 'create');
-  const canEdit = checkActionPermission(permissions, 'setting-2-1-2', 'edit');
-  const canDelete = checkActionPermission(permissions, 'setting-2-1-2', 'delete');
+  const canCreate = checkActionPermission(
+    permissions,
+    'setting-2-1-2',
+    'create',
+  )
+  const canEdit = checkActionPermission(permissions, 'setting-2-1-2', 'edit')
+  const canDelete = checkActionPermission(
+    permissions,
+    'setting-2-1-2',
+    'delete',
+  )
 
   const fetchData = async () => {
     setLoading(true)
@@ -184,17 +192,19 @@ export default function TechniqueMenu({ permissions }) {
         x: 'calc(100px + 50%)',
         y: 650,
       }}
+      size="small"
       rowKey="id"
-      footer={() => (
-        canCreate && (<span
-          type="primary"
-          className="mt-2 max-w-md cursor-pointer text-pretty text-base text-indigo-500"
-          size="large"
-        >
-          Thêm hàng mới
-        </span>)
-
-      )}
+      footer={() =>
+        canCreate && (
+          <span
+            type="primary"
+            className="mt-2 max-w-md cursor-pointer text-pretty text-base text-indigo-500"
+            size="large"
+          >
+            Thêm hàng mới
+          </span>
+        )
+      }
       pagination={{
         current: page,
         pageSize: limit,
@@ -244,16 +254,17 @@ export default function TechniqueMenu({ permissions }) {
         {!isMobile && (
           <span className="inline-flex overflow-hidden">
             <div className="flex items-center gap-2">
-              {canCreate && <Button
-                onClick={openModalAddMenu}
-                type="primary"
-                icon={<PlusOutlined />}
-                className="w-full rounded-lg h-full border-gray-200 bg-indigo-600 text-white shadow-sm text-sm"
-                size="large"
-              >
-                Thêm
-              </Button>}
-
+              {canCreate && (
+                <Button
+                  onClick={openModalAddMenu}
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  className="w-full rounded-lg h-full border-gray-200 bg-indigo-600 text-white shadow-sm text-sm"
+                  size="large"
+                >
+                  Thêm
+                </Button>
+              )}
             </div>
           </span>
         )}

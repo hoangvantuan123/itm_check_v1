@@ -117,7 +117,7 @@ export default function UserProfile({
   fetchDataResAllUser,
   setSelectedGroup,
   permissions,
-  canEdit
+  canEdit,
 }) {
   const [groupStatus, setGroupStatus] = useState([])
   const [loading, setLoading] = useState(true)
@@ -276,7 +276,6 @@ export default function UserProfile({
           </Button>
         ),
       ].filter(Boolean)}
-
     >
       <Row
         justify="start"
@@ -432,8 +431,14 @@ export default function UserProfile({
           {t('personal_settings_key_menu_03.sign_out_of_all_devices')}
         </Button>
       </div>
-      {openShow === 'change-password' && <ChangePass openShow={openShow} handleCancelOpenDrawer={handleCancelOpenDrawer} isOpen={isOpen} setIsOpen={setIsOpen} />}
-
+      {openShow === 'change-password' && (
+        <ChangePass
+          openShow={openShow}
+          handleCancelOpenDrawer={handleCancelOpenDrawer}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+        />
+      )}
     </Drawer>
   )
 }

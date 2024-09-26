@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { Table, Input, Button, Form, DatePicker } from 'antd';
-import moment from 'moment';
+import { useState, useEffect } from 'react'
+import { Table, Input, Button, Form, DatePicker } from 'antd'
+import moment from 'moment'
 
 const WorkExperienceTable = ({ form }) => {
   const initialWorkExperience = {
@@ -13,7 +13,7 @@ const WorkExperienceTable = ({ form }) => {
     tasks: '',
     salary: '',
     reasonForLeaving: '',
-  };
+  }
 
   const initialProject = {
     key: 0,
@@ -23,39 +23,43 @@ const WorkExperienceTable = ({ form }) => {
     task: '',
     duration: '',
     summary: '',
-  };
+  }
 
-  const [workExperiences, setWorkExperiences] = useState([initialWorkExperience]);
-  const [projects, setProjects] = useState([initialProject]);
+  const [workExperiences, setWorkExperiences] = useState([
+    initialWorkExperience,
+  ])
+  const [projects, setProjects] = useState([initialProject])
 
   useEffect(() => {
-    const workExperienceData = form.getFieldValue('workExperiences') || [];
-    const projectData = form.getFieldValue('projects') || [];
+    const workExperienceData = form.getFieldValue('workExperiences') || []
+    const projectData = form.getFieldValue('projects') || []
 
-    if (JSON.stringify(workExperienceData) !== JSON.stringify(workExperiences)) {
-      setWorkExperiences(workExperienceData);
+    if (
+      JSON.stringify(workExperienceData) !== JSON.stringify(workExperiences)
+    ) {
+      setWorkExperiences(workExperienceData)
     }
 
     if (JSON.stringify(projectData) !== JSON.stringify(projects)) {
-      setProjects(projectData);
+      setProjects(projectData)
     }
-  }, [form, workExperiences, projects]);
+  }, [form, workExperiences, projects])
 
   const handleWorkExperienceChange = (key, field, value) => {
-    const updatedWorkExperiences = workExperiences.map(experience =>
-      experience.key === key ? { ...experience, [field]: value } : experience
-    );
-    setWorkExperiences(updatedWorkExperiences);
-    form.setFieldsValue({ workExperiences: updatedWorkExperiences });
-  };
+    const updatedWorkExperiences = workExperiences.map((experience) =>
+      experience.key === key ? { ...experience, [field]: value } : experience,
+    )
+    setWorkExperiences(updatedWorkExperiences)
+    form.setFieldsValue({ workExperiences: updatedWorkExperiences })
+  }
 
   const handleProjectChange = (key, field, value) => {
-    const updatedProjects = projects.map(project =>
-      project.key === key ? { ...project, [field]: value } : project
-    );
-    setProjects(updatedProjects);
-    form.setFieldsValue({ projects: updatedProjects });
-  };
+    const updatedProjects = projects.map((project) =>
+      project.key === key ? { ...project, [field]: value } : project,
+    )
+    setProjects(updatedProjects)
+    form.setFieldsValue({ projects: updatedProjects })
+  }
 
   const addWorkExperience = () => {
     const newExperience = {
@@ -68,11 +72,11 @@ const WorkExperienceTable = ({ form }) => {
       tasks: '',
       salary: '',
       reasonForLeaving: '',
-    };
-    const updatedWorkExperiences = [...workExperiences, newExperience];
-    setWorkExperiences(updatedWorkExperiences);
-    form.setFieldsValue({ workExperiences: updatedWorkExperiences });
-  };
+    }
+    const updatedWorkExperiences = [...workExperiences, newExperience]
+    setWorkExperiences(updatedWorkExperiences)
+    form.setFieldsValue({ workExperiences: updatedWorkExperiences })
+  }
 
   const addProject = () => {
     const newProject = {
@@ -83,23 +87,25 @@ const WorkExperienceTable = ({ form }) => {
       task: '',
       duration: '',
       summary: '',
-    };
-    const updatedProjects = [...projects, newProject];
-    setProjects(updatedProjects);
-    form.setFieldsValue({ projects: updatedProjects });
-  };
+    }
+    const updatedProjects = [...projects, newProject]
+    setProjects(updatedProjects)
+    form.setFieldsValue({ projects: updatedProjects })
+  }
 
   const removeWorkExperience = (key) => {
-    const updatedWorkExperiences = workExperiences.filter(experience => experience.key !== key);
-    setWorkExperiences(updatedWorkExperiences);
-    form.setFieldsValue({ workExperiences: updatedWorkExperiences });
-  };
+    const updatedWorkExperiences = workExperiences.filter(
+      (experience) => experience.key !== key,
+    )
+    setWorkExperiences(updatedWorkExperiences)
+    form.setFieldsValue({ workExperiences: updatedWorkExperiences })
+  }
 
   const removeProject = (key) => {
-    const updatedProjects = projects.filter(project => project.key !== key);
-    setProjects(updatedProjects);
-    form.setFieldsValue({ projects: updatedProjects });
-  };
+    const updatedProjects = projects.filter((project) => project.key !== key)
+    setProjects(updatedProjects)
+    form.setFieldsValue({ projects: updatedProjects })
+  }
 
   const workExperienceColumns = [
     {
@@ -108,7 +114,13 @@ const WorkExperienceTable = ({ form }) => {
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) => handleWorkExperienceChange(record.key, 'companyName', e.target.value)}
+          onChange={(e) =>
+            handleWorkExperienceChange(
+              record.key,
+              'companyName',
+              e.target.value,
+            )
+          }
           className="border-none w-20"
         />
       ),
@@ -119,7 +131,9 @@ const WorkExperienceTable = ({ form }) => {
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) => handleWorkExperienceChange(record.key, 'position', e.target.value)}
+          onChange={(e) =>
+            handleWorkExperienceChange(record.key, 'position', e.target.value)
+          }
           className="border-none w-20"
         />
       ),
@@ -130,7 +144,13 @@ const WorkExperienceTable = ({ form }) => {
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) => handleWorkExperienceChange(record.key, 'employeeScale', e.target.value)}
+          onChange={(e) =>
+            handleWorkExperienceChange(
+              record.key,
+              'employeeScale',
+              e.target.value,
+            )
+          }
           className="border-none w-20"
         />
       ),
@@ -141,7 +161,9 @@ const WorkExperienceTable = ({ form }) => {
       render: (text, record) => (
         <DatePicker
           value={text ? moment(text, 'YYYY') : null}
-          onChange={(date, dateString) => handleWorkExperienceChange(record.key, 'joinYear', dateString)}
+          onChange={(date, dateString) =>
+            handleWorkExperienceChange(record.key, 'joinYear', dateString)
+          }
           picker="year"
           className="border-none w-24"
         />
@@ -153,7 +175,9 @@ const WorkExperienceTable = ({ form }) => {
       render: (text, record) => (
         <DatePicker
           value={text ? moment(text, 'YYYY') : null}
-          onChange={(date, dateString) => handleWorkExperienceChange(record.key, 'leaveYear', dateString)}
+          onChange={(date, dateString) =>
+            handleWorkExperienceChange(record.key, 'leaveYear', dateString)
+          }
           picker="year"
           className="border-none w-24"
         />
@@ -165,7 +189,9 @@ const WorkExperienceTable = ({ form }) => {
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) => handleWorkExperienceChange(record.key, 'tasks', e.target.value)}
+          onChange={(e) =>
+            handleWorkExperienceChange(record.key, 'tasks', e.target.value)
+          }
           className="border-none w-20"
         />
       ),
@@ -176,7 +202,9 @@ const WorkExperienceTable = ({ form }) => {
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) => handleWorkExperienceChange(record.key, 'salary', e.target.value)}
+          onChange={(e) =>
+            handleWorkExperienceChange(record.key, 'salary', e.target.value)
+          }
           className="border-none w-20"
         />
       ),
@@ -187,7 +215,13 @@ const WorkExperienceTable = ({ form }) => {
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) => handleWorkExperienceChange(record.key, 'reasonForLeaving', e.target.value)}
+          onChange={(e) =>
+            handleWorkExperienceChange(
+              record.key,
+              'reasonForLeaving',
+              e.target.value,
+            )
+          }
           className="border-none w-20"
         />
       ),
@@ -200,7 +234,7 @@ const WorkExperienceTable = ({ form }) => {
         </Button>
       ),
     },
-  ];
+  ]
 
   const projectColumns = [
     {
@@ -209,7 +243,9 @@ const WorkExperienceTable = ({ form }) => {
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) => handleProjectChange(record.key, 'projectName', e.target.value)}
+          onChange={(e) =>
+            handleProjectChange(record.key, 'projectName', e.target.value)
+          }
           className="border-none w-20"
         />
       ),
@@ -220,7 +256,9 @@ const WorkExperienceTable = ({ form }) => {
       render: (text, record) => (
         <DatePicker
           value={text ? moment(text) : null}
-          onChange={(date, dateString) => handleProjectChange(record.key, 'startDate', dateString)}
+          onChange={(date, dateString) =>
+            handleProjectChange(record.key, 'startDate', dateString)
+          }
           className="border-none w-28"
         />
       ),
@@ -232,7 +270,9 @@ const WorkExperienceTable = ({ form }) => {
         <DatePicker
           className="border-none w-28"
           value={text ? moment(text) : null}
-          onChange={(date, dateString) => handleProjectChange(record.key, 'endDate', dateString)}
+          onChange={(date, dateString) =>
+            handleProjectChange(record.key, 'endDate', dateString)
+          }
         />
       ),
     },
@@ -242,7 +282,9 @@ const WorkExperienceTable = ({ form }) => {
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) => handleProjectChange(record.key, 'task', e.target.value)}
+          onChange={(e) =>
+            handleProjectChange(record.key, 'task', e.target.value)
+          }
           className="border-none w-20"
         />
       ),
@@ -253,7 +295,9 @@ const WorkExperienceTable = ({ form }) => {
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) => handleProjectChange(record.key, 'duration', e.target.value)}
+          onChange={(e) =>
+            handleProjectChange(record.key, 'duration', e.target.value)
+          }
           className="border-none w-20"
         />
       ),
@@ -264,7 +308,9 @@ const WorkExperienceTable = ({ form }) => {
       render: (text, record) => (
         <Input.TextArea
           value={text}
-          onChange={(e) => handleProjectChange(record.key, 'summary', e.target.value)}
+          onChange={(e) =>
+            handleProjectChange(record.key, 'summary', e.target.value)
+          }
           className="border-none w-20"
         />
       ),
@@ -277,11 +323,13 @@ const WorkExperienceTable = ({ form }) => {
         </Button>
       ),
     },
-  ];
+  ]
 
   return (
     <>
-      <h2 className="text-2xl font-semibold mb-6 mt-5">Tình trạng kinh nghiệm làm việc</h2>
+      <h2 className="text-2xl font-semibold mb-6 mt-5">
+        Tình trạng kinh nghiệm làm việc
+      </h2>
 
       <h3 className="text-xl font-semibold mb-4">Kinh nghiệm làm việc</h3>
       <Form.Item name="workExperiences">
@@ -299,7 +347,9 @@ const WorkExperienceTable = ({ form }) => {
       </Button>
 
       {/* Project Experience Table */}
-      <h3 className="text-xl font-semibold mb-4">Các dự án tham gia (nếu có)</h3>
+      <h3 className="text-xl font-semibold mb-4">
+        Các dự án tham gia (nếu có)
+      </h3>
       <Form.Item name="projects">
         <Table
           dataSource={projects}
@@ -314,7 +364,7 @@ const WorkExperienceTable = ({ form }) => {
         Thêm dự án
       </Button>
     </>
-  );
-};
+  )
+}
 
-export default WorkExperienceTable;
+export default WorkExperienceTable

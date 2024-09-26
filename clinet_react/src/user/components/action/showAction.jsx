@@ -39,14 +39,13 @@ export default function ShowAction({
   actionUsers,
   setActionUsers,
   canDelete,
-  userData
+  userData,
 }) {
   const { t } = useTranslation()
   const [showDropdown, setShowDropdown] = useState(false)
   const [selectedMenuKey, setSelectedMenuKey] = useState('')
 
   const [isOpen, setIsOpen] = useState(false)
-
 
   const handleCancelOpenDrawer = () => {
     setIsOpen(false)
@@ -95,16 +94,18 @@ export default function ShowAction({
       const response = await DeleteMenus(selectedRowKeys)
 
       if (response.success) {
-        message.success(`${t("Xóa thành công các nhóm")}`)
+        message.success(`${t('Xóa thành công các nhóm')}`)
         setSelectedRowKeys([])
         setActionUsers('')
         fetchData()
       } else {
-        message.error(`${t("Xóa thất bại: Yêu cầu không thành công, vui lòng thử lại")}`);
+        message.error(
+          `${t('Xóa thất bại: Yêu cầu không thành công, vui lòng thử lại')}`,
+        )
       }
     } catch (error) {
-      console.error(`${t("Lỗi khi xóa nhóm:")}`, error)
-      message.error(`${t("Có lỗi xảy ra, vui lòng thử lại")}`)
+      console.error(`${t('Lỗi khi xóa nhóm:')}`, error)
+      message.error(`${t('Có lỗi xảy ra, vui lòng thử lại')}`)
     }
   }
   const handleDeleteHrEmployees = async () => {
@@ -112,23 +113,25 @@ export default function ShowAction({
       const response = await DeleteHrEmployeeIds(selectedRowKeys)
 
       if (response.success) {
-        message.success(`${t("Xóa thành công các nhóm")}`);
+        message.success(`${t('Xóa thành công các nhóm')}`)
         setSelectedRowKeys([])
         setActionUsers('')
         fetchDataUser()
       } else {
-        message.error(`${t("Xóa thất bại: Yêu cầu không thành công, vui lòng thử lại")}`);
+        message.error(
+          `${t('Xóa thất bại: Yêu cầu không thành công, vui lòng thử lại')}`,
+        )
       }
     } catch (error) {
-      console.error(`${t("Lỗi khi xóa nhóm:")}`, error)
-      message.error(`${t("Có lỗi xảy ra, vui lòng thử lại")}`)
+      console.error(`${t('Lỗi khi xóa nhóm:')}`, error)
+      message.error(`${t('Có lỗi xảy ra, vui lòng thử lại')}`)
     }
   }
 
   const handleMenuClick = (e) => {
     setSelectedMenuKey(e.key)
     setShowDropdown(false)
-    if(actionUsers === 'actionUsers') {
+    if (actionUsers === 'actionUsers') {
       setIsOpen(true)
     }
 
@@ -169,24 +172,26 @@ export default function ShowAction({
 
   const menu = (
     <Menu onClick={handleMenuClick}>
-      <Menu.Item key="action_show_1">{t("Nhập danh sách")}</Menu.Item>
+      <Menu.Item key="action_show_1">{t('Nhập danh sách')}</Menu.Item>
 
-      <Menu.Item key="action_show_2">{t("Xuất danh sách")}</Menu.Item>
-      <Menu.Item key="action_show_3">{t("Lưu trữ")}</Menu.Item>
-      <Menu.Item key="action_show_4">{t("Bỏ lưu trữ")}</Menu.Item>
-      {actionUsers === "actionUsers" && <Menu.Item key="action_show_6">{t("Đổi mật khẩu")}</Menu.Item>}
+      <Menu.Item key="action_show_2">{t('Xuất danh sách')}</Menu.Item>
+      <Menu.Item key="action_show_3">{t('Lưu trữ')}</Menu.Item>
+      <Menu.Item key="action_show_4">{t('Bỏ lưu trữ')}</Menu.Item>
+      {actionUsers === 'actionUsers' && (
+        <Menu.Item key="action_show_6">{t('Đổi mật khẩu')}</Menu.Item>
+      )}
 
-      {canDelete && <Menu.Item key="action_show_5">
-        {' '}
-        <span className="w-full text-red-700">{t("Xóa")}</span>
-      </Menu.Item>}
-
+      {canDelete && (
+        <Menu.Item key="action_show_5">
+          {' '}
+          <span className="w-full text-red-700">{t('Xóa')}</span>
+        </Menu.Item>
+      )}
     </Menu>
   )
 
   return (
     <>
-
       <Dropdown
         overlay={menu}
         trigger={['click']}
@@ -198,11 +203,18 @@ export default function ShowAction({
       >
         <button className="border-[1.3px] border-[#d9d9d9] rounded-lg p-[0.6rem] w-auto flex items-center space-x-2 bg-white hover:bg-gray-100">
           <SettingIcon />
-          <span className="text-gray-500">{t("Actions")}</span>
+          <span className="text-gray-500">{t('Actions')}</span>
         </button>
       </Dropdown>
-      {actionUsers === "actionUsers" && <ChangePassSelect userData={userData}  selectedRowKeys={selectedRowKeys}  handleCancelOpenDrawer={handleCancelOpenDrawer} isOpen={isOpen} setIsOpen={setIsOpen} />}
-
+      {actionUsers === 'actionUsers' && (
+        <ChangePassSelect
+          userData={userData}
+          selectedRowKeys={selectedRowKeys}
+          handleCancelOpenDrawer={handleCancelOpenDrawer}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+        />
+      )}
     </>
   )
 }

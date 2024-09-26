@@ -1,14 +1,29 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet'
-import { Input, Space, Table, Typography, message, Button, Tabs, Drawer, Form } from 'antd'
+import {
+  Input,
+  Space,
+  Table,
+  Typography,
+  message,
+  Button,
+  Tabs,
+  Drawer,
+  Form,
+} from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 const { Search } = Input
 const { Title, Text } = Typography
 const { TabPane } = Tabs
 import 'moment/locale/vi'
 
-export default function ChangePass({ setIsOpen, isOpen, handleCancelOpenDrawer, openShow }) {
+export default function ChangePass({
+  setIsOpen,
+  isOpen,
+  handleCancelOpenDrawer,
+  openShow,
+}) {
   const page = 1
   const pageSize = 100
   const { t } = useTranslation()
@@ -27,11 +42,8 @@ export default function ChangePass({ setIsOpen, isOpen, handleCancelOpenDrawer, 
     }
   }, [])
 
-
-
   const handleFinish = async (values) => {
     message.success(t('Chưa tạo đầu API'))
-
   }
   return (
     <Drawer
@@ -55,14 +67,15 @@ export default function ChangePass({ setIsOpen, isOpen, handleCancelOpenDrawer, 
           onClick={() => form.submit()}
         >
           {t('Lưu')}
-        </Button>
-        ,
+        </Button>,
       ].filter(Boolean)}
-
     >
-
-      <Form form={form} onFinish={handleFinish} layout="vertical" name="change_password">
-
+      <Form
+        form={form}
+        onFinish={handleFinish}
+        layout="vertical"
+        name="change_password"
+      >
         <Form.Item
           label={t('personal_settings_key_menu_03.label_new_pass')}
           name="new_password"
@@ -112,7 +125,6 @@ export default function ChangePass({ setIsOpen, isOpen, handleCancelOpenDrawer, 
           />
         </Form.Item>
       </Form>
-
     </Drawer>
   )
 }

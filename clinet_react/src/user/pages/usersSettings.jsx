@@ -63,11 +63,10 @@ export default function UsersSettings({ permissions }) {
   const [limit, setLimit] = useState(10)
   const [total, setTotal] = useState(0)
   const [actionUsers, setActionUsers] = useState(null)
-  const canCreate = checkActionPermission(permissions, 'setting-1-2', 'create');
-  const canEdit = checkActionPermission(permissions, 'setting-1-2', 'edit');
-  const canDelete = checkActionPermission(permissions, 'setting-1-2', 'delete');
-  const canView = checkActionPermission(permissions, 'setting-1-2', 'view');
-
+  const canCreate = checkActionPermission(permissions, 'setting-1-2', 'create')
+  const canEdit = checkActionPermission(permissions, 'setting-1-2', 'edit')
+  const canDelete = checkActionPermission(permissions, 'setting-1-2', 'delete')
+  const canView = checkActionPermission(permissions, 'setting-1-2', 'view')
 
   const handleOnClickAction = () => {
     setActionUsers('actionUsers')
@@ -304,7 +303,7 @@ export default function UsersSettings({ permissions }) {
             displayText = `${t('Chưa kết nối')}`
           } else {
             color = 'default'
-            displayText =  `${t('Chưa xác định')}`
+            displayText = `${t('Chưa xác định')}`
           }
 
           return (
@@ -313,7 +312,7 @@ export default function UsersSettings({ permissions }) {
               key={active}
               className="p-1 font-bold rounded-lg px-6"
             >
-              {displayText} 
+              {displayText}
             </Tag>
           )
         },
@@ -336,17 +335,19 @@ export default function UsersSettings({ permissions }) {
             },
           })}
           loading={loading}
-          footer={() => (
-            canCreate && (<span
-              type="primary"
-              className="mt-2 max-w-md cursor-pointer text-pretty text-base text-indigo-500"
-              size="large"
-              onClick={handleAddRow}
-            >
-              Thêm hàng mới
-            </span>)
-    
-          )}
+          footer={() =>
+            canCreate && (
+              <span
+                type="primary"
+                className="mt-2 max-w-md cursor-pointer text-pretty text-base text-indigo-500"
+                size="large"
+                onClick={handleAddRow}
+              >
+                Thêm hàng mới
+              </span>
+            )
+          }
+          size="small"
           pagination={{
             current: page,
             pageSize: limit,
@@ -371,19 +372,15 @@ export default function UsersSettings({ permissions }) {
       <Row gutter={16} className="bg-slate-50 pb-60">
         {userData.map((user) => (
           <Col span={24} key={user.login} style={{ marginBottom: 16 }}>
-            <Card
-              title={user.name}
-              
-              onClick={() => showUserForm(user)}
-            >
+            <Card title={user.name} onClick={() => showUserForm(user)}>
               <p>
-                <strong>{t("Đăng nhập")}:</strong> {user.login}
+                <strong>{t('Đăng nhập')}:</strong> {user.login}
               </p>
               <p>
-                <strong>{t("Ngôn ngữ")}:</strong> {user.language}
+                <strong>{t('Ngôn ngữ')}:</strong> {user.language}
               </p>
               <p>
-                <strong>{t("Trạng thái")}:</strong> {user.status}
+                <strong>{t('Trạng thái')}:</strong> {user.status}
               </p>
             </Card>
           </Col>
@@ -420,10 +417,10 @@ export default function UsersSettings({ permissions }) {
       <div className="h-full">
         <div className="h-full">
           <div>
-            {isMobile  && (
+            {isMobile && (
               <div className=" flex items-center justify-end">
                 <PhoneSettingAction
-                canCreate={canCreate}
+                  canCreate={canCreate}
                   handleMenuShowActionClick={handleMenuShowActionClick}
                   showSttingActionDropdown={showSttingActionDropdown}
                   setShowSettingActionDropdown={setShowSettingActionDropdown}
@@ -440,7 +437,7 @@ export default function UsersSettings({ permissions }) {
 
             <div className="p-2 flex items-center justify-between">
               <h1 className="text-xl font-bold text-gray-900 sm:text-xl ">
-               {t(" Người dùng")}
+                {t(' Người dùng')}
               </h1>
 
               {!isMobile && (
@@ -454,11 +451,9 @@ export default function UsersSettings({ permissions }) {
                         className="w-full rounded-lg h-full border-gray-200 bg-indigo-600 text-white shadow-sm text-sm"
                         size="large"
                       >
-                        {t("Thêm")}
+                        {t('Thêm')}
                       </Button>
                     )}
-
-
                   </div>
                 </span>
               )}
@@ -470,8 +465,6 @@ export default function UsersSettings({ permissions }) {
                   fetchData={fetchData}
                 />
               )}
-
-
             </div>
             {!isMobile && (
               <div className="p-2 mb flex items-center justify-between">
@@ -482,14 +475,11 @@ export default function UsersSettings({ permissions }) {
                       className=" w-28"
                       size="large"
                     >
-                      <Option value="1">{t("Table")}</Option>
-                      <Option value="2">{t("Grid")}</Option>
-                      <Option value="3">{t("List")}</Option>
+                      <Option value="1">{t('Table')}</Option>
+                      <Option value="2">{t('Grid')}</Option>
+                      <Option value="3">{t('List')}</Option>
                     </Select>
-                    {canCreate && (
-                      <ImportAction />
-                    )}
-
+                    {canCreate && <ImportAction />}
 
                     {selectedRowKeys != null && selectedRowKeys.length > 0 && (
                       <>
@@ -514,7 +504,7 @@ export default function UsersSettings({ permissions }) {
                   onClick={openModal}
                 >
                   <SearchOutlined />
-                  <span className="text-gray-500">{t("Tìm kiếm")}</span>
+                  <span className="text-gray-500">{t('Tìm kiếm')}</span>
                 </button>
                 <Search isOpen={isModalOpen} onClose={closeModal} />
               </div>
@@ -527,7 +517,7 @@ export default function UsersSettings({ permissions }) {
                   onClick={openModal}
                 >
                   <SearchOutlined />
-                  <span className="text-gray-500">{t("Tìm kiếm")}</span>
+                  <span className="text-gray-500">{t('Tìm kiếm')}</span>
                 </button>
                 <Search isOpen={isModalOpen} onClose={closeModal} />
               </div>
@@ -546,7 +536,7 @@ export default function UsersSettings({ permissions }) {
                   className=" pb-32 scroll-container h-full overflow-auto"
                   onClick={(e) => handleOnClickGroupID(e)}
                 >
-                  <Menu.Item key="all">{t("All")}</Menu.Item>
+                  <Menu.Item key="all">{t('All')}</Menu.Item>
                   {groupsData.map((group) => (
                     <Menu.Item key={group.id}>{group.name}</Menu.Item>
                   ))}

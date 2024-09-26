@@ -170,7 +170,7 @@ export default function Profile({ permissions }) {
   const userNameLogin = userFromLocalStorage?.login || 'none'
   const avatar = userFromLocalStorage?.avatar || DefaultAvatar
   const [form] = Form.useForm()
-  const canView = checkActionPermission(permissions, 'setting', 'view');
+  const canView = checkActionPermission(permissions, 'setting', 'view')
 
   const dispatch = useDispatch()
   const userId = userFromLocalStorage.id
@@ -212,9 +212,11 @@ export default function Profile({ permissions }) {
         <div className="h-full p-3 overflow-auto scrollable-content">
           <header className="flex items-center justify-end  mb-5">
             <div className="flex items-center gap-4">
-              {canView === true && <button type="button" onClick={handleSettingsClick}>
-                <SettingIcon />
-              </button>}
+              {canView === true && (
+                <button type="button" onClick={handleSettingsClick}>
+                  <SettingIcon />
+                </button>
+              )}
 
               <Dropdown overlay={menu} trigger={['click']}>
                 <button type="button">
@@ -286,7 +288,7 @@ export default function Profile({ permissions }) {
           )}
           {selectedMenuKey === '2' && <KeyMenu02 />}
           {selectedMenuKey === '3' && <KeyMenu03 />}
-          {selectedMenuKey === '4'&& canView && <PhoneGeneralSettings />}
+          {selectedMenuKey === '4' && canView && <PhoneGeneralSettings />}
         </div>
       </div>
     </div>

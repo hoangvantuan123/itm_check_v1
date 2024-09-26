@@ -30,6 +30,8 @@
     "i18next": "^23.8.0",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
+    "jspdf": "^2.5.2",
+    "jspdf-autotable": "^3.8.3",
     "jwt-decode": "^4.0.0",
     "libphonenumber-js": "^1.11.9",
     "lodash": "^4.17.21",

@@ -67,6 +67,7 @@ export default function AddMenu({ isOpen, onClose, fetchTableData }) {
         data.parent_id,
         data.key,
       )
+      console.log("result" , result)
       if (result.success) {
         message.success(t('Tạo menu thành công'))
         fetchTableData()

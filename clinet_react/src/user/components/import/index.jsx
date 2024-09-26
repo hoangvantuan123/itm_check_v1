@@ -14,7 +14,7 @@ import {
   Row,
   Col,
   Dropdown,
-  Spin
+  Spin,
 } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import * as XLSX from 'xlsx'
@@ -27,219 +27,218 @@ const { Option } = Select
 
 const DataTable = {
   name: 'Bảng Nhóm',
-  "columns": [
+  columns: [
     {
-      "name": "id",
-      "type": "integer",
-      "isNullable": "NO",
-      "default": "nextval('base_import_id_seq'::regclass)"
+      name: 'id',
+      type: 'integer',
+      isNullable: 'NO',
+      default: "nextval('base_import_id_seq'::regclass)",
     },
     {
-      "name": "name",
-      "type": "character varying",
-      "isNullable": "NO",
-      "default": null
+      name: 'name',
+      type: 'character varying',
+      isNullable: 'NO',
+      default: null,
     },
     {
-      "name": "job_title",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'job_title',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "work_phone",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'work_phone',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "mobile_phone",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'mobile_phone',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "work_email",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'work_email',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "private_street",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'private_street',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "private_street2",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'private_street2',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "private_city",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'private_city',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "private_zip",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'private_zip',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "private_phone",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'private_phone',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "private_email",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'private_email',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "lang",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'lang',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "gender",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'gender',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "marital",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'marital',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "spouse_complete_name",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'spouse_complete_name',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "place_of_birth",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'place_of_birth',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "ssnid",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'ssnid',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "sinid",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'sinid',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "identification_id",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'identification_id',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "passport_id",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'passport_id',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "permit_no",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'permit_no',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "visa_no",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'visa_no',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "certificate",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'certificate',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "study_field",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'study_field',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "study_school",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'study_school',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "emergency_contact",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'emergency_contact',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "emergency_phone",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'emergency_phone',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "employee_type",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'employee_type',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "employee_id",
-      "type": "character varying",
-      "isNullable": "NO",
-      "default": null
+      name: 'employee_id',
+      type: 'character varying',
+      isNullable: 'NO',
+      default: null,
     },
     {
-      "name": "pin",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'pin',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "private_car_plate",
-      "type": "character varying",
-      "isNullable": "YES",
-      "default": null
+      name: 'private_car_plate',
+      type: 'character varying',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "spouse_birthdate",
-      "type": "timestamp without time zone",
-      "isNullable": "YES",
-      "default": null
+      name: 'spouse_birthdate',
+      type: 'timestamp without time zone',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "birthday",
-      "type": "timestamp without time zone",
-      "isNullable": "YES",
-      "default": null
+      name: 'birthday',
+      type: 'timestamp without time zone',
+      isNullable: 'YES',
+      default: null,
     },
     {
-      "name": "visa_expire",
-      "type": "timestamp without time zone",
-      "isNullable": "YES",
-      "default": null
-    }
-  ]
-
+      name: 'visa_expire',
+      type: 'timestamp without time zone',
+      isNullable: 'YES',
+      default: null,
+    },
+  ],
 }
 
 const FileIcon = () => {
@@ -269,62 +268,61 @@ export default function ImportForm({ isOpen, onClose }) {
   const [selectedColumns, setSelectedColumns] = useState([])
   const [selectedTable, setSelectedTable] = useState(null)
   const [connectValues, setConnectValues] = useState({})
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
   const handleCheck = async () => {
     if (!selectedTable || Object.keys(connectValues).length === 0) {
-      message.error(t('Vui lòng chọn bảng và ít nhất một cột để kiểm tra'));
-      return;
+      message.error(t('Vui lòng chọn bảng và ít nhất một cột để kiểm tra'))
+      return
     }
 
     // Hiển thị loading và khóa giao diện
-    setIsLoading(true);
+    setIsLoading(true)
 
     try {
       // Chuẩn bị dữ liệu ánh xạ dựa trên cột liên kết
       const mappedData = selectedTable.data.map((row) => {
-        const newRow = {};
+        const newRow = {}
         selectedTable.columns.forEach((col) => {
-          const mappedColumn = connectValues[col];
+          const mappedColumn = connectValues[col]
           if (mappedColumn) {
-            newRow[mappedColumn] = row[col];
+            newRow[mappedColumn] = row[col]
           }
-        });
-        return newRow;
-      });
+        })
+        return newRow
+      })
 
-      const batchSize = 1000;
-      const totalRows = mappedData.length;
-      const promises = [];
+      const batchSize = 1000
+      const totalRows = mappedData.length
+      const promises = []
 
       for (let i = 0; i < totalRows; i += batchSize) {
-        const batch = mappedData.slice(i, i + batchSize);
+        const batch = mappedData.slice(i, i + batchSize)
 
         const data = {
           method: 'execute_import',
           model: 'base_import.import',
           data: batch,
-        };
+        }
 
-        promises.push(importData(data));
+        promises.push(importData(data))
       }
 
-      await Promise.all(promises);
+      await Promise.all(promises)
 
-      message.success(t('Dữ liệu đã được nhập thành công!'));
+      message.success(t('Dữ liệu đã được nhập thành công!'))
     } catch (error) {
-      message.error(t('Đã xảy ra lỗi trong quá trình nhập dữ liệu'));
+      message.error(t('Đã xảy ra lỗi trong quá trình nhập dữ liệu'))
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
-
+  }
 
   const handleFileChange = (info) => {
     const { file, fileList } = info
     const isCsvOrXlsx =
       file.type === 'text/csv' ||
       file.type ===
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 
     if (!isCsvOrXlsx) {
       message.error(t('Chỉ hỗ trợ tệp CSV hoặc XLSX'))
@@ -465,13 +463,13 @@ export default function ImportForm({ isOpen, onClose }) {
   }, [isOpen])
   const dataSource = selectedTable
     ? selectedTable.columns.map((col) => ({
-      key: col,
-      name: col,
-      connect: connectValues[col] || '',
-      note: `Ghi chú cho ${col}`,
-      span:
-        selectedTable.data.length > 0 ? selectedTable.data[0][col] || '' : '',
-    }))
+        key: col,
+        name: col,
+        connect: connectValues[col] || '',
+        note: `Ghi chú cho ${col}`,
+        span:
+          selectedTable.data.length > 0 ? selectedTable.data[0][col] || '' : '',
+      }))
     : []
   return (
     <Drawer
@@ -640,85 +638,89 @@ export default function ImportForm({ isOpen, onClose }) {
           </>
         ))}
 
-      <Spin spinning={isLoading}> {tables.length > 0 && (
-        <Row
-          gutter={[16, 16]}
-          className="  h-[calc(100vh-120px)] overflow-hidden"
-        >
-          <Col xs={24} sm={4} className=" border-r">
-            <div>
-              <h3 className="text-base font-semibold">{t('Tệp đã nhập')}</h3>
-              <div className="mt-4 mb-3">
-                <p className=" text-base flex items-center gap-2 cursor-pointer hover:text-slate-950">
-                  {' '}
-                  {fileName}
-                </p>
-              </div>
-              <p>
-                {' '}
-                {t('Dòng đầu tiên hàng dữ liệu sẽ được dùng để làm phân trang')}
-              </p>
-              <div className="mt-5">
-                <Select
-                  showSearch
-                  placeholder={t('Bảng tính')}
-                  optionFilterProp="children"
-                  className="w-full"
-                  size="large"
-                  onSelect={(value) => {
-                    const selectedTable = tables.find(
-                      (table) => table.name === value,
-                    )
-                    setSelectedTable(selectedTable)
-                    setSelectedColumns([])
-                  }}
-                >
-                  {tables.map((table, index) => (
-                    <Option key={index} value={table.name}>
-                      {table.name}
-                    </Option>
-                  ))}
-                </Select>
-              </div>
-              <Button
-                size="large"
-                className="w-full mt-5 border-gray-300 bg-blue-500 text-white text-sm hover:bg-blue-600"
-              >
-                {t('Nhập')}
-              </Button>
-              <Button
-                size="large"
-                onClick={handleCheck}
-                className="w-full mt-5 border-gray-300 text-black   text-sm hover:bg-gray-600"
-              >
-                {t('Kiểm tra')}
-              </Button>
-            </div>
-          </Col>
-          <Col xs={24} sm={20}>
-            <div className="h-screen overflow-auto">
-              {selectedTable && (
-                <div
-                  style={{
-                    maxHeight: 'calc(100vh - 120px)',
-                    overflowY: 'auto',
-                  }}
-                >
-                  <Table
-                    dataSource={dataSource}
-                    columns={columns}
-                    pagination={false}
-                    bordered
-                    scroll={{ y: 'calc(100vh - 200px)', x: 'max-content' }}
-                    className="cursor-pointer"
-                  />
+      <Spin spinning={isLoading}>
+        {' '}
+        {tables.length > 0 && (
+          <Row
+            gutter={[16, 16]}
+            className="  h-[calc(100vh-120px)] overflow-hidden"
+          >
+            <Col xs={24} sm={4} className=" border-r">
+              <div>
+                <h3 className="text-base font-semibold">{t('Tệp đã nhập')}</h3>
+                <div className="mt-4 mb-3">
+                  <p className=" text-base flex items-center gap-2 cursor-pointer hover:text-slate-950">
+                    {' '}
+                    {fileName}
+                  </p>
                 </div>
-              )}
-            </div>
-          </Col>
-        </Row>
-      )}</Spin>
-
+                <p>
+                  {' '}
+                  {t(
+                    'Dòng đầu tiên hàng dữ liệu sẽ được dùng để làm phân trang',
+                  )}
+                </p>
+                <div className="mt-5">
+                  <Select
+                    showSearch
+                    placeholder={t('Bảng tính')}
+                    optionFilterProp="children"
+                    className="w-full"
+                    size="large"
+                    onSelect={(value) => {
+                      const selectedTable = tables.find(
+                        (table) => table.name === value,
+                      )
+                      setSelectedTable(selectedTable)
+                      setSelectedColumns([])
+                    }}
+                  >
+                    {tables.map((table, index) => (
+                      <Option key={index} value={table.name}>
+                        {table.name}
+                      </Option>
+                    ))}
+                  </Select>
+                </div>
+                <Button
+                  size="large"
+                  className="w-full mt-5 border-gray-300 bg-blue-500 text-white text-sm hover:bg-blue-600"
+                >
+                  {t('Nhập')}
+                </Button>
+                <Button
+                  size="large"
+                  onClick={handleCheck}
+                  className="w-full mt-5 border-gray-300 text-black   text-sm hover:bg-gray-600"
+                >
+                  {t('Kiểm tra')}
+                </Button>
+              </div>
+            </Col>
+            <Col xs={24} sm={20}>
+              <div className="h-screen overflow-auto">
+                {selectedTable && (
+                  <div
+                    style={{
+                      maxHeight: 'calc(100vh - 120px)',
+                      overflowY: 'auto',
+                    }}
+                  >
+                    <Table
+                      dataSource={dataSource}
+                      columns={columns}
+                      pagination={false}
+                      bordered
+                      scroll={{ y: 'calc(100vh - 200px)', x: 'max-content' }}
+                      className="cursor-pointer"
+                    />
+                  </div>
+                )}
+              </div>
+            </Col>
+          </Row>
+        )}
+      </Spin>
     </Drawer>
   )
 }

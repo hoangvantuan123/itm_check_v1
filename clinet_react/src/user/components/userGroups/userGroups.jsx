@@ -42,7 +42,7 @@ export default function UserGroupsDrawer({
   handleCancel,
   fetchDataGroups,
   canEdit,
-  canDelete
+  canDelete,
 }) {
   const { t } = useTranslation()
   const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
@@ -80,7 +80,6 @@ export default function UserGroupsDrawer({
       value: value,
     }
     if (canEdit) {
-
       PutPermissionsID(updateData)
       setDataPermissionsMenu(newData)
     }
@@ -522,21 +521,26 @@ export default function UserGroupsDrawer({
         <Title level={5}>{t('Thông tin nhóm')}</Title>
 
         {/* Thông tin cơ bản */}
-          <Form.Item
-            label={t('Tên nhóm')}
-            name="name"
-            rules={[{ required: true, message: t('Vui lòng nhập tên nhóm') }]}
-            style={{ textAlign: 'left' }}
-          >
-            <Input size="large" placeholder={t('Tên nhóm')} disabled={!canEdit} />
-          </Form.Item>
-          <Form.Item
-            label={t('Ghi chú')}
-            name="comment"
-            style={{ textAlign: 'left' }}
-          >
-            <TextArea rows={4} size="large" placeholder={t('Ghi chú')} disabled={!canEdit} />
-          </Form.Item>
+        <Form.Item
+          label={t('Tên nhóm')}
+          name="name"
+          rules={[{ required: true, message: t('Vui lòng nhập tên nhóm') }]}
+          style={{ textAlign: 'left' }}
+        >
+          <Input size="large" placeholder={t('Tên nhóm')} disabled={!canEdit} />
+        </Form.Item>
+        <Form.Item
+          label={t('Ghi chú')}
+          name="comment"
+          style={{ textAlign: 'left' }}
+        >
+          <TextArea
+            rows={4}
+            size="large"
+            placeholder={t('Ghi chú')}
+            disabled={!canEdit}
+          />
+        </Form.Item>
 
         <div className="divide-y divide-gray-100 rounded-xl border border-gray-100 bg-white">
           <details
@@ -565,19 +569,22 @@ export default function UserGroupsDrawer({
             </summary>
 
             <div>
-              {selectedRowKeys != null && selectedRowKeys.length > 0 && canDelete && canEdit && (
-                <>
-                  <span
-                    className="inline-flex gap-2 mt-3 rounded bg-red-100 hover:bg-red-200 p-1 text-red-600 cursor-pointer px-4"
-                    onClick={() => {
-                      handleDeleteGroupsUser()
-                    }}
-                  >
-                    <DeleteOutlined className=" text-lg" />
-                    Xoá
-                  </span>
-                </>
-              )}
+              {selectedRowKeys != null &&
+                selectedRowKeys.length > 0 &&
+                canDelete &&
+                canEdit && (
+                  <>
+                    <span
+                      className="inline-flex gap-2 mt-3 rounded bg-red-100 hover:bg-red-200 p-1 text-red-600 cursor-pointer px-4"
+                      onClick={() => {
+                        handleDeleteGroupsUser()
+                      }}
+                    >
+                      <DeleteOutlined className=" text-lg" />
+                      Xoá
+                    </span>
+                  </>
+                )}
               <Table
                 rowSelection={rowSelection}
                 className="mt-3 cursor-pointer"
@@ -586,7 +593,7 @@ export default function UserGroupsDrawer({
                 rowKey="id"
                 bordered
                 loading={loading}
-                footer={() => (
+                footer={() =>
                   canEdit && (
                     <span
                       type="primary"
@@ -598,7 +605,7 @@ export default function UserGroupsDrawer({
                       Thêm hàng mới
                     </span>
                   )
-                )}
+                }
                 scroll={{ x: 'max-content', y: 400 }}
                 pagination={{
                   current: page,
@@ -637,19 +644,22 @@ export default function UserGroupsDrawer({
                 </svg>
               </span>
             </summary>
-            {selectedRowKeysPM != null && selectedRowKeysPM.length > 0 && canDelete && canEdit && (
-              <>
-                <span
-                  className="inline-flex gap-2 mt-3 rounded bg-red-100 hover:bg-red-200 p-1 text-red-600 cursor-pointer px-4"
-                  onClick={() => {
-                    handleDeletePermissionsMenu()
-                  }}
-                >
-                  <DeleteOutlined className=" text-lg" />
-                  Xoá
-                </span>
-              </>
-            )}
+            {selectedRowKeysPM != null &&
+              selectedRowKeysPM.length > 0 &&
+              canDelete &&
+              canEdit && (
+                <>
+                  <span
+                    className="inline-flex gap-2 mt-3 rounded bg-red-100 hover:bg-red-200 p-1 text-red-600 cursor-pointer px-4"
+                    onClick={() => {
+                      handleDeletePermissionsMenu()
+                    }}
+                  >
+                    <DeleteOutlined className=" text-lg" />
+                    Xoá
+                  </span>
+                </>
+              )}
             <Table
               rowSelection={rowSelectionPM}
               className="mt-3 cursor-pointer"
@@ -658,18 +668,19 @@ export default function UserGroupsDrawer({
               rowKey="id"
               bordered
               loading={loading}
-              footer={() => (
-                canEdit && (<span
-                  type="primary"
-                  icon={<PlusOutlined />}
-                  onClick={handleAddRowListMenu}
-                  className="mt-2 max-w-md cursor-pointer text-pretty text-base text-indigo-500 "
-                  size="large"
-                >
-                  Thêm hàng mới
-                </span>)
-
-              )}
+              footer={() =>
+                canEdit && (
+                  <span
+                    type="primary"
+                    icon={<PlusOutlined />}
+                    onClick={handleAddRowListMenu}
+                    className="mt-2 max-w-md cursor-pointer text-pretty text-base text-indigo-500 "
+                    size="large"
+                  >
+                    Thêm hàng mới
+                  </span>
+                )
+              }
               scroll={{ x: 'max-content' }}
               pagination={{
                 current: pagePermissionsMenu,
