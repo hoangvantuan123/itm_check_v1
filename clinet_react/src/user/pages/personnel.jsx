@@ -27,7 +27,6 @@ import { PlusOutlined, UserOutlined } from '@ant-design/icons'
 import { SearchOutlined } from '@ant-design/icons'
 import Search from '../components/search'
 import ShowAction from '../components/action/showAction'
-import FieldAction from '../components/action/fieldsAction'
 import PhoneSettingAction from '../components/phone/usersSettingAction'
 import AddPersonnel from '../components/add/addPersonnel'
 import UserProfile from '../components/hr/viewUserProfile'
@@ -421,8 +420,6 @@ export default function Personnel() {
                         />
                       </>
                     )}
-
-                    <FieldAction />
                   </div>
                 </span>
                 <button

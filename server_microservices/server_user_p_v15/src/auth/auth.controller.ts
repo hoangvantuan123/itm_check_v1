@@ -17,7 +17,7 @@ import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { jwtConstants } from 'src/config/config';
 
-@Controller('api/p')
+@Controller('api/sv1')
 export class AppController {
   constructor(
     private readonly appService: AppService,

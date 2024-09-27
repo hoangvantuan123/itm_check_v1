@@ -18,7 +18,7 @@ import * as jwt from 'jsonwebtoken';
 import { HrEmployeeService } from '../services/hr_employee.services';
 import { HrEmployeeEntity } from '../entity/hr_employee.entity';
 
-@Controller('api/p')
+@Controller('api/sv1')
 export class HrEmployeeController{
     constructor(private readonly hrEmployeeService: HrEmployeeService) { }
 

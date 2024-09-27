@@ -17,7 +17,7 @@ import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { DepartmentEntity } from '../entity/hr_department.entity';
 import { HrDepartmentService } from '../services/hr_department.services';
-@Controller('api/p')
+@Controller('api/sv1')
 export class HrDepartmentController{
     constructor(private readonly hrDepartmentService: HrDepartmentService) { }
 

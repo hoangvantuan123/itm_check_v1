@@ -19,7 +19,7 @@ import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { CreateResGroupsDto } from '../dto/res_groups.dto';
 
-@Controller('api/p')
+@Controller('api/sv1')
 export class ResGroupsController {
   constructor(private readonly resGroupsService: ResGroupsService) {}
 

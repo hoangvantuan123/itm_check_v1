@@ -6,6 +6,7 @@ import { DeleteResGroups } from '../../../features/resGroups/deleteResGroups'
 import { DeleteResUsers } from '../../../features/resUsers/deleteResUsers'
 import { DeleteMenus } from '../../../features/menu/deleteMenu'
 import { DeleteHrEmployeeIds } from '../../../features/hr/deleteHrEmployeeIds'
+import { DeleteHrInfoIds } from '../../../features/hrRecruitment/deleteHrInfoIds'
 import ChangePassSelect from '../profile/changePassSelect'
 const { Title } = Typography
 const SettingIcon = () => {
@@ -84,7 +85,6 @@ export default function ShowAction({
         )
       }
     } catch (error) {
-      console.error('Lỗi khi xóa tài khoản:', error)
       message.error('Có lỗi xảy ra, vui lòng thử lại')
     }
   }
@@ -127,6 +127,24 @@ export default function ShowAction({
       message.error(`${t('Có lỗi xảy ra, vui lòng thử lại')}`)
     }
   }
+  const handleDeleteHrInfoIds = async () => {
+    try {
+      const response = await DeleteHrInfoIds(selectedRowKeys)
+
+      if (response.success) {
+        message.success(`${t('Xóa thành công các nhóm')}`)
+        setSelectedRowKeys([])
+        setActionUsers('')
+        fetchDataUser()
+      } else {
+        message.error(
+          `${t('Xóa thất bại: Yêu cầu không thành công, vui lòng thử lại')}`,
+        )
+      }
+    } catch (error) {
+      message.error(`${t('Có lỗi xảy ra, vui lòng thử lại')}`)
+    }
+  }
 
   const handleMenuClick = (e) => {
     setSelectedMenuKey(e.key)
@@ -163,6 +181,9 @@ export default function ShowAction({
           break
         case 'actionPersonnel':
           Modal.confirm({ ...modalConfig, onOk: handleDeleteHrEmployees })
+
+        case 'actionHrInfoIds':
+          Modal.confirm({ ...modalConfig, onOk: handleDeleteHrInfoIds })
           break
         default:
           break

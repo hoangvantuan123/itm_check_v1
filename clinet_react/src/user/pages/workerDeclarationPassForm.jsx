@@ -4,18 +4,26 @@ import { Form, Input, Button, Typography, Dropdown, Menu, Spin } from 'antd'
 import Logo from '../../assets/f_logo.png'
 const { Title, Text } = Typography
 import { useTranslation } from 'react-i18next'
+
+// Hàm mã hóa Base64
+const encodePhoneNumber = (phoneNumber) => {
+  return btoa(phoneNumber) // btoa() dùng để mã hóa Base64
+}
+
 const WorkerDeclarationPassForm = () => {
   const [phoneNumber, setPhoneNumber] = useState('')
   const [language, setLanguage] = useState('Tiếng Việt')
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
   const { t } = useTranslation()
+
   const handleSubmit = (values) => {
     setLoading(true)
 
     setTimeout(() => {
       setLoading(false)
-      navigate('/apply/candidate-application/view=form')
+      const encodedPhoneNumber = encodePhoneNumber(phoneNumber)
+      navigate(`/public/apply/form/2`)
     }, 2000)
   }
 
@@ -36,8 +44,7 @@ const WorkerDeclarationPassForm = () => {
     <div className="flex flex-col h-screen bg-white p-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center justify-between border p-2 rounded-lg bg-slate-600 ">
-          {/* <img src={Logo} alt="Logo" className="mr-2" style={{ maxHeight: '40px' }} /> */}{' '}
-          {/* Adjust logo size */}
+          {/* <img src={Logo} alt="Logo" className="mr-2" style={{ maxHeight: '40px' }} /> */}
         </div>
         <Dropdown overlay={menu} trigger={['click']}>
           <Button className="border-none p-2 bg-none shadow-none">
@@ -48,7 +55,6 @@ const WorkerDeclarationPassForm = () => {
 
       <div className="flex-grow flex flex-col items-center justify-center">
         <Title level={2} className="text-center">
-          {' '}
           {t('Biểu mẫu khai báo nhân sự trực tuyến!')}
         </Title>
         <Text

@@ -5,7 +5,7 @@ import { accessToken } from '../../services/tokenService'
 export const PostPublicHrRecryutment = async (data) => {
   try {
     const response = await axios.post(
-      `${HOST_API_PUBLIC_HR}personnel`,
+      `${HOST_API_PUBLIC_HR}hr-information/personnel`,
       data,
       {
         headers: {

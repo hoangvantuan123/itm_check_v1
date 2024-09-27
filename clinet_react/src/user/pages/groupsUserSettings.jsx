@@ -95,7 +95,6 @@ export default function GroupsUsersSettings({ permissions }) {
     setSelectedRowKeys(newSelectedRowKeys)
   }
 
-
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,

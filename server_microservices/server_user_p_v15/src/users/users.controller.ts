@@ -19,7 +19,7 @@ import * as jwt from 'jsonwebtoken';
 import { UserDto } from '../auth/users.dto';
 import { Users } from 'src/auth/user.entity';
 
-@Controller('api/p')
+@Controller('api/sv1')
 export class ResUsersController {
   constructor(private readonly resUsersService: UserService) { }
 

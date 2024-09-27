@@ -70,7 +70,10 @@ const FamilyInfoTable = () => {
       title: 'Quan hệ',
       dataIndex: 'relationship',
       render: (text, record, index) => (
-        <Form.Item name={['familyMembers', index, 'relationship']}    initialValue={text || ''}  >
+        <Form.Item
+          name={['familyMembers', index, 'relationship']}
+          initialValue={text || ''}
+        >
           <span>{text}</span>
         </Form.Item>
       ),

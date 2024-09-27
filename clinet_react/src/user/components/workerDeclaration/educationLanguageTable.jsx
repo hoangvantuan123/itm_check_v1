@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Table, Input, DatePicker, InputNumber, Form, Button } from 'antd';
+import { useState } from 'react'
+import { Table, Input, DatePicker, InputNumber, Form, Button } from 'antd'
 
 const EducationLanguageTable = ({ form }) => {
   const [educationData, setEducationData] = useState([
@@ -12,7 +12,7 @@ const EducationLanguageTable = ({ form }) => {
       endYear: '',
       grade: '',
     },
-  ]);
+  ])
 
   const [languageData] = useState([
     {
@@ -45,11 +45,14 @@ const EducationLanguageTable = ({ form }) => {
       endDate: '',
       note: '',
     },
-  ]);
+  ])
 
   // Hàm để thêm hàng giáo dục mới
   const addEducationRow = () => {
-    const newKey = educationData.length > 0 ? educationData[educationData.length - 1].key + 1 : 0;
+    const newKey =
+      educationData.length > 0
+        ? educationData[educationData.length - 1].key + 1
+        : 0
     const newRow = {
       key: newKey,
       schoolName: '',
@@ -58,9 +61,9 @@ const EducationLanguageTable = ({ form }) => {
       startYear: '',
       endYear: '',
       grade: '',
-    };
-    setEducationData([...educationData, newRow]);
-  };
+    }
+    setEducationData([...educationData, newRow])
+  }
 
   const educationColumns = [
     {
@@ -117,14 +120,17 @@ const EducationLanguageTable = ({ form }) => {
         </Form.Item>
       ),
     },
-  ];
+  ]
 
   const languageColumns = [
     {
       title: 'Ngôn ngữ',
       dataIndex: 'language',
       render: (text, record, index) => (
-        <Form.Item name={['languageData', index, 'language']}    initialValue={text || ''}  >
+        <Form.Item
+          name={['languageData', index, 'language']}
+          initialValue={text || ''}
+        >
           <span>{text}</span>
         </Form.Item>
       ),
@@ -183,7 +189,7 @@ const EducationLanguageTable = ({ form }) => {
         </Form.Item>
       ),
     },
-  ];
+  ]
 
   return (
     <>
@@ -211,7 +217,7 @@ const EducationLanguageTable = ({ form }) => {
         scroll={{ x: true }}
       />
     </>
-  );
-};
+  )
+}
 
-export default EducationLanguageTable;
+export default EducationLanguageTable

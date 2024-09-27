@@ -4,7 +4,6 @@ import moment from 'moment'
 const { Option } = Select
 
 const PersonalInformation = ({ form }) => {
-  console.log(form)
   return (
     <div>
       <h2 className="text-xl font-semibold mb-4">Thông tin nhân sự</h2>
@@ -20,7 +19,11 @@ const PersonalInformation = ({ form }) => {
           </Form.Item>
         </Col>
         <Col xs={24} sm={4} md={4}>
-          <Form.Item label="Giới tính:" name="gender">
+          <Form.Item
+            label="Giới tính:"
+            name="gender"
+            rules={[{ required: true, message: 'Vui lòng chọn giới tính!' }]}
+          >
             <Select size="large" placeholder="Chọn giới tính">
               <Option value="Male">Nam</Option>
               <Option value="Female">Nữ</Option>
@@ -66,7 +69,7 @@ const PersonalInformation = ({ form }) => {
           </Form.Item>
         </Col>
         <Col xs={24} sm={12} md={8}>
-        {/* d */}
+          {/* d */}
           <Form.Item
             label="Số CMND:"
             name="idNumber"

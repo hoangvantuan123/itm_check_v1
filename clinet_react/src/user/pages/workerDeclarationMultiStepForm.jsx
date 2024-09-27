@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Form, Button, Steps, message } from 'antd'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 
 import FamilyInfoTable from '../components/workerDeclaration/familyInfoTable'
 import EducationLanguageTable from '../components/workerDeclaration/educationLanguageTable'
@@ -12,11 +12,11 @@ import { PostPublicHrRecryutment } from '../../features/hrRecruitment/postPublic
 const { Step } = Steps
 
 const WorkerDeclarationMultiStepForm = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const [currentStep, setCurrentStep] = useState(0)
   const [isSupplier, setIsSupplier] = useState(false)
   const [form] = Form.useForm()
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState({
     familyData: {},
     educationData: {},
@@ -43,118 +43,97 @@ const WorkerDeclarationMultiStepForm = () => {
     }
   }
 
-  const nextStep = async () => {
-    const isValid = await validateCurrentStep()
+  const handleSubmit = async () => {
+    const isValid = await validateCurrentStep() // Validate the current step
     if (isValid) {
-      const currentValues = form.getFieldsValue()
+      if (isSubmitting) return // Prevent multiple submissions
 
-      const updatedData = { ...formData }
-      if (currentStep === 0) {
-        updatedData.familyData = currentValues
-      } else if (currentStep === 1) {
-        updatedData.educationData = currentValues
-        updatedData.officeSkillsData = {
-          officeSkills: currentValues.officeSkills,
-          softwareSkills: currentValues.softwareSkills,
-        } // Lưu dữ liệu kỹ năng vào formData
-      } else if (currentStep === 2) {
-        updatedData.applicationData = currentValues
+      setIsSubmitting(true) // Set submitting state to true
+
+      // Gather form data
+      const finalData = { ...formData, ...form.getFieldsValue() }
+
+      const data = {
+        full_name: finalData?.fullName,
+        gender: finalData?.gender,
+        interview_date: finalData?.interviewDate,
+        start_date: finalData.startDate,
+        birth_date: finalData?.dob,
+        id_number: finalData?.idNumber,
+        id_issue_date: finalData?.issuedDate,
+        ethnicity: finalData?.ethnicity,
+        id_issue_place: finalData?.issuedPlace,
+        insurance_number: finalData?.insuranceNumber,
+        tax_number: finalData?.taxCode,
+        phone_number: finalData?.phone,
+        email: finalData?.email,
+        alternate_phone_number: finalData?.emergencyPhone,
+        alternate_name: finalData?.emergencyContactName,
+        alternate_relationship: finalData?.emergencyContactRelation,
+        birth_address: finalData?.birthAddress,
+        birth_province: finalData?.birthProvince,
+        birth_district: finalData?.birthDistrict,
+        birth_ward: finalData?.birthCommune,
+        current_address: finalData?.currentAddress,
+        current_province: finalData?.currentProvince,
+        current_district: finalData?.currentDistrict,
+        current_ward: finalData?.currentCommune,
+        families:
+          finalData?.familyMembers?.map((family) => ({
+            relationship: family?.relationship,
+            full_name: family?.name_family,
+            birth_year: family?.birthYear,
+            workplace: family?.workplace,
+            job: family?.job,
+            phone_number: family?.phoneNumber,
+            living_together: family?.livingTogether,
+          })) || [],
+        educations:
+          finalData.educationData?.map((education) => ({
+            school: education?.schoolName,
+            major: education?.major,
+            years: education?.endYear,
+            start_year: education?.startYear,
+            graduation_year: education?.endYear,
+            grade: education?.grade,
+          })) || [],
+        languages:
+          finalData.languageData?.map((language) => ({
+            language: language?.language,
+            certificate_type: language?.certificateType,
+            score: language?.score,
+            level: language.level,
+            start_date: language.startDate,
+            end_date: language.endDate,
+            has_bonus: language.note,
+          })) || [],
+        experiences:
+          finalData.workExperiences?.map((experience) => ({
+            company_name: experience.companyName,
+            position: experience.position,
+            start_date: experience.joinYear,
+            end_date: experience.leaveYear,
+            employee_scale: experience.employeeScale,
+            tasks: experience.tasks,
+            salary: experience.salary,
+            description: experience.reasonForLeaving,
+          })) || [],
       }
 
-      setFormData(updatedData)
-
-
-      setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1))
-    }
-  }
-
-  const prevStep = () => {
-    setCurrentStep((prev) => Math.max(prev - 1, 0))
-  }
-
-  const handleSubmit = async () => {
-    const isValid = await validateCurrentStep();
-    if (isValid) {
-        if (isSubmitting) return;
-
-        setIsSubmitting(true);
-
-        const finalData = { ...formData, ...form.getFieldsValue() };
-
-        const data = {
-            full_name: finalData?.fullName,
-            gender: finalData?.gender,
-            interview_date: finalData?.interviewDate,
-            start_date: finalData.startDate,
-            birth_date: finalData?.dob,
-            id_number: finalData?.idNumber,
-            id_issue_date: finalData?.issuedDate,
-            ethnicity: finalData?.ethnicity,
-            id_issue_place: finalData?.issuedPlace,
-            insurance_number: finalData?.insuranceNumber,
-            tax_number: finalData?.taxCode,
-            phone_number: finalData?.phone,
-            email: finalData?.email,
-            alternate_phone_number: finalData?.emergencyPhone,
-            alternate_name: finalData?.emergencyContactName,
-            alternate_relationship: finalData?.emergencyContactRelation,
-            birth_address: finalData?.birthAddress,
-            birth_province: finalData?.birthProvince,
-            birth_district: finalData?.birthDistrict,
-            birth_ward: finalData?.birthCommune,
-            current_address: finalData?.currentAddress,
-            current_province: finalData?.currentProvince,
-            current_district: finalData?.currentDistrict,
-            current_ward: finalData?.currentCommune,
-
-            families: finalData?.familyMembers?.map(family => ({
-                relationship: family?.relationship,
-                full_name: family?.name_family,
-                birth_year: family?.birthYear,
-                workplace: family?.workplace,
-                job: family?.job,
-                phone_number: family?.phoneNumber,
-                living_together: family?.livingTogether,
-            })) || [],
-            educations: finalData.educationData?.map(education => ({
-                school: education?.schoolName,
-                major: education?.major,
-                years: education?.endYear,
-                start_year: education?.startYear,
-                graduation_year: education?.endYear,
-                grade: education?.grade,
-            })) || [],
-            languages: finalData.languageData?.map(language => ({
-                language: language?.language,
-                certificate_type: language?.certificateType,
-                score: language?.score,
-                level: language.level,
-                start_date: language.startDate,
-                end_date: language.endDate,
-                has_bonus: language.note,
-            })) || [],
-            experiences: finalData.workExperiences?.map(experience => ({
-                company_name: experience.companyName,
-                position: experience.position,
-                start_date: experience.joinYear,
-                end_date: experience.leaveYear,
-                employee_scale: experience.employeeScale,
-                tasks: experience.tasks,
-                salary: experience.salary,
-                description: experience.reasonForLeaving,
-            })) || [],
-        };
-
-        try {
-            await PostPublicHrRecryutment(data);
-            navigate('/apply/thong-bao');
-        } catch (error) {
-            alert('Có lỗi xảy ra khi gửi thông tin. Vui lòng thử lại.');
-        } finally {
-            setIsSubmitting(false);
+      try {
+        const response = await PostPublicHrRecryutment(data)
+        if (response.success) {
+          navigate('/public/apply/thong-bao')
+        } else {
+          message.error('Có lỗi xảy ra khi gửi thông tin!')
         }
+      } catch (error) {
+        message.error('Có lỗi xảy ra khi gửi thông tin. Vui lòng thử lại!')
+      } finally {
+        setIsSubmitting(false)
+      }
     }
-}
+  }
 
   const steps = [
     {
@@ -194,17 +173,8 @@ const WorkerDeclarationMultiStepForm = () => {
           {steps[currentStep].content}
           <Form.Item className="mt-4">
             <Button
-              type="default"
-              onClick={prevStep}
-              disabled={currentStep === 0}
-            >
-              Quay Lại
-            </Button>
-            <Button
-              className="ml-2 border-gray-200 bg-indigo-600 text-white shadow-sm text-sm"
-              onClick={
-                handleSubmit
-              }
+              className=" border-gray-200 bg-indigo-600 text-white shadow-sm text-sm"
+              onClick={handleSubmit}
             >
               Gửi thông tin
             </Button>

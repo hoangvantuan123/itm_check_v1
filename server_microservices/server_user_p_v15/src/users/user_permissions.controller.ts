@@ -17,7 +17,7 @@ import { jwtConstants } from 'src/config/config';
 import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 
-@Controller('api/p')
+@Controller('api/sv1')
 export class UsersPermissionsController {
     constructor(private readonly userPermissionsService: UsersPermissionsService) { }
 

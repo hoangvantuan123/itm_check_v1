@@ -1,19 +1,19 @@
-import { useState, useEffect } from 'react';
-import { Layout, Table, Button, Modal } from 'antd';
-import { useTranslation } from 'react-i18next';
-import { Helmet } from 'react-helmet';
-import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
-import AddUserGroups from '../components/add/addUserGroups';
-import Search from '../components/search';
-import { checkActionPermission } from '../../permissions';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import { useState, useEffect } from 'react'
+import { Layout, Table, Button, Modal } from 'antd'
+import { useTranslation } from 'react-i18next'
+import { Helmet } from 'react-helmet'
+import { PlusOutlined, SearchOutlined } from '@ant-design/icons'
+import AddUserGroups from '../components/add/addUserGroups'
+import Search from '../components/search'
+import { checkActionPermission } from '../../permissions'
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 
-const { Content } = Layout;
+const { Content } = Layout
 
 export default function EmployeeRecruitment({ permissions }) {
-  const { t } = useTranslation();
-  
+  const { t } = useTranslation()
+
   // Data example
   const data = [
     {
@@ -28,15 +28,15 @@ export default function EmployeeRecruitment({ permissions }) {
       education: {
         degree: 'Cử nhân Công nghệ Thông tin',
         university: 'Đại học Bách Khoa TP. HCM',
-        graduationYear: 2018
+        graduationYear: 2018,
       },
       workExperience: [
         {
           company: 'Công ty ABC',
           position: 'Lập trình viên',
           yearsOfExperience: 3,
-          description: 'Phát triển các ứng dụng web bằng React và Node.js'
-        }
+          description: 'Phát triển các ứng dụng web bằng React và Node.js',
+        },
       ],
       skills: ['JavaScript', 'React', 'Node.js', 'MySQL'],
       applicationDate: '2024-09-01',
@@ -58,15 +58,15 @@ export default function EmployeeRecruitment({ permissions }) {
       education: {
         degree: 'Cử nhân Marketing',
         university: 'Đại học Kinh tế TP. HCM',
-        graduationYear: 2015
+        graduationYear: 2015,
       },
       workExperience: [
         {
           company: 'Công ty XYZ',
           position: 'Chuyên viên Marketing',
           yearsOfExperience: 4,
-          description: 'Quản lý chiến lược Marketing trực tuyến và offline.'
-        }
+          description: 'Quản lý chiến lược Marketing trực tuyến và offline.',
+        },
       ],
       skills: ['SEO', 'Content Marketing', 'Google Analytics'],
       applicationDate: '2024-09-15',
@@ -75,43 +75,48 @@ export default function EmployeeRecruitment({ permissions }) {
       interviewResult: 'Chờ kết quả',
       interviewer: 'Phạm Quang D',
       notes: 'Chuẩn bị portfolio và dự án thực tế',
-    }
-  ];
+    },
+  ]
 
   // States
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-  const [selectedApplicant, setSelectedApplicant] = useState(null);
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false)
+  const [selectedApplicant, setSelectedApplicant] = useState(null)
+  const [page, setPage] = useState(1)
+  const [limit, setLimit] = useState(10)
 
   // Permissions
-  const canCreate = checkActionPermission(permissions, 'hr-recruitment-1-1', 'create');
+  const canCreate = checkActionPermission(
+    permissions,
+    'hr-recruitment-1-1',
+    'create',
+  )
 
   // Handle table change
   const handleTableChange = (pagination) => {
-    setPage(pagination.current);
-    setLimit(pagination.pageSize);
-  };
+    setPage(pagination.current)
+    setLimit(pagination.pageSize)
+  }
 
   // Show detail modal
   const showDetailModal = (applicant) => {
-    setSelectedApplicant(applicant);
-    setIsDetailModalOpen(true);
-  };
+    setSelectedApplicant(applicant)
+    setIsDetailModalOpen(true)
+  }
 
   // Close detail modal
   const closeDetailModal = () => {
-    setIsDetailModalOpen(false);
-    setSelectedApplicant(null);
-  };
+    setIsDetailModalOpen(false)
+    setSelectedApplicant(null)
+  }
 
   // Export to PDF
   const exportToPDF = () => {
-    const doc = new jsPDF();
-    const { fullName, email, phoneNumber, interviewResult, notes } = selectedApplicant;
+    const doc = new jsPDF()
+    const { fullName, email, phoneNumber, interviewResult, notes } =
+      selectedApplicant
 
-    doc.text(`Thông tin ứng viên: ${fullName}`, 14, 16);
+    doc.text(`Thông tin ứng viên: ${fullName}`, 14, 16)
     autoTable(doc, {
       head: [['Thông tin', 'Giá trị']],
       body: [
@@ -120,9 +125,9 @@ export default function EmployeeRecruitment({ permissions }) {
         ['Kết quả phỏng vấn', interviewResult],
         ['Ghi chú', notes],
       ],
-    });
-    doc.save(`${fullName}_thong_tin_ung_vien.pdf`);
-  };
+    })
+    doc.save(`${fullName}_thong_tin_ung_vien.pdf`)
+  }
 
   // Table columns
   const columns = [
@@ -160,7 +165,7 @@ export default function EmployeeRecruitment({ permissions }) {
       dataIndex: 'interviewResult',
       key: 'interviewResult',
     },
-  ];
+  ]
 
   // Render detail modal
   const renderDetailModal = () => (
@@ -179,15 +184,24 @@ export default function EmployeeRecruitment({ permissions }) {
     >
       {selectedApplicant && (
         <div>
-          <p><strong>Email:</strong> {selectedApplicant.email}</p>
-          <p><strong>Số điện thoại:</strong> {selectedApplicant.phoneNumber}</p>
-          <p><strong>Kết quả phỏng vấn:</strong> {selectedApplicant.interviewResult}</p>
-          <p><strong>Ghi chú:</strong> {selectedApplicant.notes}</p>
+          <p>
+            <strong>Email:</strong> {selectedApplicant.email}
+          </p>
+          <p>
+            <strong>Số điện thoại:</strong> {selectedApplicant.phoneNumber}
+          </p>
+          <p>
+            <strong>Kết quả phỏng vấn:</strong>{' '}
+            {selectedApplicant.interviewResult}
+          </p>
+          <p>
+            <strong>Ghi chú:</strong> {selectedApplicant.notes}
+          </p>
           {/* Add more fields as needed */}
         </div>
       )}
     </Modal>
-  );
+  )
 
   // Render table
   const renderTable = () => (
@@ -202,7 +216,7 @@ export default function EmployeeRecruitment({ permissions }) {
         onChange: handleTableChange,
       }}
     />
-  );
+  )
 
   return (
     <div className="w-full h-screen bg-slate-50">
@@ -210,18 +224,23 @@ export default function EmployeeRecruitment({ permissions }) {
         <title>ITM - {t('Phỏng vấn')}</title>
       </Helmet>
       <div className="p-2 flex items-center justify-between">
-        <h1 className="text-xl font-bold text-gray-900">{t('Danh sách phỏng vấn')}</h1>
+        <h1 className="text-xl font-bold text-gray-900">
+          {t('Danh sách phỏng vấn')}
+        </h1>
         {canCreate && (
           <Button
             onClick={() => setIsModalOpen(true)}
             className=" w-20 rounded-lg h-full border-gray-200 bg-indigo-600 text-white shadow-sm text-sm"
             icon={<PlusOutlined />}
-               size="large"
+            size="large"
           >
             {t('Thêm')}
           </Button>
         )}
-        <AddUserGroups isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+        <AddUserGroups
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
       </div>
       <Layout className="h-screen">
         <Content>
@@ -230,5 +249,5 @@ export default function EmployeeRecruitment({ permissions }) {
         </Content>
       </Layout>
     </div>
-  );
+  )
 }

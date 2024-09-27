@@ -1,12 +1,12 @@
-import { Body, Controller, Post, HttpException, HttpStatus,Put, UsePipes,Param,Delete, ValidationPipe, Logger, Get, Query } from '@nestjs/common';
+import { Body, Controller, Post, HttpException, HttpStatus, Put, UsePipes, Param, Delete, ValidationPipe, Logger, Get, Query } from '@nestjs/common';
 import { CreatePersonnelWithDetailsDto } from '../dto/create-personnel-with-details.dto';
 import { HrRecruitmentServices } from '../services/hr_recruitment.services';
-
-@Controller('api')
+import { Personnel } from '../entity/personnel.entity';
+@Controller('api/sv4/hr-information')
 export class HrRecruitmentController {
   private readonly logger = new Logger(HrRecruitmentController.name);
 
-  constructor(private readonly personnelService: HrRecruitmentServices) {}
+  constructor(private readonly personnelService: HrRecruitmentServices) { }
 
   @Post('personnel')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }))
@@ -42,19 +42,43 @@ export class HrRecruitmentController {
     }
   }
 
-
-  @Get('hr-recruitment/personnel')
+  @Get('personnel')
   async findAll(
-    @Query('filter') filter: any, 
     @Query('page') page: number = 1,
-    @Query('limit') limit: number = 20,
+    @Query('limit') limit: number = 50,
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
   ): Promise<{ data: any[]; total: number; totalPages: number }> {
-    return this.personnelService.findAllPageLimit(filter, page, limit);
+    const startDateObj = startDate ? new Date(startDate) : undefined;
+    const endDateObj = endDate ? new Date(endDate) : undefined;
+    return this.personnelService.findAllPageLimit({}, page, limit, startDateObj, endDateObj);
   }
 
 
+  @Get('personnel/filter')
+  async getAllFilterPersonnel(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 50,
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+    @Query('nameTags') nameTags?: string,
+    @Query('phoneNumberTags') phoneNumberTags?: string,
+    @Query('citizenshipIdTags') citizenshipIdTags?: string,
+  ): Promise<{ data: Personnel[]; total: number; totalPages: number }> {
+    const filter: Record<string, any> = {
+      nameTags: nameTags ? nameTags.split(',') : [],
+      phoneNumberTags: phoneNumberTags ? phoneNumberTags.split(',') : [],
+      citizenshipIdTags: citizenshipIdTags ? citizenshipIdTags.split(',') : [],
+    };
 
-  @Put(':id')
+    const start = startDate ? new Date(startDate) : undefined;
+    const end = endDate ? new Date(endDate) : undefined;
+
+    return await this.personnelService.findAllPageLimitFilter(filter, page, limit, start, end);
+  }
+
+
+  @Put('personnel/:id')
   async update(
     @Param('id') id: number,
     @Body() updatePersonnelWithDetailsDto: CreatePersonnelWithDetailsDto,
@@ -62,8 +86,12 @@ export class HrRecruitmentController {
     return await this.personnelService.update(id, updatePersonnelWithDetailsDto);
   }
 
-  @Delete(':id')
-  async delete(@Param('id') id: number): Promise<{ success: boolean; message: string }> {
-    return await this.personnelService.delete(id);
+  @Delete('personnel')
+  async delete(@Body('ids') ids: number[]): Promise<{ success: boolean; message: string }> {
+  
+  
+    return await this.personnelService.delete(ids);
   }
+  
+
 }

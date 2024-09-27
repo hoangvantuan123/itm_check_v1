@@ -74,11 +74,11 @@ export default function Login() {
       </Helmet>
       <div className="min-h-screen flex flex-col lg:flex-row items-center justify-center overflow-hidden bg-gray-50">
         {/* Cột chứa ảnh */}
-        <div className="hidden lg:flex lg:w-1/2 h-full bg-gray-100 items-center justify-center">
+        <div className="hidden lg:flex lg:w-1/2 p-2 rounded-lg h-full bg-gray-100 items-center justify-center">
           <img
             src="https://images.unsplash.com/photo-1617195737496-bc30194e3a19?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
             alt="Description of image"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover rounded-lg"
           />
         </div>
 

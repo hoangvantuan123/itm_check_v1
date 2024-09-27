@@ -26,7 +26,6 @@ import { PlusOutlined } from '@ant-design/icons'
 import { SearchOutlined } from '@ant-design/icons'
 import Search from '../components/search'
 import ShowAction from '../components/action/showAction'
-import FieldAction from '../components/action/fieldsAction'
 import PhoneSettingAction from '../components/phone/usersSettingAction'
 import AddUser from '../components/add/addUser'
 import UserProfile from '../components/profile'
@@ -495,31 +494,8 @@ export default function UsersSettings({ permissions }) {
                         />
                       </>
                     )}
-
-                    <FieldAction />
                   </div>
                 </span>
-                <button
-                  className=" border-[1.3px] border-[#d9d9d9]  rounded-lg p-[0.6rem]  w-52 flex items-center space-x-2 bg-white hover:bg-gray-100"
-                  onClick={openModal}
-                >
-                  <SearchOutlined />
-                  <span className="text-gray-500">{t('Tìm kiếm')}</span>
-                </button>
-                <Search isOpen={isModalOpen} onClose={closeModal} />
-              </div>
-            )}
-            {isMobile && (
-              <div className="p-2">
-                {' '}
-                <button
-                  className=" border-[1.3px] border-[#d9d9d9]  rounded-lg p-[0.6rem]  w-full flex items-center space-x-2 bg-white hover:bg-gray-100"
-                  onClick={openModal}
-                >
-                  <SearchOutlined />
-                  <span className="text-gray-500">{t('Tìm kiếm')}</span>
-                </button>
-                <Search isOpen={isModalOpen} onClose={closeModal} />
               </div>
             )}
           </div>

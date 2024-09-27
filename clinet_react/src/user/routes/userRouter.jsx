@@ -4,8 +4,8 @@ import {
   Routes,
   Route,
   useNavigate,
-  Navigate,
   useLocation,
+  Navigate,
 } from 'react-router-dom'
 import { Layout } from 'antd'
 import Sidebar from '../components/sildebar-frame/sidebar'
@@ -18,15 +18,10 @@ import GeneralSettings from '../pages/generalSettings'
 import Notifications from '../pages/notifications'
 import WorkTimeTracking from '../pages/workTimeTracking'
 import GroupsUsersSettings from '../pages/groupsUserSettings'
-const { Content } = Layout
-import { useTranslation } from 'react-i18next'
 import UsersSettings from '../pages/usersSettings'
 import Default from '../pages/default'
-import { RefreshToken } from '../../features/auth/API/refreshToken'
 import TimeTracking from '../pages/TimeTracking'
 import TechniqueMenu from '../pages/techniqueMenu'
-import { GetUserPermissions } from '../../features/auth/API/getPermissions'
-import { checkActionPermission } from '../../permissions'
 import Unauthorized from '../pages/unauthorized'
 import Spinner from '../pages/load'
 import ErrorServer from '../pages/errorServer'
@@ -41,66 +36,54 @@ import WorkerDeclarationMultiStepForm from '../pages/workerDeclarationMultiStepF
 import EmployeeRecruitment from '../pages/employeeRecruitment'
 import WorkerRecruitmentPage from '../pages/workerRecruitment'
 import SuccessNotification from '../pages/successNotification'
+import { useTranslation } from 'react-i18next'
+import { RefreshToken } from '../../features/auth/API/refreshToken'
+import { GetUserPermissions } from '../../features/auth/API/getPermissions'
+import { checkActionPermission } from '../../permissions'
+import DetailUserHrRecruitment from '../pages/detailUserHrRecruitment'
+
+const { Content } = Layout
 
 const UserRouter = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const location = useLocation()
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const intervalRef = useRef(null)
   const [userPermissions, setUserPermissions] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [showSpinner, setShowSpinner] = useState(false)
   const skippedRoutes = [
-    '/apply/request-phone',
-    '/apply/candidate-application/view=form',
-    '/apply/worker-declaration-form/request-phone',
-    '/apply/worker-declaration-form/view=form',
-    '/apply/thong-bao'
+    '/public/apply/recruitment/phone',
+    '/public/apply/form/1',
+    '/public/apply/information/phone',
+    '/public/apply/form/2',
+    '/public/apply/thong-bao',
   ]
 
-  /*  useEffect(() => {
-    const refreshInterval = 1000 * 60 * 40
+  // Hàm kiểm tra trạng thái đăng nhập
+  const checkLoginStatus = () => {
+    const token = Cookies.get('accessToken')
+    const userInfo = localStorage.getItem('userInfo')
 
-    const refreshToken = async () => {
-      const token = localStorage.getItem('token_1h')
-      if (token) {
-        try {
-          const result = await RefreshToken(token)
-          if (!result.success) {
-            console.error(result.message)
-          }
-        } catch (error) {
-          console.error('Error refreshing token:', error)
-        }
-      }
+    if (token && userInfo) {
+      setIsLoggedIn(true)
+    } else {
+      Cookies.remove('accessToken')
+      localStorage.removeItem('userInfo')
+      navigate('/u/login')
     }
+  }
 
-    intervalRef.current = setInterval(refreshToken, refreshInterval)
-
-    return () => clearInterval(intervalRef.current)
-  }, []) */
   useEffect(() => {
-    // Only perform check if the current route is NOT in the skippedRoutes
     if (!skippedRoutes.includes(location.pathname)) {
-      const token = Cookies.get('accessToken')
-      const userInfo = localStorage.getItem('userInfo')
-
-      if (token && userInfo) {
-        setIsLoggedIn(true)
-      } else {
-        Cookies.remove('accessToken')
-        localStorage.removeItem('userInfo')
-        navigate('/u/login')
-      }
+      checkLoginStatus()
     }
-  }, [navigate, location.pathname])
+  }, [location.pathname])
 
-  const fetchData = async () => {
+  const fetchPermissions = async () => {
     setLoading(true)
     setShowSpinner(false)
-
     try {
       const response = await GetUserPermissions()
       if (response.success) {
@@ -110,6 +93,7 @@ const UserRouter = () => {
         setError(response.message)
         Cookies.remove('accessToken')
         localStorage.removeItem('userInfo')
+        navigate('/u/login')
       }
     } catch (error) {
       setError(error.message || 'Đã xảy ra lỗi')
@@ -119,36 +103,35 @@ const UserRouter = () => {
   }
 
   useEffect(() => {
-    if (isLoggedIn === true) {
-      fetchData()
+    if (isLoggedIn) {
+      fetchPermissions()
     }
   }, [isLoggedIn])
 
-  if (loading) {
-    return <Spinner />
-  }
-  if (error) {
-    return <ErrorServer />
-  }
+  if (loading) return <Spinner />
+  if (error) return <ErrorServer />
+
   return (
     <Routes>
-      <Route path="u/login" element={<Login />} />
-      <Route path="/apply/request-phone" element={<PassFormPage />} />
-      <Route
-        path="/apply/worker-declaration-form/request-phone"
-        element={<WorkerDeclarationPassForm />}
-      />
+      {/* Các route không yêu cầu đăng nhập */}
 
       <Route
-        path="/apply/candidate-application/view=form"
-        element={<MultiStepFormPage />}
+        path="/public/apply/recruitment/phone"
+        element={<PassFormPage />}
       />
       <Route
-        path="/apply/worker-declaration-form/view=form"
+        path="/public/apply/information/phone"
+        element={<WorkerDeclarationPassForm />}
+      />
+      <Route path="/public/apply/form/1" element={<MultiStepFormPage />} />
+      <Route
+        path="/public/apply/form/2"
         element={<WorkerDeclarationMultiStepForm />}
       />
-   <Route path="/apply/thong-bao" element={<SuccessNotification />} />
-      {/*  <Route path="u/register/Q9xT7ZvJ3KpF5Rm8" element={<Register />} /> */}
+      <Route path="/public/apply/thong-bao" element={<SuccessNotification />} />
+
+      {/* Router riêng tư */}
+      <Route path="u/login" element={<Login />} />
       {isLoggedIn && (
         <Route
           path="/*"
@@ -190,7 +173,6 @@ const UserRouter = () => {
                         )
                       }
                     />
-
                     <Route
                       path="u/notifications"
                       element={
@@ -237,9 +219,7 @@ const UserRouter = () => {
                         )
                       }
                     />
-
                     <Route path={`u/phone/work`} element={<PhoneWork />} />
-
                     <Route
                       path="u/action=6/time_tracking"
                       element={
@@ -332,7 +312,23 @@ const UserRouter = () => {
                           'hr-recruitment-1-1',
                           'view',
                         ) ? (
-                          <WorkerRecruitmentPage permissions={userPermissions} />
+                          <WorkerRecruitmentPage
+                            permissions={userPermissions}
+                          />
+                        ) : (
+                          <Unauthorized />
+                        )
+                      }
+                    />
+                    <Route
+                      path="/u/action=18/worker-recruitment-data/detail/:id"
+                      element={
+                        checkActionPermission(
+                          userPermissions,
+                          'hr-recruitment-1-2',
+                          'view',
+                        ) ? (
+                          <DetailUserHrRecruitment />
                         ) : (
                           <Unauthorized />
                         )

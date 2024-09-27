@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Input, Modal, Typography, Dropdown, Menu } from 'antd'
+import { Input, Modal, Typography, Dropdown, Menu, Button } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
 import ImportForm from '../import'
 
@@ -155,10 +155,9 @@ export default function ImportAction({ isOpen, onClose }) {
         open={showDropdown}
         onClick={() => setShowDropdown(!showDropdown)}
       >
-        <button className="border-[1.3px] border-[#d9d9d9] rounded-lg p-[0.6rem] w-auto flex items-center space-x-2 bg-white hover:bg-gray-100">
+        <Button size="large" className="bg-white">
           <DataIcon />
-          <span className="text-gray-500">Data</span>
-        </button>
+        </Button>
       </Dropdown>
       <ImportForm isOpen={isModalOpen} onClose={handleOnClickCloseImport} />
     </>

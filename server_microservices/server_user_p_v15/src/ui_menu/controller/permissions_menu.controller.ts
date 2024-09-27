@@ -19,7 +19,7 @@ import { jwtConstants } from 'src/config/config';
 import { PermissionsMenu } from '../entity/permissions_menu.entity';
 import { UpdatePermissionsMenuDto } from '../dto/update-permissions-menu.dto';
 
-@Controller('api/p')
+@Controller('api/sv1')
 export class PermissionMenuController {
   constructor(
     private readonly permissionsMenuService: PermissionsMenuService,
