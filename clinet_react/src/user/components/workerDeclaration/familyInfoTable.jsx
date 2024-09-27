@@ -147,6 +147,7 @@ const FamilyInfoTable = () => {
         rowKey="key"
         bordered
         scroll={{ x: true }}
+        size="small"
       />
     </>
   )

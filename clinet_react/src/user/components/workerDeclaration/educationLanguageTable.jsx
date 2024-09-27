@@ -201,6 +201,7 @@ const EducationLanguageTable = ({ form }) => {
         rowKey="key"
         scroll={{ x: true }}
         bordered
+        size="small"
       />
       <Button type="dashed" onClick={addEducationRow} style={{ marginTop: 16 }}>
         Thêm hàng
@@ -215,6 +216,7 @@ const EducationLanguageTable = ({ form }) => {
         rowKey="key"
         bordered
         scroll={{ x: true }}
+        size="small"
       />
     </>
   )
