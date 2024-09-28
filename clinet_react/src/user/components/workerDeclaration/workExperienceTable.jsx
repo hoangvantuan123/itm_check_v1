@@ -64,6 +64,7 @@ const WorkExperienceTable = ({ form }) => {
       render: (text, record) => (
         <Input
           value={text}
+          rules={[{ required: true, message: 'Vui lòng nhập tên công ty!' }]}
           onChange={(e) => handleWorkExperienceChange(record.key, 'companyName', e.target.value)}
           className="border-none w-36  md:w-full" 
           style={{ margin: 0 }} 
@@ -168,8 +169,7 @@ const WorkExperienceTable = ({ form }) => {
 
   return (
     <>
-      <h2 className="text-2xl font-semibold mb-6 mt-5">Tình trạng kinh nghiệm làm việc</h2>
-      <h3 className="text-xl font-semibold mb-4">Kinh nghiệm làm việc</h3>
+      <h3 className="text-xl font-semibold mb-4 mt-3">Kinh nghiệm làm việc</h3>
       <Form.Item name="workExperiences">
         <Table
           dataSource={workExperiences}

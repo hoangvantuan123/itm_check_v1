@@ -504,7 +504,7 @@ export default function UsersSettings({ permissions }) {
             {!isMobile && (
               <Sider
                 width={200}
-                className="bg-slate-50 border-r border-t h-screen"
+                className="bg-slate-50 border-t h-screen"
               >
                 <Menu
                   mode="inline"
@@ -525,9 +525,9 @@ export default function UsersSettings({ permissions }) {
                 padding: isMobile ? '0 8px' : '0',
                 borderTopWidth: isMobile ? '0' : '1px',
               }}
-              className="h-full p-2 overflow-auto    scrollable-content"
+              className="h-full p-2 overflow-auto     scrollable-content"
             >
-              <Content className="bg-slate-50">
+              <Content className="bg-slate-50 p-2">
                 {isMobile ? renderKanban() : renderTable()}
               </Content>
             </Layout>

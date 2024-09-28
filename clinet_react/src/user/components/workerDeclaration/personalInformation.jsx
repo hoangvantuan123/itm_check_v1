@@ -170,7 +170,7 @@ const PersonalInformation = ({ form }) => {
       </Row>
 
       <h2 className="text-xl font-semibold mb-4">Địa chỉ</h2>
-      <h3 className="font-semibold mb-2">
+      <h3 className=" italic mb-2">
         Địa chỉ đăng ký giấy khai sinh (hoặc nguyên quán hoặc HKTT hoặc tạm trú)
       </h3>
       <Row gutter={16}>
@@ -212,7 +212,7 @@ const PersonalInformation = ({ form }) => {
         </Col>
       </Row>
 
-      <h3 className="font-semibold mb-2">Địa chỉ nơi ở hiện tại</h3>
+      <h3 className=" italic mb-2">Địa chỉ nơi ở hiện tại</h3>
       <Row gutter={16}>
         <Col xs={24} sm={12} md={8}>
           <Form.Item

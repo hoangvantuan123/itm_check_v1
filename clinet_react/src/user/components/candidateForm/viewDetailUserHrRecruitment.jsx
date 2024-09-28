@@ -89,12 +89,12 @@ const ViewDetailUserHrRecruitment = ({form,isEditing, setFormData,formData, setI
        <Row gutter={16}>
          <Col span={16}>
            <Form.Item label="Họ tên ứng viên:">
-             <Input value={formData.full_name} readOnly />
+             <Input size="large" value={formData.full_name} readOnly />
            </Form.Item>
          </Col>
          <Col span={8}>
            <Form.Item label="Giới tính:">
-             <Input value={formData.gender} readOnly />
+             <Input  size="large" value={formData.gender} readOnly />
            </Form.Item>
          </Col>
        </Row>
@@ -102,12 +102,12 @@ const ViewDetailUserHrRecruitment = ({form,isEditing, setFormData,formData, setI
        <Row gutter={16}>
          <Col span={12}>
            <Form.Item label="Ngày phỏng vấn:">
-             <Input value={formData.interview_date} readOnly />
+             <Input size="large" value={formData.interview_date} readOnly />
            </Form.Item>
          </Col>
          <Col span={12}>
            <Form.Item label="Ngày vào:">
-             <Input value={formData.start_date} readOnly />
+             <Input  size="large" value={formData.start_date} readOnly />
            </Form.Item>
          </Col>
        </Row>
@@ -115,7 +115,7 @@ const ViewDetailUserHrRecruitment = ({form,isEditing, setFormData,formData, setI
        <Row gutter={16} >
          <Col span={24}>
            <Form.Item label="Ngày tháng năm sinh:">
-             <Input value={formData.birth_date} readOnly />
+             <Input size="large" value={formData.birth_date} readOnly />
            </Form.Item>
          </Col>
        </Row>
@@ -123,17 +123,17 @@ const ViewDetailUserHrRecruitment = ({form,isEditing, setFormData,formData, setI
        <Row gutter={16}>
          <Col span={12}>
            <Form.Item label="Số CCCD:">
-             <Input value={formData.id_number} readOnly />
+             <Input size="large" value={formData.id_number} readOnly />
            </Form.Item>
          </Col>
          <Col span={6}>
            <Form.Item label="Ngày cấp:">
-             <Input value={formData.id_issue_date} readOnly />
+             <Input size="large" value={formData.id_issue_date} readOnly />
            </Form.Item>
          </Col>
          <Col span={6}>
            <Form.Item label="Dân tộc:">
-             <Input value={formData.ethnicity} readOnly />
+             <Input  size="large" value={formData.ethnicity} readOnly />
            </Form.Item>
          </Col>
        </Row>
@@ -141,7 +141,7 @@ const ViewDetailUserHrRecruitment = ({form,isEditing, setFormData,formData, setI
        <Row gutter={16} >
          <Col span={24}>
            <Form.Item label="Nơi cấp:">
-             <Input value={formData.id_issue_place} readOnly />
+             <Input size="large" value={formData.id_issue_place} readOnly />
            </Form.Item>
          </Col>
        </Row>
@@ -149,7 +149,7 @@ const ViewDetailUserHrRecruitment = ({form,isEditing, setFormData,formData, setI
        <Row gutter={16}>
          <Col span={12}>
            <Form.Item label="Số bảo hiểm (nếu có):">
-             <Input value={formData.insurance_number} readOnly />
+             <Input size="large" value={formData.insurance_number} readOnly />
            </Form.Item>
          </Col>
          <Col span={12}>
@@ -162,12 +162,12 @@ const ViewDetailUserHrRecruitment = ({form,isEditing, setFormData,formData, setI
        <Row gutter={16} >
          <Col span={12}>
            <Form.Item label="Số điện thoại liên hệ:">
-             <Input value={formData.phone_number} readOnly />
+             <Input size="large" value={formData.phone_number} readOnly />
            </Form.Item>
          </Col>
          <Col span={12}>
            <Form.Item label="Email:">
-             <Input value={formData.email} readOnly />
+             <Input  size="large" value={formData.email} readOnly />
            </Form.Item>
          </Col>
        </Row>
@@ -175,17 +175,17 @@ const ViewDetailUserHrRecruitment = ({form,isEditing, setFormData,formData, setI
        <Row gutter={16} >
          <Col span={12}>
            <Form.Item label="Số điện thoại khi cần thiết:">
-             <Input value={formData.alternate_phone_number} readOnly />
+             <Input size="large" value={formData.alternate_phone_number} readOnly />
            </Form.Item>
          </Col>
          <Col span={6}>
            <Form.Item label="Tên:">
-             <Input value={formData.alternate_name} readOnly />
+             <Input  size="large" value={formData.alternate_name} readOnly />
            </Form.Item>
          </Col>
          <Col span={6}>
            <Form.Item label="Quan hệ:">
-             <Input value={formData.alternate_relationship} readOnly />
+             <Input size="large" value={formData.alternate_relationship} readOnly />
            </Form.Item>
          </Col>
        </Row>
@@ -196,22 +196,22 @@ const ViewDetailUserHrRecruitment = ({form,isEditing, setFormData,formData, setI
        <Row gutter={16} className="mt-2">
          <Col span={8}>
            <Form.Item label="Tỉnh:">
-             <Input value={formData.birth_province} readOnly />
+             <Input size="large" value={formData.birth_province} readOnly />
            </Form.Item>
          </Col>
          <Col span={8}>
            <Form.Item label="Quận/Huyện:">
-             <Input value={formData.birth_district} readOnly />
+             <Input size="large" value={formData.birth_district} readOnly />
            </Form.Item>
          </Col>
          <Col span={8}>
            <Form.Item label="Xã/Phường:">
-             <Input value={formData.birth_ward} readOnly />
+             <Input  size="large" value={formData.birth_ward} readOnly />
            </Form.Item>
          </Col>
          <Col span={24}>
            <Form.Item label="Địa chỉ:">
-             <Input value={formData.birth_address} readOnly />
+             <Input size="large" value={formData.birth_address} readOnly />
            </Form.Item>
          </Col>
        </Row>
@@ -220,22 +220,22 @@ const ViewDetailUserHrRecruitment = ({form,isEditing, setFormData,formData, setI
        <Row gutter={16} className="mt-2">
          <Col span={8}>
            <Form.Item label="Tỉnh:">
-             <Input value={formData.current_province} readOnly />
+             <Input  size="large" value={formData.current_province} readOnly />
            </Form.Item>
          </Col>
          <Col span={8}>
            <Form.Item label="Quận/Huyện:">
-             <Input value={formData.current_district} readOnly />
+             <Input size="large" value={formData.current_district} readOnly />
            </Form.Item>
          </Col>
          <Col span={8}>
            <Form.Item label="Xã/Phường:">
-             <Input value={formData.current_ward} readOnly />
+             <Input size="large" value={formData.current_ward} readOnly />
            </Form.Item>
          </Col>
          <Col span={24}>
            <Form.Item label="Số nhà/Đường:">
-             <Input value={formData.current_address} readOnly />
+             <Input size="large" value={formData.current_address} readOnly />
            </Form.Item>
          </Col>
        </Row>

@@ -317,7 +317,7 @@ export default function TechniqueMenu({ permissions }) {
           }}
           className="h-full p-2 overflow-auto scrollable-content"
         >
-          <Content className="bg-slate-50">
+          <Content className="bg-slate-50 p-2">
             {isMobile ? renderKanban() : renderTable()}
           </Content>
         </Layout>

@@ -99,7 +99,7 @@ export default function DetailUserHrRecruitment() {
       >
         <ol className="flex items-center gap-4 text-sm text-gray-700">
           <li onClick={handleNavigateToBack} className="cursor-pointer">
-            <span className="text-blue-600 hover:underline">Trở lại</span>
+            <span className="text-blue-600 ">Trở lại</span>
           </li>
         </ol>
         <ol className=" flex items-center gap-2">
@@ -129,12 +129,13 @@ export default function DetailUserHrRecruitment() {
         </Col>
 
         <Col xs={24} sm={24} md={10}>
-          <div className="border bg-white rounded-lg p-6 mb-3">
+          <div className="border bg-white rounded-lg p-6 mb-3 h-screen overflow-auto scroll-container cursor-pointer">
             <h1 className="text-xl font-bold text-center mb-4">Kết quả phỏng vấn</h1>
             <Form
               layout="vertical"
               initialValues={formData}
               onValuesChange={handleFormChange}
+              className=""
             >
               <Row gutter={16}>
                 <Col span={24}>
@@ -150,17 +151,17 @@ export default function DetailUserHrRecruitment() {
               <Row gutter={16}>
                 <Col span={12}>
                   <Form.Item label="Bộ phận ứng tuyển" name="recruitmentDepartment">
-                    <Input placeholder="Bộ phận ứng tuyển" />
+                    <Input size="large" placeholder="Bộ phận ứng tuyển" />
                   </Form.Item>
                 </Col>
                 <Col span={12}>
                   <Form.Item label="Chức vụ" name="position">
-                    <Input placeholder="Chức vụ" />
+                    <Input size="large" placeholder="Chức vụ" />
                   </Form.Item>
                 </Col>
                 <Col span={24}>
                   <Form.Item label="Tên người phỏng vấn" name="interviewerName">
-                    <Input placeholder="Tên người phỏng vấn" />
+                    <Input  size="large" placeholder="Tên người phỏng vấn" />
                   </Form.Item>
                 </Col>
               </Row>
@@ -168,17 +169,17 @@ export default function DetailUserHrRecruitment() {
               <Row gutter={16}>
                 <Col span={16}>
                   <Form.Item label="Ngoại hình" name="appearanceCriteria">
-                    <Input />
+                    <Input  size="large"/>
                   </Form.Item>
                 </Col>
                 <Col span={8}>
-                  <Form.Item label="Chiều cao" name="height">
-                    <Input />
+                  <Form.Item  label="Chiều cao" name="height">
+                    <Input size="large" />
                   </Form.Item>
                 </Col>
                 <Col span={24}>
                   <Form.Item label="Tiền án" name="criminalRecord">
-                    <Input />
+                    <Input size="large" />
                   </Form.Item>
                 </Col>
               </Row>
@@ -186,17 +187,17 @@ export default function DetailUserHrRecruitment() {
               <Row gutter={16}>
                 <Col span={16}>
                   <Form.Item label="Trình độ" name="educationLevel">
-                    <Input />
+                    <Input  size="large"/>
                   </Form.Item>
                 </Col>
                 <Col span={8}>
                   <Form.Item label="Biết đọc, biết viết" name="readingWriting">
-                    <Input />
+                    <Input size="large" />
                   </Form.Item>
                 </Col>
                 <Col span={24}>
                   <Form.Item label="Khả năng tính toán" name="calculationAbility">
-                    <Input />
+                    <Input size="large" />
                   </Form.Item>
                 </Col>
               </Row>

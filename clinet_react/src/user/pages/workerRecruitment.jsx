@@ -359,10 +359,10 @@ export default function WorkerRecruitmentPage({ permissions }) {
           handleTableChange({ current: page, pageSize }),
       }}
       loading={loading}
-      scroll={{
-        x: 'calc(100px + 50%)',
+      /* scroll={{
+        x: 'calc(100px + 100%)',
         y: 650,
-      }}
+      }} */
     />
   )
 
@@ -372,82 +372,84 @@ export default function WorkerRecruitmentPage({ permissions }) {
     await fetchDataFilter()
   }
   return (
-    <div className="w-full h-screen bg-white">
-      <Helmet>
-        <title>ITM - {t('Phỏng vấn')}</title>
-      </Helmet>
-      <div className="p-2 flex items-center justify-between">
-        <h1 className="text-xl font-bold text-gray-900">
-          {t('Danh sách dữ liệu')}
-        </h1>
-        {canCreate && (
-          <Button
-            onClick={() => setIsModalOpen(true)}
-            className="w-20 rounded-lg h-full border-gray-200 bg-indigo-600 text-white shadow-sm text-sm"
-            icon={<PlusOutlined />}
-            size="large"
-          >
-            {t('Thêm')}
-          </Button>
+    <div className="w-full h-screen flex flex-col bg-white">
+  <Helmet>
+    <title>ITM - {t('Phỏng vấn')}</title>
+  </Helmet>
+  
+  <div className="p-2 flex items-center justify-between">
+    <h1 className="text-xl font-bold text-gray-900">
+      {t('Danh sách dữ liệu')}
+    </h1>
+    {canCreate && (
+      <Button
+        onClick={() => setIsModalOpen(true)}
+        className="w-20 rounded-lg h-full border-gray-200 bg-indigo-600 text-white shadow-sm text-sm"
+        icon={<PlusOutlined />}
+        size="large"
+      >
+        {t('Thêm')}
+      </Button>
+    )}
+  </div>
+
+  <div className="p-2 mb flex items-center justify-between">
+    <span className="inline-flex overflow-hidden">
+      <div className="flex items-center gap-2">
+        <Select defaultValue="Table" className="w-28" size="large">
+          <Option value="1">{t('Table')}</Option>
+          <Option value="2">{t('Grid')}</Option>
+          <Option value="3">{t('List')}</Option>
+        </Select>
+        {canCreate && <ImportAction />}
+        <RangePicker
+          value={dateRange}
+          onChange={setDateRange}
+          format="YYYY-MM-DD"
+          className="cursor-pointer"
+          size="large"
+        />
+        <FieldActionWorkerRecruitment
+          dateRange={dateRange}
+          setDateRange={setDateRange}
+          handleApplyFilter={handleApplyFilter}
+          setIsDrawerVisible={setIsDrawerVisibleFilter}
+          isDrawerVisible={isDrawerVisibleFilter}
+          nameTags={nameTags}
+          setNameTags={setNameTags}
+          phoneNumberTags={phoneNumberTags}
+          setPhoneNumberTags={setPhoneNumberTags}
+          citizenshipIdTags={citizenshipIdTags}
+          setCitizenshipIdTags={setCitizenshipIdTags}
+        />
+        <Button
+          size="large"
+          className="bg-white"
+          onClick={() => setIsDrawerVisible(true)}
+        >
+          <CloumnIcon />
+        </Button>
+        {selectedRowKeys != null && selectedRowKeys.length > 0 && (
+          <ShowAction
+            handleOnClickAction={handleOnClickAction}
+            actionUsers={actionUsers}
+            setActionUsers={setActionUsers}
+            setSelectedRowKeys={setSelectedRowKeys}
+            selectedRowKeys={selectedRowKeys}
+            fetchDataUser={fetchData}
+            canDelete={canDelete}
+          />
         )}
       </div>
-      <div className="p-2 mb flex items-center justify-between">
-        <span className="inline-flex overflow-hidden">
-          <div className="flex items-center gap-2">
-            <Select defaultValue="Table" className="w-28" size="large">
-              <Option value="1">{t('Table')}</Option>
-              <Option value="2">{t('Grid')}</Option>
-              <Option value="3">{t('List')}</Option>
-            </Select>
-            {canCreate && <ImportAction />}
-            <RangePicker
-              value={dateRange}
-              onChange={setDateRange}
-              format="YYYY-MM-DD"
-              className="cursor-pointer"
-              size="large"
-            />
-            <FieldActionWorkerRecruitment
-              dateRange={dateRange}
-              setDateRange={setDateRange}
-              handleApplyFilter={handleApplyFilter}
-              setIsDrawerVisible={setIsDrawerVisibleFilter}
-              isDrawerVisible={isDrawerVisibleFilter}
-              nameTags={nameTags}
-              setNameTags={setNameTags}
-              phoneNumberTags={phoneNumberTags}
-              setPhoneNumberTags={setPhoneNumberTags}
-              citizenshipIdTags={citizenshipIdTags}
-              setCitizenshipIdTags={setCitizenshipIdTags}
-            />
-            <Button
-              size="large"
-              className="bg-white"
-              onClick={() => setIsDrawerVisible(true)}
-            >
-              <CloumnIcon />
-            </Button>
-            {selectedRowKeys != null && selectedRowKeys.length > 0 && (
-              <>
-                <ShowAction
-                  handleOnClickAction={handleOnClickAction}
-                  actionUsers={actionUsers}
-                  setActionUsers={setActionUsers}
-                  setSelectedRowKeys={setSelectedRowKeys}
-                  selectedRowKeys={selectedRowKeys}
-                  fetchDataUser={fetchData}
-                  canDelete={canDelete}
-                />
-              </>
-            )}
-          </div>
-        </span>
-      </div>
-      <Layout className="h-screen bg-white p-2">
-        {renderTable()}
-        {renderDetailModal()}
-        {renderColumnVisibilityDrawer()}
-      </Layout>
-    </div>
+    </span>
+  </div>
+
+  <Layout className="flex-1 overflow-auto bg-white p-2">
+    {renderTable()}
+    {renderDetailModal()}
+    {renderColumnVisibilityDrawer()}
+  </Layout>
+</div>
+
   )
 }
