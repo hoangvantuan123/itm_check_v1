@@ -132,7 +132,6 @@ const WorkerDeclarationMultiStepForm = () => {
       }
     }
   }
-
   const steps = [
     {
       title: 'Thông Tin Cá Nhân',

@@ -65,8 +65,8 @@ const WorkExperienceTable = ({ form }) => {
         <Input
           value={text}
           onChange={(e) => handleWorkExperienceChange(record.key, 'companyName', e.target.value)}
-          className="border-none w-36  md:w-full" // Adjusted width
-          style={{ margin: 0 }} // Reduced margin
+          className="border-none w-36  md:w-full" 
+          style={{ margin: 0 }} 
         />
       ),
     },
@@ -77,8 +77,8 @@ const WorkExperienceTable = ({ form }) => {
         <Input
           value={text}
           onChange={(e) => handleWorkExperienceChange(record.key, 'position', e.target.value)}
-          className="border-none w-36  md:w-full" // Adjusted width
-          style={{ margin: 0 }} // Reduced margin
+          className="border-none w-36  md:w-full" 
+          style={{ margin: 0 }}
         />
       ),
     },
@@ -89,8 +89,8 @@ const WorkExperienceTable = ({ form }) => {
         <Input
           value={text}
           onChange={(e) => handleWorkExperienceChange(record.key, 'employeeScale', e.target.value)}
-          className="border-none w-36  md:w-full" // Adjusted width
-          style={{ margin: 0 }} // Reduced margin
+          className="border-none w-36  md:w-full" 
+          style={{ margin: 0 }} 
         />
       ),
     },
