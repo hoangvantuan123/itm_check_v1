@@ -59,7 +59,7 @@ export default function UsersSettings({ permissions }) {
   const [error, setError] = useState(null)
   const [totalPages, setTotalPages] = useState(0)
   const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(10)
+  const [limit, setLimit] = useState(50)
   const [total, setTotal] = useState(0)
   const [actionUsers, setActionUsers] = useState(null)
   const canCreate = checkActionPermission(permissions, 'setting-1-2', 'create')
