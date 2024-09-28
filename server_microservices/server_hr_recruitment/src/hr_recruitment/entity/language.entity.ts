@@ -27,8 +27,8 @@ export class Language {
   @Column({ type: 'date', nullable: true })
   end_date: Date;
 
-  @Column({ type: 'boolean', nullable: true })
-  has_bonus: boolean;
+  @Column({ nullable: true })
+  has_bonus: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   create_date: Date;

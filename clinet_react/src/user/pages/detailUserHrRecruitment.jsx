@@ -1,78 +1,209 @@
-import { useState, useCallback, useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Helmet } from 'react-helmet'
-import { Input, Space, Table, Typography, message, Tabs } from 'antd'
-import { useDispatch, useSelector } from 'react-redux'
-const { Search } = Input
-import { useNavigate } from 'react-router-dom'
-const { Title, Text } = Typography
-const { TabPane } = Tabs
-import 'moment/locale/vi'
-import './static/css/scroll_container.css'
+import { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet';
+import {
+  Row,
+  Col,
+  Typography,
+  Button,
+  Form,
+  Input,
+  Radio,
+} from 'antd';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import './static/css/scroll_container.css';
+import ViewDetailUserHrRecruitment from '../components/candidateForm/viewDetailUserHrRecruitment';
+import { GetHrInfoId } from '../../features/hrRecruitment/getPersonnelId';
+import NoData from './noData';
+import Spinner from './load';
+
+const { Text } = Typography;
 
 export default function DetailUserHrRecruitment() {
-  const page = 1
-  const pageSize = 100
-  const { t } = useTranslation()
-  const [isMobile, setIsMobile] = useState(false)
-  const navigate = useNavigate()
-  const handleNavigateToBack = (id) => {
-    navigate(`/u/action=18/worker-recruitment-data`) // Replace with your actual route
-  }
+  const { t } = useTranslation();
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [form] = Form.useForm()
+  const fetchDataUserId = async () => {
+    setLoading(true);
+    try {
+      const response = await GetHrInfoId(id);
+      if (response.success) {
+        if (response.data.status) {
+          setFormData(response.data.data);
+          setError(null);
+        } else {
+          setError("Không có dữ liệu cho ID này."); 
+          setFormData({});
+        }
+      } else {
+        setError("Dữ liệu không khả dụng."); 
+        setFormData({});
+      }
+    } catch (error) {
+      setError(error.message || 'Đã xảy ra lỗi');
+      setFormData({});
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 820)
+    if (id) {
+      fetchDataUserId();
     }
+  }, [id]);
 
-    handleResize()
-    window.addEventListener('resize', handleResize)
+  const handleNavigateToBack = () => {
+    navigate(`/u/action=18/worker-recruitment-data`);
+  };
 
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [])
+  const handleFormChange = (changedValues) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      ...changedValues,
+    }));
+  };
+
+  const handleSubmit = () => {
+    console.log('Data Saved', formData);
+  };
+
+  const toggleEdit = () => {
+    setIsEditing(true);
+  };
+
+  if (loading) {
+    return <Spinner/>;
+  }
+
+  if (error) {
+    return (
+      <NoData/>
+    );
+  }
+
   return (
-    <div className="w-full h-screen bg-white p-3">
+    <div className="w-full h-screen bg-gray-50 p-3">
       <Helmet>
         <title>ITM - {t('Công nhân')}</title>
       </Helmet>
 
-      <nav aria-label="Breadcrumb">
-        <ol className="flex items-center gap-1 text-sm text-gray-600">
-          <li
-            onClick={handleNavigateToBack}
-            className="flex cursor-pointer items-center gap-2"
-          >
-            <svg
-              className=" w-5 h-5 opacity-65"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M9.57 5.92993L3.5 11.9999L9.57 18.0699"
-                stroke="#292D32"
-                stroke-width="1.5"
-                stroke-miterlimit="10"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M20.5 12H3.67004"
-                stroke="#292D32"
-                stroke-width="1.5"
-                stroke-miterlimit="10"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-            <a className="block transition  text-base hover:text-gray-800 ">
-              {' '}
-              {t('Quay lại bảng')}{' '}
-            </a>
+      <nav
+        aria-label="Breadcrumb"
+        className="flex justify-between items-center mb-6"
+      >
+        <ol className="flex items-center gap-4 text-sm text-gray-700">
+          <li onClick={handleNavigateToBack} className="cursor-pointer">
+            <span className="text-blue-600 hover:underline">Trở lại</span>
           </li>
         </ol>
+        <ol className=" flex items-center gap-2">
+          <Button className="bg-white">Export PDF</Button>
+          <Button className="bg-white">Xóa</Button>
+          <Button className="bg-white" onClick={toggleEdit}>
+            Chỉnh sửa
+          </Button>
+          <Button className="bg-white" onClick={handleSubmit}>
+            Lưu
+          </Button>
+        </ol>
       </nav>
+
+      <Row gutter={16}>
+        <Col xs={24} sm={24} md={14}>
+          <div className="border background bg-white rounded-lg p-6 h-screen overflow-auto scroll-container cursor-pointer">
+            <ViewDetailUserHrRecruitment
+              setIsEditing={setIsEditing}
+              setFormData={setFormData}
+              formData={formData}
+              isEditing={isEditing}
+              toggleEdit={toggleEdit}
+              form={form}
+            />
+          </div>
+        </Col>
+
+        <Col xs={24} sm={24} md={10}>
+          <div className="border bg-white rounded-lg p-6 mb-3">
+            <h1 className="text-xl font-bold text-center mb-4">Kết quả phỏng vấn</h1>
+            <Form
+              layout="vertical"
+              initialValues={formData}
+              onValuesChange={handleFormChange}
+            >
+              <Row gutter={16}>
+                <Col span={24}>
+                  <h3 className="font-semibold">Kết quả phỏng vấn</h3>
+                  <Form.Item name="interviewResult">
+                    <Radio.Group>
+                      <Radio value="ĐẠT">ĐẠT</Radio>
+                      <Radio value="KHÔNG ĐẠT">KHÔNG ĐẠT</Radio>
+                    </Radio.Group>
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item label="Bộ phận ứng tuyển" name="recruitmentDepartment">
+                    <Input placeholder="Bộ phận ứng tuyển" />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item label="Chức vụ" name="position">
+                    <Input placeholder="Chức vụ" />
+                  </Form.Item>
+                </Col>
+                <Col span={24}>
+                  <Form.Item label="Tên người phỏng vấn" name="interviewerName">
+                    <Input placeholder="Tên người phỏng vấn" />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <h3 className="font-semibold">Tiêu chuẩn lao động</h3>
+              <Row gutter={16}>
+                <Col span={16}>
+                  <Form.Item label="Ngoại hình" name="appearanceCriteria">
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item label="Chiều cao" name="height">
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={24}>
+                  <Form.Item label="Tiền án" name="criminalRecord">
+                    <Input />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <h3 className="font-semibold">Học vấn</h3>
+              <Row gutter={16}>
+                <Col span={16}>
+                  <Form.Item label="Trình độ" name="educationLevel">
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item label="Biết đọc, biết viết" name="readingWriting">
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={24}>
+                  <Form.Item label="Khả năng tính toán" name="calculationAbility">
+                    <Input />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form>
+          </div>
+        </Col>
+      </Row>
     </div>
-  )
+  );
 }

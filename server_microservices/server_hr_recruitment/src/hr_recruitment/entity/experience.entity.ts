@@ -24,11 +24,11 @@ export class Experience {
   @Column({ type: 'text', nullable: true })
   salary: string;
 
-  @Column({ type: 'date', nullable: true })
-  start_date: Date;
+  @Column({ nullable: true })
+  start_date: Number;
 
-  @Column({ type: 'date', nullable: true })
-  end_date: Date;
+  @Column({ nullable: true })
+  end_date: Number;
 
   @Column({ type: 'text', nullable: true })
   description: string;

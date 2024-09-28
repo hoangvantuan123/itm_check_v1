@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet'
-import { useDispatch, useSelector } from 'react-redux'
 import {
   Button,
   Checkbox,
@@ -14,9 +13,7 @@ import { registerUser } from '../../features/auth/API/registerAPI'
 const { Title, Text } = Typography
 
 export default function Register() {
-  const dispatch = useDispatch()
   const { t } = useTranslation()
-  const { loading, error } = useSelector((state) => state.auth)
 
   const onFinish = async (values) => {
     const { login, password } = values

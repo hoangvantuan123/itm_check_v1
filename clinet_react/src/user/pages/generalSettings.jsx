@@ -12,7 +12,7 @@ import {
   Tabs,
 } from 'antd'
 import { Link } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+
 const { Search } = Input
 const { Title, Text } = Typography
 const { TabPane } = Tabs
@@ -24,7 +24,7 @@ import 'moment/locale/vi'
 export default function GeneralSettings() {
   const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
   const userNameLogin = userFromLocalStorage?.login || 'none'
-  const dispatch = useDispatch()
+  
   const userId = userFromLocalStorage.id
   const page = 1
   const pageSize = 100

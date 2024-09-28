@@ -12,7 +12,6 @@ import {
   Drawer,
   Form,
 } from 'antd'
-import { useDispatch, useSelector } from 'react-redux'
 const { Search } = Input
 const { Title, Text } = Typography
 const { TabPane } = Tabs

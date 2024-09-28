@@ -1,8 +1,8 @@
-import { useState } from 'react'
-import { Form, Table, Input, Button, Checkbox, InputNumber } from 'antd'
+import { useState } from 'react';
+import { Form, Table, Input, Button, Checkbox, InputNumber } from 'antd';
 
 const FamilyInfoTable = () => {
-  const initialFamilyMembers = [
+  const [familyMembers, setFamilyMembers] = useState([
     {
       key: 0,
       relationship: 'Bố',
@@ -43,27 +43,22 @@ const FamilyInfoTable = () => {
       phoneNumber: '',
       livingTogether: false,
     },
-    {
-      key: 4,
-      relationship: 'Anh/Em/Con',
-      name_family: '',
-      birthYear: '',
-      workplace: '',
-      job: '',
-      phoneNumber: '',
-      livingTogether: false,
-    },
-    {
-      key: 5,
-      relationship: 'Anh/Em/Con',
-      name_family: '',
-      birthYear: '',
-      workplace: '',
-      job: '',
-      phoneNumber: '',
-      livingTogether: false,
-    },
-  ]
+  ]);
+
+  const addSibling = () => {
+    if (familyMembers.filter(member => member.relationship === 'Anh/Em/Con').length <3) {
+      setFamilyMembers([...familyMembers, {
+        key: familyMembers.length,
+        relationship: 'Anh/Em/Con',
+        name_family: '',
+        birthYear: '',
+        workplace: '',
+        job: '',
+        phoneNumber: '',
+        livingTogether: false,
+      }]);
+    }
+  };
 
   const columns = [
     {
@@ -73,6 +68,7 @@ const FamilyInfoTable = () => {
         <Form.Item
           name={['familyMembers', index, 'relationship']}
           initialValue={text || ''}
+          style={{ margin: 0 }} 
         >
           <span>{text}</span>
         </Form.Item>
@@ -82,8 +78,8 @@ const FamilyInfoTable = () => {
       title: 'Họ tên',
       dataIndex: 'name_family',
       render: (text, record, index) => (
-        <Form.Item name={['familyMembers', index, 'name_family']}>
-          <Input className="border-none w-[200px]" />
+        <Form.Item name={['familyMembers', index, 'name_family']} style={{ margin: 0 }}>
+          <Input className="border-none w-[150px]" />
         </Form.Item>
       ),
     },
@@ -91,8 +87,8 @@ const FamilyInfoTable = () => {
       title: 'Năm sinh',
       dataIndex: 'birthYear',
       render: (text, record, index) => (
-        <Form.Item name={['familyMembers', index, 'birthYear']}>
-          <InputNumber className="border-none w-28" />
+        <Form.Item name={['familyMembers', index, 'birthYear']} style={{ margin: 0 }}>
+          <InputNumber className="border-none w-[80px]" /> 
         </Form.Item>
       ),
     },
@@ -100,8 +96,8 @@ const FamilyInfoTable = () => {
       title: 'Nơi làm việc',
       dataIndex: 'workplace',
       render: (text, record, index) => (
-        <Form.Item name={['familyMembers', index, 'workplace']}>
-          <Input className="border-none w-28" />
+        <Form.Item name={['familyMembers', index, 'workplace']} style={{ margin: 0 }}>
+          <Input className="border-none w-[120px]" />
         </Form.Item>
       ),
     },
@@ -109,8 +105,8 @@ const FamilyInfoTable = () => {
       title: 'Công việc',
       dataIndex: 'job',
       render: (text, record, index) => (
-        <Form.Item name={['familyMembers', index, 'job']}>
-          <Input className="border-none w-28" />
+        <Form.Item name={['familyMembers', index, 'job']} style={{ margin: 0 }}>
+          <Input className="border-none w-[120px]" />
         </Form.Item>
       ),
     },
@@ -118,8 +114,8 @@ const FamilyInfoTable = () => {
       title: 'Số điện thoại',
       dataIndex: 'phoneNumber',
       render: (text, record, index) => (
-        <Form.Item name={['familyMembers', index, 'phoneNumber']}>
-          <Input className="border-none w-28" />
+        <Form.Item name={['familyMembers', index, 'phoneNumber']} style={{ margin: 0 }}>
+          <Input className="border-none w-[120px]" /> 
         </Form.Item>
       ),
     },
@@ -130,26 +126,38 @@ const FamilyInfoTable = () => {
         <Form.Item
           name={['familyMembers', index, 'livingTogether']}
           valuePropName="checked"
+          style={{ margin: 0 }}
         >
           <Checkbox />
         </Form.Item>
       ),
     },
-  ]
+  ];
 
   return (
     <>
       <h2 className="text-xl font-semibold mb-4">Thông tin gia đình</h2>
       <Table
-        dataSource={initialFamilyMembers}
+        dataSource={familyMembers}
         columns={columns}
         pagination={false}
         rowKey="key"
         bordered
         scroll={{ x: true }}
+        style={{ margin: '0 auto' }} 
+        rowClassName="custom-row" 
+        size="small"
       />
+      <Button 
+        onClick={addSibling} 
+        type="dashed"
+        disabled={familyMembers.filter(member => member.relationship === 'Anh/Em/Con').length >= 3}
+        style={{ marginTop: '16px' }} 
+      >
+        Thêm hàng
+      </Button>
     </>
-  )
-}
+  );
+};
 
-export default FamilyInfoTable
+export default FamilyInfoTable;

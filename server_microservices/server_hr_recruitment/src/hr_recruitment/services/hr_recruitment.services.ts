@@ -88,7 +88,7 @@ export class HrRecruitmentServices {
 
     if (endDate) {
       const endOfDay = new Date(endDate);
-      endOfDay.setHours(23, 59, 59, 999); // Đặt giờ đến cuối ngày
+      endOfDay.setHours(23, 59, 59, 999); 
       query.andWhere('personnel.create_date <= :endOfDay', { endOfDay });
     }
 
@@ -270,6 +270,84 @@ export class HrRecruitmentServices {
     }
   }
 
-
-
+  async getPersonnelById(id: number): Promise<any> {
+    const personnel = await this.personnelRepository.findOne({
+      where: { id },
+      relations: ['families', 'educations', 'languages', 'experiences'],
+    });
+  
+    if (!personnel) {
+      return {
+        status: false, 
+        data: [], // Mảng dữ liệu rỗng
+      };
+    }
+  
+    return {
+      status: true,
+      data: {
+        full_name: personnel.full_name,
+        gender: personnel.gender,
+        interview_date: personnel.interview_date,
+        start_date: personnel.start_date,
+        birth_date: personnel.birth_date,
+        id_number: personnel.id_number,
+        id_issue_date: personnel.id_issue_date,
+        ethnicity: personnel.ethnicity,
+        id_issue_place: personnel.id_issue_place,
+        insurance_number: personnel.insurance_number,
+        tax_number: personnel.tax_number,
+        phone_number: personnel.phone_number,
+        email: personnel.email,
+        alternate_phone_number: personnel.alternate_phone_number,
+        alternate_name: personnel.alternate_name,
+        alternate_relationship: personnel.alternate_relationship,
+        birth_address: personnel.birth_address,
+        birth_province: personnel.birth_province,
+        birth_district: personnel.birth_district,
+        birth_ward: personnel.birth_ward,
+        current_address: personnel.current_address,
+        current_province: personnel.current_province,
+        current_district: personnel.current_district,
+        current_ward: personnel.current_ward,
+        families: personnel.families?.map(family => ({
+          relationship: family.relationship,
+          full_name: family.full_name,
+          birth_year: family.birth_year,
+          workplace: family.workplace,
+          job: family.job,
+          phone_number: family.phone_number,
+          living_together: family.living_together,
+        })) ?? [], // Trả về mảng rỗng nếu không có `families`
+        educations: personnel.educations?.map(education => ({
+          school: education.school,
+          major: education.major,
+          years: education.years,
+          start_year: education.start_year,
+          graduation_year: education.graduation_year,
+          grade: education.grade,
+        })) ?? [], // Trả về mảng rỗng nếu không có `educations`
+        languages: personnel.languages?.map(language => ({
+          language: language.language,
+          certificate_type: language.certificate_type,
+          score: language.score,
+          level: language.level,
+          start_date: language.start_date,
+          end_date: language.end_date,
+          has_bonus: language.has_bonus,
+        })) ?? [], // Trả về mảng rỗng nếu không có `languages`
+        experiences: personnel.experiences?.map(experience => ({
+          company_name: experience.company_name,
+          position: experience.position,
+          start_date: experience.start_date,
+          end_date: experience.end_date,
+          employee_scale: experience.employee_scale,
+          tasks: experience.tasks,
+          salary: experience.salary,
+          description: experience.description,
+        })) ?? [], // Trả về mảng rỗng nếu không có `experiences`
+      },
+    };
+  }
+  
 }

@@ -12,7 +12,7 @@ import {
   Button,
   Dropdown,
 } from 'antd'
-import { useDispatch, useSelector } from 'react-redux'
+
 const { Search } = Input
 import decodeJWT from '../../utils/decode-JWT'
 const { Title, Text } = Typography
@@ -324,7 +324,6 @@ const TableIcon = () => {
   )
 }
 export default function PhoneWork() {
-  const dispatch = useDispatch()
   const { t } = useTranslation()
   const [isMobile, setIsMobile] = useState(false)
   const [viewModeList, setViewModeList] = useState('month')

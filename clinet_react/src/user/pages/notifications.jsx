@@ -14,7 +14,6 @@ import {
   Button,
   Drawer,
 } from 'antd'
-import { useDispatch } from 'react-redux'
 const { Search } = Input
 const { Title, Text } = Typography
 import decodeJWT from '../../utils/decode-JWT'
@@ -33,7 +32,6 @@ const { Sider, Content } = Layout
 export default function Notifications() {
   const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
   const userNameLogin = userFromLocalStorage?.login || 'none'
-  const dispatch = useDispatch()
   const userId = userFromLocalStorage.id
   const pageSize = 100
   const { t } = useTranslation()

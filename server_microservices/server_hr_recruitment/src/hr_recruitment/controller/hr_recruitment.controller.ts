@@ -93,5 +93,8 @@ export class HrRecruitmentController {
     return await this.personnelService.delete(ids);
   }
   
-
+  @Get('personnel/:id')
+  async getPersonnel(@Param('id') id: number) {
+    return this.personnelService.getPersonnelById(id);
+  }
 }

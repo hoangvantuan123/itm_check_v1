@@ -2,7 +2,6 @@ import { useState, useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet'
 import { Input, Space, Table, Typography, message, Tabs } from 'antd'
-import { useDispatch, useSelector } from 'react-redux'
 const { Search } = Input
 import decodeJWT from '../../utils/decode-JWT'
 const { Title, Text } = Typography

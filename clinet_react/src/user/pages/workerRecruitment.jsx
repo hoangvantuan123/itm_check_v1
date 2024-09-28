@@ -119,6 +119,7 @@ export default function WorkerRecruitmentPage({ permissions }) {
   const [citizenshipIdTags, setCitizenshipIdTags] = useState([])
   const [isDrawerVisibleFilter, setIsDrawerVisibleFilter] = useState(false)
   const [actionUsers, setActionUsers] = useState(null)
+  const [idUser, setIdUser] = useState(null)
   const handleOnClickAction = () => {
     setActionUsers('actionHrInfoIds')
   }
@@ -242,7 +243,7 @@ export default function WorkerRecruitmentPage({ permissions }) {
   }
 
   const handleNavigateToDetail = (id) => {
-    navigate(`/u/action=18/worker-recruitment-data/detail/${id}`) // Replace with your actual route
+    navigate(`/u/action=18/worker-recruitment-data/detail/${id}`)
   }
 
   const columns = [

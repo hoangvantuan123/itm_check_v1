@@ -79,9 +79,9 @@ class CreateLanguageDto {
   @IsOptional()
   end_date?: string;
 
-  @IsBoolean()
+  @IsString()
   @IsOptional()
-  has_bonus?: boolean;
+  has_bonus?: string;
 }
 
 class CreateExperienceDto {
@@ -92,13 +92,11 @@ class CreateExperienceDto {
   @IsOptional()
   position?: string;
 
-  @IsDateString()
   @IsOptional()
-  start_date?: string;
+  start_date?: number;
 
-  @IsDateString()
   @IsOptional()
-  end_date?: string;
+  end_date?: number;
 
   @IsString()
   @IsOptional()

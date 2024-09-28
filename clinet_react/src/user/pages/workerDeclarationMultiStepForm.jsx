@@ -9,7 +9,6 @@ import PersonalInformation from '../components/workerDeclaration/personalInforma
 import CandidateType from '../components/workerDeclaration/candidateType'
 import { PostPublicHrRecryutment } from '../../features/hrRecruitment/postPublicHrRecruitment'
 
-const { Step } = Steps
 
 const WorkerDeclarationMultiStepForm = () => {
   const navigate = useNavigate()
@@ -44,13 +43,12 @@ const WorkerDeclarationMultiStepForm = () => {
   }
 
   const handleSubmit = async () => {
-    const isValid = await validateCurrentStep() // Validate the current step
+    const isValid = await validateCurrentStep() 
     if (isValid) {
-      if (isSubmitting) return // Prevent multiple submissions
+      if (isSubmitting) return 
 
-      setIsSubmitting(true) // Set submitting state to true
+      setIsSubmitting(true) 
 
-      // Gather form data
       const finalData = { ...formData, ...form.getFieldsValue() }
 
       const data = {
@@ -156,25 +154,18 @@ const WorkerDeclarationMultiStepForm = () => {
   return (
     <div className="flex items-center justify-center h-screen overflow-auto p-3">
       <div className="lg:max-w-5xl w-full h-screen">
-        <h1 className="text-2xl font-bold text-center p-4">TỜ KHAI ỨNG VIÊN</h1>
+        <h1 className="text-2xl font-bold text-center p-4">MẪU KHAI ỨNG VIÊN</h1>
         <p className="text-center mb-4">Mẫu tờ khai thông tin cá nhân online</p>
 
-        <Steps current={currentStep} className="mb-4">
-          {steps.map((step) => (
-            <Step
-              key={step.title}
-              title={step.title}
-              className="flex items-center"
-            />
-          ))}
-        </Steps>
+     
 
         <Form form={form} layout="vertical" className="pb-10">
           {steps[currentStep].content}
           <Form.Item className="mt-4">
             <Button
-              className=" border-gray-200 bg-indigo-600 text-white shadow-sm text-sm"
+              className=" w-full  border-gray-200 bg-indigo-600 text-white shadow-sm text-sm"
               onClick={handleSubmit}
+              size="large"
             >
               Gửi thông tin
             </Button>

@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
 import {
   Button,
   Checkbox,
@@ -21,7 +20,6 @@ const { Title, Text } = Typography
 
 export default function Login() {
   const navigate = useNavigate()
-  const dispatch = useDispatch()
   const { t } = useTranslation()
   const location = useLocation()
   const [error, setError] = useState(null)

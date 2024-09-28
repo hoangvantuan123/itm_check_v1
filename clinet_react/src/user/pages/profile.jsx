@@ -17,7 +17,7 @@ import {
   Switch,
   Checkbox,
 } from 'antd'
-import { useDispatch, useSelector } from 'react-redux'
+
 import { DownOutlined } from '@ant-design/icons'
 
 const { Search } = Input
@@ -172,7 +172,6 @@ export default function Profile({ permissions }) {
   const [form] = Form.useForm()
   const canView = checkActionPermission(permissions, 'setting', 'view')
 
-  const dispatch = useDispatch()
   const userId = userFromLocalStorage.id
   const page = 1
   const pageSize = 100

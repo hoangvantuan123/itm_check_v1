@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet'
 import moment from 'moment'
 import { AudioOutlined } from '@ant-design/icons'
 import { Input, Space, Table, Typography, message, Tabs } from 'antd'
-import { useDispatch, useSelector } from 'react-redux'
+
 const { Search } = Input
 import decodeJWT from '../../utils/decode-JWT'
 const { Title, Text } = Typography
@@ -45,7 +45,6 @@ const MoreSettings = () => {
 
 export default function Home() {
   const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
-  const dispatch = useDispatch()
   const userId = userFromLocalStorage.id
   const page = 1
   const pageSize = 100

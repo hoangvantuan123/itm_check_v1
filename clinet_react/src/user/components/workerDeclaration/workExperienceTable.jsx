@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
-import { Table, Input, Button, Form, DatePicker } from 'antd'
-import moment from 'moment'
+import { useState, useEffect } from 'react';
+import { Table, Input, Button, Form, DatePicker } from 'antd';
+import moment from 'moment';
 
 const WorkExperienceTable = ({ form }) => {
   const initialWorkExperience = {
@@ -13,29 +13,24 @@ const WorkExperienceTable = ({ form }) => {
     tasks: '',
     salary: '',
     reasonForLeaving: '',
-  }
+  };
 
-  const [workExperiences, setWorkExperiences] = useState([
-    initialWorkExperience,
-  ])
+  const [workExperiences, setWorkExperiences] = useState([initialWorkExperience]);
 
   useEffect(() => {
-    const workExperienceData = form.getFieldValue('workExperiences') || []
-
-    if (
-      JSON.stringify(workExperienceData) !== JSON.stringify(workExperiences)
-    ) {
-      setWorkExperiences(workExperienceData)
+    const workExperienceData = form.getFieldValue('workExperiences') || [];
+    if (JSON.stringify(workExperienceData) !== JSON.stringify(workExperiences)) {
+      setWorkExperiences(workExperienceData);
     }
-  }, [form, workExperiences])
+  }, [form, workExperiences]);
 
   const handleWorkExperienceChange = (key, field, value) => {
     const updatedWorkExperiences = workExperiences.map((experience) =>
       experience.key === key ? { ...experience, [field]: value } : experience,
-    )
-    setWorkExperiences(updatedWorkExperiences)
-    form.setFieldsValue({ workExperiences: updatedWorkExperiences })
-  }
+    );
+    setWorkExperiences(updatedWorkExperiences);
+    form.setFieldsValue({ workExperiences: updatedWorkExperiences });
+  };
 
   const addWorkExperience = () => {
     const newExperience = {
@@ -48,19 +43,19 @@ const WorkExperienceTable = ({ form }) => {
       tasks: '',
       salary: '',
       reasonForLeaving: '',
-    }
-    const updatedWorkExperiences = [...workExperiences, newExperience]
-    setWorkExperiences(updatedWorkExperiences)
-    form.setFieldsValue({ workExperiences: updatedWorkExperiences })
-  }
+    };
+    const updatedWorkExperiences = [...workExperiences, newExperience];
+    setWorkExperiences(updatedWorkExperiences);
+    form.setFieldsValue({ workExperiences: updatedWorkExperiences });
+  };
 
   const removeWorkExperience = (key) => {
     const updatedWorkExperiences = workExperiences.filter(
       (experience) => experience.key !== key,
-    )
-    setWorkExperiences(updatedWorkExperiences)
-    form.setFieldsValue({ workExperiences: updatedWorkExperiences })
-  }
+    );
+    setWorkExperiences(updatedWorkExperiences);
+    form.setFieldsValue({ workExperiences: updatedWorkExperiences });
+  };
 
   const workExperienceColumns = [
     {
@@ -69,14 +64,9 @@ const WorkExperienceTable = ({ form }) => {
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) =>
-            handleWorkExperienceChange(
-              record.key,
-              'companyName',
-              e.target.value,
-            )
-          }
-          className="border-none w-20"
+          onChange={(e) => handleWorkExperienceChange(record.key, 'companyName', e.target.value)}
+          className="border-none w-36  md:w-full" // Adjusted width
+          style={{ margin: 0 }} // Reduced margin
         />
       ),
     },
@@ -86,10 +76,9 @@ const WorkExperienceTable = ({ form }) => {
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) =>
-            handleWorkExperienceChange(record.key, 'position', e.target.value)
-          }
-          className="border-none w-20"
+          onChange={(e) => handleWorkExperienceChange(record.key, 'position', e.target.value)}
+          className="border-none w-36  md:w-full" // Adjusted width
+          style={{ margin: 0 }} // Reduced margin
         />
       ),
     },
@@ -99,14 +88,9 @@ const WorkExperienceTable = ({ form }) => {
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) =>
-            handleWorkExperienceChange(
-              record.key,
-              'employeeScale',
-              e.target.value,
-            )
-          }
-          className="border-none w-20"
+          onChange={(e) => handleWorkExperienceChange(record.key, 'employeeScale', e.target.value)}
+          className="border-none w-36  md:w-full" // Adjusted width
+          style={{ margin: 0 }} // Reduced margin
         />
       ),
     },
@@ -116,11 +100,10 @@ const WorkExperienceTable = ({ form }) => {
       render: (text, record) => (
         <DatePicker
           value={text ? moment(text, 'YYYY') : null}
-          onChange={(date, dateString) =>
-            handleWorkExperienceChange(record.key, 'joinYear', dateString)
-          }
+          onChange={(date, dateString) => handleWorkExperienceChange(record.key, 'joinYear', dateString)}
           picker="year"
-          className="border-none w-24"
+          className="border-none w-28  md:w-full" // Adjusted width
+          style={{ margin: 0 }} // Reduced margin
         />
       ),
     },
@@ -130,11 +113,10 @@ const WorkExperienceTable = ({ form }) => {
       render: (text, record) => (
         <DatePicker
           value={text ? moment(text, 'YYYY') : null}
-          onChange={(date, dateString) =>
-            handleWorkExperienceChange(record.key, 'leaveYear', dateString)
-          }
+          onChange={(date, dateString) => handleWorkExperienceChange(record.key, 'leaveYear', dateString)}
           picker="year"
-          className="border-none w-24"
+          className="border-none w-28  md:w-full" // Adjusted width
+          style={{ margin: 0 }} // Reduced margin
         />
       ),
     },
@@ -144,10 +126,9 @@ const WorkExperienceTable = ({ form }) => {
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) =>
-            handleWorkExperienceChange(record.key, 'tasks', e.target.value)
-          }
-          className="border-none w-20"
+          onChange={(e) => handleWorkExperienceChange(record.key, 'tasks', e.target.value)}
+          className="border-none w-36  md:w-full" // Adjusted width
+          style={{ margin: 0 }} // Reduced margin
         />
       ),
     },
@@ -157,10 +138,9 @@ const WorkExperienceTable = ({ form }) => {
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) =>
-            handleWorkExperienceChange(record.key, 'salary', e.target.value)
-          }
-          className="border-none w-20"
+          onChange={(e) => handleWorkExperienceChange(record.key, 'salary', e.target.value)}
+          className="border-none w-36  md:w-full" // Adjusted width
+          style={{ margin: 0 }} // Reduced margin
         />
       ),
     },
@@ -170,33 +150,25 @@ const WorkExperienceTable = ({ form }) => {
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) =>
-            handleWorkExperienceChange(
-              record.key,
-              'reasonForLeaving',
-              e.target.value,
-            )
-          }
-          className="border-none w-20"
+          onChange={(e) => handleWorkExperienceChange(record.key, 'reasonForLeaving', e.target.value)}
+          className="border-none w-36  md:w-full " // Adjusted width
+          style={{ margin: 0 }} // Reduced margin
         />
       ),
     },
     {
       title: 'Hành động',
       render: (text, record) => (
-        <Button type="link" onClick={() => removeWorkExperience(record.key)}>
+        <Button  className=" md:w-full"type="link" onClick={() => removeWorkExperience(record.key)}>
           Xóa
         </Button>
       ),
     },
-  ]
+  ];
 
   return (
     <>
-      <h2 className="text-2xl font-semibold mb-6 mt-5">
-        Tình trạng kinh nghiệm làm việc
-      </h2>
-
+      <h2 className="text-2xl font-semibold mb-6 mt-5">Tình trạng kinh nghiệm làm việc</h2>
       <h3 className="text-xl font-semibold mb-4">Kinh nghiệm làm việc</h3>
       <Form.Item name="workExperiences">
         <Table
@@ -206,13 +178,16 @@ const WorkExperienceTable = ({ form }) => {
           rowKey="key"
           scroll={{ x: true }}
           bordered
+          style={{ margin: '0 auto' }} 
+          rowClassName="custom-row" 
+          size="small"
         />
       </Form.Item>
       <Button type="dashed" onClick={addWorkExperience} className="mt-5 mb-5">
         Thêm công ty
       </Button>
     </>
-  )
-}
+  );
+};
 
-export default WorkExperienceTable
+export default WorkExperienceTable;
