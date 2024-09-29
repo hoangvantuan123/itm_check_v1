@@ -1,18 +1,50 @@
-import { useState } from 'react'
-import { Col, Row, Form, Input, Divider, Button, Table, Typography } from 'antd'
+import { useState, useEffect } from 'react'
+import {
+  Col,
+  Row,
+  Form,
+  Input,
+  Divider,
+  Button,
+  Table,
+  DatePicker,
+  Typography,
+  Select,
+} from 'antd'
 import EditLanguageTable from './editLanguageTable'
 import EditWorkExperienceTable from './editWorkExperienceTable'
 import EditEducationTable from './editEducationTable'
 import EditFamilyInfoTable from './editFamilyInfoTable'
 const { Text } = Typography
-
-const ViewDetailUserHrRecruitment = ({form,isEditing, setFormData,formData, setIsEditing, toggleEdit  }) => {
-
+const { Option } = Select
+import moment from 'moment'
+const ViewDetailUserHrRecruitment = ({
+  form,
+  isEditing,
+  handleFinish,
+  setFormData,
+  formData,
+  setIsEditing,
+  toggleEdit,
+}) => {
   const handleFormChange = (changedValues) => {
     setFormData({ ...formData, ...changedValues })
   }
 
-
+  useEffect(() => {
+    const formattedData = {
+      ...formData,
+      interview_date: formData.interview_date
+        ? moment(formData.interview_date)
+        : null,
+      start_date: formData.start_date ? moment(formData.start_date) : null,
+      birth_date: formData.birth_date ? moment(formData.birth_date) : null,
+      id_issue_date: formData.id_issue_date
+        ? moment(formData.id_issue_date)
+        : null,
+    }
+    form.setFieldsValue(formattedData)
+  }, [formData, form])
 
   // Columns for the tables
   const familyColumns = [
@@ -55,7 +87,7 @@ const ViewDetailUserHrRecruitment = ({form,isEditing, setFormData,formData, setI
     { title: 'Ngày bắt đầu', dataIndex: 'start_date', key: 'start_date' },
     { title: 'Ngày kết thúc', dataIndex: 'end_date', key: 'end_date' },
     {
-      title: 'Có thưởng',
+      title: 'Ghi chú',
       dataIndex: 'has_bonus',
       key: 'has_bonus',
       render: (text) => (text ? 'Có' : 'Không'),
@@ -85,175 +117,292 @@ const ViewDetailUserHrRecruitment = ({form,isEditing, setFormData,formData, setI
       <Divider orientation="left italic">Thông tin nhân sự</Divider>
 
       {isEditing ? (
-       <Form layout="vertical" className="pb-20">
-       <Row gutter={16}>
-         <Col span={16}>
-           <Form.Item label="Họ tên ứng viên:">
-             <Input size="large" value={formData.full_name} readOnly />
-           </Form.Item>
-         </Col>
-         <Col span={8}>
-           <Form.Item label="Giới tính:">
-             <Input  size="large" value={formData.gender} readOnly />
-           </Form.Item>
-         </Col>
-       </Row>
- 
-       <Row gutter={16}>
-         <Col span={12}>
-           <Form.Item label="Ngày phỏng vấn:">
-             <Input size="large" value={formData.interview_date} readOnly />
-           </Form.Item>
-         </Col>
-         <Col span={12}>
-           <Form.Item label="Ngày vào:">
-             <Input  size="large" value={formData.start_date} readOnly />
-           </Form.Item>
-         </Col>
-       </Row>
- 
-       <Row gutter={16} >
-         <Col span={24}>
-           <Form.Item label="Ngày tháng năm sinh:">
-             <Input size="large" value={formData.birth_date} readOnly />
-           </Form.Item>
-         </Col>
-       </Row>
- 
-       <Row gutter={16}>
-         <Col span={12}>
-           <Form.Item label="Số CCCD:">
-             <Input size="large" value={formData.id_number} readOnly />
-           </Form.Item>
-         </Col>
-         <Col span={6}>
-           <Form.Item label="Ngày cấp:">
-             <Input size="large" value={formData.id_issue_date} readOnly />
-           </Form.Item>
-         </Col>
-         <Col span={6}>
-           <Form.Item label="Dân tộc:">
-             <Input  size="large" value={formData.ethnicity} readOnly />
-           </Form.Item>
-         </Col>
-       </Row>
- 
-       <Row gutter={16} >
-         <Col span={24}>
-           <Form.Item label="Nơi cấp:">
-             <Input size="large" value={formData.id_issue_place} readOnly />
-           </Form.Item>
-         </Col>
-       </Row>
- 
-       <Row gutter={16}>
-         <Col span={12}>
-           <Form.Item label="Số bảo hiểm (nếu có):">
-             <Input size="large" value={formData.insurance_number} readOnly />
-           </Form.Item>
-         </Col>
-         <Col span={12}>
-           <Form.Item label="Mã số thuế cá nhân:">
-             <Input value={formData.tax_number} readOnly />
-           </Form.Item>
-         </Col>
-       </Row>
- 
-       <Row gutter={16} >
-         <Col span={12}>
-           <Form.Item label="Số điện thoại liên hệ:">
-             <Input size="large" value={formData.phone_number} readOnly />
-           </Form.Item>
-         </Col>
-         <Col span={12}>
-           <Form.Item label="Email:">
-             <Input  size="large" value={formData.email} readOnly />
-           </Form.Item>
-         </Col>
-       </Row>
- 
-       <Row gutter={16} >
-         <Col span={12}>
-           <Form.Item label="Số điện thoại khi cần thiết:">
-             <Input size="large" value={formData.alternate_phone_number} readOnly />
-           </Form.Item>
-         </Col>
-         <Col span={6}>
-           <Form.Item label="Tên:">
-             <Input  size="large" value={formData.alternate_name} readOnly />
-           </Form.Item>
-         </Col>
-         <Col span={6}>
-           <Form.Item label="Quan hệ:">
-             <Input size="large" value={formData.alternate_relationship} readOnly />
-           </Form.Item>
-         </Col>
-       </Row>
- 
-       <h3 className="mb-2 mt-2 italic">
-         Địa chỉ đăng ký giấy khai sinh (hoặc nguyên quán hoặc HKTT hoặc tạm trú)
-       </h3>
-       <Row gutter={16} className="mt-2">
-         <Col span={8}>
-           <Form.Item label="Tỉnh:">
-             <Input size="large" value={formData.birth_province} readOnly />
-           </Form.Item>
-         </Col>
-         <Col span={8}>
-           <Form.Item label="Quận/Huyện:">
-             <Input size="large" value={formData.birth_district} readOnly />
-           </Form.Item>
-         </Col>
-         <Col span={8}>
-           <Form.Item label="Xã/Phường:">
-             <Input  size="large" value={formData.birth_ward} readOnly />
-           </Form.Item>
-         </Col>
-         <Col span={24}>
-           <Form.Item label="Địa chỉ:">
-             <Input size="large" value={formData.birth_address} readOnly />
-           </Form.Item>
-         </Col>
-       </Row>
- 
-       <h3 className="mb-2 mt-2 italic">Địa chỉ nơi ở hiện tại</h3>
-       <Row gutter={16} className="mt-2">
-         <Col span={8}>
-           <Form.Item label="Tỉnh:">
-             <Input  size="large" value={formData.current_province} readOnly />
-           </Form.Item>
-         </Col>
-         <Col span={8}>
-           <Form.Item label="Quận/Huyện:">
-             <Input size="large" value={formData.current_district} readOnly />
-           </Form.Item>
-         </Col>
-         <Col span={8}>
-           <Form.Item label="Xã/Phường:">
-             <Input size="large" value={formData.current_ward} readOnly />
-           </Form.Item>
-         </Col>
-         <Col span={24}>
-           <Form.Item label="Số nhà/Đường:">
-             <Input size="large" value={formData.current_address} readOnly />
-           </Form.Item>
-         </Col>
-       </Row>
- 
-       <Divider orientation="left italic">Thông tin gia đình</Divider>
-       <EditFamilyInfoTable form={form} dataSource={formData.families}/>
-       
-       <Divider orientation="left italic">Tình trạng học vấn</Divider>
-       <h2 className="mt-4 mb-2 font-semibold">Học vấn</h2>
-       <EditEducationTable form={form} dataSource={formData.educations}/>
- 
-       <h2 className="mt-4 mb-2 font-semibold">Ngôn ngữ</h2>
-       <EditLanguageTable form={form} dataSource={formData.languages}/>
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleFinish}
+          className="pb-20"
+        >
+          <Row gutter={16}>
+            <Col span={16}>
+              <Form.Item
+                label="Họ tên ứng viên:"
+                name="full_name"
+                rules={[{ required: true, message: 'Vui lòng nhập họ tên!' }]}
+              >
+                <Input size="large" placeholder="Nhập họ tên" />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                label="Giới tính:"
+                name="gender"
+                rules={[
+                  { required: true, message: 'Vui lòng chọn giới tính!' },
+                ]}
+              >
+                <Select size="large" placeholder="Chọn giới tính">
+                  <Option value="Male">Nam</Option>
+                  <Option value="Female">Nữ</Option>
+                  <Option value="Other">Khác</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
 
-       <Divider orientation="left italic">Kinh nghiệm làm việc</Divider>
-       <EditWorkExperienceTable form={form} dataSource={formData.experiences}/>
-      
-     </Form>  
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                label="Ngày phỏng vấn:"
+                name="interview_date"
+                rules={[
+                  { required: true, message: 'Vui lòng nhập ngày phỏng vấn!' },
+                ]}
+              >
+                <DatePicker
+                  size="large"
+                  style={{ width: '100%' }}
+                  placeholder="Chọn ngày phỏng vấn"
+                  format="YYYY-MM-DD"
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item label="Ngày vào:" name="start_date">
+                <DatePicker
+                  size="large"
+                  style={{ width: '100%' }}
+                  placeholder="Chọn ngày vào"
+                  format="YYYY-MM-DD"
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col span={24}>
+              <Form.Item
+                label="Ngày tháng năm sinh:"
+                name="birth_date"
+                rules={[
+                  { required: true, message: 'Vui lòng nhập ngày sinh!' },
+                ]}
+              >
+                <DatePicker
+                  size="large"
+                  style={{ width: '100%' }}
+                  placeholder="Chọn ngày sinh"
+                  format="YYYY-MM-DD"
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                label="Số CCCD:"
+                name="id_number"
+                rules={[{ required: true, message: 'Vui lòng nhập số CMND!' }]}
+              >
+                <Input size="large" />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="Ngày cấp:" name="id_issue_date">
+                <DatePicker
+                  size="large"
+                  style={{ width: '100%' }}
+                  placeholder="Chọn ngày cấp"
+                  format="YYYY-MM-DD"
+                />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="Dân tộc:" name="ethnicity">
+                <Input size="large" />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col span={24}>
+              <Form.Item label="Nơi cấp:" name="id_issue_place">
+                <Input size="large" />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item label="Số bảo hiểm (nếu có):" name="insurance_number">
+                <Input size="large" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item label="Mã số thuế cá nhân:" name="tax_number">
+                <Input size="large" />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                label="Số điện thoại liên hệ:"
+                name="phone_number"
+                rules={[
+                  { required: true, message: 'Vui lòng nhập số điện thoại!' },
+                ]}
+              >
+                <Input size="large" placeholder="Nhập số điện thoại" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item label="Email:" name="email">
+                <Input size="large" placeholder="Nhập email" />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                label="Số điện thoại khi cần thiết:"
+                name="alternate_phone_number"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Vui lòng nhập số điện thoại khẩn cấp!',
+                  },
+                ]}
+              >
+                <Input size="large" placeholder="Nhập số điện thoại khẩn cấp" />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item
+                label="Tên:"
+                name="alternate_name"
+                rules={[{ required: true, message: 'Vui lòng nhập tên!' }]}
+              >
+                <Input size="large" placeholder="Nhập tên người liên hệ" />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="Quan hệ:" name="alternate_relationship">
+                <Input size="large" placeholder="Nhập quan hệ" />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <h3 className="mb-2 mt-2 italic">
+            Địa chỉ đăng ký giấy khai sinh (hoặc nguyên quán hoặc HKTT hoặc tạm
+            trú)
+          </h3>
+          <Row gutter={16} className="mt-2">
+            <Col span={8}>
+              <Form.Item
+                label="Tỉnh:"
+                name="birth_province"
+                rules={[{ required: true, message: 'Vui lòng nhập tỉnh!' }]}
+              >
+                <Input size="large" placeholder="Nhập tỉnh" />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                label="Quận/Huyện:"
+                name="birth_district"
+                rules={[
+                  { required: true, message: 'Vui lòng nhập quận/huyện!' },
+                ]}
+              >
+                <Input size="large" placeholder="Nhập quận/huyện" />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                label="Xã/Phường:"
+                name="birth_ward"
+                rules={[
+                  { required: true, message: 'Vui lòng nhập xã/phường!' },
+                ]}
+              >
+                <Input size="large" placeholder="Nhập xã/phường" />
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item
+                label="Địa chỉ:"
+                name="birth_address"
+                rules={[{ required: true, message: 'Vui lòng nhập địa chỉ!' }]}
+              >
+                <Input size="large" placeholder="Nhập địa chỉ" />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <h3 className="mb-2 mt-2 italic">Địa chỉ nơi ở hiện tại</h3>
+          <Row gutter={16} className="mt-2">
+            <Col span={8}>
+              <Form.Item
+                label="Tỉnh:"
+                name="current_province"
+                rules={[{ required: true, message: 'Vui lòng nhập tỉnh!' }]}
+              >
+                <Input size="large" placeholder="Nhập tỉnh" />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                label="Quận/Huyện:"
+                name="current_district"
+                rules={[
+                  { required: true, message: 'Vui lòng nhập quận/huyện!' },
+                ]}
+              >
+                <Input size="large" placeholder="Nhập quận/huyện" />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                label="Xã/Phường:"
+                name="current_ward"
+                rules={[
+                  { required: true, message: 'Vui lòng nhập xã/phường!' },
+                ]}
+              >
+                <Input size="large" placeholder="Nhập xã/phường" />
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item
+                label="Số nhà/Đường:"
+                name="current_address"
+                rules={[{ required: true, message: 'Vui lòng nhập địa chỉ!' }]}
+              >
+                <Input size="large" placeholder="Nhập địa chỉ" />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Divider orientation="left italic">Thông tin gia đình</Divider>
+          <EditFamilyInfoTable form={form} dataSource={formData.families} />
+
+          <Divider orientation="left italic">Tình trạng học vấn</Divider>
+          <h2 className="mt-4 mb-2 font-semibold">Học vấn</h2>
+          <EditEducationTable form={form} dataSource={formData.educations} />
+
+          <h2 className="mt-4 mb-2 font-semibold">Ngôn ngữ</h2>
+          <EditLanguageTable form={form} dataSource={formData.languages} />
+
+          <Divider orientation="left italic">Kinh nghiệm làm việc</Divider>
+          <EditWorkExperienceTable
+            form={form}
+            dataSource={formData.experiences}
+          />
+        </Form>
       ) : (
         <div className="pb-20">
           <Row gutter={16}>
@@ -270,7 +419,7 @@ const ViewDetailUserHrRecruitment = ({form,isEditing, setFormData,formData, setI
               </div>
             </Col>
           </Row>
-          <Row gutter={16} className='mt-2'>
+          <Row gutter={16} className="mt-2">
             <Col span={12}>
               <div>
                 <strong>Ngày phỏng vấn:</strong>
@@ -284,7 +433,7 @@ const ViewDetailUserHrRecruitment = ({form,isEditing, setFormData,formData, setI
               </div>
             </Col>
           </Row>
-          <Row gutter={16} className='mt-2'>
+          <Row gutter={16} className="mt-2">
             <Col span={24}>
               <div>
                 <strong>Ngày tháng năm sinh:</strong>
@@ -293,7 +442,7 @@ const ViewDetailUserHrRecruitment = ({form,isEditing, setFormData,formData, setI
             </Col>
           </Row>
 
-          <Row gutter={16} className='mt-2'>
+          <Row gutter={16} className="mt-2">
             <Col span={12}>
               <div>
                 <strong>Số CCCD:</strong>
@@ -314,7 +463,7 @@ const ViewDetailUserHrRecruitment = ({form,isEditing, setFormData,formData, setI
             </Col>
           </Row>
 
-          <Row gutter={16} className='mt-2'>
+          <Row gutter={16} className="mt-2">
             <Col span={24}>
               <div>
                 <strong>Nơi cấp:</strong>
@@ -322,7 +471,7 @@ const ViewDetailUserHrRecruitment = ({form,isEditing, setFormData,formData, setI
               </div>
             </Col>
           </Row>
-          <Row gutter={16} className='mt-2'>
+          <Row gutter={16} className="mt-2">
             <Col span={12}>
               <div>
                 <strong>Số bảo hiểm (nếu có):</strong>
@@ -336,7 +485,7 @@ const ViewDetailUserHrRecruitment = ({form,isEditing, setFormData,formData, setI
               </div>
             </Col>
           </Row>
-          <Row gutter={16} className='mt-2'>
+          <Row gutter={16} className="mt-2">
             <Col span={12}>
               <div>
                 <strong>Số điện thoại liên hệ:</strong>
@@ -351,7 +500,7 @@ const ViewDetailUserHrRecruitment = ({form,isEditing, setFormData,formData, setI
             </Col>
           </Row>
 
-          <Row gutter={16} className='mt-2'>
+          <Row gutter={16} className="mt-2">
             <Col span={12}>
               <div>
                 <strong>Số điện thoại khi cần thiết:</strong>
@@ -376,7 +525,7 @@ const ViewDetailUserHrRecruitment = ({form,isEditing, setFormData,formData, setI
             Địa chỉ đăng ký giấy khai sinh(hoặc nguyên quán hoặc HKTT hoặc tạm
             trú)
           </h3>
-          <Row gutter={16} className='mt-2'>
+          <Row gutter={16} className="mt-2">
             <Col span={8}>
               <div>
                 <strong>Tỉnh:</strong>
@@ -403,8 +552,8 @@ const ViewDetailUserHrRecruitment = ({form,isEditing, setFormData,formData, setI
             </Col>
           </Row>
 
-          <h3  className=" mb-2 mt-2 italic">Địa chỉ nơi ở hiện tại</h3>
-          <Row gutter={16} className='mt-2'>
+          <h3 className=" mb-2 mt-2 italic">Địa chỉ nơi ở hiện tại</h3>
+          <Row gutter={16} className="mt-2">
             <Col span={8}>
               <div>
                 <strong>Tỉnh:</strong>

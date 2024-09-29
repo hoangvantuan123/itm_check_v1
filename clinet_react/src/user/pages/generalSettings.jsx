@@ -24,7 +24,7 @@ import 'moment/locale/vi'
 export default function GeneralSettings() {
   const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
   const userNameLogin = userFromLocalStorage?.login || 'none'
-  
+
   const userId = userFromLocalStorage.id
   const page = 1
   const pageSize = 100

@@ -3,6 +3,7 @@ import { Family } from './family.entity';
 import { Education } from './education.entity';
 import { Language } from './language.entity';
 import { Experience } from './experience.entity';
+import { InterviewResult } from './interview_results.entity';
 
 @Entity('hr_personnel')
 export class Personnel {
@@ -95,6 +96,10 @@ export class Personnel {
 
   @OneToMany(() => Experience, experience => experience.personnel) 
   experiences: Experience[];
+
+
+  @OneToMany(() => InterviewResult, interview => interview.personnel) 
+  interviews: InterviewResult[];
 
 
 

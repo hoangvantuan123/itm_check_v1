@@ -502,10 +502,7 @@ export default function UsersSettings({ permissions }) {
 
           <Layout className="h-screen lg:pb-[70px] ">
             {!isMobile && (
-              <Sider
-                width={200}
-                className="bg-slate-50 border-t h-screen"
-              >
+              <Sider width={200} className="bg-slate-50 border-t h-screen">
                 <Menu
                   mode="inline"
                   defaultSelectedKeys={['all']}

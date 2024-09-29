@@ -1,7 +1,33 @@
-import { Table, Input, Button, Form, InputNumber } from 'antd';
-import { useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react'
+import { Table, Input, Button, Form, InputNumber } from 'antd'
 
 const EditEducationTable = ({ form, dataSource }) => {
+  const [localDataSource, setLocalDataSource] = useState(dataSource)
+
+  useEffect(() => {
+    setLocalDataSource(dataSource)
+  }, [dataSource])
+
+  useEffect(() => {
+    form.setFieldsValue({ education: localDataSource })
+  }, [localDataSource, form])
+
+  const handleEducationChange = useCallback((key, field, value) => {
+    setLocalDataSource((prevData) =>
+      prevData.map((education) =>
+        education.key === key ? { ...education, [field]: value } : education,
+      ),
+    )
+  }, [])
+
+  // Xóa dòng dữ liệu dựa vào key
+  const removeEducation = useCallback((key) => {
+    setLocalDataSource((prevData) =>
+      prevData.filter((education) => education.key !== key),
+    )
+  }, [])
+
+  // Định nghĩa cột cho bảng
   const educationColumns = [
     {
       title: 'Trường',
@@ -9,7 +35,9 @@ const EditEducationTable = ({ form, dataSource }) => {
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) => handleEducationChange(record.key, 'school', e.target.value)}
+          onChange={(e) =>
+            handleEducationChange(record.key, 'school', e.target.value)
+          }
           className="border-none w-36 md:w-full"
           style={{ margin: 0 }}
         />
@@ -21,7 +49,9 @@ const EditEducationTable = ({ form, dataSource }) => {
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) => handleEducationChange(record.key, 'major', e.target.value)}
+          onChange={(e) =>
+            handleEducationChange(record.key, 'major', e.target.value)
+          }
           className="border-none w-36 md:w-full"
           style={{ margin: 0 }}
         />
@@ -33,7 +63,9 @@ const EditEducationTable = ({ form, dataSource }) => {
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) => handleEducationChange(record.key, 'years', e.target.value)}
+          onChange={(e) =>
+            handleEducationChange(record.key, 'years', e.target.value)
+          }
           className="border-none w-36 md:w-full"
           style={{ margin: 0 }}
         />
@@ -44,11 +76,11 @@ const EditEducationTable = ({ form, dataSource }) => {
       dataIndex: 'start_year',
       render: (text, record) => (
         <InputNumber
-          value={text || null}
-          onChange={(value) => handleEducationChange(record.key, 'start_year', value)}
+          onChange={(value) =>
+            handleEducationChange(record.key, 'start_year', value)
+          }
           className="border-none w-28 md:w-full"
           style={{ margin: 0 }}
-          min={1900} // Giới hạn năm bắt đầu
         />
       ),
     },
@@ -57,22 +89,23 @@ const EditEducationTable = ({ form, dataSource }) => {
       dataIndex: 'graduation_year',
       render: (text, record) => (
         <InputNumber
-          value={text || null}
-          onChange={(value) => handleEducationChange(record.key, 'graduation_year', value)}
+          onChange={(value) =>
+            handleEducationChange(record.key, 'graduation_year', value)
+          }
           className="border-none w-28 md:w-full"
           style={{ margin: 0 }}
-          min={1900} // Giới hạn năm bắt đầu
         />
       ),
     },
-
     {
       title: 'Xếp loại',
       dataIndex: 'grade',
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) => handleEducationChange(record.key, 'grade', e.target.value)}
+          onChange={(e) =>
+            handleEducationChange(record.key, 'grade', e.target.value)
+          }
           className="border-none w-36 md:w-full"
           style={{ margin: 0 }}
         />
@@ -86,34 +119,20 @@ const EditEducationTable = ({ form, dataSource }) => {
         </Button>
       ),
     },
-  ];
-
-  const handleEducationChange = (key, field, value) => {
-    const updatedData = dataSource.map((education) =>
-      education.key === key ? { ...education, [field]: value } : education,
-    );
-    form.setFieldsValue({ education: updatedData });
-  };
-
-  const removeEducation = (key) => {
-    const updatedData = dataSource.filter((education) => education.key !== key);
-    form.setFieldsValue({ education: updatedData });
-  };
+  ]
 
   return (
-    <>
-      <Form.Item name="education">
-        <Table
-          dataSource={dataSource}
-          columns={educationColumns}
-          pagination={false}
-          rowKey="key"
-          bordered
-          size="small"
-        />
-      </Form.Item>
-    </>
-  );
-};
+    <Form.Item name="education">
+      <Table
+        dataSource={localDataSource}
+        columns={educationColumns}
+        pagination={false}
+        rowKey={(record) => record.key}
+        bordered
+        size="small"
+      />
+    </Form.Item>
+  )
+}
 
-export default EditEducationTable;
+export default EditEducationTable

@@ -9,7 +9,7 @@ export class Language {
   @ManyToOne(() => Personnel, personnel => personnel.languages, { onDelete: 'CASCADE' })
   personnel: Personnel;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'text', nullable: true })
   language: string;
 
   @Column({ type: 'text', nullable: true })

@@ -1,9 +1,36 @@
-import { Table, Input, Button, Form, DatePicker } from 'antd';
-import { useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react'
+import { Table, Input, Button, Form, DatePicker } from 'antd'
+import moment from 'moment'
 import 'moment/locale/vi'
-import moment from 'moment';
 
 const EditLanguageTable = ({ form, dataSource }) => {
+  const [localDataSource, setLocalDataSource] = useState(dataSource)
+
+  // Đồng bộ dữ liệu khi dataSource thay đổi
+  useEffect(() => {
+    setLocalDataSource(dataSource)
+  }, [dataSource])
+
+  // Đồng bộ dữ liệu từ localDataSource vào form
+  useEffect(() => {
+    form.setFieldsValue({ languages: localDataSource })
+  }, [localDataSource, form])
+
+  // Dùng useCallback để ngăn việc tạo lại hàm không cần thiết
+  const handleLanguageChange = useCallback((key, field, value) => {
+    setLocalDataSource((prevData) =>
+      prevData.map((language) =>
+        language.key === key ? { ...language, [field]: value } : language,
+      ),
+    )
+  }, [])
+
+  const removeLanguage = useCallback((key) => {
+    setLocalDataSource((prevData) =>
+      prevData.filter((language) => language.key !== key),
+    )
+  }, [])
+
   const languageColumns = [
     {
       title: 'Ngôn ngữ',
@@ -11,7 +38,9 @@ const EditLanguageTable = ({ form, dataSource }) => {
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) => handleLanguageChange(record.key, 'language', e.target.value)}
+          onChange={(e) =>
+            handleLanguageChange(record.key, 'language', e.target.value)
+          }
           className="border-none w-36 md:w-full"
           style={{ margin: 0 }}
         />
@@ -23,7 +52,9 @@ const EditLanguageTable = ({ form, dataSource }) => {
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) => handleLanguageChange(record.key, 'certificate_type', e.target.value)}
+          onChange={(e) =>
+            handleLanguageChange(record.key, 'certificate_type', e.target.value)
+          }
           className="border-none w-36 md:w-full"
           style={{ margin: 0 }}
         />
@@ -35,7 +66,9 @@ const EditLanguageTable = ({ form, dataSource }) => {
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) => handleLanguageChange(record.key, 'score', e.target.value)}
+          onChange={(e) =>
+            handleLanguageChange(record.key, 'score', e.target.value)
+          }
           className="border-none w-36 md:w-full"
           style={{ margin: 0 }}
         />
@@ -47,7 +80,9 @@ const EditLanguageTable = ({ form, dataSource }) => {
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) => handleLanguageChange(record.key, 'level', e.target.value)}
+          onChange={(e) =>
+            handleLanguageChange(record.key, 'level', e.target.value)
+          }
           className="border-none w-36 md:w-full"
           style={{ margin: 0 }}
         />
@@ -59,7 +94,9 @@ const EditLanguageTable = ({ form, dataSource }) => {
       render: (text, record) => (
         <DatePicker
           value={text ? moment(text) : null}
-          onChange={(date, dateString) => handleLanguageChange(record.key, 'start_date', dateString)}
+          onChange={(date, dateString) =>
+            handleLanguageChange(record.key, 'start_date', dateString)
+          }
           className="border-none w-28 md:w-full"
           style={{ margin: 0 }}
         />
@@ -71,16 +108,13 @@ const EditLanguageTable = ({ form, dataSource }) => {
       render: (text, record) => (
         <DatePicker
           value={text ? moment(text) : null}
-          onChange={(date, dateString) => handleLanguageChange(record.key, 'end_date', dateString)}
+          onChange={(date, dateString) =>
+            handleLanguageChange(record.key, 'end_date', dateString)
+          }
           className="border-none w-28 md:w-full"
           style={{ margin: 0 }}
         />
       ),
-    },
-    {
-      title: 'Có thưởng',
-      dataIndex: 'has_bonus',
-      render: (text) => (text ? 'Có' : 'Không'),
     },
     {
       title: 'Hành động',
@@ -90,34 +124,20 @@ const EditLanguageTable = ({ form, dataSource }) => {
         </Button>
       ),
     },
-  ];
-
-  const handleLanguageChange = (key, field, value) => {
-    const updatedData = dataSource.map((language) =>
-      language.key === key ? { ...language, [field]: value } : language,
-    );
-    form.setFieldsValue({ languages: updatedData });
-  };
-
-  const removeLanguage = (key) => {
-    const updatedData = dataSource.filter((language) => language.key !== key);
-    form.setFieldsValue({ languages: updatedData });
-  };
+  ]
 
   return (
-    <>
-      <Form.Item name="languages">
-        <Table
-          dataSource={dataSource}
-          columns={languageColumns}
-          pagination={false}
-          rowKey="key"
-          bordered
-          size="small"
-        />
-      </Form.Item>
-    </>
-  );
-};
+    <Form.Item name="languages">
+      <Table
+        dataSource={localDataSource}
+        columns={languageColumns}
+        pagination={false}
+        rowKey={(record) => record.key}
+        bordered
+        size="small"
+      />
+    </Form.Item>
+  )
+}
 
-export default EditLanguageTable;
+export default EditLanguageTable

@@ -1,7 +1,12 @@
 import { IsString, IsOptional, IsEnum, IsDateString, ValidateNested, IsArray, IsInt, IsBoolean } from 'class-validator';
 import { Type } from 'class-transformer';
 
+// DTO cho Family
 class CreateFamilyDto {
+  @IsInt()
+  @IsOptional() 
+  id?: number;
+
   @IsString()
   relationship: 'Father' | 'Mother' | 'Spouse' | 'Sibling' | 'Child';
 
@@ -30,7 +35,12 @@ class CreateFamilyDto {
   living_together?: boolean;
 }
 
+// DTO cho Education
 class CreateEducationDto {
+  @IsInt()
+  @IsOptional()
+  id?: number; // ID là tùy chọn
+
   @IsString()
   @IsOptional()
   school?: string;
@@ -56,7 +66,12 @@ class CreateEducationDto {
   grade?: 'Excellent' | 'Good' | 'Average' | 'Poor';
 }
 
+// DTO cho Language
 class CreateLanguageDto {
+  @IsInt()
+  @IsOptional()
+  id?: number; // ID là tùy chọn
+
   @IsString()
   language: string;
 
@@ -84,7 +99,12 @@ class CreateLanguageDto {
   has_bonus?: string;
 }
 
+// DTO cho Experience
 class CreateExperienceDto {
+  @IsInt()
+  @IsOptional()
+  id?: number; // ID là tùy chọn
+  
   @IsString()
   company_name: string;
 
@@ -92,11 +112,13 @@ class CreateExperienceDto {
   @IsOptional()
   position?: string;
 
+  @IsInt() 
   @IsOptional()
-  start_date?: number;
+  start_date?: string;
 
+  @IsInt()
   @IsOptional()
-  end_date?: number;
+  end_date?: string;
 
   @IsString()
   @IsOptional()
@@ -115,7 +137,62 @@ class CreateExperienceDto {
   description?: string;
 }
 
+// DTO cho Interview
+class CreateInterviewDto {
+  @IsInt()
+  @IsOptional()
+  id?: number;
+
+  @IsBoolean()
+  @IsOptional()
+  interview_result: boolean;
+
+  @IsString()
+  @IsOptional()
+  recruitment_department: string;
+
+  @IsString()
+  @IsOptional()
+  position: string;
+
+  @IsString()
+  @IsOptional()
+  interviewer_name: string;
+
+  @IsString()
+  @IsOptional()
+  appearance_criteria?: string;
+
+  @IsString()
+  @IsOptional()
+  height?: string;
+
+  @IsString()
+  @IsOptional()
+  criminal_record?: string;
+
+  @IsString()
+  @IsOptional()
+  education_level?: string;
+
+  @IsString()
+  @IsOptional()
+  reading_writing?: string;
+
+  @IsString()
+  @IsOptional()
+  calculation_ability?: string;
+  
+ 
+}
+
+
+// DTO chính cho Personnel với các bảng liên quan
 export class CreatePersonnelWithDetailsDto {
+  @IsInt()
+  @IsOptional()
+  id?: number;
+
   @IsString()
   full_name: string;
 
@@ -160,7 +237,7 @@ export class CreatePersonnelWithDetailsDto {
 
   @IsString()
   @IsOptional()
-  phone_number?: string; // Đã thêm
+  phone_number?: string; 
 
   @IsString()
   @IsOptional()
@@ -168,47 +245,47 @@ export class CreatePersonnelWithDetailsDto {
 
   @IsString()
   @IsOptional()
-  alternate_phone_number?: string; // Đã thêm
+  alternate_phone_number?: string;
 
   @IsString()
   @IsOptional()
-  alternate_name?: string; // Đã thêm
+  alternate_name?: string;
 
   @IsString()
   @IsOptional()
-  alternate_relationship?: string; // Đã thêm
+  alternate_relationship?: string;
 
   @IsString()
   @IsOptional()
-  birth_address?: string; // Đã thêm
+  birth_address?: string;
 
   @IsString()
   @IsOptional()
-  birth_province?: string; // Đã thêm
+  birth_province?: string;
 
   @IsString()
   @IsOptional()
-  birth_district?: string; // Đã thêm
+  birth_district?: string;
 
   @IsString()
   @IsOptional()
-  birth_ward?: string; // Đã thêm
+  birth_ward?: string;
 
   @IsString()
   @IsOptional()
-  current_address?: string; // Đã thêm
+  current_address?: string;
 
   @IsString()
   @IsOptional()
-  current_province?: string; // Đã thêm
+  current_province?: string;
 
   @IsString()
   @IsOptional()
-  current_district?: string; // Đã thêm
+  current_district?: string;
 
   @IsString()
   @IsOptional()
-  current_ward?: string; // Đã thêm
+  current_ward?: string;
 
   @ValidateNested({ each: true })
   @IsArray()
@@ -229,4 +306,12 @@ export class CreatePersonnelWithDetailsDto {
   @IsArray()
   @Type(() => CreateExperienceDto)
   experiences?: CreateExperienceDto[];
+
+  @IsArray()
+  @IsOptional()
+  @Type(() => CreateInterviewDto)
+  interviews?: CreateInterviewDto[];
 }
+
+
+//DTO 

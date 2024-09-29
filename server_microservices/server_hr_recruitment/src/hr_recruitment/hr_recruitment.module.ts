@@ -8,10 +8,11 @@ import { Experience } from './entity/experience.entity';
 import { Education } from './entity/education.entity';
 import { HrRecruitmentController } from './controller/hr_recruitment.controller';
 import { HrRecruitmentServices } from './services/hr_recruitment.services';
+import { InterviewResult } from './entity/interview_results.entity';
 @Module({
   imports: [
     DatabaseModule,
-    TypeOrmModule.forFeature([Family, Personnel, Language,Experience,Education  ]),
+    TypeOrmModule.forFeature([Family, Personnel, Language,Experience,Education , InterviewResult ]),
    
   ],
   providers: [HrRecruitmentServices],
