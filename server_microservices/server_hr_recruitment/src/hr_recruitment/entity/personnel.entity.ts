@@ -10,10 +10,10 @@ export class Personnel {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text' , nullable: true})
   full_name: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   gender: 'Male' | 'Female' | 'Other';
 
   @Column({ type: 'date', nullable: true })
@@ -82,8 +82,8 @@ export class Personnel {
   @Column({ type: 'text', nullable: true })
   current_ward: string;
 
-  @Column({ type: 'text', nullable: true })
-  house_street_village: string;
+  @Column({ type: 'boolean', default: false })
+  type: boolean;
 
   @OneToMany(() => Family, family => family.personnel) 
   families: Family[];
@@ -100,8 +100,6 @@ export class Personnel {
 
   @OneToMany(() => InterviewResult, interview => interview.personnel) 
   interviews: InterviewResult[];
-
-
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   create_date: Date;

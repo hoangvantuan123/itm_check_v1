@@ -1,7 +1,9 @@
-import { Body, Controller, Post, HttpException, HttpStatus, Put, UsePipes, Param, Delete, ValidationPipe, Logger, Get, Query } from '@nestjs/common';
+import { Body, Req, Controller, Post, HttpException, HttpStatus, Put, UsePipes, Param, Delete, UnauthorizedException, ValidationPipe, Logger, Get, Query } from '@nestjs/common';
 import { CreatePersonnelWithDetailsDto } from '../dto/create-personnel-with-details.dto';
 import { HrRecruitmentServices } from '../services/hr_recruitment.services';
 import { Personnel } from '../entity/personnel.entity';
+import { InterviewResult } from '../entity/interview_results.entity';
+import { UpdateInterviewResultDto } from '../dto/update_interview_result.dto';
 @Controller('api/sv4/hr-information')
 export class HrRecruitmentController {
   private readonly logger = new Logger(HrRecruitmentController.name);
@@ -88,13 +90,39 @@ export class HrRecruitmentController {
 
   @Delete('personnel')
   async delete(@Body('ids') ids: number[]): Promise<{ success: boolean; message: string }> {
-  
-  
+
+
     return await this.personnelService.delete(ids);
   }
-  
+
   @Get('personnel/:id')
   async getPersonnel(@Param('id') id: number) {
     return this.personnelService.getPersonnelById(id);
   }
+
+
+  @Put('personnel/interview/:id')
+  async updateInterview(
+    @Param('id') id: number,
+    @Body() updateDto: Partial<InterviewResult>,
+    @Req() req: Request,
+  ): Promise<{ success: boolean; message: string }> {
+    try {
+      await this.personnelService.updateUserInterviewId(id, updateDto);
+
+      return { success: true, message: 'User updated successfully' };
+    } catch (error) {
+      throw new UnauthorizedException('Failed to authenticate. Please try again.');
+    }
+
+  }
+
+
+  @Post('personnel/interview/status')
+  async updateInterviewResults(
+    @Body() updateInterviewResultDto: Partial<UpdateInterviewResultDto>,
+  ): Promise<{ success: boolean; message: string }> {
+    return this.personnelService.updateInterviewResults(updateInterviewResultDto);
+  }
+
 }

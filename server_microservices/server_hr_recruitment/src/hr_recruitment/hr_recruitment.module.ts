@@ -9,14 +9,16 @@ import { Education } from './entity/education.entity';
 import { HrRecruitmentController } from './controller/hr_recruitment.controller';
 import { HrRecruitmentServices } from './services/hr_recruitment.services';
 import { InterviewResult } from './entity/interview_results.entity';
+import { HrInterviewServices } from './services/hr_interview.services';
+import { HrInterviewController } from './controller/hr_interview.controller';
 @Module({
   imports: [
     DatabaseModule,
     TypeOrmModule.forFeature([Family, Personnel, Language,Experience,Education , InterviewResult ]),
    
   ],
-  providers: [HrRecruitmentServices],
-  controllers: [HrRecruitmentController],
+  providers: [HrRecruitmentServices, HrInterviewServices],
+  controllers: [HrRecruitmentController, HrInterviewController],
   exports: [],
 })
 export class HrRecruitment { }

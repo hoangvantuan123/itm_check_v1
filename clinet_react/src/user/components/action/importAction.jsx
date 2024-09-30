@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Input, Modal, Typography, Dropdown, Menu, Button } from 'antd'
-import { DownOutlined } from '@ant-design/icons'
+import { GetTableName } from '../../../features/import/getTable'
 import ImportForm from '../import'
 
 const { Title } = Typography
@@ -121,12 +121,30 @@ const DataIcon = () => {
     </svg>
   )
 }
-export default function ImportAction({ isOpen, onClose }) {
+export default function ImportAction({fetchData, isOpen, handleOnClickActionImport, setActionImport, actionImport }) {
+  console.log(actionImport)
   const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
   const userNameLogin = userFromLocalStorage?.login || 'none'
   const { t } = useTranslation()
   const [showDropdown, setShowDropdown] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [tableInfo, setTableInfo] = useState(null);
+  useEffect(() => {
+    if (isModalOpen) {
+
+      const fetchTableInfo = async () => {
+        const result = await GetTableName(actionImport);
+        if (result.success) {
+          setTableInfo(result.data);
+        } else {
+          setError(result.message);
+        }
+        setLoading(false);
+      };
+
+      fetchTableInfo();
+    }
+  }, [isModalOpen, actionImport]);
   const handleOnClickOpenImport = () => {
     setShowDropdown(false)
     setIsModalOpen(true)
@@ -147,19 +165,25 @@ export default function ImportAction({ isOpen, onClose }) {
     </Menu>
   )
 
+
+
+  const handleOnClick = () => {
+    handleOnClickActionImport()
+    setShowDropdown(!showDropdown)
+  }
   return (
     <>
       <Dropdown
         overlay={menu}
         trigger={['click']}
         open={showDropdown}
-        onClick={() => setShowDropdown(!showDropdown)}
+        onClick={handleOnClick}
       >
         <Button size="large" className="bg-white">
           <DataIcon />
         </Button>
       </Dropdown>
-      <ImportForm isOpen={isModalOpen} onClose={handleOnClickCloseImport} />
+      <ImportForm fetchData={fetchData} isOpen={isModalOpen} tableInfo={tableInfo} actionImport={actionImport} onClose={handleOnClickCloseImport} />
     </>
   )
 }

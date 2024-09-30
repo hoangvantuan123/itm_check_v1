@@ -15,6 +15,9 @@ dotenv.config();
       database: 'itm_db',
       synchronize: true,
       logging: true,
+      extra: {
+        connectionTimeoutMillis: 30000, 
+      },
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       migrations: [__dirname + '/migrations/*{.ts,.js}'],
     }),

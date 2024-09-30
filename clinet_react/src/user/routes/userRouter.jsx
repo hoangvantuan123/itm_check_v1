@@ -41,6 +41,7 @@ import { RefreshToken } from '../../features/auth/API/refreshToken'
 import { GetUserPermissions } from '../../features/auth/API/getPermissions'
 import { checkActionPermission } from '../../permissions'
 import DetailUserHrRecruitment from '../pages/detailUserHrRecruitment'
+import DetailUserHrInterview from '../pages/detailUserHrInterview'
 
 const { Content } = Layout
 
@@ -309,7 +310,7 @@ const UserRouter = () => {
                       element={
                         checkActionPermission(
                           userPermissions,
-                          'hr-recruitment-1-1',
+                          'hr-recruitment-1-2',
                           'view',
                         ) ? (
                           <WorkerRecruitmentPage
@@ -334,6 +335,22 @@ const UserRouter = () => {
                         )
                       }
                     />
+                    <Route
+                      path="/u/action=19/worker-interview-data/detail/:id"
+                      element={
+                        checkActionPermission(
+                          userPermissions,
+                          'hr-recruitment-1-1',
+                          'view',
+                        ) ? (
+                          <DetailUserHrInterview />
+                        ) : (
+                          <Unauthorized />
+                        )
+                      }
+                    />
+
+
                   </Routes>
                 </Content>
               </Layout>

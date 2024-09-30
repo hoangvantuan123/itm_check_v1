@@ -1,12 +1,13 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, EntityManager } from 'typeorm';
+import { Repository, EntityManager, In } from 'typeorm';
 import { Personnel } from '../entity/personnel.entity';
 import { Family } from '../entity/family.entity';
 import { Education } from '../entity/education.entity';
 import { Language } from '../entity/language.entity';
 import { Experience } from '../entity/experience.entity';
 import { InterviewResult } from '../entity/interview_results.entity';
+import { UpdateInterviewResultDto } from '../dto/update_interview_result.dto';
 
 import { CreatePersonnelWithDetailsDto } from '../dto/create-personnel-with-details.dto';
 
@@ -42,24 +43,24 @@ export class HrRecruitmentServices {
             experiences = [],
             ...personnelData
           } = createPersonnelWithDetailsDto;
-  
+
           const personnel = this.personnelRepository.create(personnelData);
           const savedPersonnel = await entityManager.save(Personnel, personnel);
-  
+
           const interviewEntities = [{
-              interview_result: false, 
-              recruitment_department: 'Default Department',
-              position: 'Default Position',
-              interviewer_name: 'Default Interviewer',
-              appearance_criteria: 'Default Appearance',
-              height: 'N/A',
-              criminal_record: 'No',
-              education_level: 'High School',
-              reading_writing: 'Yes',
-              calculation_ability: 'Yes',
-              personnel: savedPersonnel, 
-            }];
-  
+            interview_result: false,
+            recruitment_department: 'Default Department',
+            position: 'Default Position',
+            interviewer_name: 'Default Interviewer',
+            appearance_criteria: 'Default Appearance',
+            height: 'N/A',
+            criminal_record: 'No',
+            education_level: 'High School',
+            reading_writing: 'Yes',
+            calculation_ability: 'Yes',
+            personnel: savedPersonnel,
+          }];
+
           const familyEntities = families.map((family) => ({
             ...family,
             personnel: savedPersonnel,
@@ -76,7 +77,7 @@ export class HrRecruitmentServices {
             ...experience,
             personnel: savedPersonnel,
           }));
-  
+
           // Lưu các đối tượng liên quan
           await Promise.all([
             familyEntities.length > 0
@@ -91,9 +92,9 @@ export class HrRecruitmentServices {
             experienceEntities.length > 0
               ? entityManager.save(Experience, experienceEntities)
               : Promise.resolve(),
-            entityManager.save(InterviewResult, interviewEntities), 
+            entityManager.save(InterviewResult, interviewEntities),
           ]);
-  
+
           return {
             success: true,
             message: 'Personnel and related details created successfully',
@@ -109,8 +110,8 @@ export class HrRecruitmentServices {
       };
     }
   }
-  
-  
+
+
 
   async findAllPageLimit(
     filter: Record<string, any> = {},
@@ -120,6 +121,9 @@ export class HrRecruitmentServices {
     endDate?: Date,
   ): Promise<{ data: Personnel[]; total: number; totalPages: number }> {
     const query = this.personnelRepository.createQueryBuilder('personnel');
+
+    query.leftJoinAndSelect('personnel.interviews', 'interview');
+    query.andWhere('personnel.type = :type', { type: true });
 
     Object.entries(filter).forEach(([key, value]) => {
       if (value) {
@@ -133,11 +137,25 @@ export class HrRecruitmentServices {
 
     if (endDate) {
       const endOfDay = new Date(endDate);
-      endOfDay.setHours(23, 59, 59, 999); 
+      endOfDay.setHours(23, 59, 59, 999);
       query.andWhere('personnel.create_date <= :endOfDay', { endOfDay });
     }
 
-    query.select(['personnel.id', 'personnel.full_name', 'personnel.gender', 'personnel.create_date', 'personnel.interview_date', 'personnel.birth_date', 'personnel.id_number', 'personnel.phone_number', 'personnel.email', 'personnel.tax_number'])
+    query
+      .select([
+        'personnel.id',
+        'personnel.full_name',
+        'personnel.gender',
+        'personnel.create_date',
+        'personnel.interview_date',
+        'personnel.birth_date',
+        'personnel.id_number',
+        'personnel.phone_number',
+        'personnel.email',
+        'personnel.tax_number',
+        'interview.id',
+        'interview.interview_result',
+      ])
       .skip((page - 1) * limit)
       .take(limit)
       .orderBy('personnel.create_date', 'DESC');
@@ -151,10 +169,11 @@ export class HrRecruitmentServices {
     };
   }
 
+
   async findAllPageLimitFilter(
     filter: Record<string, any> = {},
     page: number = 1,
-    limit: number = 50,
+    limit: number = 1000,
     startDate?: Date,
     endDate?: Date,
   ): Promise<{ data: Personnel[]; total: number; totalPages: number }> {
@@ -184,6 +203,10 @@ export class HrRecruitmentServices {
       query.andWhere(`(${idConditions.join(' OR ')})`);
     }
 
+
+    query.leftJoinAndSelect('personnel.interviews', 'interview');
+    query.andWhere('personnel.type = :type', { type: true });
+
     if (startDate) {
       query.andWhere('personnel.create_date >= :startDate', { startDate });
     }
@@ -205,7 +228,9 @@ export class HrRecruitmentServices {
       'personnel.id_number',
       'personnel.phone_number',
       'personnel.email',
-      'personnel.tax_number'
+      'personnel.tax_number',
+      'interview.id',
+      'interview.interview_result',
     ])
       .skip((page - 1) * limit)
       .take(limit)
@@ -224,22 +249,21 @@ export class HrRecruitmentServices {
 
 
   async update(
-    id: number, 
-    updatePersonnelWithDetailsDto: CreatePersonnelWithDetailsDto, 
+    id: number,
+    updatePersonnelWithDetailsDto: CreatePersonnelWithDetailsDto,
   ): Promise<{ success: boolean; message: string; data?: Personnel }> {
     try {
-      // Tìm personnel cần update dựa trên ID
       const existingPersonnel = await this.personnelRepository.findOne({ where: { id } });
       if (!existingPersonnel) {
         return { success: false, message: 'Personnel not found' };
       }
-  
+
       return await this.personnelRepository.manager.transaction(
         async (entityManager: EntityManager) => {
           const { families = [], educations = [], languages = [], experiences = [], ...personnelData } = updatePersonnelWithDetailsDto;
-  
+
           await entityManager.update(Personnel, { id }, personnelData);
-  
+
           for (const family of families) {
             if (family.id) {
               await entityManager.update(Family, { id: family.id }, family);
@@ -248,7 +272,7 @@ export class HrRecruitmentServices {
               await entityManager.save(Family, newFamily);
             }
           }
-  
+
           // 2. Update Educations
           for (const education of educations) {
             if (education.id) {
@@ -258,7 +282,7 @@ export class HrRecruitmentServices {
               await entityManager.save(Education, newEducation);
             }
           }
-  
+
           // 3. Update Languages
           for (const language of languages) {
             if (language.id) {
@@ -268,7 +292,7 @@ export class HrRecruitmentServices {
               await entityManager.save(Language, newLanguage);
             }
           }
-  
+
           // 4. Update Experiences
           for (const experience of experiences) {
             if (experience.id) {
@@ -278,12 +302,12 @@ export class HrRecruitmentServices {
               await entityManager.save(Experience, newExperience);
             }
           }
-  
+
           const updatedPersonnel = await entityManager.findOne(Personnel, {
             where: { id },
             relations: ['families', 'educations', 'languages', 'experiences'],
           });
-  
+
           return {
             success: true,
             message: 'Personnel and related details updated successfully',
@@ -299,9 +323,8 @@ export class HrRecruitmentServices {
       };
     }
   }
-  
+
   async delete(ids: number[]): Promise<{ success: boolean; message: string }> {
-    
     try {
       const personnels = await this.personnelRepository.findByIds(ids);
 
@@ -310,13 +333,12 @@ export class HrRecruitmentServices {
       }
 
       await this.personnelRepository.manager.transaction(async (entityManager: EntityManager) => {
-        for (const personnel of personnels) {
-          await entityManager.delete(Family, { personnel });
-          await entityManager.delete(Education, { personnel });
-          await entityManager.delete(Language, { personnel });
-          await entityManager.delete(Experience, { personnel });
-          await entityManager.remove(Personnel, personnel);
-        }
+        await entityManager.delete(Family, { personnel: In(ids) });
+        await entityManager.delete(Education, { personnel: In(ids) });
+        await entityManager.delete(Language, { personnel: In(ids) });
+        await entityManager.delete(Experience, { personnel: In(ids) });
+
+        await entityManager.delete(Personnel, { id: In(ids) });
       });
 
       return {
@@ -332,19 +354,20 @@ export class HrRecruitmentServices {
     }
   }
 
+
   async getPersonnelById(id: number): Promise<any> {
     const personnel = await this.personnelRepository.findOne({
       where: { id },
       relations: ['families', 'educations', 'languages', 'experiences', 'interviews'],
     });
-  
+
     if (!personnel) {
       return {
-        status: false, 
-        data: [], 
+        status: false,
+        data: [],
       };
     }
-  
+
     return {
       status: true,
       data: {
@@ -412,7 +435,7 @@ export class HrRecruitmentServices {
           tasks: experience.tasks,
           salary: experience.salary,
           description: experience.description,
-        })) ?? [], 
+        })) ?? [],
         interviews: personnel.interviews?.map(interview => ({
           key: interview.id,
           interview_result: interview.interview_result,
@@ -425,9 +448,54 @@ export class HrRecruitmentServices {
           education_level: interview.education_level,
           reading_writing: interview.reading_writing,
           calculation_ability: interview.calculation_ability,
-        })) ?? [], 
+        })) ?? [],
       },
     };
   }
-  
+
+
+
+  async updateUserInterviewId(
+    id: number,
+    updateDto: Partial<InterviewResult>,
+  ): Promise<InterviewResult> {
+    await this.interviewRepository.update(id, updateDto);
+    return this.interviewRepository.findOneBy({ id });
+  }
+
+
+  async updateInterviewResults(
+    updateInterviewResultDto: Partial<UpdateInterviewResultDto>,
+  ): Promise<{ success: boolean; message: string }> {
+    const { personnelIds, interviewResult } = updateInterviewResultDto;
+
+    try {
+      // Thực hiện giao dịch
+      await this.interviewRepository.manager.transaction(async (entityManager) => {
+        const updatePromises = personnelIds.map(personnelId =>
+          entityManager
+            .createQueryBuilder()
+            .update(InterviewResult)
+            .set({ interview_result: interviewResult })
+            .where('personnelId = :personnelId', { personnelId })
+            .execute()
+        );
+        await Promise.all(updatePromises);
+      });
+
+      // Trả về phản hồi thành công
+      return {
+        success: true,
+        message: 'Cập nhật thành công',
+      };
+    } catch (error) {
+      console.error('Error updating interview results:', error);
+      return {
+        success: false,
+        message: error.message || 'Có lỗi xảy ra trong quá trình cập nhật',
+      };
+    }
+  }
+
+
 }

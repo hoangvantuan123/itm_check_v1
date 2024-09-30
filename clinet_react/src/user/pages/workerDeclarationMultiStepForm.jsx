@@ -70,6 +70,7 @@ const WorkerDeclarationMultiStepForm = () => {
       current_province: finalData?.currentProvince,
       current_district: finalData?.currentDistrict,
       current_ward: finalData?.currentCommune,
+      type: true,
       families:
         finalData?.familyMembers?.map((family) => ({
           relationship: family?.relationship,

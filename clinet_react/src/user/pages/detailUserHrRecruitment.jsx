@@ -9,6 +9,7 @@ import { GetHrInfoId } from '../../features/hrRecruitment/getPersonnelId'
 import NoData from './noData'
 import Spinner from './load'
 import { PutHrInfoId } from '../../features/hrRecruitment/updateHrInfoId'
+import { PutUserInterview } from '../../features/hrRecruitment/putUserInterview'
 const { Text } = Typography
 
 export default function DetailUserHrRecruitment() {
@@ -19,7 +20,7 @@ export default function DetailUserHrRecruitment() {
   const [formData, setFormData] = useState({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [interviewData, setInterviewData] = useState({}); 
+  const [interviewData, setInterviewData] = useState({})
   const [form] = Form.useForm()
   const [formInterview] = Form.useForm()
   const fetchDataUserId = async () => {
@@ -30,10 +31,13 @@ export default function DetailUserHrRecruitment() {
         if (response.data.status) {
           setFormData(response.data.data)
           setError(null)
-          if (response.data.data.interviews && response.data.data.interviews.length > 0) {
-            setInterviewData(response.data.data.interviews[0]); 
+          if (
+            response.data.data.interviews &&
+            response.data.data.interviews.length > 0
+          ) {
+            setInterviewData(response.data.data.interviews[0])
           } else {
-            setInterviewData({}); 
+            setInterviewData({})
           }
         } else {
           setError('Không có dữ liệu cho ID này.')
@@ -68,8 +72,6 @@ export default function DetailUserHrRecruitment() {
     }))
   }
 
-  
-
   const toggleEdit = () => {
     setIsEditing(true)
   }
@@ -90,15 +92,23 @@ export default function DetailUserHrRecruitment() {
     )
   }
   const handleFormInterViewChange = (changedValues) => {
-    setInterviewData(prev => ({
+    setInterviewData((prev) => ({
       ...prev,
-      ...changedValues
-    }));
-  };
+      ...changedValues,
+    }))
+  }
 
   const handleSubmit = async (values) => {
-    console.log('Data interviewData', interviewData)
-    console.log('Data values', values)
+    try {
+      const response = await PutUserInterview(interviewData?.key, values)
+      if (response.success) {
+        message.success('Cập nhật thành công!')
+      } else {
+        message.error(`Cập nhật thất bại: ${response.message}`)
+      }
+    } catch (error) {
+      message.error('Đã xảy ra lỗi trong quá trình cập nhật.')
+    }
   }
   const formatSubmissionData = (finalData) => {
     const result = {
@@ -187,9 +197,9 @@ export default function DetailUserHrRecruitment() {
     }
   }
   const handleSave = () => {
-    form.submit(); 
-    formInterview.submit(); 
-  };
+    form.submit()
+    formInterview.submit()
+  }
   return (
     <div className="w-full h-screen bg-gray-50 p-3">
       <Helmet>
@@ -238,7 +248,7 @@ export default function DetailUserHrRecruitment() {
               Kết quả phỏng vấn
             </h1>
             <Form
-               form={formInterview}
+              form={formInterview}
               layout="vertical"
               initialValues={interviewData}
               onFinish={handleSubmit}
@@ -249,8 +259,8 @@ export default function DetailUserHrRecruitment() {
                   <h3 className="font-semibold">Kết quả phỏng vấn</h3>
                   <Form.Item name="interview_result">
                     <Radio.Group>
-                    <Radio value={true}>ĐẠT</Radio>
-                    <Radio value={false}>KHÔNG ĐẠT</Radio>
+                      <Radio value={true}>ĐẠT</Radio>
+                      <Radio value={false}>KHÔNG ĐẠT</Radio>
                     </Radio.Group>
                   </Form.Item>
                 </Col>
@@ -259,8 +269,7 @@ export default function DetailUserHrRecruitment() {
                 <Col span={12}>
                   <Form.Item
                     label="Bộ phận ứng tuyển"
-                  name="recruitment_department"
-
+                    name="recruitment_department"
                   >
                     <Input size="large" placeholder="Bộ phận ứng tuyển" />
                   </Form.Item>
@@ -271,7 +280,10 @@ export default function DetailUserHrRecruitment() {
                   </Form.Item>
                 </Col>
                 <Col span={24}>
-                  <Form.Item label="Tên người phỏng vấn" name="interviewer_name">
+                  <Form.Item
+                    label="Tên người phỏng vấn"
+                    name="interviewer_name"
+                  >
                     <Input size="large" placeholder="Tên người phỏng vấn" />
                   </Form.Item>
                 </Col>

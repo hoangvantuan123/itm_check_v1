@@ -287,6 +287,11 @@ export class CreatePersonnelWithDetailsDto {
   @IsOptional()
   current_ward?: string;
 
+
+  @IsBoolean()
+  @IsOptional()
+  type?: boolean;
+
   @ValidateNested({ each: true })
   @IsArray()
   @Type(() => CreateFamilyDto)

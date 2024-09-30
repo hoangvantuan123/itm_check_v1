@@ -24,6 +24,7 @@ import Search from '../components/search'
 import FieldActionWorkerRecruitment from '../components/action/fieldActionWorkerRecruitment'
 import { GetFilterHrInfoPageLimit } from '../../features/hrRecruitment/getFilterHrInfoPageLimit'
 import ShowAction from '../components/action/showAction'
+import CustomTag from '../components/candidateForm/customTag'
 const { RangePicker } = DatePicker
 const { Content } = Layout
 const { Option } = Select
@@ -36,6 +37,7 @@ const columnConfig = [
   { key: 'phone_number', label: 'Số điện thoại' },
   { key: 'email', label: 'Email' },
   { key: 'create_date', label: 'Thời gian tạo' },
+  { key: 'interview_result', label: 'Kết quả' },
 ]
 
 const CloumnIcon = () => {
@@ -111,7 +113,7 @@ export default function WorkerRecruitmentPage({ permissions }) {
   const [loading, setLoading] = useState(true)
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(500)
+  const [limit, setLimit] = useState(1000)
   const [dateRange, setDateRange] = useState([today, today])
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const [nameTags, setNameTags] = useState([])
@@ -119,9 +121,12 @@ export default function WorkerRecruitmentPage({ permissions }) {
   const [citizenshipIdTags, setCitizenshipIdTags] = useState([])
   const [isDrawerVisibleFilter, setIsDrawerVisibleFilter] = useState(false)
   const [actionUsers, setActionUsers] = useState(null)
-  const [idUser, setIdUser] = useState(null)
+  const [actionImport, setActionImport] = useState(null)
   const handleOnClickAction = () => {
     setActionUsers('actionHrInfoIds')
+  }
+  const handleOnClickActionImport = () => {
+    setActionImport('hr_personnel')
   }
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys)
@@ -235,7 +240,7 @@ export default function WorkerRecruitmentPage({ permissions }) {
   const handleSelectAll = (e) => {
     const checked = e.target.checked
     if (checked) {
-      const allKeys = data.map((item) => item.applicantId) // Replace with your key
+      const allKeys = data.map((item) => item.applicantId)
       setSelectedRowKeys(allKeys)
     } else {
       setSelectedRowKeys([])
@@ -267,9 +272,16 @@ export default function WorkerRecruitmentPage({ permissions }) {
       dataIndex: key,
       key: key,
       render: (text, record) => {
+        if (key === 'interview_result') {
+          const result =
+            record.interviews.length > 0
+              ? record.interviews[0].interview_result
+              : null
+          return visibleColumns[key] ? <CustomTag status={result} /> : null
+        }
         if (key === 'create_date') {
           return visibleColumns[key]
-            ? moment.utc(record.create_date).format('DD/MM/YYYY HH:mm:ss')
+            ? moment(record.create_date).format('lll')
             : null
         }
         return visibleColumns[key] ? text : null
@@ -299,9 +311,7 @@ export default function WorkerRecruitmentPage({ permissions }) {
       title={selectedApplicant?.full_name}
       visible={isDetailModalOpen}
       onCancel={closeDetailModal}
-    >
-      {/* Add detailed applicant information here */}
-    </Modal>
+    ></Modal>
   )
 
   const renderColumnVisibilityDrawer = () => (
@@ -340,6 +350,7 @@ export default function WorkerRecruitmentPage({ permissions }) {
       Table.SELECTION_NONE,
     ],
   }
+
   const renderTable = () => (
     <Table
       rowSelection={rowSelection}
@@ -359,10 +370,10 @@ export default function WorkerRecruitmentPage({ permissions }) {
           handleTableChange({ current: page, pageSize }),
       }}
       loading={loading}
-      /* scroll={{
-        x: 'calc(100px + 100%)',
-        y: 650,
-      }} */
+    /* scroll={{
+      x: 'calc(100px + 100%)',
+      y: 650,
+    }} */
     />
   )
 
@@ -381,16 +392,6 @@ export default function WorkerRecruitmentPage({ permissions }) {
         <h1 className="text-xl font-bold text-gray-900">
           {t('Danh sách dữ liệu')}
         </h1>
-        {canCreate && (
-          <Button
-            onClick={() => setIsModalOpen(true)}
-            className="w-20 rounded-lg h-full border-gray-200 bg-indigo-600 text-white shadow-sm text-sm"
-            icon={<PlusOutlined />}
-            size="large"
-          >
-            {t('Thêm')}
-          </Button>
-        )}
       </div>
 
       <div className="p-2 mb flex items-center justify-between">
@@ -401,7 +402,7 @@ export default function WorkerRecruitmentPage({ permissions }) {
               <Option value="2">{t('Grid')}</Option>
               <Option value="3">{t('List')}</Option>
             </Select>
-            {canCreate && <ImportAction />}
+            {canCreate && <ImportAction  fetchData={fetchData} handleOnClickActionImport={handleOnClickActionImport} setActionImport={setActionImport} actionImport={actionImport}/>}
             <RangePicker
               value={dateRange}
               onChange={setDateRange}

@@ -7,7 +7,9 @@ import { DeleteResUsers } from '../../../features/resUsers/deleteResUsers'
 import { DeleteMenus } from '../../../features/menu/deleteMenu'
 import { DeleteHrEmployeeIds } from '../../../features/hr/deleteHrEmployeeIds'
 import { DeleteHrInfoIds } from '../../../features/hrRecruitment/deleteHrInfoIds'
+import { PutUsersInterviewStatus } from '../../../features/hrRecruitment/putUsersInterviewStatus'
 import ChangePassSelect from '../profile/changePassSelect'
+
 const { Title } = Typography
 const SettingIcon = () => {
   return (
@@ -127,6 +129,7 @@ export default function ShowAction({
       message.error(`${t('Có lỗi xảy ra, vui lòng thử lại')}`)
     }
   }
+
   const handleDeleteHrInfoIds = async () => {
     try {
       const response = await DeleteHrInfoIds(selectedRowKeys)
@@ -145,6 +148,47 @@ export default function ShowAction({
       message.error(`${t('Có lỗi xảy ra, vui lòng thử lại')}`)
     }
   }
+  const handleUpdateUserInterviewTrue = async () => {
+    try {
+      const response = await PutUsersInterviewStatus(selectedRowKeys, true);
+
+      const messagePromise = response.success
+        ? Promise.resolve(message.success(`${t('Cập nhật thành công')}`))
+        : Promise.reject(new Error(`${t('Cập nhật thất bại: Yêu cầu không thành công, vui lòng thử lại')}`));
+
+      await messagePromise; 
+
+      if (response.success) {
+        await fetchDataUser(); 
+        setSelectedRowKeys([]);
+        setActionUsers('');
+      }
+    } catch (error) {
+      message.error(`${t('Có lỗi xảy ra, vui lòng thử lại')}`);
+    }
+  };
+
+
+  const handleUpdateUserInterviewFalse = async () => {
+    try {
+      const response = await PutUsersInterviewStatus(selectedRowKeys, false);
+
+      const messages = response.success
+        ? Promise.resolve(message.success(`${t('Cập nhật thành công')}`))
+        : Promise.reject(new Error(`${t('Cập nhật thất bại: Yêu cầu không thành công, vui lòng thử lại')}`));
+
+      await messages;
+
+      if (response.success) {
+        setSelectedRowKeys([]);
+        setActionUsers('');
+        await fetchDataUser();
+      }
+    } catch (error) {
+      message.error(`${t('Có lỗi xảy ra, vui lòng thử lại')}`);
+    }
+  };
+
 
   const handleMenuClick = (e) => {
     setSelectedMenuKey(e.key)
@@ -153,11 +197,24 @@ export default function ShowAction({
       setIsOpen(true)
     }
 
-    // Cấu hình cho Modal
     const modalConfig = {
       title: 'Xác nhận xóa',
       content: 'Bạn có chắc chắn muốn xóa các nhóm đã chọn?',
       okText: 'Xóa',
+      cancelText: 'Hủy',
+      okButtonProps: {
+        style: {
+          backgroundColor: '#ff4d4f',
+          borderColor: '#ff4d4f',
+          color: '#fff',
+        },
+      },
+    }
+
+    const modalSuccess = {
+      title: 'Cập nhật',
+      content: 'Bạn có chắc chắn muốn cập nhật các nhóm đã chọn không?',
+      okText: 'Chọn',
       cancelText: 'Hủy',
       okButtonProps: {
         style: {
@@ -189,6 +246,24 @@ export default function ShowAction({
           break
       }
     }
+    if (e.key === 'action_show_6_1') {
+      switch (actionUsers) {
+        case 'actionHrInfoIds':
+          Modal.confirm({ ...modalSuccess, onOk: handleUpdateUserInterviewTrue })
+          break
+        default:
+          break
+      }
+    }
+    if (e.key === 'action_show_6_2') {
+      switch (actionUsers) {
+        case 'actionHrInfoIds':
+          Modal.confirm({ ...modalSuccess, onOk: handleUpdateUserInterviewFalse })
+          break
+        default:
+          break
+      }
+    }
   }
 
   const menu = (
@@ -198,6 +273,14 @@ export default function ShowAction({
       <Menu.Item key="action_show_2">{t('Xuất danh sách')}</Menu.Item>
       <Menu.Item key="action_show_3">{t('Lưu trữ')}</Menu.Item>
       <Menu.Item key="action_show_4">{t('Bỏ lưu trữ')}</Menu.Item>
+      {actionUsers === 'actionHrInfoIds' && (
+        <Menu.SubMenu key="sub_menu_duyet" title={t('Duyệt')}>
+          <Menu.Item key="action_show_6_1">{t('ĐẠT')}</Menu.Item>
+          <Menu.Item key="action_show_6_2">{t('KHÔNG ĐẠT')}</Menu.Item>
+        </Menu.SubMenu>
+
+      )}
+
       {actionUsers === 'actionUsers' && (
         <Menu.Item key="action_show_6">{t('Đổi mật khẩu')}</Menu.Item>
       )}
