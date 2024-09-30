@@ -123,7 +123,7 @@ export class HrRecruitmentServices {
     const query = this.personnelRepository.createQueryBuilder('personnel');
 
     query.leftJoinAndSelect('personnel.interviews', 'interview');
-    query.andWhere('personnel.type = :type', { type: true });
+    query.andWhere('personnel.type_personnel = :type_personnel', { type_personnel: true });
 
     Object.entries(filter).forEach(([key, value]) => {
       if (value) {
@@ -205,7 +205,7 @@ export class HrRecruitmentServices {
 
 
     query.leftJoinAndSelect('personnel.interviews', 'interview');
-    query.andWhere('personnel.type = :type', { type: true });
+    query.andWhere('personnel.type_personnel = :type_personnel', { type_personnel: true });
 
     if (startDate) {
       query.andWhere('personnel.create_date >= :startDate', { startDate });

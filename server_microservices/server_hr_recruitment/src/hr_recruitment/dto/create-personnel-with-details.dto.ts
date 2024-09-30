@@ -290,7 +290,7 @@ export class CreatePersonnelWithDetailsDto {
 
   @IsBoolean()
   @IsOptional()
-  type?: boolean;
+  type_personnel?: boolean;
 
   @ValidateNested({ each: true })
   @IsArray()

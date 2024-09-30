@@ -1,6 +1,6 @@
 export class CreatePersonnelDto {
   full_name: string;
-  gender: 'Male' | 'Female' | 'Other';
+  gender: string;
   interview_date?: Date;
   start_date?: Date;
   birth_date?: Date;
@@ -23,5 +23,5 @@ export class CreatePersonnelDto {
   current_province?: string;
   current_district?: string;
   current_ward?: string;
-  house_street_village?: string;
+  type_personnel?: boolean;
 }

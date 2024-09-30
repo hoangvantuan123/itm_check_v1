@@ -131,9 +131,7 @@ export class TestImportServices {
             throw new Error(`Bản ghi không hợp lệ: trường current_ward phải là kiểu string.`);
         }
 
-        if (record.house_street_village && typeof record.house_street_village !== 'string') {
-            throw new Error(`Bản ghi không hợp lệ: trường house_street_village phải là kiểu string.`);
-        }
+       
 
         return true;
     }

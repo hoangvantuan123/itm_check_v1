@@ -82,8 +82,8 @@ export class Personnel {
   @Column({ type: 'text', nullable: true })
   current_ward: string;
 
-  @Column({ type: 'boolean', default: false })
-  type: boolean;
+  @Column({  name: 'type_personnel', type: 'boolean', default: false })
+  type_personnel: boolean;
 
   @OneToMany(() => Family, family => family.personnel) 
   families: Family[];

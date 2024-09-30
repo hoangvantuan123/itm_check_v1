@@ -113,7 +113,7 @@ export default function WorkerRecruitmentPage({ permissions }) {
   const [loading, setLoading] = useState(true)
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(1000)
+  const [limit, setLimit] = useState(150)
   const [dateRange, setDateRange] = useState([today, today])
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const [nameTags, setNameTags] = useState([])

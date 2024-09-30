@@ -59,7 +59,7 @@ export class ImportServices {
                     current_province,
                     current_district,
                     current_ward,
-                    house_street_village
+                    type_personnel
                 } = record;
 
                 return {
@@ -87,7 +87,7 @@ export class ImportServices {
                     current_province,
                     current_district,
                     current_ward,
-                    house_street_village
+                    type_personnel
                 };
             }).filter(record => record.full_name !== undefined && record.gender !== undefined); 
 
