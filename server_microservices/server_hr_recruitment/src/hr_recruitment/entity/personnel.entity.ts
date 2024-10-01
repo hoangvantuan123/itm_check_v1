@@ -1,16 +1,17 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Family } from './family.entity';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+
 import { Education } from './education.entity';
 import { Language } from './language.entity';
 import { Experience } from './experience.entity';
 import { InterviewResult } from './interview_results.entity';
-
 @Entity('hr_personnel')
 export class Personnel {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Column({ type: 'text' , nullable: true})
+  @Column({ name: 'full_name', type: 'text', nullable: true})
   full_name: string;
 
   @Column({ type: 'text', nullable: true })
@@ -84,6 +85,18 @@ export class Personnel {
 
   @Column({  name: 'type_personnel', type: 'boolean', default: false })
   type_personnel: boolean;
+
+
+
+
+  @Column({ type: 'text', nullable: true })
+  @IsString()
+  candidate_type: string;
+
+  @Column({ type: 'text', nullable: true }) 
+  @IsString()
+  supplier_details?: string
+
 
   @OneToMany(() => Family, family => family.personnel) 
   families: Family[];

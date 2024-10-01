@@ -93,10 +93,27 @@ const MultiStepFormPage = () => {
             handleCheckboxChange={handleCheckboxChange}
           />
           <PersonalInformation form={form} />
+         
+        
+       
+        </>
+      ),
+    },
+    { title: "Vị trí ứng tuyển" , 
+      content: (
+        <>
+          <ApplicationInformation form={form} />
+        </>
+      ),
+    },
+    { title: "Thông tin gia đình" , 
+      content: (
+        <>
           <FamilyInfoTable form={form} />
         </>
       ),
     },
+
     {
       title: 'Học vấn và Kỹ năng',
       content: (
@@ -124,19 +141,9 @@ const MultiStepFormPage = () => {
         <h1 className="text-2xl font-bold text-center p-4">TỜ KHAI ỨNG VIÊN</h1>
         <p className="text-center mb-4">Mẫu tờ khai thông tin cá nhân online</p>
 
-        <Steps current={currentStep} className="mb-4">
-          {steps.map((step) => (
-            <Step
-              key={step.title}
-              title={step.title}
-              className="flex items-center"
-            />
-          ))}
-        </Steps>
-
         <Form form={form} layout="vertical" className="pb-10">
           {steps[currentStep].content}
-          <Form.Item className="mt-4">
+          <Form.Item className="mt-4 ">
             <Button
               type="default"
               onClick={prevStep}

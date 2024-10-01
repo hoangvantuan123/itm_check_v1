@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Personnel } from './personnel.entity';
 
 @Entity('hr_experience')
@@ -7,6 +7,7 @@ export class Experience {
   id: number;
 
   @ManyToOne(() => Personnel, personnel => personnel.experiences, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'personnel_id' })
   personnel: Personnel;
 
   @Column({ type: 'text', nullable: true })

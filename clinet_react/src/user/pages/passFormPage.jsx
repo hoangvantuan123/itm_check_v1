@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Form, Input, Button, Typography, Dropdown, Menu, Spin } from 'antd'
 import Logo from '../../assets/f_logo.png'
+import { GetFindByPhone } from '../../features/hrRecruitment/getFindByPhone'
 const { Title, Text } = Typography
 import { useTranslation } from 'react-i18next'
 const PassFormPage = () => {
@@ -10,12 +11,15 @@ const PassFormPage = () => {
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
   const { t } = useTranslation()
+
+
+
   const handleSubmit = (values) => {
     setLoading(true)
-
+    GetFindByPhone(phoneNumber)
     setTimeout(() => {
       setLoading(false)
-      navigate('/apply/candidate-application/view=form')
+    /*   navigate('/apply/candidate-application/view=form') */
     }, 2000)
   }
 
@@ -67,7 +71,9 @@ const PassFormPage = () => {
           <Form
             onFinish={handleSubmit}
             style={{ maxWidth: '400px', width: '100%', margin: '0 auto' }}
+            className=" flex items-center justify-between"
           >
+
             <Form.Item
               name="phoneNumber"
               rules={[
@@ -89,7 +95,6 @@ const PassFormPage = () => {
                 inputMode="numeric"
               />
             </Form.Item>
-
             <Form.Item>
               <Button
                 size="large"

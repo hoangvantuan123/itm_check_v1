@@ -1,7 +1,6 @@
 import { Form, Radio, Row, Col, Input } from 'antd'
 
 const CandidateType = ({ handleCheckboxChange, isSupplier }) => {
-  console.log(isSupplier)
   return (
     <div>
       <h2 className="text-xl font-semibold mb-4">Đối tượng ứng viên</h2>

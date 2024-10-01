@@ -127,6 +127,7 @@ const OfficeSkillsTable = ({ form, formData }) => {
           rowKey="key"
           scroll={{ x: true }}
           bordered
+            size="small"
         />
       </Form.Item>
 
@@ -140,6 +141,7 @@ const OfficeSkillsTable = ({ form, formData }) => {
           rowKey="key"
           scroll={{ x: true }}
           bordered
+          size="small"
         />
       </Form.Item>
     </div>

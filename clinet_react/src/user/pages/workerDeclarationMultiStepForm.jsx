@@ -70,7 +70,9 @@ const WorkerDeclarationMultiStepForm = () => {
       current_province: finalData?.currentProvince,
       current_district: finalData?.currentDistrict,
       current_ward: finalData?.currentCommune,
-      type: true,
+      type_personnel: true,
+      supplier_details:  finalData?.supplierDetails,
+      candidate_type: finalData?.candidateType,
       families:
         finalData?.familyMembers?.map((family) => ({
           relationship: family?.relationship,
@@ -130,7 +132,6 @@ const WorkerDeclarationMultiStepForm = () => {
     setIsSubmitting(true)
     const finalData = { ...formData, ...form.getFieldsValue() }
     const submissionData = formatSubmissionData(finalData)
-
     try {
       const response = await PostPublicHrRecryutment(submissionData)
       if (response.success) {
@@ -152,6 +153,7 @@ const WorkerDeclarationMultiStepForm = () => {
       content: (
         <>
           <CandidateType
+          form={form}
             isSupplier={isSupplier}
             handleCheckboxChange={handleCheckboxChange}
           />

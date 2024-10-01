@@ -122,7 +122,6 @@ const DataIcon = () => {
   )
 }
 export default function ImportAction({fetchData, isOpen, handleOnClickActionImport, setActionImport, actionImport }) {
-  console.log(actionImport)
   const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
   const userNameLogin = userFromLocalStorage?.login || 'none'
   const { t } = useTranslation()

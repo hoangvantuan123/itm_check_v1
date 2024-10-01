@@ -20,6 +20,9 @@ export class TestImportServices {
             case 'hr_personnel':
                 await this.validateHRPersonnelData(importData);
                 break;
+            case 'hr_personnel,hr_language,hr_family,hr_experience,hr_education':
+                await this.processHRPersonnelDatas(importData, 'hr_personnel,hr_language,hr_family,hr_experience,hr_education');
+                break;
             default:
                 throw new NotFoundException(`Model ${model} không được hỗ trợ`);
         }
@@ -78,7 +81,7 @@ export class TestImportServices {
             throw new Error(`Bản ghi không hợp lệ: trường tax_number phải là kiểu string.`);
         }
 
-        if (record.phone_number&& typeof record.phone_number !== 'string') {
+        if (record.phone_number && typeof record.phone_number !== 'string') {
             throw new Error(`Bản ghi không hợp lệ: trường phone_number phải chỉ chứa các chữ số.`);
         }
 
@@ -131,7 +134,7 @@ export class TestImportServices {
             throw new Error(`Bản ghi không hợp lệ: trường current_ward phải là kiểu string.`);
         }
 
-       
+
 
         return true;
     }
@@ -141,6 +144,76 @@ export class TestImportServices {
             if (isNaN(date.getTime())) { // Kiểm tra xem ngày có hợp lệ hay không
                 throw new Error(`Bản ghi không hợp lệ: trường ${fieldName} phải là kiểu Date hợp lệ.`);
             }
+        }
+    }
+
+
+
+
+
+
+
+
+    private async processHRPersonnelDatas(importData: any[], tableNames: string): Promise<void> {
+        const batchSize = 1000;
+        const totalBatches = Math.ceil(importData.length / batchSize);
+        const tables = tableNames.split(',');
+        console.log("tables", tables)
+        for (let i = 0; i < totalBatches; i++) {
+            const batch = importData.slice(i * batchSize, (i + 1) * batchSize);
+
+            const dataToSave: { [key: string]: any[] } = {};
+
+            batch.forEach(record => {
+                tables.forEach(table => {
+                    if (!dataToSave[table]) {
+                        dataToSave[table] = [];
+                    }
+
+                    /*    switch (table) {
+                           case 'hr_personnel':
+                               if (record.full_name !== undefined && record.gender !== undefined) {
+                                   dataToSave[table].push({
+                                       full_name: record.full_name,
+                                       gender: record.gender,
+                                       interview_date: record.interview_date,
+                                       start_date: record.start_date,
+                                       birth_date: record.birth_date,
+                                       id_number: record.id_number,
+                                       id_issue_date: record.id_issue_date,
+                                       ethnicity: record.ethnicity,
+                                       id_issue_place: record.id_issue_place,
+                                       insurance_number: record.insurance_number,
+                                       tax_number: record.tax_number,
+                                       phone_number: record.phone_number,
+                                       email: record.email,
+                                       alternate_phone_number: record.alternate_phone_number,
+                                       alternate_name: record.alternate_name,
+                                       alternate_relationship: record.alternate_relationship,
+                                       birth_address: record.birth_address,
+                                       birth_province: record.birth_province,
+                                       birth_district: record.birth_district,
+                                       birth_ward: record.birth_ward,
+                                       current_address: record.current_address,
+                                       current_province: record.current_province,
+                                       current_district: record.current_district,
+                                       current_ward: record.current_ward,
+                                       type_personnel: record.type_personnel || true,
+                                   } as CreatePersonnelDto);
+                               }
+                               break;
+                           case 'hr_language':
+                               break;
+                           case 'hr_family':
+                               break;
+                           case 'hr_experience':
+                               break;
+                           case 'hr_education':
+                               break;
+                       } */
+                });
+            });
+
         }
     }
 }

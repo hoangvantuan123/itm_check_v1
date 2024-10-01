@@ -2,12 +2,13 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Form, Input, Button, Typography, Dropdown, Menu, Spin } from 'antd'
 import Logo from '../../assets/f_logo.png'
+import { GetFindByPhone } from '../../features/hrRecruitment/getFindByPhone'
 const { Title, Text } = Typography
 import { useTranslation } from 'react-i18next'
 
 // Hàm mã hóa Base64
 const encodePhoneNumber = (phoneNumber) => {
-  return btoa(phoneNumber) // btoa() dùng để mã hóa Base64
+  return btoa(phoneNumber) 
 }
 
 const WorkerDeclarationPassForm = () => {
@@ -18,14 +19,23 @@ const WorkerDeclarationPassForm = () => {
   const { t } = useTranslation()
 
   const handleSubmit = (values) => {
-    setLoading(true)
-
+  setLoading(true) 
     setTimeout(() => {
       setLoading(false)
       const encodedPhoneNumber = encodePhoneNumber(phoneNumber)
       navigate(`/public/apply/form/2`)
-    }, 2000)
+    }, 1000)
   }
+   /*  const handleSubmit = async (values) => {
+      const result = await GetFindByPhone(values.phoneNumber);
+    
+      if (result.success) {
+        console.log('User data:', result.data);
+      } else {
+        console.error('Error fetching user data:', result.message);
+      }
+    };
+     */
 
   const handleMenuClick = (e) => {
     setLanguage(e.key)

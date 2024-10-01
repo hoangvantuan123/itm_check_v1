@@ -292,6 +292,17 @@ export class CreatePersonnelWithDetailsDto {
   @IsOptional()
   type_personnel?: boolean;
 
+
+  @IsString()
+  @IsOptional()
+  candidate_type?: string;
+
+
+  @IsString()
+  @IsOptional()
+  supplier_details?: string;
+
+
   @ValidateNested({ each: true })
   @IsArray()
   @Type(() => CreateFamilyDto)

@@ -24,14 +24,14 @@ import { TestImportData } from '../../../features/import/test_import'
 
 const { Title } = Typography
 const { Sider, Content } = Layout
-const { Option } = Select
+const { Option, OptGroup } = Select;
 
 
 
 const FileIcon = () => {
   return (
     <svg
-      className="w-4 h-4"
+      className="w-4 h-4 opacity-50"
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -91,7 +91,6 @@ export default function ImportForm({ fetchData, isOpen, onClose, tableInfo, acti
 
         promises.push(TestImportData(data));
       }
-
       const results = await Promise.all(promises);
       results.forEach(result => {
         if (result.data.status === 200) {
@@ -151,7 +150,7 @@ export default function ImportForm({ fetchData, isOpen, onClose, tableInfo, acti
       const results = await Promise.all(promises);
       results.forEach(result => {
         if (result.data.status === 200) {
-           fetchData()
+          fetchData()
           message.success(t('Dữ liệu cập nhật thành công!'));
           onClose()
         } else if (result.data.status === 400) {
@@ -269,20 +268,20 @@ export default function ImportForm({ fetchData, isOpen, onClose, tableInfo, acti
           showSearch
           placeholder={t('Nhập, chọn một trường')}
         >
-          {tableInfo?.columns.map((table) => (
-            <Option
-              key={table.name}
-              value={table.name}
-              disabled={
-                Object.values(connectValues).includes(table.name) &&
-                connectValues[record.key] !== table.name
-              }
-            >
-              <span className="flex items-center gap-3 ">
-                {' '}
-                <FileIcon /> {t(`execute_import.${table.name}`)} - <span className=" italic">{table.name}</span>
-              </span>
-            </Option>
+          {tableInfo?.map((table) => (
+            <OptGroup key={table.name} label={<span className="font-bold sticky-header">  Model : {table.name}</span>}>
+              {table.columns.map((column) => (
+                <Option
+                  key={`${table.name}-${column.name}`}
+                  value={column.name}
+                  disabled={Object.values(connectValues).includes(column.name)}
+                >
+                  <span className="flex items-center gap-3">
+                    <FileIcon />   {t(`execute_import.${column.name}`)} - <span className="italic  text-red-400">{column.type}</span>
+                  </span>
+                </Option>
+              ))}
+            </OptGroup>
           ))}
         </Select>
       ),

@@ -1,4 +1,4 @@
-import { Body, Req, Controller, Post, HttpException, HttpStatus, Put, UsePipes, Param, Delete, UnauthorizedException, ValidationPipe, Logger, Get, Query } from '@nestjs/common';
+import { Body, Req, Controller, Post, HttpException, Res, HttpStatus, Put, UsePipes, Param, Delete, UnauthorizedException, ValidationPipe, Logger, Get, Query } from '@nestjs/common';
 import { CreatePersonnelWithDetailsDto } from '../dto/create-personnel-with-details.dto';
 import { HrRecruitmentServices } from '../services/hr_recruitment.services';
 import { Personnel } from '../entity/personnel.entity';
@@ -124,5 +124,13 @@ export class HrRecruitmentController {
   ): Promise<{ success: boolean; message: string }> {
     return this.personnelService.updateInterviewResults(updateInterviewResultDto);
   }
+
+  @Get('find-by-phone/:phone_number')
+  async findByPhone(
+    @Param('phone_number') phoneNumber: string,
+  ) {
+    return await this.personnelService.findByPhoneNumber(phoneNumber);
+  }
+
 
 }

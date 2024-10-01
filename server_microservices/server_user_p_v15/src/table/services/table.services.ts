@@ -92,35 +92,48 @@ export class TableService {
     return result;
   }
 
-  async getTableByName(tableName: string): Promise<
-    { id: number; name: string; columnCount: number; columns: { name: string, type: string, isNullable: string, default: string | null }[] } | null
+  async getTablesByNames(tableNames: string[]): Promise<
+    { name: string; columnCount: number; columns: { name: string, type: string, isNullable: string, default: string | null }[] }[]
   > {
-    const columnQuery = `
-    SELECT 
-      column_name, 
-      data_type, 
-      is_nullable, 
-      column_default
-    FROM information_schema.columns 
-    WHERE table_schema = 'public' 
-    AND table_name = $1;  -- sử dụng placeholder để tránh SQL injection
-  `;
-    const columns = await this.connection.query(columnQuery, [tableName]);
+    const tablesInfo: { name: string; columnCount: number; columns: { name: string, type: string, isNullable: string, default: string | null }[] }[] = [];
 
-    if (columns.length === 0) {
-      return null; // Nếu không tìm thấy bảng
+    for (const tableName of tableNames) {
+      const columnQuery = `
+      SELECT 
+        column_name, 
+        data_type, 
+        is_nullable, 
+        column_default
+      FROM information_schema.columns 
+      WHERE table_schema = 'public' 
+      AND table_name = $1; 
+    `;
+      const columns = await this.connection.query(columnQuery, [tableName]);
+
+      if (columns.length === 0) {
+        continue; // Bỏ qua nếu không tìm thấy bảng
+      }
+
+      const filteredColumns = columns.filter((column: any) =>
+        column.column_name !== 'id' &&
+        column.column_name !== 'create_date' &&
+        column.column_name !== 'write_date'
+      );
+
+      tablesInfo.push({
+        name: tableName,
+        columnCount: filteredColumns.length,
+        columns: filteredColumns.map((column: any) => ({
+          name: column.column_name,
+          type: column.data_type,
+          isNullable: column.is_nullable,
+          default: column.column_default
+        }))
+      });
     }
 
-    return {
-      id: 1, 
-      name: tableName,
-      columnCount: columns.length,
-      columns: columns.map((column: any) => ({
-        name: column.column_name,
-        type: column.data_type,
-        isNullable: column.is_nullable,
-        default: column.column_default
-      }))
-    };
+    return tablesInfo;
   }
+
+
 }

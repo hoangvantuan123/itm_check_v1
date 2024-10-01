@@ -1,6 +1,6 @@
 export class CreatePersonnelDto {
-  full_name: string;
-  gender: string;
+  full_name?: string;
+  gender?: string;
   interview_date?: Date;
   start_date?: Date;
   birth_date?: Date;
@@ -24,4 +24,6 @@ export class CreatePersonnelDto {
   current_district?: string;
   current_ward?: string;
   type_personnel?: boolean;
+  candidate_type?: string;
+  supplier_details?: string;
 }

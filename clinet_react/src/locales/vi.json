@@ -180,6 +180,13 @@
     "current_district": " Quận huyện",
     "current_ward": "Xã phường",
     "create_date": "Thời gian tạo",
-    "write_date": "Thời gian ghi"
+    "write_date": "Thời gian ghi",
+    "type_personnel" : "Loại nhân sự",
+    "supplier_details" : "Nhà cung cấp",
+    "candidate_type" : "Loại nhà cung cấpcấp"
+  },
+  "tables" : {
+    "hr_personnel" : "Nhân sự",
+    "hr_language" : "Ngôn ngữ"
   }
 }
