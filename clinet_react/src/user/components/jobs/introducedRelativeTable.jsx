@@ -12,22 +12,23 @@ const IntroducedRelativeTable = ({ form }) => {
             label="Họ tên người giới thiệu (Tên người giới thiệu)"
             name={['introducer', 'introducerName']} // Nested field for better structure
           >
-            <Input placeholder="Nhập họ tên" />
+            <Input  size="large" placeholder="Nhập họ tên" />
           </Form.Item>
         </Col>
 
         <Col xs={24} sm={12} md={8}>
           <Form.Item
+
             label="Bộ phận (Phòng ban)"
             name={['introducer', 'department']}
           >
-            <Input placeholder="Nhập bộ phận" />
+            <Input   size="large" placeholder="Nhập bộ phận" />
           </Form.Item>
         </Col>
 
         <Col xs={24} sm={12} md={8}>
           <Form.Item label="Số điện thoại" name={['introducer', 'phoneNumber']}>
-            <Input placeholder="Nhập số điện thoại" />
+            <Input  size="large" placeholder="Nhập số điện thoại" />
           </Form.Item>
         </Col>
       </Row>

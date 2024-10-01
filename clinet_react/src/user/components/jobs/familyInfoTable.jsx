@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Form, Table, Input, Button, Checkbox, InputNumber, Drawer, Card, Col, Row } from 'antd';
 
-const FamilyInfoTable = () => {
+const FamilyInfoTable = ({isMobile}) => {
   const [familyMembers, setFamilyMembers] = useState([
     {
       key: 0,
@@ -57,20 +57,7 @@ const FamilyInfoTable = () => {
     livingTogether: false,
   });
 
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 820);
-    };
-
-    handleResize();
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  
 
   const showDrawer = (member = null) => {
     setSelectedMember(member);
@@ -228,7 +215,7 @@ const FamilyInfoTable = () => {
 
       <Drawer
         title={null}
-        height={800}
+        height={750}
         onClose={onClose}
         visible={visible}
         placement="bottom"

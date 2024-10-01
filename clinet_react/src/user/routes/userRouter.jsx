@@ -62,7 +62,6 @@ const UserRouter = () => {
     '/public/apply/thong-bao',
   ]
 
-  // Hàm kiểm tra trạng thái đăng nhập
   const checkLoginStatus = () => {
     const token = Cookies.get('accessToken')
     const userInfo = localStorage.getItem('userInfo')

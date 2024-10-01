@@ -1,7 +1,9 @@
-import { useState } from 'react'
-import { Table, Input, DatePicker, InputNumber, Form, Button } from 'antd'
+import { useState } from 'react';
+import { Input, DatePicker, InputNumber, Form, Button, Card, Row, Col, Drawer, Select } from 'antd';
 
-const EducationLanguageTable = ({ form }) => {
+const { Option } = Select;
+
+const EducationLanguageTable = ({ isMobile }) => {
   const [educationData, setEducationData] = useState([
     {
       key: 0,
@@ -12,248 +14,332 @@ const EducationLanguageTable = ({ form }) => {
       endYear: '',
       grade: '',
     },
-  ])
+  ]);
 
-  const [languageData] = useState([
+  const [languageData, setLanguageData] = useState([
     {
       key: 0,
       language: 'Tiếng Hàn',
       certificateType: '',
       score: '',
       level: '',
-      startDate: '',
-      endDate: '',
+      startDate: null,
+      endDate: null,
       note: '',
     },
-    {
-      key: 1,
-      language: 'Tiếng Anh',
-      certificateType: '',
-      score: '',
-      level: '',
-      startDate: '',
-      endDate: '',
-      note: '',
-    },
-    {
-      key: 2,
-      language: 'Ngôn ngữ khác',
-      certificateType: '',
-      score: '',
-      level: '',
-      startDate: '',
-      endDate: '',
-      note: '',
-    },
-  ])
+  ]);
 
-  // Hàm để thêm hàng giáo dục mới
-  const addEducationRow = () => {
-    const newKey =
-      educationData.length > 0
-        ? educationData[educationData.length - 1].key + 1
-        : 0
-    const newRow = {
-      key: newKey,
-      schoolName: '',
-      major: '',
-      years: '',
-      startYear: '',
-      endYear: '',
-      grade: '',
+  const [visible, setVisible] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [formType, setFormType] = useState('education');
+
+  const [formValues, setFormValues] = useState({
+    schoolName: '',
+    major: '',
+    years: '',
+    startYear: '',
+    endYear: '',
+    grade: '',
+    language: '',
+    certificateType: '',
+    score: '',
+    level: '',
+    startDate: null,
+    endDate: null,
+    note: '',
+  });
+
+  const showDrawer = (item, type) => {
+    setVisible(true);
+    setEditMode(!!item);
+    setSelectedItem(item);
+    setFormType(type);
+    setFormValues({
+      schoolName: item?.schoolName || '',
+      major: item?.major || '',
+      years: item?.years || '',
+      startYear: item?.startYear || '',
+      endYear: item?.endYear || '',
+      grade: item?.grade || '',
+      language: item?.language || '',
+      certificateType: item?.certificateType || '',
+      score: item?.score || '',
+      level: item?.level || '',
+      startDate: item?.startDate || null,
+      endDate: item?.endDate || null,
+      note: item?.note || '',
+    });
+  };
+
+  const onClose = () => {
+    setVisible(false);
+    setEditMode(false);
+    setSelectedItem(null);
+  };
+
+  const handleSubmit = () => {
+    if (selectedItem) {
+      if (formType === 'language') {
+        setLanguageData((prev) =>
+          prev.map((lang) => (lang.key === selectedItem.key ? { ...formValues } : lang))
+        );
+      } else {
+        setEducationData((prev) =>
+          prev.map((edu) => (edu.key === selectedItem.key ? { ...formValues } : edu))
+        );
+      }
+    } else {
+      const newKey = formType === 'language' ? languageData.length : educationData.length;
+      if (formType === 'language') {
+        setLanguageData([...languageData, { key: newKey, ...formValues }]);
+      } else {
+        setEducationData([...educationData, { key: newKey, ...formValues }]);
+      }
     }
-    setEducationData([...educationData, newRow])
-  }
-
-  const educationColumns = [
-    {
-      title: 'Trường học',
-      dataIndex: 'schoolName',
-      render: (text, record, index) => (
-        <Form.Item
-          name={['educationData', index, 'schoolName']}
-          style={{ margin: 0 }}
-        >
-          <Input className="border-none w-[150px] md:w-full" />
-        </Form.Item>
-      ),
-    },
-    {
-      title: 'Chuyên ngành',
-      dataIndex: 'major',
-      render: (text, record, index) => (
-        <Form.Item
-          name={['educationData', index, 'major']}
-          style={{ margin: 0 }}
-        >
-          <Input className="border-none w-32  md:w-full " />
-        </Form.Item>
-      ),
-    },
-    {
-      title: 'Số năm',
-      dataIndex: 'years',
-      render: (text, record, index) => (
-        <Form.Item
-          name={['educationData', index, 'years']}
-          style={{ margin: 0 }}
-        >
-          <InputNumber className="border-none w-20  md:w-full" />
-        </Form.Item>
-      ),
-    },
-    {
-      title: 'Năm nhập học',
-      dataIndex: 'startYear',
-      render: (text, record, index) => (
-        <Form.Item
-          name={['educationData', index, 'startYear']}
-          style={{ margin: 0 }}
-        >
-          <InputNumber className="border-none w-20  md:w-full" />
-        </Form.Item>
-      ),
-    },
-    {
-      title: 'Năm tốt nghiệp',
-      dataIndex: 'endYear',
-      render: (text, record, index) => (
-        <Form.Item
-          name={['educationData', index, 'endYear']}
-          style={{ margin: 0 }}
-        >
-          <InputNumber className="border-none w-20  md:w-full " />
-        </Form.Item>
-      ),
-    },
-    {
-      title: 'Xếp loại',
-      dataIndex: 'grade',
-      render: (text, record, index) => (
-        <Form.Item
-          name={['educationData', index, 'grade']}
-          style={{ margin: 0 }}
-        >
-          <Input className="border-none w-20  md:w-full" />
-        </Form.Item>
-      ),
-    },
-  ]
-
-  const languageColumns = [
-    {
-      title: 'Ngôn ngữ',
-      dataIndex: 'language',
-      render: (text, record, index) => (
-        <Form.Item
-          name={['languageData', index, 'language']}
-          initialValue={text || ''}
-          style={{ margin: 0 }}
-        >
-          <span className="border-none w-20  md:w-full">{text}</span>
-        </Form.Item>
-      ),
-    },
-    {
-      title: 'Loại chứng nhận',
-      dataIndex: 'certificateType',
-      render: (text, record, index) => (
-        <Form.Item
-          name={['languageData', index, 'certificateType']}
-          style={{ margin: 0 }}
-        >
-          <Input className="border-none w-32  md:w-full" />
-        </Form.Item>
-      ),
-    },
-    {
-      title: 'Điểm số',
-      dataIndex: 'score',
-      render: (text, record, index) => (
-        <Form.Item
-          name={['languageData', index, 'score']}
-          style={{ margin: 0 }}
-        >
-          <Input className="border-none w-20  md:w-full" />
-        </Form.Item>
-      ),
-    },
-    {
-      title: 'Cấp bậc',
-      dataIndex: 'level',
-      render: (text, record, index) => (
-        <Form.Item
-          name={['languageData', index, 'level']}
-          style={{ margin: 0 }}
-        >
-          <Input className="border-none w-20  md:w-full" />
-        </Form.Item>
-      ),
-    },
-    {
-      title: 'Ngày bắt đầu',
-      dataIndex: 'startDate',
-      render: (text, record, index) => (
-        <Form.Item
-          name={['languageData', index, 'startDate']}
-          style={{ margin: 0 }}
-        >
-          <DatePicker className="border-none w-32  md:w-full" />
-        </Form.Item>
-      ),
-    },
-    {
-      title: 'Ngày kết thúc',
-      dataIndex: 'endDate',
-      render: (text, record, index) => (
-        <Form.Item
-          name={['languageData', index, 'endDate']}
-          style={{ margin: 0 }}
-        >
-          <DatePicker className="border-none w-32  md:w-full" />
-        </Form.Item>
-      ),
-    },
-    {
-      title: 'Ghi chú',
-      dataIndex: 'note',
-      render: (text, record, index) => (
-        <Form.Item name={['languageData', index, 'note']} style={{ margin: 0 }}>
-          <Input className="border-none w-32  md:w-full" />
-        </Form.Item>
-      ),
-    },
-  ]
+    onClose();
+  };
 
   return (
     <>
       <h2 className="text-xl font-semibold mb-4 mt-4">Tình trạng học vấn</h2>
-      <Table
-        dataSource={educationData}
-        columns={educationColumns}
-        pagination={false}
-        rowKey="key"
-        scroll={{ x: true }}
-        bordered
-        size="small"
-      />
-      <Button type="dashed" onClick={addEducationRow} style={{ marginTop: 16 }}>
-        Thêm hàng
+      <Row gutter={16}>
+        {educationData.map((edu) => (
+          <Col span={isMobile ? 24 : 24} key={edu.key}>
+            <Card
+            onClick={() => showDrawer(edu, 'education')}
+              title={edu.schoolName || "Trường học"}
+             
+              style={{ marginBottom: 16 }}
+            >
+              <p><strong>Chuyên ngành:</strong> {edu.major || "Chuyên ngành"}</p>
+              <p><strong>Số năm:</strong> {edu.years || "Số năm"}</p>
+              <p><strong>Năm nhập học:</strong> {edu.startYear || "Năm nhập học"}</p>
+              <p><strong>Năm tốt nghiệp:</strong> {edu.endYear || "Năm tốt nghiệp"}</p>
+              <p><strong>Xếp loại:</strong> {edu.grade || "Xếp loại"}</p>
+            </Card>
+          </Col>
+        ))}
+      </Row>
+      <Button type="dashed" onClick={() => showDrawer(null, 'education')} style={{ marginTop: 5 }}>
+        Thêm hàng giáo dục
       </Button>
 
-      {/* Foreign Language Table */}
       <h2 className="text-xl font-semibold mb-4 mt-5">Ngoại ngữ</h2>
-      <Table
-        dataSource={languageData}
-        columns={languageColumns}
-        pagination={false}
-        rowKey="key"
-        bordered
-        scroll={{ x: true }}
-        size="small"
-      />
-    </>
-  )
-}
+      <Row gutter={16}>
+        {languageData.map((lang) => (
+          <Col span={isMobile ? 24 : 24} key={lang.key}>
+            <Card
+            onClick={() => showDrawer(lang, 'language')}
+              title={lang.language || "Ngôn ngữ"}
+              style={{ marginBottom: 16 }}
+            >
+              <p><strong>Loại chứng nhận:</strong> {lang.certificateType || "Loại chứng nhận"}</p>
+              <p><strong>Điểm số:</strong> {lang.score || "Điểm số"}</p>
+              <p><strong>Cấp bậc:</strong> {lang.level || "Cấp bậc"}</p>
+              <p><strong>Ngày bắt đầu:</strong> {lang.startDate ? lang.startDate.format('YYYY-MM-DD') : "Ngày bắt đầu"}</p>
+              <p><strong>Ngày kết thúc:</strong> {lang.endDate ? lang.endDate.format('YYYY-MM-DD') : "Ngày kết thúc"}</p>
+              <p><strong>Ghi chú:</strong> {lang.note || "Ghi chú"}</p>
+            </Card>
+          </Col>
+        ))}
+      </Row>
 
-export default EducationLanguageTable
+      <Button type="dashed" onClick={() => showDrawer(null, 'language')} style={{ marginTop: 5 }}>
+        Thêm ngoại ngữ
+      </Button>
+
+      <Drawer
+        title={null}
+        height={750}
+        onClose={onClose}
+        visible={visible}
+        placement="bottom"
+        closable={false}
+        footer={
+          <div className="flex items-center justify-between">
+            <Button key="cancel" onClick={onClose} size="large">
+              Thoát
+            </Button>
+            <Button
+              key="submit"
+              type="primary"
+              size="large"
+              className="ml-2 border-gray-200 bg-indigo-600 text-white shadow-sm text-sm"
+              onClick={handleSubmit}
+            >
+              {editMode ? "Cập nhật" : "Thêm"}
+            </Button>
+          </div>
+        }
+      >
+        <Form layout="vertical">
+          {formType === 'language' ? (
+            <>
+             <Row gutter={16}>
+        <Col xs={24} sm={12}>
+          <Form.Item label="Ngôn ngữ">
+            <Select
+              value={formValues.language}
+              size="large"
+              onChange={(value) => setFormValues({ ...formValues, language: value })}
+              placeholder="Chọn ngôn ngữ"
+            >
+              <Option value="Tiếng Hàn">Tiếng Hàn</Option>
+              <Option value="Tiếng Anh">Tiếng Anh</Option>
+              <Option value="Tiếng Nhật">Tiếng Nhật</Option>
+              <Option value="Tiếng Trung">Tiếng Trung</Option>
+              <Option value="Ngôn ngữ khác">Ngôn ngữ khác</Option>
+            </Select>
+          </Form.Item>
+        </Col>
+
+        <Col xs={24} sm={12}>
+          <Form.Item label="Loại chứng nhận">
+            <Input
+              size="large"
+              value={formValues.certificateType}
+              onChange={(e) => setFormValues({ ...formValues, certificateType: e.target.value })}
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+
+      <Row gutter={16}>
+        <Col xs={12} sm={12}>
+          <Form.Item label="Điểm số">
+            <InputNumber
+
+            className="w-full"
+              size="large"
+              value={formValues.score}
+              onChange={(e) => setFormValues({ ...formValues, score: e.target.value })}
+            />
+          </Form.Item>
+        </Col>
+
+        <Col xs={12} sm={12}>
+          <Form.Item label="Cấp bậc">
+            <Input
+              className="w-full"
+              size="large"
+              value={formValues.level}
+              onChange={(e) => setFormValues({ ...formValues, level: e.target.value })}
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+
+      <Row gutter={16}>
+        <Col xs={12} sm={12}>
+          <Form.Item label="Ngày bắt đầu">
+            <DatePicker
+            className="w-full"
+              size="large"
+              value={formValues.startDate}
+              onChange={(date) => setFormValues({ ...formValues, startDate: date })}
+            />
+          </Form.Item>
+        </Col>
+
+        <Col xs={12} sm={12}>
+          <Form.Item label="Ngày kết thúc">
+            <DatePicker
+            className="w-full"
+              size="large"
+              value={formValues.endDate}
+              onChange={(date) => setFormValues({ ...formValues, endDate: date })}
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+
+      <Row gutter={16}>
+        <Col xs={24}>
+          <Form.Item label="Ghi chú">
+            <Input.TextArea
+              size="large"
+              value={formValues.note}
+              onChange={(e) => setFormValues({ ...formValues, note: e.target.value })}
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+            </>
+          ) : (
+            <>
+           <Row gutter={16}>
+        <Col xs={24} sm={12}>
+          <Form.Item label="Trường học">
+            <Input
+              size="large"
+              value={formValues.schoolName}
+              onChange={(e) => setFormValues({ ...formValues, schoolName: e.target.value })}
+            />
+          </Form.Item>
+        </Col>
+        <Col xs={24} sm={12}>
+          <Form.Item label="Chuyên ngành">
+            <Input
+              size="large"
+              value={formValues.major}
+              onChange={(e) => setFormValues({ ...formValues, major: e.target.value })}
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+
+      <Row gutter={16}>
+        <Col xs={12} sm={12}>
+          <Form.Item label="Số năm">
+            <InputNumber
+              size="large"
+              className="w-full"
+              value={formValues.years}
+              onChange={(value) => setFormValues({ ...formValues, years: value })}
+            />
+          </Form.Item>
+        </Col>
+        <Col xs={12} sm={12}>
+          <Form.Item label="Năm nhập học">
+            <InputNumber
+              size="large"
+               className="w-full"
+              value={formValues.startYear}
+              onChange={(value) => setFormValues({ ...formValues, startYear: value })}
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+
+      <Row gutter={16}>
+        <Col xs={12} sm={12}>
+          <Form.Item label="Năm tốt nghiệp">
+            <InputNumber
+             className="w-full"
+              size="large"
+              value={formValues.endYear}
+              onChange={(value) => setFormValues({ ...formValues, endYear: value })}
+            />
+          </Form.Item>
+        </Col>
+        <Col xs={12} sm={12}>
+          <Form.Item label="Xếp loại">
+            <Input
+              size="large"
+              value={formValues.grade}
+              onChange={(e) => setFormValues({ ...formValues, grade: e.target.value })}
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+            </>
+          )}
+        
+        </Form>
+      </Drawer>
+    </>
+  );
+};
+
+export default EducationLanguageTable;
