@@ -34,7 +34,7 @@ export class HrRecruitmentServices {
     createPersonnelWithDetailsDto: CreatePersonnelWithDetailsDto,
   ): Promise<{ success: boolean; message: string; data?: Personnel }> {
     try {
-      console.log("CreatePersonnelWithDetailsDto" , CreatePersonnelWithDetailsDto)
+      console.log("CreatePersonnelWithDetailsDto", CreatePersonnelWithDetailsDto)
       return await this.personnelRepository.manager.transaction(
         async (entityManager: EntityManager) => {
           const {
@@ -500,31 +500,31 @@ export class HrRecruitmentServices {
 
   async findByPhoneNumber(phone_number: string): Promise<any> {
     const personnel = await this.personnelRepository.findOne({
-        where: { phone_number },
-        relations: ['families', 'educations', 'languages', 'experiences', 'interviews'],
+      where: { phone_number },
+      relations: ['families', 'educations', 'languages', 'experiences', 'interviews'],
     });
 
     if (!personnel) {
-        return {
-            success: false,
-            message: 'Personnel not found with this phone number',
-            redirectUrl: '/your-desired-url', // Your desired redirect URL
-        };
+      return {
+        success: false,
+        message: 'Personnel not found with this phone number',
+        redirectUrl: '/your-desired-url', // Your desired redirect URL
+      };
     }
 
     const combinedInfo = `${personnel.phone_number}:${personnel.full_name}`;
     const encodedRouter = Buffer.from(combinedInfo).toString('base64');
 
     return {
-        success: true,
-        data: {
-            phoneNumber: personnel.phone_number,
-            name: personnel.full_name,
-            email: personnel.email,
-            router: encodedRouter,
-        },
+      success: true,
+      data: {
+        phoneNumber: personnel.phone_number,
+        name: personnel.full_name,
+        email: personnel.email,
+        router: encodedRouter,
+      },
     };
-}
+  }
 
 
 

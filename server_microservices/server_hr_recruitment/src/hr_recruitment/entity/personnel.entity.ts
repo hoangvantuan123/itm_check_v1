@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn } from 'typeorm';
 import { Family } from './family.entity';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
@@ -6,6 +6,8 @@ import { Education } from './education.entity';
 import { Language } from './language.entity';
 import { Experience } from './experience.entity';
 import { InterviewResult } from './interview_results.entity';
+import { HrInterviewCandidate } from './hr_interview_candidates.entity';
+
 @Entity('hr_personnel')
 export class Personnel {
   @PrimaryGeneratedColumn('increment')
@@ -98,20 +100,32 @@ export class Personnel {
   supplier_details?: string
 
 
+
+
+  @OneToMany(() => HrInterviewCandidate, (candidate) => candidate.personnel)
+  @JoinColumn({ name: 'candidate_id' })
+  candidates: HrInterviewCandidate[];
+
+
   @OneToMany(() => Family, family => family.personnel) 
+  @JoinColumn({ name: 'family_id' })
   families: Family[];
 
   @OneToMany(() => Education, education => education.personnel) 
+  @JoinColumn({ name: 'education_id' })
   educations: Education[];
 
   @OneToMany(() => Language, language => language.personnel)
+  @JoinColumn({ name: 'language_id' })
   languages: Language[];
 
   @OneToMany(() => Experience, experience => experience.personnel) 
+  @JoinColumn({ name: 'experience_id' })
   experiences: Experience[];
 
 
   @OneToMany(() => InterviewResult, interview => interview.personnel) 
+  @JoinColumn({ name: 'interview_id' })
   interviews: InterviewResult[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

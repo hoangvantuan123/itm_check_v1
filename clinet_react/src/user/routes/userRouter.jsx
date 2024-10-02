@@ -76,7 +76,7 @@ const UserRouter = () => {
   }
 
   useEffect(() => {
-    if (!skippedRoutes.includes(location.pathname)) {
+    if (!skippedRoutes.includes(location.pathname)  && !location.pathname.startsWith('/public/')) {
       checkLoginStatus()
     }
   }, [location.pathname])
@@ -124,6 +124,7 @@ const UserRouter = () => {
         element={<WorkerDeclarationPassForm />}
       />
       <Route path="/public/apply/form/1" element={<MultiStepFormPage />} />
+      <Route path="/public/apply/form/:router" element={<MultiStepFormPage />} />
       <Route
         path="/public/apply/form/2"
         element={<WorkerDeclarationMultiStepForm />}

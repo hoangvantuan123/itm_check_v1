@@ -22,9 +22,11 @@ import moment from 'moment'
 import Search from '../components/search'
 import FieldActionWorkerRecruitment from '../components/action/fieldActionWorkerRecruitment'
 import ShowAction from '../components/action/showAction'
-import CustomTag from '../components/candidateForm/customTag'
 import { GetHrInterviewPageLimit } from '../../features/hrInterview/getHrInterviewPageLimit'
 import { GetFilterHrInterviewPageLimit } from '../../features/hrInterview/getFilterHrInterviewPageLimit'
+import { GetFilterHrInterviewCandidatePageLimit } from '../../features/hrInterviewCandidate/getHrInterviewCandidate'
+import CustomTagForm from '../components/tags/customTagForm'
+import CustomTagResult from '../components/tags/customTagResult'
 const { RangePicker } = DatePicker
 const { Content } = Layout
 const { Option } = Select
@@ -32,12 +34,15 @@ const { Option } = Select
 const columnConfig = [
   { key: 'full_name', label: 'Họ và tên' },
   { key: 'gender', label: 'Giới tính' },
-  { key: 'birth_date', label: 'Ngày sinh' },
-  { key: 'id_number', label: 'CCCD' },
   { key: 'phone_number', label: 'Số điện thoại' },
   { key: 'email', label: 'Email' },
-  { key: 'create_date', label: 'Thời gian tạo' },
-  { key: 'interview_result', label: 'Kết quả' },
+  { key: 'id_card_number', label: 'CCCD' },
+  { key: 'job_position', label: 'Vị trí' },
+  { key: 'interview_date', label: 'Ngày phỏng vấn' },
+  { key: 'form_status', label: 'Form' },
+  { key: 'interview_status', label: 'Kết quả' },
+
+
 ]
 
 const CloumnIcon = () => {
@@ -123,10 +128,10 @@ export default function EmployeeRecruitment({ permissions }) {
   const [actionUsers, setActionUsers] = useState(null)
   const [actionImport, setActionImport] = useState(null)
   const handleOnClickAction = () => {
-    setActionUsers('actionHrInfoIds')
+    setActionUsers('actionHrInterCandidateIds')
   }
   const handleOnClickActionImport = () => {
-    setActionImport('hr_personnel')
+    setActionImport('hr_interview_candidates')
   }
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys)
@@ -165,7 +170,7 @@ export default function EmployeeRecruitment({ permissions }) {
       const [startDate, endDate] = dateRange.map((date) =>
         date ? date.format('YYYY-MM-DD') : null,
       )
-      const response = await GetHrInterviewPageLimit(page, limit, startDate, endDate)
+      const response = await GetFilterHrInterviewCandidatePageLimit(page, limit, startDate, endDate)
 
       if (response.success) {
         setData(response.data.data)
@@ -272,12 +277,11 @@ export default function EmployeeRecruitment({ permissions }) {
       dataIndex: key,
       key: key,
       render: (text, record) => {
-        if (key === 'interview_result') {
-          const result =
-            record.interviews.length > 0
-              ? record.interviews[0].interview_result
-              : null
-          return visibleColumns[key] ? <CustomTag status={result} /> : null
+        if (key === 'form_status') {
+          return visibleColumns[key] ? <CustomTagForm status={record.form_status} /> : null
+        }
+        if (key === 'interview_status') {
+          return visibleColumns[key] ? <CustomTagResult status={record.interview_status} /> : null
         }
         if (key === 'create_date') {
           return visibleColumns[key]

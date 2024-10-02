@@ -1,27 +1,33 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Form, Input, Button, Typography, Dropdown, Menu, Spin } from 'antd'
+import { Form, Input, Button, Typography, Dropdown, Menu, Spin,message } from 'antd'
 import Logo from '../../assets/f_logo.png'
-import { GetFindByPhone } from '../../features/hrRecruitment/getFindByPhone'
+import { GetFindByPhone } from '../../features/hrInterviewCandidate/getFindByPhone'
 const { Title, Text } = Typography
 import { useTranslation } from 'react-i18next'
 const PassFormPage = () => {
   const [phoneNumber, setPhoneNumber] = useState('')
   const [language, setLanguage] = useState('Tiếng Việt')
   const [loading, setLoading] = useState(false)
+  const [data, setDaa] = useState([])
   const navigate = useNavigate()
   const { t } = useTranslation()
+  const handleSubmit = async (values) => {
+    try {
+      const response = await GetFindByPhone(values.phoneNumber);
+      if (response.success) {
+        const data = response.data.data;
+        setDaa(data);
+        const routerPath = `/public/apply/form/${data.router}`;
+        navigate(`${routerPath}`)
+      } else {
+        message.error('Số điện thoại không đúng!. Vui lòng nhập lại')
+      }
+    } catch (error) {
+      message.error('Số điện thoại không đúng!. Vui lòng nhập lại')
+    }
+  };
 
-
-
-  const handleSubmit = (values) => {
-    setLoading(true)
-    GetFindByPhone(phoneNumber)
-    setTimeout(() => {
-      setLoading(false)
-    /*   navigate('/apply/candidate-application/view=form') */
-    }, 2000)
-  }
 
   const handleMenuClick = (e) => {
     setLanguage(e.key)
@@ -52,7 +58,7 @@ const PassFormPage = () => {
 
       <div className="flex-grow flex flex-col items-center justify-center">
         <Title level={2} className="text-center">
-          {t('Chào mừng bạn đến với mẫu tờ khai online!')}
+          {t('Chào mừng bạn đến biểu mẫu khai báo trực tuyến!')}
         </Title>
         <Text
           type="secondary"
@@ -71,9 +77,7 @@ const PassFormPage = () => {
           <Form
             onFinish={handleSubmit}
             style={{ maxWidth: '400px', width: '100%', margin: '0 auto' }}
-            className=" flex items-center justify-between"
           >
-
             <Form.Item
               name="phoneNumber"
               rules={[
@@ -95,6 +99,7 @@ const PassFormPage = () => {
                 inputMode="numeric"
               />
             </Form.Item>
+
             <Form.Item>
               <Button
                 size="large"

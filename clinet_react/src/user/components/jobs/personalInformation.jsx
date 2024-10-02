@@ -4,7 +4,6 @@ import moment from 'moment'
 const { Option } = Select
 
 const PersonalInformation = ({ form }) => {
-  console.log(form)
   return (
     <div>
 

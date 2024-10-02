@@ -115,10 +115,10 @@ const OfficeSkillsTable = ({ form, formData }) => {
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-6 mt-5">Công việc văn phòng</h2>
+      <h2 className="text-2xl font-semibold mb-6 mt-5">Kỹ năngn</h2>
 
       {/* Bảng kỹ năng văn phòng */}
-      <h3 className="text-xl font-semibold mb-4">Kỹ năng văn phòng</h3>
+      <h3 className="text-base font-semibold mb-4">Kỹ năng văn phòng</h3>
       <Form.Item name="officeSkills">
         <Table
           dataSource={officeSkills}

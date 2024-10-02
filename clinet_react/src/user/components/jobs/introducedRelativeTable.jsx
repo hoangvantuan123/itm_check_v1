@@ -3,7 +3,7 @@ import { Form, Input, Row, Col } from 'antd'
 const IntroducedRelativeTable = ({ form }) => {
   return (
     <div>
-      <h3 className="text-xl font-semibold mb-4">
+      <h3 className="text-base font-semibold mb-4">
         Có hay không người quen giới thiệu
       </h3>
       <Row gutter={16} style={{ marginBottom: '10px' }}>

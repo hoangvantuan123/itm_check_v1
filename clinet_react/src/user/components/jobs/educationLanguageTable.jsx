@@ -3,32 +3,9 @@ import { Input, DatePicker, InputNumber, Form, Button, Card, Row, Col, Drawer, S
 
 const { Option } = Select;
 
-const EducationLanguageTable = ({ isMobile }) => {
-  const [educationData, setEducationData] = useState([
-    {
-      key: 0,
-      schoolName: '',
-      major: '',
-      years: '',
-      startYear: '',
-      endYear: '',
-      grade: '',
-    },
-  ]);
+const EducationLanguageTable = ({ isMobile , educationData, setEducationData, languageData, setLanguageData }) => {
 
-  const [languageData, setLanguageData] = useState([
-    {
-      key: 0,
-      language: 'Tiếng Hàn',
-      certificateType: '',
-      score: '',
-      level: '',
-      startDate: null,
-      endDate: null,
-      note: '',
-    },
-  ]);
-
+ 
   const [visible, setVisible] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -102,11 +79,12 @@ const EducationLanguageTable = ({ isMobile }) => {
 
   return (
     <>
-      <h2 className="text-xl font-semibold mb-4 mt-4">Tình trạng học vấn</h2>
+      <h2 className="text-base font-semibold mb-4 mt-4">Tình trạng học vấn</h2>
       <Row gutter={16}>
         {educationData.map((edu) => (
           <Col span={isMobile ? 24 : 24} key={edu.key}>
             <Card
+             size="small"
             onClick={() => showDrawer(edu, 'education')}
               title={edu.schoolName || "Trường học"}
              
@@ -130,6 +108,7 @@ const EducationLanguageTable = ({ isMobile }) => {
         {languageData.map((lang) => (
           <Col span={isMobile ? 24 : 24} key={lang.key}>
             <Card
+             size="small"
             onClick={() => showDrawer(lang, 'language')}
               title={lang.language || "Ngôn ngữ"}
               style={{ marginBottom: 16 }}

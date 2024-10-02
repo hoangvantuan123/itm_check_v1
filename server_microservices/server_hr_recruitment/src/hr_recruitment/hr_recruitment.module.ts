@@ -11,14 +11,17 @@ import { HrRecruitmentServices } from './services/hr_recruitment.services';
 import { InterviewResult } from './entity/interview_results.entity';
 import { HrInterviewServices } from './services/hr_interview.services';
 import { HrInterviewController } from './controller/hr_interview.controller';
+import { HrInterviewCandidate } from './entity/hr_interview_candidates.entity';
+import { HrInterviewCandidatesController } from './controller/hr_interview_candidate.controller';
+import { HrInterviewCandidatesService } from './services/hr_interview_candidate.services';
 @Module({
   imports: [
     DatabaseModule,
-    TypeOrmModule.forFeature([Family, Personnel, Language,Experience,Education , InterviewResult ]),
+    TypeOrmModule.forFeature([Family, Personnel, Language,Experience,Education , InterviewResult , HrInterviewCandidate]),
    
   ],
-  providers: [HrRecruitmentServices, HrInterviewServices],
-  controllers: [HrRecruitmentController, HrInterviewController],
+  providers: [HrRecruitmentServices, HrInterviewServices, HrInterviewCandidatesService],
+  controllers: [HrRecruitmentController, HrInterviewController, HrInterviewCandidatesController],
   exports: [],
 })
 export class HrRecruitment { }

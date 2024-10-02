@@ -1,52 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Form, Table, Input, Button, Checkbox, InputNumber, Drawer, Card, Col, Row } from 'antd';
 
-const FamilyInfoTable = ({isMobile}) => {
-  const [familyMembers, setFamilyMembers] = useState([
-    {
-      key: 0,
-      relationship: 'Bố',
-      name_family: '',
-      birthYear: '',
-      workplace: '',
-      job: '',
-      phoneNumber: '',
-      livingTogether: false,
-    },
-    {
-      key: 1,
-      relationship: 'Mẹ',
-      name_family: '',
-      birthYear: '',
-      workplace: '',
-      job: '',
-      phoneNumber: '',
-      livingTogether: false,
-    },
-    {
-      key: 2,
-      relationship: 'Vợ/chồng',
-      name_family: '',
-      birthYear: '',
-      workplace: '',
-      job: '',
-      phoneNumber: '',
-      livingTogether: false,
-    },
-    {
-      key: 3,
-      relationship: 'Anh/Em/Con',
-      name_family: '',
-      birthYear: '',
-      workplace: '',
-      job: '',
-      phoneNumber: '',
-      livingTogether: false,
-    },
-  ]);
-
+const FamilyInfoTable = ({isMobile,familyMembers, setFamilyMembers}) => {
+ 
   const [visible, setVisible] = useState(false);
-  const [selectedMember, setSelectedMember] = useState(null); // Trạng thái lưu thông tin thành viên đang chỉnh sửa
+  const [selectedMember, setSelectedMember] = useState(null);
   const [newMember, setNewMember] = useState({
     relationship: 'Anh/Em/Con',
     name_family: '',
@@ -172,7 +130,7 @@ const FamilyInfoTable = ({isMobile}) => {
 
   return (
     <>
-      <h2 className="text-xl font-semibold mb-4">Thông tin gia đình</h2>
+      <h2 className="text-base font-semibold mb-4">Thông tin gia đình</h2>
 
       {/* Render Table cho Desktop */}
       {!isMobile && (

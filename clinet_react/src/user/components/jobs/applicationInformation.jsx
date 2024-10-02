@@ -3,7 +3,7 @@ import { Form, Input, Row, Col, Card } from 'antd';
 const ApplicationInformation = ({ form }) => {
   return (
     <div  className="mb-4">
-      <h2 className="text-xl font-semibold mb-4">Thông tin ứng tuyển</h2>
+      <h2 className="text-base font-semibold mb-4">Thông tin ứng tuyển</h2>
       <Row gutter={16}>
         <Col xs={24} sm={12} md={12}>
           <Form.Item
