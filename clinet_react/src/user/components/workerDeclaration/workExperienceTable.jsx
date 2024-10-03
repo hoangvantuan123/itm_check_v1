@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Table, Input, Button, Form, DatePicker } from 'antd'
+import { Table, Input, Button, Form, InputNumber } from 'antd'
 import moment from 'moment'
 
 const WorkExperienceTable = ({ form }) => {
@@ -8,8 +8,8 @@ const WorkExperienceTable = ({ form }) => {
     companyName: '',
     position: '',
     employeeScale: '',
-    joinYear: '',
-    leaveYear: '',
+    joinYear: null,
+    leaveYear: null,
     tasks: '',
     salary: '',
     reasonForLeaving: '',
@@ -42,8 +42,8 @@ const WorkExperienceTable = ({ form }) => {
       companyName: '',
       position: '',
       employeeScale: '',
-      joinYear: '',
-      leaveYear: '',
+      joinYear: null,
+      leaveYear: null,
       tasks: '',
       salary: '',
       reasonForLeaving: '',
@@ -117,32 +117,36 @@ const WorkExperienceTable = ({ form }) => {
       title: 'Năm vào công ty',
       dataIndex: 'joinYear',
       render: (text, record) => (
-        <DatePicker
-          value={text ? moment(text, 'YYYY') : null}
-          onChange={(date, dateString) =>
-            handleWorkExperienceChange(record.key, 'joinYear', dateString)
-          }
-          picker="year"
-          className="border-none w-28  md:w-full" // Adjusted width
-          style={{ margin: 0 }} // Reduced margin
-        />
+        <Form.Item name={['workExperience', record.key, 'joinYear']} style={{ margin: 0 }}>
+          <InputNumber
+            min={1900} // Giới hạn năm tối thiểu
+            max={new Date().getFullYear()} // Giới hạn năm tối đa là năm hiện tại
+            value={text ?? null} // Nếu text không tồn tại, đặt giá trị là null
+            onChange={(value) => handleWorkExperienceChange(record.key, 'joinYear', value)}
+            className="border-none w-28 md:w-full"
+            style={{ margin: 0 }}
+          />
+        </Form.Item>
       ),
     },
     {
       title: 'Năm thôi việc',
       dataIndex: 'leaveYear',
       render: (text, record) => (
-        <DatePicker
-          value={text ? moment(text, 'YYYY') : null}
-          onChange={(date, dateString) =>
-            handleWorkExperienceChange(record.key, 'leaveYear', dateString)
-          }
-          picker="year"
-          className="border-none w-28  md:w-full" // Adjusted width
-          style={{ margin: 0 }} // Reduced margin
-        />
+        <Form.Item name={['workExperience', record.key, 'leaveYear']} style={{ margin: 0 }}>
+          <InputNumber
+            min={record.joinYear ?? 1900}
+            max={new Date().getFullYear()} 
+            value={text ?? null} 
+            onChange={(value) => handleWorkExperienceChange(record.key, 'leaveYear', value)}
+            className="border-none w-28 md:w-full"
+            style={{ margin: 0 }}
+          />
+        </Form.Item>
       ),
     },
+
+
     {
       title: 'Công việc phụ trách',
       dataIndex: 'tasks',

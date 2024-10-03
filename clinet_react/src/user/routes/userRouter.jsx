@@ -42,6 +42,8 @@ import { GetUserPermissions } from '../../features/auth/API/getPermissions'
 import { checkActionPermission } from '../../permissions'
 import DetailUserHrRecruitment from '../pages/detailUserHrRecruitment'
 import DetailUserHrInterview from '../pages/detailUserHrInterview'
+import EmployeeDataiView from '../pages/employeeData'
+import DetailUserHrAllData from '../pages/detailUserHrAllData'
 
 const { Content } = Layout
 
@@ -119,6 +121,7 @@ const UserRouter = () => {
         path="/public/apply/recruitment/phone"
         element={<PassFormPage />}
       />
+
       <Route
         path="/public/apply/information/phone"
         element={<WorkerDeclarationPassForm />}
@@ -344,6 +347,35 @@ const UserRouter = () => {
                           'view',
                         ) ? (
                           <DetailUserHrInterview />
+                        ) : (
+                          <Unauthorized />
+                        )
+                      }
+                    />
+                    <Route
+                      path="/u/action=20/data-employee/detail/:id"
+                      element={
+                        checkActionPermission(
+                          userPermissions,
+                          'hr-recruitment-1-3',
+                          'view',
+                        ) ? (
+                          <DetailUserHrAllData />
+                        ) : (
+                          <Unauthorized />
+                        )
+                      }
+                    />
+                    
+                    <Route
+                      path="/u/action=20/data-employee"
+                      element={
+                        checkActionPermission(
+                          userPermissions,
+                          'hr-recruitment-1-3',
+                          'view',
+                        ) ? (
+                          <EmployeeDataiView permissions={userPermissions} />
                         ) : (
                           <Unauthorized />
                         )

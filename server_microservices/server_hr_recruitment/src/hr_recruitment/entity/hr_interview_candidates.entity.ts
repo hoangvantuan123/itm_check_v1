@@ -48,12 +48,8 @@ export class HrInterviewCandidate {
 
 
     @ManyToOne(() => Personnel, (personnel) => personnel.candidates, { onDelete: 'CASCADE' })
-    
     @JoinColumn({ name: 'personnel_id' })
     personnel: Personnel;
-
-
-
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     create_date: Date;

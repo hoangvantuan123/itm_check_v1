@@ -12,16 +12,20 @@ import { InterviewResult } from './entity/interview_results.entity';
 import { HrInterviewServices } from './services/hr_interview.services';
 import { HrInterviewController } from './controller/hr_interview.controller';
 import { HrInterviewCandidate } from './entity/hr_interview_candidates.entity';
+import { Projects } from './entity/project.entity';
+import { OfficeSkills } from './entity/office_skills.entity';
 import { HrInterviewCandidatesController } from './controller/hr_interview_candidate.controller';
 import { HrInterviewCandidatesService } from './services/hr_interview_candidate.services';
+import { HrAllDataService } from './services/hr_all_data.services';
+import { HrAllDataController } from './controller/hr_all_data.services.controller';
 @Module({
   imports: [
     DatabaseModule,
-    TypeOrmModule.forFeature([Family, Personnel, Language,Experience,Education , InterviewResult , HrInterviewCandidate]),
+    TypeOrmModule.forFeature([Family, Personnel, Language,Experience,Education , InterviewResult , HrInterviewCandidate, Projects, OfficeSkills]),
    
   ],
-  providers: [HrRecruitmentServices, HrInterviewServices, HrInterviewCandidatesService],
-  controllers: [HrRecruitmentController, HrInterviewController, HrInterviewCandidatesController],
+  providers: [HrRecruitmentServices, HrInterviewServices, HrInterviewCandidatesService, HrAllDataService],
+  controllers: [HrRecruitmentController, HrInterviewController, HrInterviewCandidatesController, HrAllDataController],
   exports: [],
 })
 export class HrRecruitment { }

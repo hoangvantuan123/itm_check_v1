@@ -15,16 +15,17 @@ const PassFormPage = () => {
   const handleSubmit = async (values) => {
     try {
       const response = await GetFindByPhone(values.phoneNumber);
+      console.log("response" ,response)
       if (response.success) {
         const data = response.data.data;
         setDaa(data);
         const routerPath = `/public/apply/form/${data.router}`;
         navigate(`${routerPath}`)
       } else {
-        message.error('Số điện thoại không đúng!. Vui lòng nhập lại')
+        message.error("Vui lòng thử lại sau.");
       }
     } catch (error) {
-      message.error('Số điện thoại không đúng!. Vui lòng nhập lại')
+      message.error('Vui lòng thử lại sau.');
     }
   };
 

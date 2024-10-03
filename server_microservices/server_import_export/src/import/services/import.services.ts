@@ -4,6 +4,7 @@ import { EntityManager } from 'typeorm';
 import { ImportDataDto } from '../dto/import.dto';
 import { CreatePersonnelDto } from '../dto/hr_personnel.dto';
 import { CreateEducationDto } from '../dto/hr_education.dto';
+import { HrInterviewCandidateDTO } from '../dto/hr_interview_candidates.dto';
 
 @Injectable()
 export class ImportServices {
@@ -24,6 +25,9 @@ export class ImportServices {
                 break;
             case 'hr_personnel,hr_language,hr_family,hr_experience,hr_education':
                 await this.processHRPersonnelDatas(importData, 'hr_personnel,hr_language,hr_family,hr_experience,hr_education');
+                break;
+            case 'hr_interview_candidates':
+                await this.processHRInterviewCandidates(importData, 'hr_interview_candidates');
                 break;
             default:
                 throw new NotFoundException(`Model ${model} không được hỗ trợ`);
@@ -163,14 +167,6 @@ export class ImportServices {
         }
     }
 
-
-
-
-
-
-
-
-
     private async processHRPersonnelDatas(importData: Array<{ [key: string]: any }>, tableNames: string): Promise<void> {
         const batchSize = 1000;
         const totalBatches = Math.ceil(importData.length / batchSize);
@@ -234,12 +230,12 @@ export class ImportServices {
                         case 'hr_education':
                             if (record.school || record.major || record.years || record.start_year || record.graduation_year || record.grade) {
                                 dataToSave[table].push({
-                                    school: record.school, 
-                                    major: record.major,  
-                                    years: record.years, 
-                                    start_year: record.start_year, 
-                                    graduation_year: record.graduation_year, 
-                                    grade: record.grade, 
+                                    school: record.school,
+                                    major: record.major,
+                                    years: record.years,
+                                    start_year: record.start_year,
+                                    graduation_year: record.graduation_year,
+                                    grade: record.grade,
                                 } as CreateEducationDto);
                             }
                             break;
@@ -263,6 +259,92 @@ export class ImportServices {
 
 
 
+
+    private async processHRInterviewCandidates(importData: any[], tableName: string): Promise<void> {
+        const batchSize = 1000;
+        const totalBatches = Math.ceil(importData.length / batchSize);
+    
+        // Truy vấn để lấy danh sách số điện thoại đã tồn tại trong bảng
+        const existingPhoneNumbers = await this.getExistingPhoneNumbers(tableName);
+    
+        for (let i = 0; i < totalBatches; i++) {
+            const batch = importData.slice(i * batchSize, (i + 1) * batchSize);
+    
+            const validBatch: HrInterviewCandidateDTO[] = batch.map(record => {
+                return {
+                    full_name: record.full_name,
+                    gender: record.gender,
+                    phone_number: record.phone_number,
+                    current_residence: record.current_residence,
+                    birth_year: record.birth_year,
+                    hometown: record.hometown,
+                    contractor: record.contractor,
+                    job_position: record.job_position,
+                    email: record.email,
+                    id_card_number: record.id_card_number,
+                    interview_date: record.interview_date,
+                } as HrInterviewCandidateDTO;
+            }).filter(record => record.full_name !== undefined && record.gender !== undefined);
+    
+            // Kiểm tra tính duy nhất của số điện thoại
+            const filteredBatch = validBatch.filter(record => {
+                return record.phone_number && !existingPhoneNumbers.has(record.phone_number);
+            });
+    
+            if (filteredBatch.length === 0) {
+                continue; // Nếu không có bản ghi hợp lệ sau khi lọc, bỏ qua
+            }
+    
+            await this.saveBatchToTableHrInterviewCandidates(filteredBatch, tableName);
+        }
+    }
+    
+    // Hàm để lấy danh sách số điện thoại đã tồn tại trong bảng
+    private async getExistingPhoneNumbers(tableName: string): Promise<Set<string>> {
+        const query = `SELECT phone_number FROM ${tableName}`;
+        const results = await this.entityManager.query(query);
+        const phoneNumbers = new Set<string>();
+    
+        results.forEach((row: { phone_number: string }) => {
+            if (row.phone_number) {
+                phoneNumbers.add(row.phone_number);
+            }
+        });
+    
+        return phoneNumbers;
+    }
+    
+
+    private async saveBatchToTableHrInterviewCandidates(batch: HrInterviewCandidateDTO[], tableName: string): Promise<number[]> {
+        const insertQuery = `INSERT INTO ${tableName} (full_name, gender, phone_number, current_residence, birth_year, hometown, contractor, job_position, email, id_card_number, interview_date) VALUES `;
+
+        const values: string[] = batch.map((record) => {
+            return `(
+                '${record.full_name ?? ''}', 
+                '${record.gender ?? ''}', 
+                '${record.phone_number ?? ''}', 
+                '${record.current_residence ?? ''}', 
+                ${record.birth_year ?? 'NULL'}, 
+                '${record.hometown ?? ''}', 
+                '${record.contractor ?? ''}', 
+                '${record.job_position ?? ''}', 
+                '${record.email ?? ''}', 
+                '${record.id_card_number ?? ''}', 
+                ${record.interview_date ? `'${record.interview_date}'` : 'DEFAULT'}
+            )`;
+        });
+
+        const finalQuery = insertQuery + values.join(', ') + ' RETURNING id';
+
+        try {
+            const result = await this.entityManager.query(finalQuery);
+
+            const ids = result.map((row: { id: number }) => row.id);
+            return ids;
+        } catch (error) {
+            throw new NotFoundException(`Không thể ghi dữ liệu vào bảng ${tableName}`);
+        }
+    }
 
 
 

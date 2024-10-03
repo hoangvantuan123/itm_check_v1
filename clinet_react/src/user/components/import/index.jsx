@@ -185,6 +185,20 @@ export default function ImportForm({ fetchData, isOpen, onClose, tableInfo, acti
     setFileName(file.name)
     setFileList(fileList)
     setTables([])
+    const newConnectValues = {};
+    const defaultMappings = {
+      'Họ và Tên': 'full_name',
+      'Giới tính': 'gender',
+      'Email': 'email',
+      'Số điện thoại': 'phone_number',
+      'CCCD': 'id_card_number',
+      'Ngày phỏng vấn': 'interview_date',
+      'Chức vụ': 'job_position',
+      'Nhà thầu': 'contractor',
+      'Địa chỉ': 'hometown',
+      'Năm sinh': 'birth_year',
+      'Địa chỉ hiện tại': 'current_residence',
+    };
     if (file.type === 'text/csv') {
       const reader = new FileReader()
       reader.onload = (e) => {
@@ -202,6 +216,19 @@ export default function ImportForm({ fetchData, isOpen, onClose, tableInfo, acti
 
             const columns = Object.keys(result.data[0])
             setTables([{ name: 'CSV Data', columns, data: result.data }])
+
+
+            tableInfo?.forEach((table) => {
+              table.columns.forEach((column) => {
+                for (const [key, mappedName] of Object.entries(defaultMappings)) {
+                  if (column.name === mappedName) {
+                    newConnectValues[key] = column.name;
+                  }
+                }
+              });
+            });
+
+            setConnectValues(newConnectValues);
             message.success(t('Tải lên thành công tệp CSV'))
           },
           header: true,
@@ -227,6 +254,17 @@ export default function ImportForm({ fetchData, isOpen, onClose, tableInfo, acti
         })
 
         setTables(allTables)
+        tableInfo?.forEach((table) => {
+          table.columns.forEach((column) => {
+            for (const [key, mappedName] of Object.entries(defaultMappings)) {
+              if (column.name === mappedName) {
+                newConnectValues[key] = column.name; 
+              }
+            }
+          });
+        });
+
+        setConnectValues(newConnectValues);
         message.success(t('Tải lên thành công tệp XLSX'))
       }
 

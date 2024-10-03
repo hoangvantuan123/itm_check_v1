@@ -1,9 +1,9 @@
 // src/hr-interview-candidates/hr-interview-candidates.controller.ts
-
-import { Controller, Get, Post, Body, Param, Put, Delete, Query, Req } from '@nestjs/common';
+import { Body, Req, Controller, Post, HttpException, Res, HttpStatus, Put, UsePipes, Param, Delete, UnauthorizedException, ValidationPipe, Logger, Get, Query } from '@nestjs/common';
 import { HrInterviewCandidatesService } from '../services/hr_interview_candidate.services';
 import { HrInterviewCandidate } from '../entity/hr_interview_candidates.entity';
 import { FindCandidatesDto } from '../dto/find-candidates.dto';
+import { CreatePersonnelWithDetailsDto } from '../dto/create_hr_internview_candidate.dto';
 
 @Controller('api/sv4/hr-interview-candidates')
 export class HrInterviewCandidatesController {
@@ -38,7 +38,7 @@ export class HrInterviewCandidatesController {
     }
 
     @Get()
-    async getAllFilterPersonnel(
+    async getCandidate(
         @Query('page') page: number = 1,
         @Query('limit') limit: number = 500,
         @Query('startDate') startDate?: string,
@@ -53,8 +53,68 @@ export class HrInterviewCandidatesController {
 
     @Get('find-by-phone/:phone_number')
     async findByPhone(
-      @Param('phone_number') phoneNumber: string,
+        @Param('phone_number') phoneNumber: string,
     ) {
-      return await this.candidatesService.findByPhoneNumber(phoneNumber);
+        return await this.candidatesService.findByPhoneNumber(phoneNumber);
     }
+
+
+
+    @Post('personnel')
+    @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }))
+    async create(@Body() createPersonnelWithDetailsDto: CreatePersonnelWithDetailsDto) {
+        try {
+            const result = await this.candidatesService.create(createPersonnelWithDetailsDto);
+
+            if (result.success) {
+                return {
+                    statusCode: HttpStatus.CREATED,
+                    message: result.message,
+                    data: result.data,
+                };
+            } else {
+                throw new HttpException(
+                    {
+                        statusCode: HttpStatus.BAD_REQUEST,
+                        message: result.message,
+                    },
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+        } catch (error) {
+            throw new HttpException(
+                {
+                    statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+                    message: 'Internal Server Error: Could not create personnel with related details',
+                },
+                HttpStatus.INTERNAL_SERVER_ERROR,
+            );
+        }
+    }
+
+
+
+
+    @Get('candidate/filter')
+    async getAllFilterCandidate(
+        @Query('page') page: number = 1,
+        @Query('limit') limit: number = 500,
+        @Query('startDate') startDate?: string,
+        @Query('endDate') endDate?: string,
+        @Query('nameTags') nameTags?: string,
+        @Query('phoneNumberTags') phoneNumberTags?: string,
+        @Query('citizenshipIdTags') citizenshipIdTags?: string,
+    ): Promise<{ data: HrInterviewCandidate[]; total: number; totalPages: number }> {
+        const filter: Record<string, any> = {
+            nameTags: nameTags ? nameTags.split(',') : [],
+            phoneNumberTags: phoneNumberTags ? phoneNumberTags.split(',') : [],
+            citizenshipIdTags: citizenshipIdTags ? citizenshipIdTags.split(',') : [],
+        };
+
+        const start = startDate ? new Date(startDate) : undefined;
+        const end = endDate ? new Date(endDate) : undefined;
+
+        return await this.candidatesService.findAllPageLimitFilter(filter, page, limit, start, end);
+    }
+
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Helmet } from 'react-helmet'
-import { Row, Col, Typography, Button, Form, Input, Radio, message } from 'antd'
+import { Row, Col, Typography, Button, Form, Input, Radio, message, Pagination  } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import './static/css/scroll_container.css'
@@ -12,7 +12,20 @@ import { PutHrInfoId } from '../../features/hrRecruitment/updateHrInfoId'
 import { PutUserInterview } from '../../features/hrRecruitment/putUserInterview'
 const { Text } = Typography
 
-export default function DetailUserHrInterview() {
+export default function DetailUserHrAllData() {
+  const datada = [
+    { id: 1, name: 'Item 1' },
+    { id: 2, name: 'Item 2' },
+    { id: 3, name: 'Item 3' },
+    { id: 4, name: 'Item 4' },
+    { id: 5, name: 'Item 5' },
+    { id: 6, name: 'Item 6' },
+    { id: 7, name: 'Item 7' },
+    { id: 8, name: 'Item 8' },
+    { id: 9, name: 'Item 9' },
+    { id: 10, name: 'Item 10' },
+  ];
+  console.log("datada" , datada.length)
   const { t } = useTranslation()
   const { id } = useParams()
   const navigate = useNavigate()
@@ -23,7 +36,11 @@ export default function DetailUserHrInterview() {
   const [interviewData, setInterviewData] = useState({})
   const [form] = Form.useForm()
   const [formInterview] = Form.useForm()
-  
+  const [currentPage, setCurrentPage] = useState(1);
+  const [total, setTotal] = useState(datada.length);
+  useEffect(() => {
+    setTotal(datada.length);
+  }, [datada]);
   const fetchDataUserId = async () => {
     setLoading(true)
     try {
@@ -65,7 +82,7 @@ export default function DetailUserHrInterview() {
 
 
   const handleNavigateToBack = () => {
-    navigate(`/u/action=17/employee-recruitment-data`)
+    navigate(`/u/action=20/data-employee`)
   }
 
   const handleFormChange = (changedValues) => {
@@ -204,6 +221,12 @@ export default function DetailUserHrInterview() {
     form.submit()
     formInterview.submit()
   }
+
+
+ 
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
   return (
     <div className="w-full h-screen bg-gray-50 p-3">
       <Helmet>
@@ -214,11 +237,18 @@ export default function DetailUserHrInterview() {
         aria-label="Breadcrumb"
         className="flex justify-between items-center mb-6"
       >
+        
         <ol className="flex items-center gap-4 text-sm text-gray-700">
           <li onClick={handleNavigateToBack} className="cursor-pointer">
             <span className=" text-black opacity-80">Trở lại</span>
           </li>
         </ol>
+          <Pagination
+        simple
+        defaultCurrent={1}
+        total={total}
+        onChange={handlePageChange}
+      />
         <ol className=" flex items-center gap-2">
           <Button className="bg-white">Export PDF</Button>
           <Button className="bg-white">Xóa</Button>
@@ -228,6 +258,7 @@ export default function DetailUserHrInterview() {
           <Button className="bg-white" onClick={handleSave}>
             Lưu
           </Button>
+         
         </ol>
       </nav>
 

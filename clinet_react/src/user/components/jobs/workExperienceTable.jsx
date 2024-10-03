@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Table, Input, Button, DatePicker, Card, Drawer, Row, Col , Form} from 'antd';
+import { Table, Input, Button, DatePicker, Card, Drawer, Row, Col, Form, InputNumber } from 'antd';
 import moment from 'moment';
 
-const WorkExperienceTable = ({ isMobile , setWorkExperiences, workExperiences, setProjects, projects , initialWorkExperience, initialProject}) => {
- 
+const WorkExperienceTable = ({ isMobile, setWorkExperiences, workExperiences, setProjects, projects, initialWorkExperience, initialProject }) => {
+
   const [visible, setVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -77,14 +77,14 @@ const WorkExperienceTable = ({ isMobile , setWorkExperiences, workExperiences, s
 
   return (
     <>
-      
+
 
       <h3 className="text-base font-semibold mb-4">Kinh nghiệm làm việc</h3>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
         {workExperiences.map((experience) => (
           <Card
             key={experience.key}
-              size="small"
+            size="small"
             title={experience.companyName || 'Công ty chưa có tên'}
             style={{ width: isMobile ? '100%' : '100%' }}
             onClick={() => showDrawer(experience)}
@@ -109,12 +109,12 @@ const WorkExperienceTable = ({ isMobile , setWorkExperiences, workExperiences, s
         {projects.map((project) => (
           <Card
             size="small"
-          onClick={() => showDrawer(project, true)}
+            onClick={() => showDrawer(project, true)}
             key={project.key}
             title={project.projectName || 'Dự án chưa có tên'}
             style={{ width: isMobile ? '100%' : '100%' }}
             extra={[
-           
+
               <Button type="link" onClick={() => removeProject(project.key)}>
                 Xóa
               </Button>,
@@ -153,169 +153,172 @@ const WorkExperienceTable = ({ isMobile , setWorkExperiences, workExperiences, s
           </div>
         }
       >
-           <Form layout="vertical">
+        <Form layout="vertical">
           {isProjectMode ? (
             <>
               <Row gutter={16}>
-        <Col xs={24} sm={12}>
-          <Form.Item label="Tên dự án">
-            <Input
-              size="large"
-              placeholder="Tên dự án"
-              value={currentItem?.projectName}
-              onChange={(e) => setCurrentItem({ ...currentItem, projectName: e.target.value })}
-            />
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row gutter={16}>
-        <Col xs={12} sm={12}>
-          <Form.Item label="Ngày bắt đầu">
-            <DatePicker
-              size="large"
-              className="w-full"
-              placeholder="Ngày bắt đầu"
-              value={currentItem?.startDate ? moment(currentItem.startDate) : null}
-              onChange={(date) => setCurrentItem({ ...currentItem, startDate: date })}
-            />
-          </Form.Item>
-        </Col>
-        <Col xs={12} sm={12}>
-          <Form.Item label="Ngày kết thúc">
-            <DatePicker
-              size="large"
-              className="w-full"
-              placeholder="Ngày kết thúc"
-              value={currentItem?.endDate ? moment(currentItem.endDate) : null}
-              onChange={(date) => setCurrentItem({ ...currentItem, endDate: date })}
-            />
-          </Form.Item>
-        </Col>
-        <Col xs={24} sm={12}>
-          <Form.Item label="Công việc phụ trách">
-            <Input
-              size="large"
-              placeholder="Công việc phụ trách"
-              value={currentItem?.task}
-              onChange={(e) => setCurrentItem({ ...currentItem, task: e.target.value })}
-            />
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row gutter={16}>
-        <Col xs={24} sm={12}>
-          <Form.Item label="Số năm">
-            <Input
-              size="large"
-              placeholder="Số năm"
-              value={currentItem?.duration}
-              onChange={(e) => setCurrentItem({ ...currentItem, duration: e.target.value })}
-            />
-          </Form.Item>
-        </Col>
-        <Col xs={24} sm={12}>
-          <Form.Item label="Khái quát dự án">
-            <Input.TextArea
-              size="large"
-              placeholder="Khái quát dự án"
-              value={currentItem?.summary}
-              onChange={(e) => setCurrentItem({ ...currentItem, summary: e.target.value })}
-            />
-          </Form.Item>
-        </Col>
-      </Row>
+                <Col xs={24} sm={12}>
+                  <Form.Item label="Tên dự án">
+                    <Input
+                      size="large"
+                      placeholder="Tên dự án"
+                      value={currentItem?.projectName}
+                      onChange={(e) => setCurrentItem({ ...currentItem, projectName: e.target.value })}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col xs={12} sm={12}>
+                  <Form.Item label="Ngày bắt đầu">
+                    <DatePicker
+                      size="large"
+                      className="w-full"
+                      placeholder="Ngày bắt đầu"
+                      value={currentItem?.startDate ? moment(currentItem.startDate) : null}
+                      onChange={(date) => setCurrentItem({ ...currentItem, startDate: date })}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col xs={12} sm={12}>
+                  <Form.Item label="Ngày kết thúc">
+                    <DatePicker
+                      size="large"
+                      className="w-full"
+                      placeholder="Ngày kết thúc"
+                      value={currentItem?.endDate ? moment(currentItem.endDate) : null}
+                      onChange={(date) => setCurrentItem({ ...currentItem, endDate: date })}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={12}>
+                  <Form.Item label="Công việc phụ trách">
+                    <Input
+                      size="large"
+                      placeholder="Công việc phụ trách"
+                      value={currentItem?.task}
+                      onChange={(e) => setCurrentItem({ ...currentItem, task: e.target.value })}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col xs={24} sm={12}>
+                  <Form.Item label="Số năm">
+                    <Input
+                      size="large"
+                      placeholder="Số năm"
+                      value={currentItem?.duration}
+                      onChange={(e) => setCurrentItem({ ...currentItem, duration: e.target.value })}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={12}>
+                  <Form.Item label="Khái quát dự án">
+                    <Input.TextArea
+                      size="large"
+                      placeholder="Khái quát dự án"
+                      value={currentItem?.summary}
+                      onChange={(e) => setCurrentItem({ ...currentItem, summary: e.target.value })}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
             </>
           ) : (
             <>
               <Row gutter={16}>
-          <Col xs={24} sm={12}>
-            <Form.Item label="Tên công ty">
-              <Input
-                size="large"
-                value={currentItem?.companyName}
-                onChange={(e) => setCurrentItem({ ...currentItem, companyName: e.target.value })}
-              />
-            </Form.Item>
-          </Col>
-          <Col xs={24} sm={12}>
-            <Form.Item label="Chức vụ">
-              <Input
-                size="large"
-                value={currentItem?.position}
-                onChange={(e) => setCurrentItem({ ...currentItem, position: e.target.value })}
-              />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row gutter={16}>
-          <Col xs={24} sm={12}>
-            <Form.Item label="Quy mô LĐ">
-              <Input
-                size="large"
-                value={currentItem?.employeeScale}
-                onChange={(e) => setCurrentItem({ ...currentItem, employeeScale: e.target.value })}
-              />
-            </Form.Item>
-          </Col>
-        
-        </Row>
-        <Row gutter={16}>
+                <Col xs={24} sm={12}>
+                  <Form.Item label="Tên công ty">
+                    <Input
+                      size="large"
+                      value={currentItem?.companyName}
+                      onChange={(e) => setCurrentItem({ ...currentItem, companyName: e.target.value })}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={12}>
+                  <Form.Item label="Chức vụ">
+                    <Input
+                      size="large"
+                      value={currentItem?.position}
+                      onChange={(e) => setCurrentItem({ ...currentItem, position: e.target.value })}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col xs={24} sm={12}>
+                  <Form.Item label="Quy mô LĐ">
+                    <Input
+                      size="large"
+                      value={currentItem?.employeeScale}
+                      onChange={(e) => setCurrentItem({ ...currentItem, employeeScale: e.target.value })}
+                    />
+                  </Form.Item>
+                </Col>
 
-          <Col xs={12} sm={12}>
-            <Form.Item label="Năm vào công ty">
-              <DatePicker
-                size="large"
-                className="w-full"
-                picker="year"
-                value={currentItem?.joinYear ? moment(currentItem.joinYear) : null}
-                onChange={(date) => setCurrentItem({ ...currentItem, joinYear: date })}
-              />
-            </Form.Item>
-          </Col>
-          <Col xs={12} sm={12}>
-            <Form.Item label="Năm thôi việc">
-              <DatePicker
-                size="large"
-                picker="year"
-                 className="w-full"
-                value={currentItem?.leaveYear ? moment(currentItem.leaveYear) : null}
-                onChange={(date) => setCurrentItem({ ...currentItem, leaveYear: date })}
-              />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row gutter={16}>
+              </Row>
+              <Row gutter={16}>
 
-          <Col xs={24} sm={12}>
-            <Form.Item label="Công việc phụ trách">
-              <Input.TextArea
-                size="large"
-                value={currentItem?.tasks}
-                onChange={(e) => setCurrentItem({ ...currentItem, tasks: e.target.value })}
-              />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row gutter={16}>
-          <Col xs={24} sm={12}>
-            <Form.Item label="Mức lương">
-              <Input
-                size="large"
-                value={currentItem?.salary}
-                onChange={(e) => setCurrentItem({ ...currentItem, salary: e.target.value })}
-              />
-            </Form.Item>
-          </Col>
-          <Col xs={24} sm={12}>
-            <Form.Item label="Lý do xin nghỉ">
-              <Input.TextArea
-                size="large"
-                value={currentItem?.reasonForLeaving}
-                onChange={(e) => setCurrentItem({ ...currentItem, reasonForLeaving: e.target.value })}
-              />
-            </Form.Item>
-          </Col>
-        </Row>
+                <Col xs={12} sm={12}>
+                  <Form.Item label="Năm vào công ty">
+                    <InputNumber
+                      size="large"
+                      className="w-full"
+                      min={1900} 
+                      max={new Date().getFullYear()}
+                      value={currentItem?.joinYear || null} 
+                      onChange={(value) => setCurrentItem({ ...currentItem, joinYear: value })}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col xs={12} sm={12}>
+                  <Form.Item label="Năm thôi việc">
+                    <InputNumber
+                      size="large"
+                      className="w-full"
+                      min={currentItem?.joinYear || 1900} // Giới hạn năm thôi việc phải lớn hơn hoặc bằng năm vào công ty, hoặc 1900 nếu `joinYear` không có giá trị
+                      max={new Date().getFullYear()} // Giới hạn năm tối đa là năm hiện tại
+                      value={currentItem?.leaveYear || null} // Nếu `leaveYear` không có giá trị, đặt là `null`
+                      onChange={(value) => setCurrentItem({ ...currentItem, leaveYear: value })}
+                    />
+                  </Form.Item>
+                </Col>
+
+              </Row>
+              <Row gutter={16}>
+
+                <Col xs={24} sm={12}>
+                  <Form.Item label="Công việc phụ trách">
+                    <Input.TextArea
+                      size="large"
+                      value={currentItem?.tasks}
+                      onChange={(e) => setCurrentItem({ ...currentItem, tasks: e.target.value })}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col xs={24} sm={12}>
+                  <Form.Item label="Mức lương">
+                    <Input
+                      size="large"
+                      value={currentItem?.salary}
+                      onChange={(e) => setCurrentItem({ ...currentItem, salary: e.target.value })}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={12}>
+                  <Form.Item label="Lý do xin nghỉ">
+                    <Input.TextArea
+                      size="large"
+                      value={currentItem?.reasonForLeaving}
+                      onChange={(e) => setCurrentItem({ ...currentItem, reasonForLeaving: e.target.value })}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
             </>
           )}
         </Form>
