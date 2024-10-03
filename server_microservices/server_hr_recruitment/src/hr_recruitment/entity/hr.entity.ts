@@ -1,16 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn } from 'typeorm';
-import { Family } from './family.entity';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-import { Education } from './education.entity';
-import { Language } from './language.entity';
-import { Experience } from './experience.entity';
-import { InterviewResult } from './interview_results.entity';
-import { HrInterviewCandidate } from './hr_interview_candidates.entity';
-import { Projects } from './project.entity';
-import { OfficeSkills } from './office_skills.entity';
-@Entity('hr_personnel')
-export class Personnel {
+@Entity('hr')
+export class HrErp {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
@@ -89,11 +81,12 @@ export class Personnel {
   @Column({ name: 'type_personnel', type: 'boolean', default: false })
   type_personnel: boolean;
 
-
   @Column({ type: 'text', nullable: true })
   introducer_department: string;
+  
   @Column({ type: 'text', nullable: true })
   introducer_introducer_name: string;
+  
   @Column({ type: 'text', nullable: true })
   introducer_phone_number: string;
 
@@ -103,12 +96,7 @@ export class Personnel {
 
   @Column({ type: 'text', nullable: true })
   @IsString()
-  supplier_details?: string
-
-
-  @Column({ nullable: true, type: 'int' })
-  id_hr_interview_candidates?: number;
-
+  supplier_details?: string;
 
   @Column({ type: 'boolean', default: false })
   synchronize: boolean;
@@ -119,50 +107,42 @@ export class Personnel {
 
   @Column({ type: 'text', nullable: true })
   department: string;
+
   @Column({ type: 'text', nullable: true })
   team: string;
 
   @Column({ type: 'text', nullable: true })
   jop_position: string;
 
-
   @Column({ type: 'text', nullable: true })
   employee_code: string;
 
-  @OneToMany(() => HrInterviewCandidate, (candidate) => candidate.personnel)
-  @JoinColumn({ name: 'candidate_id' })
-  candidates: HrInterviewCandidate[];
 
 
-  @OneToMany(() => Family, family => family.personnel)
-  @JoinColumn({ name: 'family_id' })
-  families: Family[];
 
-  @OneToMany(() => Education, education => education.personnel)
-  @JoinColumn({ name: 'education_id' })
-  educations: Education[];
+  @Column({ type: 'json', nullable: true })
+  candidates_json: any[];  
 
-  @OneToMany(() => Language, language => language.personnel)
-  @JoinColumn({ name: 'language_id' })
-  languages: Language[];
+  @Column({ type: 'json', nullable: true })
+  families_json: any[];
 
-  @OneToMany(() => Experience, experience => experience.personnel)
-  @JoinColumn({ name: 'experience_id' })
-  experiences: Experience[];
+  @Column({ type: 'json', nullable: true })
+  educations_json: any[];
 
+  @Column({ type: 'json', nullable: true })
+  languages_json: any[];
 
-  @OneToMany(() => InterviewResult, interview => interview.personnel)
-  @JoinColumn({ name: 'interview_id' })
-  interviews: InterviewResult[];
+  @Column({ type: 'json', nullable: true })
+  experiences_json: any[];
 
-  @OneToMany(() => Projects, project => project.personnel)
-  @JoinColumn({ name: 'project_id' })
-  projects: Projects[];
+  @Column({ type: 'json', nullable: true })
+  interviews_json: any[];
 
+  @Column({ type: 'json', nullable: true })
+  projects_json: any[];
 
-  @OneToMany(() => OfficeSkills, office_skill => office_skill.personnel)
-  @JoinColumn({ name: 'office_skill_id' })
-  office_skills: OfficeSkills[];
+  @Column({ type: 'json', nullable: true })
+  office_skills_json: any[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   create_date: Date;
@@ -172,5 +152,5 @@ export class Personnel {
     default: () => 'CURRENT_TIMESTAMP',
     onUpdate: 'CURRENT_TIMESTAMP',
   })
-  write_date: Date
+  write_date: Date;
 }

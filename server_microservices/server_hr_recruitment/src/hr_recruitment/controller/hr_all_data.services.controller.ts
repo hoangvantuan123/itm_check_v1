@@ -4,7 +4,6 @@ import { HrAllDataService } from '../services/hr_all_data.services';
 
 
 
-
 @Controller('api/sv4/hr-all-data')
 export class HrAllDataController {
   private readonly logger = new Logger(HrAllDataController.name);
@@ -46,6 +45,9 @@ export class HrAllDataController {
   }
 
 
-
+  @Post('synchronize')
+  async synchronizeHr(@Body('ids') ids: number[]): Promise<void> {
+    return this.personnelService.synchronizeHr(ids);
+  }
 
 }

@@ -18,10 +18,11 @@ import { HrInterviewCandidatesController } from './controller/hr_interview_candi
 import { HrInterviewCandidatesService } from './services/hr_interview_candidate.services';
 import { HrAllDataService } from './services/hr_all_data.services';
 import { HrAllDataController } from './controller/hr_all_data.services.controller';
+import { HrErp } from './entity/hr.entity';
 @Module({
   imports: [
     DatabaseModule,
-    TypeOrmModule.forFeature([Family, Personnel, Language,Experience,Education , InterviewResult , HrInterviewCandidate, Projects, OfficeSkills]),
+    TypeOrmModule.forFeature([Family, Personnel, Language,Experience,Education , InterviewResult , HrInterviewCandidate, Projects, OfficeSkills, HrErp]),
    
   ],
   providers: [HrRecruitmentServices, HrInterviewServices, HrInterviewCandidatesService, HrAllDataService],

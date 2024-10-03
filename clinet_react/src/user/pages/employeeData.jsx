@@ -449,7 +449,7 @@ export default function EmployeeDataiView({ permissions }) {
             >
               <CloumnIcon />
             </Button>
-            {selectedRowKeys != null && selectedRowKeys.length > 0 && (    <SynAction/>)}
+            {selectedRowKeys != null && selectedRowKeys.length > 0 && (    <SynAction selectedRowKeys={selectedRowKeys}/>)}
         
             {selectedRowKeys != null && selectedRowKeys.length > 0 && (
               <ShowAction

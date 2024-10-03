@@ -481,7 +481,7 @@ const Sidebar = ({ permissions }) => {
                         to="/u/action=20/data-employee"
                         className="flex items-center justify-start"
                       >
-                        {t('Data nhân viên')}
+                        {t('Danh sách nhân sự')}
                       </Link>
                     </Menu.Item>
                   )}

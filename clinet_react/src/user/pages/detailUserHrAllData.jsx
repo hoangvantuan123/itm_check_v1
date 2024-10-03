@@ -26,10 +26,7 @@ export default function DetailUserHrAllData() {
   const [form] = Form.useForm()
   const [formInterview] = Form.useForm()
   const [currentPage, setCurrentPage] = useState(1);
-  const [total, setTotal] = useState(datada.length);
-  useEffect(() => {
-    setTotal(datada.length);
-  }, [datada]);
+  
   const fetchDataUserId = async () => {
     setLoading(true)
     try {
@@ -232,12 +229,7 @@ export default function DetailUserHrAllData() {
             <span className=" text-black opacity-80">Trở lại</span>
           </li>
         </ol>
-          <Pagination
-        simple
-        defaultCurrent={1}
-        total={total}
-        onChange={handlePageChange}
-      />
+         
         <ol className=" flex items-center gap-2">
           <Button className="bg-white">Export PDF</Button>
           <Button className="bg-white">Xóa</Button>
