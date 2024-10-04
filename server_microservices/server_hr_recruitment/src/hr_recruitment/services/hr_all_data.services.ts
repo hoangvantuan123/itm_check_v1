@@ -85,8 +85,10 @@ export class HrAllDataService {
         'personnel.fac',
         'personnel.department',
         'personnel.team',
+        'personnel.type_personnel',
         'personnel.jop_position',
         'interview.id',
+
         'interview.interview_result',
       ])
       .skip((page - 1) * limit)
@@ -162,6 +164,7 @@ export class HrAllDataService {
       'personnel.fac',
       'personnel.department',
       'personnel.team',
+      'personnel.type_personnel',
       'personnel.jop_position',
       'interview.id',
       'interview.interview_result',
@@ -178,124 +181,222 @@ export class HrAllDataService {
       totalPages: Math.ceil(total / limit),
     };
   }
-
   async synchronizeHr(ids: number[]): Promise<void> {
     const personnels = await this.personnelRepository.createQueryBuilder('p')
-        .leftJoinAndSelect('p.families', 'fam')
-        .where('p.id IN (:...ids)', { ids })
-        .andWhere('p.synchronize = false')
-        .select([
-            'p.id AS personnel_id',
-            'p.full_name',
-            'p.gender',
-            'p.interview_date',
-            'p.start_date',
-            'p.birth_date',
-            'p.id_number',
-            'p.id_issue_date',
-            'p.ethnicity',
-            'p.id_issue_place',
-            'p.insurance_number',
-            'p.tax_number',
-            'p.phone_number',
-            'p.email',
-            'p.alternate_phone_number',
-            'p.alternate_name',
-            'p.alternate_relationship',
-            'p.birth_address',
-            'p.birth_province',
-            'p.birth_district',
-            'p.birth_ward',
-            'p.current_address',
-            'p.current_province',
-            'p.current_district',
-            'p.current_ward',
-            'p.type_personnel',
-            'p.introducer_department',
-            'p.introducer_introducer_name',
-            'p.introducer_phone_number',
-            'p.candidate_type',
-            'p.supplier_details',
-            'p.create_date',
-            'p.write_date',
-            // Tạo JSON array cho các bản ghi Family
-            'COALESCE(json_agg(json_build_object(' +
-                "'id', fam.id, " +
-                "'full_name', fam.full_name, " +
-                "'relationship', fam.relationship, " +
-                "'birth_year', fam.birth_year, " +
-                "'workplace', fam.workplace, " +
-                "'job', fam.job, " +
-                "'phone_number', fam.phone_number, " +
-                "'living_together', fam.living_together, " +
-                "'create_date', fam.create_date, " +
-                "'write_date', fam.write_date" +
-            ')) FILTER (WHERE fam.id IS NOT NULL), \'[]\') AS family_members'
-            
-        ])
-        .groupBy('p.id')
-        .orderBy('p.id')
-        .getRawMany();
+      .leftJoinAndSelect('p.families', 'fam')
+      .leftJoinAndSelect('p.educations', 'edu')
+      .leftJoinAndSelect('p.languages', 'lang')
+      .leftJoinAndSelect('p.experiences', 'exper')
+      .leftJoinAndSelect('p.interviews', 'inter')
+      .leftJoinAndSelect('p.projects', 'pro')
+      .leftJoinAndSelect('p.office_skills', 'skill')
+      .where('p.id IN (:...ids)', { ids })
+      .andWhere('p.synchronize = false')
+      .select([
+        'p.id AS personnel_id',
+        'p.full_name',
+        'p.gender',
+        'p.interview_date',
+        'p.start_date',
+        'p.birth_date',
+        'p.id_number',
+        'p.id_issue_date',
+        'p.ethnicity',
+        'p.id_issue_place',
+        'p.insurance_number',
+        'p.tax_number',
+        'p.phone_number',
+        'p.email',
+        'p.alternate_phone_number',
+        'p.alternate_name',
+        'p.alternate_relationship',
+        'p.birth_address',
+        'p.birth_province',
+        'p.birth_district',
+        'p.birth_ward',
+        'p.current_address',
+        'p.current_province',
+        'p.current_district',
+        'p.current_ward',
+        'p.type_personnel',
+        'p.introducer_department',
+        'p.introducer_introducer_name',
+        'p.introducer_phone_number',
+        'p.candidate_type',
+        'p.supplier_details',
+        'p.create_date',
+        'p.write_date',
+        // JSON cho các trường family
+        'COALESCE(json_agg(DISTINCT jsonb_build_object(' +
+        "'id', fam.id, " +
+        "'full_name', fam.full_name, " +
+        "'relationship', fam.relationship, " +
+        "'birth_year', fam.birth_year, " +
+        "'workplace', fam.workplace, " +
+        "'job', fam.job, " +
+        "'phone_number', fam.phone_number, " +
+        "'living_together', fam.living_together " +
+        ')) FILTER (WHERE fam.id IS NOT NULL), \'[]\') AS family_members',
 
-    // Kiểm tra nếu không tìm thấy bản ghi nào
+        // JSON cho các trường education
+        'COALESCE(json_agg(DISTINCT jsonb_build_object(' +
+        "'id', edu.id, " +
+        "'school', edu.school, " +
+        "'major', edu.major, " +
+        "'years', edu.years, " +
+        "'start_year', edu.start_year, " +
+        "'graduation_year', edu.graduation_year, " +
+        "'grade', edu.grade " +
+        ')) FILTER (WHERE edu.id IS NOT NULL), \'[]\') AS p_education_records',
+
+        // JSON cho các trường language
+        'COALESCE(json_agg(DISTINCT jsonb_build_object(' +
+        "'id', lang.id, " +
+        "'language', lang.language, " +
+        "'certificate_type', lang.certificate_type, " +
+        "'score', lang.score, " +
+        "'level', lang.level, " +
+        "'start_date', lang.start_date, " +
+        "'end_date', lang.end_date, " +
+        "'has_bonus', lang.has_bonus " +
+        ')) FILTER (WHERE lang.id IS NOT NULL), \'[]\') AS p_lang_records',
+
+        // JSON cho các trường experiences
+        'COALESCE(json_agg(DISTINCT jsonb_build_object(' +
+        "'id', exper.id, " +
+        "'company_name', exper.company_name, " +
+        "'position', exper.position, " +
+        "'employee_scale', exper.employee_scale, " +
+        "'tasks', exper.tasks, " +
+        "'salary', exper.salary, " +
+        "'start_date', exper.start_date, " +
+        "'end_date', exper.end_date, " +
+        "'description', exper.description " +
+        ')) FILTER (WHERE exper.id IS NOT NULL), \'[]\') AS p_exper_records',
+
+        // JSON cho các trường interviews
+        'COALESCE(json_agg(DISTINCT jsonb_build_object(' +
+        "'id', inter.id, " +
+        "'interview_result', inter.interview_result, " +
+        "'recruitment_department', inter.recruitment_department, " +
+        "'position', inter.position, " +
+        "'interviewer_name', inter.interviewer_name, " +
+        "'appearance_criteria', inter.appearance_criteria, " +
+        "'height', inter.height, " +
+        "'criminal_record', inter.criminal_record, " +
+        "'education_level', inter.education_level, " +
+        "'reading_writing', inter.reading_writing, " +
+        "'calculation_ability', inter.calculation_ability " +
+        ')) FILTER (WHERE inter.id IS NOT NULL), \'[]\') AS p_inter_records',
+
+        // JSON cho các trường projects
+        'COALESCE(json_agg(DISTINCT jsonb_build_object(' +
+        "'id', pro.id, " +
+        "'project_name', pro.project_name, " +
+        "'task', pro.task, " +
+        "'duration', pro.duration, " +
+        "'summary', pro.summary, " +
+        "'start_date', pro.start_date, " +
+        "'end_date', pro.end_date " +
+        ')) FILTER (WHERE pro.id IS NOT NULL), \'[]\') AS p_project_records',
+
+        // JSON cho các trường office skills
+        'COALESCE(json_agg(DISTINCT jsonb_build_object(' +
+        "'id', skill.id, " +
+        "'skill_name', skill.skill_name, " +
+        "'skill_level', skill.skill_level " +
+        ')) FILTER (WHERE skill.id IS NOT NULL), \'[]\') AS p_skill_records'
+      ])
+      .groupBy('p.id')
+      .orderBy('p.id')
+      .getRawMany();
+
     if (!personnels || personnels.length === 0) {
-        console.warn("No personnel found for the given IDs:", ids);
-        return; // Hoặc xử lý theo cách bạn muốn
+      console.warn("No personnel found for the given IDs:", ids);
+      return;
     }
-    console.log("personnel" , personnels)
-    for (const personnel of personnels) {
-        // Tạo mới bản ghi trong bảng hr
-        const hrErpRecord = this.hrErpRepository.create({
-            full_name: personnel.p_full_name,
-            gender: personnel.p_gender,
-            birth_date: personnel.p_birth_date,
-            phone_number: personnel.p_phone_number,
-            email: personnel.p_email,
-            families_json: personnel.p_family_members,
-            interview_date: personnel.p_interview_date,
-            start_date: personnel.p_start_date,
-            id_number: personnel.p_id_number,
-            id_issue_date: personnel.p_id_issue_date,
-            ethnicity: personnel.p_ethnicity,
-            id_issue_place: personnel.p_id_issue_place,
-            insurance_number: personnel.p_insurance_number,
-            tax_number: personnel.p_tax_number,
-            alternate_phone_number: personnel.p_alternate_phone_number,
-            alternate_name: personnel.p_alternate_name,
-            alternate_relationship: personnel.p_alternate_relationship,
-            birth_address: personnel.p_birth_address,
-            birth_province: personnel.p_birth_province,
-            birth_district: personnel.p_birth_district,
-            birth_ward: personnel.p_birth_ward,
-            current_address: personnel.p_current_address,
-            current_province: personnel.p_current_province,
-            current_district: personnel.p_current_district,
-            current_ward: personnel.p_current_ward,
-            type_personnel: personnel.p_type_personnel,
-            introducer_department: personnel.p_introducer_department,
-            introducer_introducer_name: personnel.p_introducer_introducer_name,
-            introducer_phone_number: personnel.p_introducer_phone_number,
-            candidate_type: personnel.p_candidate_type,
-            supplier_details: personnel.p_supplier_details,
-        });
 
-        await this.hrErpRepository.save(hrErpRecord);
+    // Tạo danh sách bản ghi đồng thời để giảm số lần `save`
+    const hrErpRecords = personnels.map((personnel) => ({
+      full_name: personnel.p_full_name,
+      gender: personnel.p_gender,
+      birth_date: personnel.p_birth_date,
+      phone_number: personnel.p_phone_number,
+      email: personnel.p_email,
+      families_json: personnel.family_members,
+      educations_json: personnel.p_education_records,
+      languages_json: personnel.p_lang_records,
+      experiences_json: personnel.p_exper_records,
+      interviews_json: personnel.p_inter_records,
+      projects_json: personnel.p_project_records,
+      office_skills_json: personnel.p_skill_records,
+      interview_date: personnel.p_interview_date,
+      start_date: personnel.p_start_date,
+      id_number: personnel.p_id_number,
+      id_issue_date: personnel.p_id_issue_date,
+      ethnicity: personnel.p_ethnicity,
+      id_issue_place: personnel.p_id_issue_place,
+      insurance_number: personnel.p_insurance_number,
+      tax_number: personnel.p_tax_number,
+      alternate_phone_number: personnel.p_alternate_phone_number,
+      alternate_name: personnel.p_alternate_name,
+      alternate_relationship: personnel.p_alternate_relationship,
+      birth_address: personnel.p_birth_address,
+      birth_province: personnel.p_birth_province,
+      birth_district: personnel.p_birth_district,
+      birth_ward: personnel.p_birth_ward,
+      current_address: personnel.p_current_address,
+      current_province: personnel.p_current_province,
+      current_district: personnel.p_current_district,
+      current_ward: personnel.p_current_ward,
+      type_personnel: personnel.p_type_personnel,
+      introducer_department: personnel.p_introducer_department,
+      introducer_introducer_name: personnel.p_introducer_introducer_name,
+      introducer_phone_number: personnel.p_introducer_phone_number,
+      candidate_type: personnel.p_candidate_type,
+      supplier_details: personnel.p_supplier_details,
+    }));
+
+    await this.hrErpRepository.save(hrErpRecords);
+    await this.personnelRepository.update(
+      { id: In(ids) },
+      { synchronize: true }
+    );
+  }
+
+
+
+
+  async findByPhoneNumber(phone_number: string): Promise<any> {
+    const candidate = await this.personnelRepository.findOne({
+      where: { phone_number },
+      relations: ['personnel'], 
+    });
+
+    if (!candidate) {
+      return {
+        success: false,
+        message: 'Candidate not found with this phone number',
+        redirectUrl: '/your-desired-url',
+      };
     }
-}
 
 
+    const combinedInfo = `${candidate.id}:${candidate.phone_number}:${candidate.full_name}:${candidate.email}`;
+    const encodedRouter = Buffer.from(combinedInfo).toString('base64');
 
-
-
-
-
-
-
-
-
-
-
-
+    return {
+      success: true,
+      data: {
+        idCadidate: candidate.id,
+        phoneNumber: candidate.phone_number,
+        name: candidate.full_name,
+        email: candidate.email,
+        router: encodedRouter,
+        gender: candidate.gender,
+      },
+    };
+  }
 
 
 

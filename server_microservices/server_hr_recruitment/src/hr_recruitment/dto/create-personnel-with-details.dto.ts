@@ -186,7 +186,59 @@ class CreateInterviewDto {
  
 }
 
+class CreateProjectDto {
+  @IsInt()
+  @IsOptional()
+  id?: number;
 
+ 
+  @IsString()
+  @IsOptional()
+  project_name: string;
+
+  
+  @IsString()
+  @IsOptional()
+  task: string;
+
+  @IsString()
+  @IsOptional()
+  duration: string;
+
+
+  @IsString()
+  @IsOptional()
+  summary: string;
+
+  @IsDateString()
+  @IsOptional()
+  start_date?: string;
+
+  @IsDateString()
+  @IsOptional()
+  end_date?: string;
+  
+ 
+}
+
+
+
+// DTO cho Office_skills
+class CreateOfficeSkillsDto {
+  @IsInt()
+  @IsOptional()
+  id?: number;
+
+
+  @IsString()
+  @IsOptional()
+  skill_name: string;
+
+
+  @IsString()
+  @IsOptional()
+  skill_level: string;
+}
 // DTO chính cho Personnel với các bảng liên quan
 export class CreatePersonnelWithDetailsDto {
   @IsInt()
@@ -292,6 +344,11 @@ export class CreatePersonnelWithDetailsDto {
   @IsOptional()
   type_personnel?: boolean;
 
+  
+  @IsBoolean()
+  @IsOptional()
+  status_form?: boolean;
+
 
   @IsString()
   @IsOptional()
@@ -327,6 +384,22 @@ export class CreatePersonnelWithDetailsDto {
   @IsOptional()
   @Type(() => CreateInterviewDto)
   interviews?: CreateInterviewDto[];
+
+
+  @ValidateNested()
+  @IsArray()
+  @IsOptional()
+  @Type(() => CreateProjectDto)
+  projects?: CreateProjectDto[];
+
+  @ValidateNested()
+  @IsArray()
+  @IsOptional()
+  @Type(() => CreateOfficeSkillsDto)
+  office_skills?: CreateOfficeSkillsDto[];
+
+
+  
 }
 
 

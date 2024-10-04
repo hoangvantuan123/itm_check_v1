@@ -26,4 +26,19 @@ export class CreatePersonnelDto {
   type_personnel?: boolean;
   candidate_type?: string;
   supplier_details?: string;
+
+  // Fields not previously defined in CreatePersonnelDto
+  introducer_department?: string;
+  introducer_introducer_name?: string;
+  introducer_phone_number?: string;
+  fac?: string;
+  department?: string;
+  team?: string;
+  jop_position?: string;
+  type_of_degree?: string;
+  type_classify?: string;
+  employee_code?: string;
+  contract_term?: string;
+  line_model?: string;
+  part?: string;
 }

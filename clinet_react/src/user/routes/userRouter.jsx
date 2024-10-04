@@ -43,7 +43,8 @@ import { checkActionPermission } from '../../permissions'
 import DetailUserHrRecruitment from '../pages/detailUserHrRecruitment'
 import DetailUserHrInterview from '../pages/detailUserHrInterview'
 import EmployeeDataiView from '../pages/employeeData'
-import DetailUserHrAllData from '../pages/detailUserHrAllData'
+import DetailUserHrAllDataTrue from '../pages/detailUserHrAllDataTrue'
+import DetailUserHrAllDataFalse from '../pages/detailUserHrAllDataFalse'
 
 const { Content } = Layout
 
@@ -126,10 +127,11 @@ const UserRouter = () => {
         path="/public/apply/information/phone"
         element={<WorkerDeclarationPassForm />}
       />
+
       <Route path="/public/apply/form/1" element={<MultiStepFormPage />} />
-      <Route path="/public/apply/form/:router" element={<MultiStepFormPage />} />
+      <Route path="/public/apply/form/1/:router" element={<MultiStepFormPage />} />
       <Route
-        path="/public/apply/form/2"
+        path="/public/apply/form/2/:router"
         element={<WorkerDeclarationMultiStepForm />}
       />
       <Route path="/public/apply/thong-bao" element={<SuccessNotification />} />
@@ -353,14 +355,28 @@ const UserRouter = () => {
                       }
                     />
                     <Route
-                      path="/u/action=20/data-employee/detail/:id"
+                      path="/u/action=20/data-employee/detail/type=true/:id"
                       element={
                         checkActionPermission(
                           userPermissions,
                           'hr-recruitment-1-3',
                           'view',
                         ) ? (
-                          <DetailUserHrAllData />
+                          <DetailUserHrAllDataTrue/>
+                        ) : (
+                          <Unauthorized />
+                        )
+                      }
+                    />
+                    <Route
+                      path="/u/action=20/data-employee/detail/type=false/:id"
+                      element={
+                        checkActionPermission(
+                          userPermissions,
+                          'hr-recruitment-1-3',
+                          'view',
+                        ) ? (
+                          <DetailUserHrAllDataFalse />
                         ) : (
                           <Unauthorized />
                         )

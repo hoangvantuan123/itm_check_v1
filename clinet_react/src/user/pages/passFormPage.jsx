@@ -19,7 +19,7 @@ const PassFormPage = () => {
       if (response.success) {
         const data = response.data.data;
         setDaa(data);
-        const routerPath = `/public/apply/form/${data.router}`;
+        const routerPath = `/public/apply/form/1/${data.router}`;
         navigate(`${routerPath}`)
       } else {
         message.error("Vui lòng thử lại sau.");

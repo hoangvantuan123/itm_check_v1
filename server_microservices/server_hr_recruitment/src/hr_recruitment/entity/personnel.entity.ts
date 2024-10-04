@@ -18,7 +18,7 @@ export class Personnel {
   full_name: string;
 
   @Column({ type: 'text', nullable: true })
-  gender: 'Male' | 'Female' | 'Other';
+  gender: string;
 
   @Column({ type: 'date', nullable: true })
   interview_date: Date;
@@ -112,6 +112,9 @@ export class Personnel {
 
   @Column({ type: 'boolean', default: false })
   synchronize: boolean;
+  
+  @Column({ type: 'boolean', default: false })
+  status_form: boolean;
 
   /* Vị trí */
   @Column({ type: 'text', nullable: true })
@@ -124,10 +127,18 @@ export class Personnel {
 
   @Column({ type: 'text', nullable: true })
   jop_position: string;
-
-
+  @Column({ type: 'text', nullable: true })
+  type_of_degree: string;
+  @Column({ type: 'text', nullable: true })
+  type_classify: string;
   @Column({ type: 'text', nullable: true })
   employee_code: string;
+  @Column({ type: 'text', nullable: true })
+  contract_term: string;
+  @Column({ type: 'text', nullable: true })
+  line_model: string;
+  @Column({ type: 'text', nullable: true })
+  part: string;
 
   @OneToMany(() => HrInterviewCandidate, (candidate) => candidate.personnel)
   @JoinColumn({ name: 'candidate_id' })

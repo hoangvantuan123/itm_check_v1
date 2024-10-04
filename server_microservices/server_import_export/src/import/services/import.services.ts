@@ -67,7 +67,22 @@ export class ImportServices {
                     current_province: record.current_province,
                     current_district: record.current_district,
                     current_ward: record.current_ward,
-                    type_personnel: record.type_personnel || true,
+                    type_personnel: record.type_personnel,
+                    candidate_type: record.candidate_type,
+                    supplier_details: record.supplier_details,
+                    introducer_department: record.introducer_department,
+                    introducer_introducer_name: record.introducer_introducer_name,
+                    introducer_phone_number: record.introducer_phone_number,
+                    fac: record.fac,
+                    department: record.department,
+                    team: record.team,
+                    jop_position: record.jop_position,
+                    type_of_degree: record.type_of_degree,
+                    type_classify: record.type_classify,
+                    employee_code: record.employee_code,
+                    contract_term: record.contract_term,
+                    line_model: record.line_model,
+                    part: record.part,
                 } as CreatePersonnelDto;
             }).filter(record => record.full_name !== undefined && record.gender !== undefined);
 
@@ -80,9 +95,19 @@ export class ImportServices {
     }
 
     private async saveBatchToTable(batch: Record<string, any>[], tableName: string): Promise<number[]> {
-        const insertQuery = `INSERT INTO ${tableName} (full_name, gender, interview_date, start_date, birth_date, id_number, id_issue_date, ethnicity, id_issue_place, insurance_number, tax_number, phone_number, email, alternate_phone_number, alternate_name, alternate_relationship, birth_address, birth_province, birth_district, birth_ward, current_address, current_province, current_district, current_ward, type_personnel) VALUES `;
+        const insertQuery = `INSERT INTO ${tableName} 
+        (full_name, gender, interview_date, start_date, birth_date, id_number, 
+        id_issue_date, ethnicity, id_issue_place, insurance_number, tax_number, 
+        phone_number, email, alternate_phone_number, alternate_name, 
+        alternate_relationship, birth_address, birth_province, birth_district, 
+        birth_ward, current_address, current_province, current_district, 
+        current_ward, type_personnel, candidate_type, supplier_details, 
+        introducer_department, introducer_introducer_name, introducer_phone_number, 
+        fac, department, team, jop_position, type_of_degree, type_classify, 
+        employee_code, contract_term, line_model, part) VALUES `;
 
         const values: string[] = batch.map((record) => {
+            // Chỉ tạo chuỗi giá trị nếu tất cả giá trị đều hợp lệ
             return `(
                 '${record.full_name ?? ''}', 
                 '${record.gender ?? ''}', 
@@ -108,21 +133,43 @@ export class ImportServices {
                 '${record.current_province ?? ''}', 
                 '${record.current_district ?? ''}', 
                 '${record.current_ward ?? ''}', 
-                ${record.type_personnel ?? 'TRUE'}
+                ${record.type_personnel ?? ''},
+                ${record.candidate_type ? `'${record.candidate_type}'` : 'DEFAULT'},
+                ${record.supplier_details ? `'${record.supplier_details}'` : 'DEFAULT'},
+                ${record.introducer_department ? `'${record.introducer_department}'` : 'DEFAULT'},
+                ${record.introducer_introducer_name ? `'${record.introducer_introducer_name}'` : 'DEFAULT'},
+                ${record.introducer_phone_number ? `'${record.introducer_phone_number}'` : 'DEFAULT'},
+                ${record.fac ? `'${record.fac}'` : 'DEFAULT'},
+                ${record.department ? `'${record.department}'` : 'DEFAULT'},
+                ${record.team ? `'${record.team}'` : 'DEFAULT'},
+                ${record.jop_position ? `'${record.jop_position}'` : 'DEFAULT'},
+                ${record.type_of_degree ? `'${record.type_of_degree}'` : 'DEFAULT'},
+                ${record.type_classify ? `'${record.type_classify}'` : 'DEFAULT'},
+                ${record.employee_code ? `'${record.employee_code}'` : 'DEFAULT'},
+                ${record.contract_term ? `'${record.contract_term}'` : 'DEFAULT'},
+                ${record.line_model ? `'${record.line_model}'` : 'DEFAULT'},
+                ${record.part ? `'${record.part}'` : 'DEFAULT'}
             )`;
-        });
+        }).filter(value => value.trim() !== '()'); // Loại bỏ các giá trị rỗng
+
+        // Kiểm tra nếu không có giá trị nào hợp lệ
+        if (values.length === 0) {
+            this.logger.warn(`No valid records to insert into ${tableName}`);
+            return [];
+        }
+
         const finalQuery = insertQuery + values.join(', ') + ' RETURNING id';
         try {
             const result = await this.entityManager.query(finalQuery);
-
             const personnelIds = result.map((row: { id: number }) => row.id);
-            await this.saveInterviewResults(personnelIds); // Cập nhật ở đây
-            return personnelIds; // Trả về ID personnel
+            await this.saveInterviewResults(personnelIds);
+            return personnelIds;
         } catch (error) {
             this.logger.error(`Lỗi khi ghi dữ liệu vào bảng ${tableName}`, error);
             throw new NotFoundException(`Không thể ghi dữ liệu vào bảng ${tableName}`);
         }
     }
+
 
     private async saveInterviewResults(personnelIds: number[]): Promise<void> {
         const interviewEntities = personnelIds.map(personnelId => ({
@@ -263,13 +310,13 @@ export class ImportServices {
     private async processHRInterviewCandidates(importData: any[], tableName: string): Promise<void> {
         const batchSize = 1000;
         const totalBatches = Math.ceil(importData.length / batchSize);
-    
+
         // Truy vấn để lấy danh sách số điện thoại đã tồn tại trong bảng
         const existingPhoneNumbers = await this.getExistingPhoneNumbers(tableName);
-    
+
         for (let i = 0; i < totalBatches; i++) {
             const batch = importData.slice(i * batchSize, (i + 1) * batchSize);
-    
+
             const validBatch: HrInterviewCandidateDTO[] = batch.map(record => {
                 return {
                     full_name: record.full_name,
@@ -285,35 +332,35 @@ export class ImportServices {
                     interview_date: record.interview_date,
                 } as HrInterviewCandidateDTO;
             }).filter(record => record.full_name !== undefined && record.gender !== undefined);
-    
+
             // Kiểm tra tính duy nhất của số điện thoại
             const filteredBatch = validBatch.filter(record => {
                 return record.phone_number && !existingPhoneNumbers.has(record.phone_number);
             });
-    
+
             if (filteredBatch.length === 0) {
                 continue; // Nếu không có bản ghi hợp lệ sau khi lọc, bỏ qua
             }
-    
+
             await this.saveBatchToTableHrInterviewCandidates(filteredBatch, tableName);
         }
     }
-    
+
     // Hàm để lấy danh sách số điện thoại đã tồn tại trong bảng
     private async getExistingPhoneNumbers(tableName: string): Promise<Set<string>> {
         const query = `SELECT phone_number FROM ${tableName}`;
         const results = await this.entityManager.query(query);
         const phoneNumbers = new Set<string>();
-    
+
         results.forEach((row: { phone_number: string }) => {
             if (row.phone_number) {
                 phoneNumbers.add(row.phone_number);
             }
         });
-    
+
         return phoneNumbers;
     }
-    
+
 
     private async saveBatchToTableHrInterviewCandidates(batch: HrInterviewCandidateDTO[], tableName: string): Promise<number[]> {
         const insertQuery = `INSERT INTO ${tableName} (full_name, gender, phone_number, current_residence, birth_year, hometown, contractor, job_position, email, id_card_number, interview_date) VALUES `;

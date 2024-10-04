@@ -134,7 +134,11 @@ export default function DetailUserHrInterview() {
       current_province: finalData?.current_province,
       current_district: finalData?.current_district,
       current_ward: finalData?.current_ward,
-      type: false,
+      type_personnel: true,
+      supplier_details: finalData?.supplierDetails,
+      candidate_type: finalData?.candidateType,
+      status_form: true,
+      
       families:
         finalData?.families?.map((family) => ({
           id: family.key,
@@ -181,6 +185,8 @@ export default function DetailUserHrInterview() {
             description: experience.description,
           }),
         ) || [],
+        projects: [],
+        office_skills: []
     }
 
     return filterEmptyFields(result)

@@ -12,7 +12,7 @@ import { PutHrInfoId } from '../../features/hrRecruitment/updateHrInfoId'
 import { PutUserInterview } from '../../features/hrRecruitment/putUserInterview'
 const { Text } = Typography
 
-export default function DetailUserHrAllData() {
+export default function DetailUserHrAllDataTrue() {
 
 
   const { t } = useTranslation()
@@ -137,7 +137,11 @@ export default function DetailUserHrAllData() {
       current_province: finalData?.current_province,
       current_district: finalData?.current_district,
       current_ward: finalData?.current_ward,
-      type: false,
+      type_personnel: true,
+      supplier_details: finalData?.supplierDetails,
+      candidate_type: finalData?.candidateType,
+      status_form: true,
+      
       families:
         finalData?.families?.map((family) => ({
           id: family.key,
@@ -184,6 +188,8 @@ export default function DetailUserHrAllData() {
             description: experience.description,
           }),
         ) || [],
+        projects: [],
+        office_skills: []
     }
 
     return filterEmptyFields(result)

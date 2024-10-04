@@ -27,6 +27,7 @@ import ShowAction from '../components/action/showAction'
 import CustomTag from '../components/candidateForm/customTag'
 import CustomTagSyn from '../components/tags/customTagSyn'
 import SynAction from '../components/action/synAction'
+import CustomTypePersonnel from '../components/tags/customTypePersonnel'
 const { RangePicker } = DatePicker
 const { Content } = Layout
 const { Option } = Select
@@ -41,9 +42,11 @@ const columnConfig = [
   { key: 'department', label: 'Phòng ban' },
   { key: 'team', label: 'Team' },
   { key: 'jop_position', label: 'Chức vụ' },
+  { key: 'type_personnel', label: 'Loại' },
 
   { key: 'interview_result', label: 'Kết quả' },
   { key: 'synchronize', label: 'Đồng bộ ' },
+
 ]
 
 const CloumnIcon = () => {
@@ -120,7 +123,7 @@ export default function EmployeeDataiView({ permissions }) {
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(150)
-  const [dateRange, setDateRange] = useState([moment().startOf('day'), moment().endOf('day')]);
+  const [dateRange, setDateRange] = useState([null, null]);
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const [nameTags, setNameTags] = useState([])
@@ -133,7 +136,7 @@ export default function EmployeeDataiView({ permissions }) {
     setActionUsers('actionHrInfoIds')
   }
   const handleOnClickActionImport = () => {
-    setActionImport('_')
+    setActionImport('hr_personnel')
   }
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys)
@@ -255,8 +258,16 @@ export default function EmployeeDataiView({ permissions }) {
     }
   }
 
-  const handleNavigateToDetail = (id) => {
-    navigate(`/u/action=20/data-employee/detail/${id}`)
+  const handleNavigateToDetail = (record) => {
+    if (record.type_personnel === false) {
+      console.log("type_personnel F")
+      navigate(`/u/action=20/data-employee/detail/type=false/${record.id}`)
+    }
+    if (record.type_personnel === true) {
+      console.log("type_personnel T")
+      navigate(`/u/action=20/data-employee/detail/type=true/${record.id}`)
+    }
+
   }
 
   const columns = [
@@ -290,6 +301,9 @@ export default function EmployeeDataiView({ permissions }) {
         if (key === 'synchronize') {
           return visibleColumns[key] ? <CustomTagSyn status={record.synchronize} /> : null
         }
+        if (key === 'type_personnel') {
+          return visibleColumns[key] ? <CustomTypePersonnel status={record.type_personnel} /> : null
+        }
         if (key === 'create_date') {
           return visibleColumns[key]
             ? moment(record.create_date).format('lll')
@@ -299,13 +313,15 @@ export default function EmployeeDataiView({ permissions }) {
       },
       onCell: (record) => ({
         onClick: () => {
-          showDetailModal(record)
-          handleNavigateToDetail(record.id)
+          handleNavigateToDetail(record)
         },
       }),
       sorter: (a, b) => {
         const aValue = a[key]
         const bValue = b[key]
+        if (key === 'type_personnel') {
+          return (aValue === bValue) ? 0 : aValue ? -1 : 1;
+        }
         if (key === 'create_date') {
           return moment(aValue).isBefore(moment(bValue)) ? -1 : 1
         } else if (key === 'tax_number' || key === 'phone_number') {
@@ -449,8 +465,8 @@ export default function EmployeeDataiView({ permissions }) {
             >
               <CloumnIcon />
             </Button>
-            {selectedRowKeys != null && selectedRowKeys.length > 0 && (    <SynAction selectedRowKeys={selectedRowKeys}/>)}
-        
+            {selectedRowKeys != null && selectedRowKeys.length > 0 && (<SynAction selectedRowKeys={selectedRowKeys} />)}
+
             {selectedRowKeys != null && selectedRowKeys.length > 0 && (
               <ShowAction
                 handleOnClickAction={handleOnClickAction}

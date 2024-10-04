@@ -8,7 +8,8 @@ import { Language } from '../entity/language.entity';
 import { Experience } from '../entity/experience.entity';
 import { InterviewResult } from '../entity/interview_results.entity';
 import { UpdateInterviewResultDto } from '../dto/update_interview_result.dto';
-
+import { OfficeSkills } from '../entity/office_skills.entity';
+import { Projects } from '../entity/project.entity';
 import { CreatePersonnelWithDetailsDto } from '../dto/create-personnel-with-details.dto';
 
 @Injectable()
@@ -34,7 +35,6 @@ export class HrRecruitmentServices {
     createPersonnelWithDetailsDto: CreatePersonnelWithDetailsDto,
   ): Promise<{ success: boolean; message: string; data?: Personnel }> {
     try {
-      console.log("CreatePersonnelWithDetailsDto", CreatePersonnelWithDetailsDto)
       return await this.personnelRepository.manager.transaction(
         async (entityManager: EntityManager) => {
           const {
@@ -261,7 +261,7 @@ export class HrRecruitmentServices {
 
       return await this.personnelRepository.manager.transaction(
         async (entityManager: EntityManager) => {
-          const { families = [], educations = [], languages = [], experiences = [], ...personnelData } = updatePersonnelWithDetailsDto;
+          const { families = [], educations = [], languages = [], experiences = [], projects = [], office_skills = [], ...personnelData } = updatePersonnelWithDetailsDto;
 
           await entityManager.update(Personnel, { id }, personnelData);
 
@@ -303,10 +303,27 @@ export class HrRecruitmentServices {
               await entityManager.save(Experience, newExperience);
             }
           }
+          // 4. Update Experiences
+          for (const office_skill of office_skills) {
+            if (office_skill.id) {
+              await entityManager.update(OfficeSkills, { id: office_skill.id }, office_skill);
+            } else {
+              const newOfficeSkills = entityManager.create(OfficeSkills, { ...office_skill, personnel: existingPersonnel });
+              await entityManager.save(OfficeSkills, newOfficeSkills);
+            }
+          }
+          for (const project of projects) {
+            if (project.id) {
+              await entityManager.update(Projects, { id: project.id }, project);
+            } else {
+              const newProjects = entityManager.create(Projects, { ...project, personnel: existingPersonnel });
+              await entityManager.save(Projects, newProjects);
+            }
+          }
 
           const updatedPersonnel = await entityManager.findOne(Personnel, {
             where: { id },
-            relations: ['families', 'educations', 'languages', 'experiences'],
+            relations: ['families', 'educations', 'languages', 'experiences', 'projects', 'office_skills'],
           });
 
           return {
@@ -334,12 +351,61 @@ export class HrRecruitmentServices {
       }
 
       await this.personnelRepository.manager.transaction(async (entityManager: EntityManager) => {
-        await entityManager.delete(Family, { personnel: In(ids) });
-        await entityManager.delete(Education, { personnel: In(ids) });
-        await entityManager.delete(Language, { personnel: In(ids) });
-        await entityManager.delete(Experience, { personnel: In(ids) });
+        try {
+          await entityManager.delete(Family, { personnel: In(ids) });
+        } catch (error) {
+          this.logger.error(`Error deleting Family for personnel IDs ${ids.join(', ')}: ${error.message}`, error.stack);
+          throw new Error(`Failed to delete Family: ${error.message}`);
+        }
 
-        await entityManager.delete(Personnel, { id: In(ids) });
+        try {
+          await entityManager.delete(Education, { personnel: In(ids) });
+        } catch (error) {
+          this.logger.error(`Error deleting Education for personnel IDs ${ids.join(', ')}: ${error.message}`, error.stack);
+          throw new Error(`Failed to delete Education: ${error.message}`);
+        }
+
+        try {
+          await entityManager.delete(Language, { personnel: In(ids) });
+        } catch (error) {
+          this.logger.error(`Error deleting Language for personnel IDs ${ids.join(', ')}: ${error.message}`, error.stack);
+          throw new Error(`Failed to delete Language: ${error.message}`);
+        }
+
+        try {
+          await entityManager.delete(Experience, { personnel: In(ids) });
+        } catch (error) {
+          this.logger.error(`Error deleting Experience for personnel IDs ${ids.join(', ')}: ${error.message}`, error.stack);
+          throw new Error(`Failed to delete Experience: ${error.message}`);
+        }
+
+        try {
+          await entityManager.delete(Projects, { personnel: In(ids) });
+        } catch (error) {
+          this.logger.error(`Error deleting Projects for personnel IDs ${ids.join(', ')}: ${error.message}`, error.stack);
+          throw new Error(`Failed to delete Projects: ${error.message}`);
+        }
+
+        try {
+          await entityManager.delete(OfficeSkills, { personnel: In(ids) });
+        } catch (error) {
+          this.logger.error(`Error deleting OfficeSkills for personnel IDs ${ids.join(', ')}: ${error.message}`, error.stack);
+          throw new Error(`Failed to delete OfficeSkills: ${error.message}`);
+        }
+
+        try {
+          await entityManager.delete(InterviewResult, { personnel: In(ids) });
+        } catch (error) {
+          this.logger.error(`Error deleting InterviewResult for personnel IDs ${ids.join(', ')}: ${error.message}`, error.stack);
+          throw new Error(`Failed to delete InterviewResult: ${error.message}`);
+        }
+
+        try {
+          await entityManager.delete(Personnel, { id: In(ids) });
+        } catch (error) {
+          this.logger.error(`Error deleting Personnel for IDs ${ids.join(', ')}: ${error.message}`, error.stack);
+          throw new Error(`Failed to delete Personnel: ${error.message}`);
+        }
       });
 
       return {
@@ -347,19 +413,20 @@ export class HrRecruitmentServices {
         message: 'Personnels and related details deleted successfully',
       };
     } catch (error) {
-      this.logger.error('Error deleting personnels', error.stack);
+      this.logger.error(`Error deleting personnels: ${error.message}`, error.stack);
       return {
         success: false,
-        message: 'Failed to delete personnels',
+        message: `Failed to delete personnels: ${error.message}`,
       };
     }
   }
 
 
+
   async getPersonnelById(id: number): Promise<any> {
     const personnel = await this.personnelRepository.findOne({
       where: { id },
-      relations: ['families', 'educations', 'languages', 'experiences', 'interviews'],
+      relations: ['families', 'educations', 'languages', 'experiences', 'interviews', 'projects', 'office_skills'],
     });
 
     if (!personnel) {
@@ -450,6 +517,20 @@ export class HrRecruitmentServices {
           reading_writing: interview.reading_writing,
           calculation_ability: interview.calculation_ability,
         })) ?? [],
+        projects: personnel.projects?.map(project => ({
+          key: project.id,
+          project_name: project.project_name,
+          start_date: project.start_date,
+          end_date: project.end_date,
+          task: project.task,
+          duration: project.duration,
+          summary: project.summary
+        })) ?? [],
+        office_skills: personnel.office_skills?.map(office_skill => ({
+          key: office_skill.id,
+          skill_name: office_skill.skill_name,
+          skill_level: office_skill.skill_level
+        })) ?? [],
       },
     };
   }
@@ -508,16 +589,24 @@ export class HrRecruitmentServices {
       return {
         success: false,
         message: 'Personnel not found with this phone number',
-        redirectUrl: '/your-desired-url', // Your desired redirect URL
+        redirectUrl: '/your-desired-url',
       };
     }
-
-    const combinedInfo = `${personnel.phone_number}:${personnel.full_name}`;
+    const personnelStatus = personnel.status_form;
+    if (personnelStatus) {
+      return {
+        success: false,
+        message: 'Candidate found but no personnel associated with this candidate.',
+        redirectUrl: '/your-desired-url',
+      };
+    }
+    const combinedInfo = `${personnel.id}:${personnel.phone_number}:${personnel.full_name}:${personnel.email}`;
     const encodedRouter = Buffer.from(combinedInfo).toString('base64');
 
     return {
       success: true,
       data: {
+        type_personnel: personnel.type_personnel,
         phoneNumber: personnel.phone_number,
         name: personnel.full_name,
         email: personnel.email,

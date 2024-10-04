@@ -8,17 +8,14 @@ import WorkExperienceTable from '../components/workerDeclaration/workExperienceT
 import PersonalInformation from '../components/workerDeclaration/personalInformation'
 import CandidateType from '../components/workerDeclaration/candidateType'
 import { PostPublicHrRecryutment } from '../../features/hrRecruitment/postPublicHrRecruitment'
-import { PutUserInterview } from '../../features/hrRecruitment/putUserInterview'
 import { GetHrInfoId } from '../../features/hrRecruitment/getPersonnelId'
-import { PutHrInfoId } from '../../features/hrRecruitment/updateHrInfoId'
-const WorkerDeclarationMultiStepForm = () => {
+const COPY = () => {
   const navigate = useNavigate()
   const [currentStep, setCurrentStep] = useState(0)
   const [isSupplier, setIsSupplier] = useState(false)
   const [form] = Form.useForm()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState([])
-
   const [loading, setLoading] = useState(true)
   const [interviewData, setInterviewData] = useState({})
   const [isDrawerVisible, setIsDrawerVisible] = useState(false)
@@ -143,7 +140,6 @@ const WorkerDeclarationMultiStepForm = () => {
       supplier_details: finalData?.supplierDetails,
       candidate_type: finalData?.candidateType,
       status_form: true,
-
       families:
         finalData?.familyMembers?.map((family) => ({
           relationship: family?.relationship,
@@ -186,8 +182,6 @@ const WorkerDeclarationMultiStepForm = () => {
             description: experience.reasonForLeaving,
           }),
         ) || [],
-      projects: [],
-      office_skills: []
     }
 
     // Loại bỏ các thuộc tính có giá trị rỗng trong toàn bộ kết quả
@@ -205,9 +199,8 @@ const WorkerDeclarationMultiStepForm = () => {
     setIsSubmitting(true)
     const finalData = { ...formData, ...form.getFieldsValue() }
     const submissionData = formatSubmissionData(finalData)
-   
     try {
-      const response = await PutHrInfoId(decodedData?.id, submissionData)
+      const response = await PostPublicHrRecryutment(submissionData)
       if (response.success) {
         navigate('/public/apply/thong-bao')
       } else {
@@ -217,7 +210,7 @@ const WorkerDeclarationMultiStepForm = () => {
       message.error('Có lỗi xảy ra khi gửi thông tin. Vui lòng thử lại!')
     } finally {
       setIsSubmitting(false)
-      setIsDrawerVisible(false)
+      setIsDrawerVisible(false) // Đóng Drawer sau khi gửi xong
     }
   }
 
@@ -231,8 +224,8 @@ const WorkerDeclarationMultiStepForm = () => {
             isSupplier={isSupplier}
             handleCheckboxChange={handleCheckboxChange}
           />
-          <PersonalInformation form={form} formData={formData} />
-          <FamilyInfoTable form={form} formData={formData} />
+          <PersonalInformation form={form} />
+          <FamilyInfoTable form={form} />
           <EducationLanguageTable form={form} />
           <WorkExperienceTable form={form} />
         </>
@@ -338,4 +331,4 @@ const WorkerDeclarationMultiStepForm = () => {
   )
 }
 
-export default WorkerDeclarationMultiStepForm
+export default COPY;

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Form, Input, Button, Typography, Dropdown, Menu, Spin } from 'antd'
+import { Form, Input, Button, Typography, Dropdown, Menu, Spin, message } from 'antd'
 import Logo from '../../assets/f_logo.png'
 import { GetFindByPhone } from '../../features/hrRecruitment/getFindByPhone'
 const { Title, Text } = Typography
@@ -8,34 +8,42 @@ import { useTranslation } from 'react-i18next'
 
 // Hàm mã hóa Base64
 const encodePhoneNumber = (phoneNumber) => {
-  return btoa(phoneNumber) 
+  return btoa(phoneNumber)
 }
 
 const WorkerDeclarationPassForm = () => {
   const [phoneNumber, setPhoneNumber] = useState('')
   const [language, setLanguage] = useState('Tiếng Việt')
   const [loading, setLoading] = useState(false)
+  const [data, setDaa] = useState([])
   const navigate = useNavigate()
   const { t } = useTranslation()
 
-  const handleSubmit = (values) => {
-  setLoading(true) 
-    setTimeout(() => {
-      setLoading(false)
-      const encodedPhoneNumber = encodePhoneNumber(phoneNumber)
-      navigate(`/public/apply/form/2`)
-    }, 1000)
-  }
-   /*  const handleSubmit = async (values) => {
-      const result = await GetFindByPhone(values.phoneNumber);
-    
-      if (result.success) {
-        console.log('User data:', result.data);
+
+
+  const handleSubmit = async (values) => {
+    try {
+      const response = await GetFindByPhone(values.phoneNumber);
+      console.log("response", response)
+      if (response.success) {
+        const data = response.data.data;
+        setDaa(data);
+        if (data.type_personnel === true) {
+          const routerPath = `/public/apply/form/2/${data.router}`;
+          navigate(`${routerPath}`)
+        }
+        if (data.type_personnel === false) {
+          const routerPath = `/public/apply/form/1/${data.router}`;
+          navigate(`${routerPath}`)
+        }
+
       } else {
-        console.error('Error fetching user data:', result.message);
+        message.error("Vui lòng thử lại sau.");
       }
-    };
-     */
+    } catch (error) {
+      message.error('Vui lòng thử lại sau.');
+    }
+  };
 
   const handleMenuClick = (e) => {
     setLanguage(e.key)

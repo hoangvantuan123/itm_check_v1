@@ -15,6 +15,7 @@ import {
   Col,
   Dropdown,
   Spin,
+  InputNumber
 } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import * as XLSX from 'xlsx'
@@ -56,6 +57,7 @@ export default function ImportForm({ fetchData, isOpen, onClose, tableInfo, acti
   const [selectedTable, setSelectedTable] = useState(null)
   const [connectValues, setConnectValues] = useState({})
   const [isLoading, setIsLoading] = useState(false)
+  const [row, setRow] = useState(0)
   const handleCheck = async () => {
     if (!selectedTable || Object.keys(connectValues).length === 0) {
       message.error(t('Vui lòng chọn bảng và ít nhất một cột để kiểm tra'));
@@ -187,18 +189,50 @@ export default function ImportForm({ fetchData, isOpen, onClose, tableInfo, acti
     setTables([])
     const newConnectValues = {};
     const defaultMappings = {
-      'Họ và Tên': 'full_name',
       'Giới tính': 'gender',
-      'Email': 'email',
+      'Ngày tuyển dụng': 'interview_date',
+      'Ngày bắt đầu': 'start_date',
+      'Ngày sinh': 'birth_date',
+      'Số CCCD': 'id_number',
+      'Ngày cấp': 'id_issue_date',
+      'Dân tộc': 'ethnicity',
+      'Nơi cấp': 'id_issue_place',
+      'Số bảo hiểm': 'insurance_number',
+      'Mã số thuế': 'tax_number',
       'Số điện thoại': 'phone_number',
-      'CCCD': 'id_card_number',
-      'Ngày phỏng vấn': 'interview_date',
-      'Chức vụ': 'job_position',
-      'Nhà thầu': 'contractor',
-      'Địa chỉ': 'hometown',
-      'Năm sinh': 'birth_year',
-      'Địa chỉ hiện tại': 'current_residence',
+      'Email': 'email',
+      'Số điện thoại phụ': 'alternate_phone_number',
+      'Tên gọi khác': 'alternate_name',
+      'Mối quan hệ với người gọi khác': 'alternate_relationship',
+      '1 Thôn/xóm/số nhà/đường': 'birth_address',
+      '1 Tỉnh/thành phố': 'birth_province',
+      '1 Quận/huyện/thành phố/Thị xã': 'birth_district',
+      '1 Xã/Phường/thị trấn': 'birth_ward',
+      '2 Thôn/xóm/số nhà/đường': 'current_address',
+      '2 Tỉnh/thành phố': 'current_province',
+      '2 Quận/huyện/thành phố/Thị xã': 'current_district',
+      '2 Xã/Phường/thị trấn': 'current_ward',
+      'Loại': 'type_personnel',
+      'Họ và Tên': 'full_name',
+      'Nhà thầu': 'supplier_details',
+      'Loại ứng viên': 'candidate_type',
+      'Phòng giới thiệu': 'introducer_department',
+      'Người giới thiệu': 'introducer_introducer_name',
+      'Số điện thoại người giới thiệu': 'introducer_phone_number',
+      'ID phỏng vấn ứng viên HR': 'id_hr_interview_candidates',
+      'Đồng bộ hóa': 'synchronize',
+      'Nhà máy': 'fac',
+      'Phòng ban': 'department',
+      'Team': 'team',
+      'Chức vụ': 'jop_position',
+      'Mã nhân viên': 'employee_code',
+      'Bằng cấp': 'type_of_degree',
+      'Phân loại': 'type_classify',
+      'Thời hạn hợp đồng': 'contract_term',
+      'Part': 'part',
+      'Line/Model': 'line_model',
     };
+
     if (file.type === 'text/csv') {
       const reader = new FileReader()
       reader.onload = (e) => {
@@ -214,7 +248,7 @@ export default function ImportForm({ fetchData, isOpen, onClose, tableInfo, acti
               return
             }
 
-            const columns = Object.keys(result.data[0])
+            const columns = Object.keys(result.data[row])
             setTables([{ name: 'CSV Data', columns, data: result.data }])
 
 
@@ -249,7 +283,7 @@ export default function ImportForm({ fetchData, isOpen, onClose, tableInfo, acti
 
         workbook.SheetNames.forEach((sheetName) => {
           const worksheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName])
-          const columns = Object.keys(worksheet[0])
+          const columns = Object.keys(worksheet[row])
           allTables.push({ name: sheetName, columns, data: worksheet })
         })
 
@@ -258,7 +292,7 @@ export default function ImportForm({ fetchData, isOpen, onClose, tableInfo, acti
           table.columns.forEach((column) => {
             for (const [key, mappedName] of Object.entries(defaultMappings)) {
               if (column.name === mappedName) {
-                newConnectValues[key] = column.name; 
+                newConnectValues[key] = column.name;
               }
             }
           });
@@ -347,9 +381,13 @@ export default function ImportForm({ fetchData, isOpen, onClose, tableInfo, acti
       connect: connectValues[col] || '',
       note: `Ghi chú cho ${col}`,
       span:
-        selectedTable.data.length > 0 ? selectedTable.data[0][col] || '' : '',
+        selectedTable.data.length > row ? selectedTable.data[row][col] || '' : '',
     }))
     : []
+
+  const onChange = (value) => {
+    setRow(value)
+  };
   return (
     <Drawer
       title="Import"
@@ -539,7 +577,19 @@ export default function ImportForm({ fetchData, isOpen, onClose, tableInfo, acti
                     'Dòng đầu tiên hàng dữ liệu sẽ được dùng để làm phân trang',
                   )}
                 </p>
+
                 <div className="mt-5">
+                  <label className="block mb-2">Nhập số lượng</label>
+                  <InputNumber
+                    min={0}
+                    size="large"
+                    max={100}
+                    className="w-full"
+                    defaultValue={0}
+                    onChange={onChange}
+                  />
+
+                  <label className="block mt-4 mb-2">Chọn bảng tính</label>
                   <Select
                     showSearch
                     placeholder={t('Bảng tính')}
@@ -547,9 +597,7 @@ export default function ImportForm({ fetchData, isOpen, onClose, tableInfo, acti
                     className="w-full"
                     size="large"
                     onSelect={(value) => {
-                      const selectedTable = tables.find(
-                        (table) => table.name === value,
-                      )
+                      const selectedTable = tables.find((table) => table.name === value)
                       setSelectedTable(selectedTable)
                       setSelectedColumns([])
                     }}
@@ -561,6 +609,7 @@ export default function ImportForm({ fetchData, isOpen, onClose, tableInfo, acti
                     ))}
                   </Select>
                 </div>
+
                 <Button
                   size="large"
                   onClick={handleUpload}

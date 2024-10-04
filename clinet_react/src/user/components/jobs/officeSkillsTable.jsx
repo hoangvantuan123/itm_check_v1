@@ -47,7 +47,6 @@ const OfficeSkillsTable = ({ form, formData }) => {
   const [officeSkills, setOfficeSkills] = useState(initialOfficeSkills)
   const [softwareSkills, setSoftwareSkills] = useState(initialSoftwareSkills)
 
-  // Effect để đồng bộ dữ liệu với form
   useEffect(() => {
     form.setFieldsValue({
       officeSkills: officeSkills,
@@ -55,12 +54,12 @@ const OfficeSkillsTable = ({ form, formData }) => {
     })
   }, [officeSkills, softwareSkills, form])
 
-  // Hàm thay đổi giá trị kỹ năng
+
   const handleSkillsChange = (key, value, isOfficeSkill = true) => {
     const updatedSkills = (isOfficeSkill ? officeSkills : softwareSkills).map(
       (skill) => {
         if (skill.key === key) {
-          return { ...skill, level: value } // Chỉ cập nhật hàng hiện tại
+          return { ...skill, level: value } 
         }
         return skill
       },
@@ -68,10 +67,10 @@ const OfficeSkillsTable = ({ form, formData }) => {
 
     if (isOfficeSkill) {
       setOfficeSkills(updatedSkills)
-      formData.officeSkillsData.officeSkills = updatedSkills // Cập nhật dữ liệu vào formData
+      formData.officeSkillsData.officeSkills = updatedSkills 
     } else {
       setSoftwareSkills(updatedSkills)
-      formData.officeSkillsData.softwareSkills = updatedSkills // Cập nhật dữ liệu vào formData
+      formData.officeSkillsData.softwareSkills = updatedSkills
     }
   }
 
