@@ -440,7 +440,7 @@ const Sidebar = ({ permissions }) => {
                   </span>
                 }
               >
-                {checkMenuPermission(
+               {/*  {checkMenuPermission(
                   permissions,
                   'hr-recruitment-1-1',
                   'view',
@@ -468,7 +468,7 @@ const Sidebar = ({ permissions }) => {
                         {t('Tuyển dụng công nhân')}
                       </Link>
                     </Menu.Item>
-                  )}
+                  )} */}
 
 
                 {checkMenuPermission(

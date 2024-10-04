@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Helmet } from 'react-helmet'
-import { Row, Col, Typography, Button, Form, Input, Radio, message, Pagination  } from 'antd'
+import { Row, Col, Typography, Button, Form,Input, Radio, message, Pagination  } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import './static/css/scroll_container.css'
@@ -238,6 +238,7 @@ export default function DetailUserHrAllDataTrue() {
          
         <ol className=" flex items-center gap-2">
           <Button className="bg-white">Export PDF</Button>
+          <Button className="bg-white">Mở Form</Button>
           <Button className="bg-white">Xóa</Button>
           <Button className="bg-white" onClick={toggleEdit}>
             Chỉnh sửa
@@ -248,6 +249,8 @@ export default function DetailUserHrAllDataTrue() {
          
         </ol>
       </nav>
+
+
 
       <Row gutter={16}>
         <Col xs={24} sm={24} md={14}>

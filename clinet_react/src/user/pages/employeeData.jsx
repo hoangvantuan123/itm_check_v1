@@ -148,7 +148,18 @@ export default function EmployeeDataiView({ permissions }) {
   }, {})
 
   const [visibleColumns, setVisibleColumns] = useState(initialVisibleColumns)
-
+  const handleColumnVisibilityChange = (key, isVisible) => {
+    const updatedColumns = { ...visibleColumns, [key]: isVisible };
+    setVisibleColumns(updatedColumns);
+    localStorage.setItem('visibleColumns', JSON.stringify(updatedColumns));
+  };
+  useEffect(() => {
+    const storedColumns = localStorage.getItem('visibleColumns');
+    if (storedColumns) {
+      setVisibleColumns(JSON.parse(storedColumns));
+    }
+  }, []);
+  
   const canCreate = checkActionPermission(
     permissions,
     'hr-recruitment-1-3',
@@ -352,14 +363,9 @@ export default function EmployeeDataiView({ permissions }) {
       <Row gutter={16}>
         {columnConfig.map(({ key, label }) => (
           <Col span={24} key={key} className="mt-3">
-            <Checkbox
+             <Checkbox
               checked={visibleColumns[key]}
-              onChange={(e) =>
-                setVisibleColumns({
-                  ...visibleColumns,
-                  [key]: e.target.checked,
-                })
-              }
+              onChange={(e) => handleColumnVisibilityChange(key, e.target.checked)}
             >
               {t(label)}
             </Checkbox>
@@ -428,6 +434,14 @@ export default function EmployeeDataiView({ permissions }) {
         <h1 className="text-xl font-bold text-gray-900">
           {t('Danh sách dữ liệu')}
         </h1>
+        <Button
+                        type="primary"
+                        icon={<PlusOutlined />}
+                        className=" rounded-lg h-full border-gray-200 bg-indigo-600 hover:bg-none text-white shadow-sm text-sm"
+                        size="large"
+                      >
+                        {t('Thêm')}
+                      </Button>
       </div>
       <div className="p-2 mb flex items-center justify-between">
         <span className="inline-flex overflow-hidden">
