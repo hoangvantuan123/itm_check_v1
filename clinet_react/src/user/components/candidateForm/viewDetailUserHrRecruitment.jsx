@@ -111,9 +111,7 @@ const ViewDetailUserHrRecruitment = ({
 
   return (
     <div>
-      <h1 className="text-xl font-bold text-center mb-4">
-        THÔNG TIN KHAI BÁO
-      </h1>
+      <h1 className="text-xl font-bold text-center mb-4">THÔNG TIN KHAI BÁO</h1>
       <Divider orientation="left italic">Thông tin nhân sự</Divider>
       {isEditing ? (
         <Form

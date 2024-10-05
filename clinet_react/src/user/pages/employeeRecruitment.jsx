@@ -42,9 +42,6 @@ const columnConfig = [
   { key: 'interview_date', label: 'Ngày phỏng vấn' },
   { key: 'form_status', label: 'Form' },
   { key: 'interview_status', label: 'Kết quả' },
-
-
-
 ]
 
 const CloumnIcon = () => {
@@ -172,7 +169,12 @@ export default function EmployeeRecruitment({ permissions }) {
       const [startDate, endDate] = dateRange.map((date) =>
         date ? date.format('YYYY-MM-DD') : null,
       )
-      const response = await GetFilterHrInterviewCandidatePageLimit(page, limit, startDate, endDate)
+      const response = await GetFilterHrInterviewCandidatePageLimit(
+        page,
+        limit,
+        startDate,
+        endDate,
+      )
 
       if (response.success) {
         setData(response.data.data)
@@ -280,10 +282,14 @@ export default function EmployeeRecruitment({ permissions }) {
       key: key,
       render: (text, record) => {
         if (key === 'form_status') {
-          return visibleColumns[key] ? <CustomTagForm status={record.form_status} /> : null
+          return visibleColumns[key] ? (
+            <CustomTagForm status={record.form_status} />
+          ) : null
         }
         if (key === 'interview_status') {
-          return visibleColumns[key] ? <CustomTagResult status={record.interview_status} /> : null
+          return visibleColumns[key] ? (
+            <CustomTagResult status={record.interview_status} />
+          ) : null
         }
         if (key === 'create_date') {
           return visibleColumns[key]
@@ -376,7 +382,7 @@ export default function EmployeeRecruitment({ permissions }) {
           handleTableChange({ current: page, pageSize }),
       }}
       loading={loading}
-    /* scroll={{
+      /* scroll={{
       x: 'calc(100px + 100%)',
       y: 650,
     }} */
@@ -408,7 +414,14 @@ export default function EmployeeRecruitment({ permissions }) {
               <Option value="2">{t('Grid')}</Option>
               <Option value="3">{t('List')}</Option>
             </Select>
-            {canCreate && <ImportAction fetchData={fetchData} handleOnClickActionImport={handleOnClickActionImport} setActionImport={setActionImport} actionImport={actionImport} />}
+            {canCreate && (
+              <ImportAction
+                fetchData={fetchData}
+                handleOnClickActionImport={handleOnClickActionImport}
+                setActionImport={setActionImport}
+                actionImport={actionImport}
+              />
+            )}
             <RangePicker
               value={dateRange}
               onChange={setDateRange}

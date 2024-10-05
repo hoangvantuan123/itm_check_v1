@@ -54,12 +54,11 @@ const OfficeSkillsTable = ({ form, formData }) => {
     })
   }, [officeSkills, softwareSkills, form])
 
-
   const handleSkillsChange = (key, value, isOfficeSkill = true) => {
     const updatedSkills = (isOfficeSkill ? officeSkills : softwareSkills).map(
       (skill) => {
         if (skill.key === key) {
-          return { ...skill, level: value } 
+          return { ...skill, level: value }
         }
         return skill
       },
@@ -67,7 +66,7 @@ const OfficeSkillsTable = ({ form, formData }) => {
 
     if (isOfficeSkill) {
       setOfficeSkills(updatedSkills)
-      formData.officeSkillsData.officeSkills = updatedSkills 
+      formData.officeSkillsData.officeSkills = updatedSkills
     } else {
       setSoftwareSkills(updatedSkills)
       formData.officeSkillsData.softwareSkills = updatedSkills
@@ -126,7 +125,7 @@ const OfficeSkillsTable = ({ form, formData }) => {
           rowKey="key"
           scroll={{ x: true }}
           bordered
-            size="small"
+          size="small"
         />
       </Form.Item>
 

@@ -1,6 +1,6 @@
 export class HrInterviewCandidateDTO {
     full_name: string;
-    gender: 'Male' | 'Female' | 'Other';
+    gender: string;
     phone_number: string;
     current_residence?: string;
     birth_year?: number;

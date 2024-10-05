@@ -6,7 +6,6 @@ export const GetTableName = async (name) => {
   try {
     const token = accessToken()
     const response = await axios.get(`${HOST_API_SERVER_P}/table/${name}`, {
-     
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',

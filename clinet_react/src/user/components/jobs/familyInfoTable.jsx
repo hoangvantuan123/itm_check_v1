@@ -1,10 +1,20 @@
-import { useState, useEffect } from 'react';
-import { Form, Table, Input, Button, Checkbox, InputNumber, Drawer, Card, Col, Row } from 'antd';
+import { useState, useEffect } from 'react'
+import {
+  Form,
+  Table,
+  Input,
+  Button,
+  Checkbox,
+  InputNumber,
+  Drawer,
+  Card,
+  Col,
+  Row,
+} from 'antd'
 
-const FamilyInfoTable = ({isMobile,familyMembers, setFamilyMembers}) => {
- 
-  const [visible, setVisible] = useState(false);
-  const [selectedMember, setSelectedMember] = useState(null);
+const FamilyInfoTable = ({ isMobile, familyMembers, setFamilyMembers }) => {
+  const [visible, setVisible] = useState(false)
+  const [selectedMember, setSelectedMember] = useState(null)
   const [newMember, setNewMember] = useState({
     relationship: 'Anh/Em/Con',
     name_family: '',
@@ -13,14 +23,12 @@ const FamilyInfoTable = ({isMobile,familyMembers, setFamilyMembers}) => {
     job: '',
     phoneNumber: '',
     livingTogether: false,
-  });
-
-  
+  })
 
   const showDrawer = (member = null) => {
-    setSelectedMember(member);
+    setSelectedMember(member)
     if (member) {
-      setNewMember(member); // Thiết lập thông tin thành viên đang chỉnh sửa
+      setNewMember(member) // Thiết lập thông tin thành viên đang chỉnh sửa
     } else {
       setNewMember({
         relationship: 'Anh/Em/Con',
@@ -30,37 +38,34 @@ const FamilyInfoTable = ({isMobile,familyMembers, setFamilyMembers}) => {
         job: '',
         phoneNumber: '',
         livingTogether: false,
-      });
+      })
     }
-    setVisible(true);
-  };
+    setVisible(true)
+  }
 
   const onClose = () => {
-    setVisible(false);
-  };
+    setVisible(false)
+  }
 
   const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, type, checked } = e.target
     setNewMember((prev) => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
-    }));
-  };
+    }))
+  }
 
   const handleAddOrUpdateMember = () => {
     if (selectedMember) {
       // Cập nhật thông tin thành viên đã chọn
       setFamilyMembers((prev) =>
         prev.map((member) =>
-          member.key === selectedMember.key ? { ...newMember } : member
-        )
-      );
+          member.key === selectedMember.key ? { ...newMember } : member,
+        ),
+      )
     } else {
       // Thêm thông tin thành viên mới
-      setFamilyMembers((prev) => [
-        ...prev,
-        { key: prev.length, ...newMember },
-      ]);
+      setFamilyMembers((prev) => [...prev, { key: prev.length, ...newMember }])
     }
     setNewMember({
       relationship: 'Anh/Em/Con',
@@ -70,20 +75,41 @@ const FamilyInfoTable = ({isMobile,familyMembers, setFamilyMembers}) => {
       job: '',
       phoneNumber: '',
       livingTogether: false,
-    });
-    onClose();
-  };
+    })
+    onClose()
+  }
 
   const renderCard = (member) => (
-    <Card key={member.key} title={member.relationship} style={{ marginBottom: '16px' }} onClick={() => showDrawer(member)}>
-      <p><strong>Họ tên:</strong> {member.name_family}</p>
-      <p><strong>Năm sinh:</strong> {member.birthYear}</p>
-      <p><strong>Nơi làm việc:</strong> {member.workplace}</p>
-      <p><strong>Công việc:</strong> {member.job}</p>
-      <p><strong>Số điện thoại:</strong> {member.phoneNumber}</p>
-      <p><strong>Sống chung:</strong> <Checkbox checked={member.livingTogether} disabled > Đang sống chung </Checkbox></p>
+    <Card
+      key={member.key}
+      title={member.relationship}
+      style={{ marginBottom: '16px' }}
+      onClick={() => showDrawer(member)}
+    >
+      <p>
+        <strong>Họ tên:</strong> {member.name_family}
+      </p>
+      <p>
+        <strong>Năm sinh:</strong> {member.birthYear}
+      </p>
+      <p>
+        <strong>Nơi làm việc:</strong> {member.workplace}
+      </p>
+      <p>
+        <strong>Công việc:</strong> {member.job}
+      </p>
+      <p>
+        <strong>Số điện thoại:</strong> {member.phoneNumber}
+      </p>
+      <p>
+        <strong>Sống chung:</strong>{' '}
+        <Checkbox checked={member.livingTogether} disabled>
+          {' '}
+          Đang sống chung{' '}
+        </Checkbox>
+      </p>
     </Card>
-  );
+  )
 
   const columns = [
     {
@@ -121,12 +147,12 @@ const FamilyInfoTable = ({isMobile,familyMembers, setFamilyMembers}) => {
       dataIndex: 'livingTogether',
       render: (text) => <Checkbox checked={text} disabled />,
     },
-  ];
+  ]
 
   // Hàm xử lý sự kiện click vào hàng trong bảng
   const handleRowClick = (record) => {
-    showDrawer(record);
-  };
+    showDrawer(record)
+  }
 
   return (
     <>
@@ -151,11 +177,7 @@ const FamilyInfoTable = ({isMobile,familyMembers, setFamilyMembers}) => {
       )}
 
       {/* Render Cards cho Mobile */}
-      {isMobile && (
-          <div>
-          {familyMembers.map(renderCard)}
-          </div>
-      )}
+      {isMobile && <div>{familyMembers.map(renderCard)}</div>}
 
       <Button
         onClick={() => showDrawer()}
@@ -190,7 +212,7 @@ const FamilyInfoTable = ({isMobile,familyMembers, setFamilyMembers}) => {
               className="ml-2 border-gray-200 bg-indigo-600 text-white shadow-sm text-sm"
               onClick={handleAddOrUpdateMember}
             >
-              {selectedMember ? "Cập nhật" : "Thêm"}
+              {selectedMember ? 'Cập nhật' : 'Thêm'}
             </Button>
           </div>
         }
@@ -244,15 +266,15 @@ const FamilyInfoTable = ({isMobile,familyMembers, setFamilyMembers}) => {
             <Checkbox
               name="livingTogether"
               checked={newMember.livingTogether}
-              onChange={handleInputChange}>
-              Đang sống chung</Checkbox>
-
+              onChange={handleInputChange}
+            >
+              Đang sống chung
+            </Checkbox>
           </Form.Item>
-
         </Form>
-      </Drawer >
+      </Drawer>
     </>
-  );
-};
+  )
+}
 
-export default FamilyInfoTable;
+export default FamilyInfoTable

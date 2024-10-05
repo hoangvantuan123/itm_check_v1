@@ -58,7 +58,6 @@ const UserRouter = () => {
   const [error, setError] = useState(null)
   const [showSpinner, setShowSpinner] = useState(false)
   const skippedRoutes = [
-    '/public/apply/recruitment/phone',
     '/public/apply/form/1',
     '/public/apply/information/phone',
     '/public/apply/form/2',
@@ -79,7 +78,10 @@ const UserRouter = () => {
   }
 
   useEffect(() => {
-    if (!skippedRoutes.includes(location.pathname)  && !location.pathname.startsWith('/public/')) {
+    if (
+      !skippedRoutes.includes(location.pathname) &&
+      !location.pathname.startsWith('/public/')
+    ) {
       checkLoginStatus()
     }
   }, [location.pathname])
@@ -118,10 +120,10 @@ const UserRouter = () => {
     <Routes>
       {/* Các route không yêu cầu đăng nhập */}
 
-      <Route
+      {/*   <Route
         path="/public/apply/recruitment/phone"
         element={<PassFormPage />}
-      />
+      /> */}
 
       <Route
         path="/public/apply/information/phone"
@@ -129,7 +131,10 @@ const UserRouter = () => {
       />
 
       <Route path="/public/apply/form/1" element={<MultiStepFormPage />} />
-      <Route path="/public/apply/form/1/:router" element={<MultiStepFormPage />} />
+      <Route
+        path="/public/apply/form/1/:router"
+        element={<MultiStepFormPage />}
+      />
       <Route
         path="/public/apply/form/2/:router"
         element={<WorkerDeclarationMultiStepForm />}
@@ -362,7 +367,7 @@ const UserRouter = () => {
                           'hr-recruitment-1-3',
                           'view',
                         ) ? (
-                          <DetailUserHrAllDataTrue/>
+                          <DetailUserHrAllDataTrue />
                         ) : (
                           <Unauthorized />
                         )
@@ -382,7 +387,7 @@ const UserRouter = () => {
                         )
                       }
                     />
-                    
+
                     <Route
                       path="/u/action=20/data-employee"
                       element={
@@ -397,8 +402,6 @@ const UserRouter = () => {
                         )
                       }
                     />
-
-
                   </Routes>
                 </Content>
               </Layout>

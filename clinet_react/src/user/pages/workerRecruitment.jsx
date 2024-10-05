@@ -370,7 +370,7 @@ export default function WorkerRecruitmentPage({ permissions }) {
           handleTableChange({ current: page, pageSize }),
       }}
       loading={loading}
-    /* scroll={{
+      /* scroll={{
       x: 'calc(100px + 100%)',
       y: 650,
     }} */
@@ -402,7 +402,14 @@ export default function WorkerRecruitmentPage({ permissions }) {
               <Option value="2">{t('Grid')}</Option>
               <Option value="3">{t('List')}</Option>
             </Select>
-            {canCreate && <ImportAction  fetchData={fetchData} handleOnClickActionImport={handleOnClickActionImport} setActionImport={setActionImport} actionImport={actionImport}/>}
+            {canCreate && (
+              <ImportAction
+                fetchData={fetchData}
+                handleOnClickActionImport={handleOnClickActionImport}
+                setActionImport={setActionImport}
+                actionImport={actionImport}
+              />
+            )}
             <RangePicker
               value={dateRange}
               onChange={setDateRange}

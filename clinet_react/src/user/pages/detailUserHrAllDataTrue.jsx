@@ -1,6 +1,17 @@
 import { useState, useEffect } from 'react'
 import { Helmet } from 'react-helmet'
-import { Row, Col, Typography, Button, Form,Input, Radio, message, Pagination  } from 'antd'
+import {
+  Row,
+  Col,
+  Typography,
+  Button,
+  Form,
+  Input,
+  Radio,
+  message,
+  Pagination,
+  Select,
+} from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import './static/css/scroll_container.css'
@@ -13,8 +24,6 @@ import { PutUserInterview } from '../../features/hrRecruitment/putUserInterview'
 const { Text } = Typography
 
 export default function DetailUserHrAllDataTrue() {
-
-
   const { t } = useTranslation()
   const { id } = useParams()
   const navigate = useNavigate()
@@ -23,10 +32,11 @@ export default function DetailUserHrAllDataTrue() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [interviewData, setInterviewData] = useState({})
+  console.log("interviewData", interviewData)
   const [form] = Form.useForm()
   const [formInterview] = Form.useForm()
-  const [currentPage, setCurrentPage] = useState(1);
-  
+  const [formMore] = Form.useForm()
+
   const fetchDataUserId = async () => {
     setLoading(true)
     try {
@@ -65,17 +75,8 @@ export default function DetailUserHrAllDataTrue() {
     }
   }, [id])
 
-
-
   const handleNavigateToBack = () => {
     navigate(`/u/action=20/data-employee`)
-  }
-
-  const handleFormChange = (changedValues) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      ...changedValues,
-    }))
   }
 
   const toggleEdit = () => {
@@ -103,6 +104,7 @@ export default function DetailUserHrAllDataTrue() {
       ...changedValues,
     }))
   }
+
 
   const handleSubmit = async (values) => {
     try {
@@ -137,11 +139,23 @@ export default function DetailUserHrAllDataTrue() {
       current_province: finalData?.current_province,
       current_district: finalData?.current_district,
       current_ward: finalData?.current_ward,
-      type_personnel: true,
       supplier_details: finalData?.supplierDetails,
       candidate_type: finalData?.candidateType,
-      status_form: true,
-      
+
+      /*  */
+      /*   fac: finalData?.fac,
+        department: finalData?.department,
+        team: finalData?.team,
+        jop_position: finalData?.jop_position,
+        type_personnel: finalData?.type_personnel,
+        contract_term: finalData?.contract_term,
+        type_classify: finalData?.type_classify,
+        line_model: finalData?.line_model,
+        part: finalData?.part,
+        type_of_degree: finalData?.type_of_degree,
+        type_of_degree: finalData?.type_of_degree,
+        employee_code: finalData?.employee_code, */
+
       families:
         finalData?.families?.map((family) => ({
           id: family.key,
@@ -188,8 +202,8 @@ export default function DetailUserHrAllDataTrue() {
             description: experience.description,
           }),
         ) || [],
-        projects: [],
-        office_skills: []
+      projects: [],
+      office_skills: [],
     }
 
     return filterEmptyFields(result)
@@ -197,7 +211,6 @@ export default function DetailUserHrAllDataTrue() {
 
   const handleFinish = async (values) => {
     const submissionData = formatSubmissionData(values)
-
     try {
       const response = await PutHrInfoId(id, submissionData)
       if (response.success) {
@@ -209,16 +222,15 @@ export default function DetailUserHrAllDataTrue() {
       message.error('Đã xảy ra lỗi trong quá trình cập nhật.')
     }
   }
+  const handleFinishFormMore = async (values) => {
+    console.log('values', values)
+  }
   const handleSave = () => {
     form.submit()
     formInterview.submit()
+    formMore.submit()
   }
 
-
- 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
   return (
     <div className="w-full h-screen bg-gray-50 p-3">
       <Helmet>
@@ -229,13 +241,31 @@ export default function DetailUserHrAllDataTrue() {
         aria-label="Breadcrumb"
         className="flex justify-between items-center mb-6"
       >
-        
-        <ol className="flex items-center gap-4 text-sm text-gray-700">
+        <ol className="flex items-center gap-1 text-sm text-gray-700">
           <li onClick={handleNavigateToBack} className="cursor-pointer">
-            <span className=" text-black opacity-80">Trở lại</span>
+            <span className=" text-black hover:text-indigo-950 opacity-80">
+              Trở lại
+            </span>
+          </li>
+          <li className="rtl:rotate-180">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="size-4"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </li>
+          <li className="cursor-pointer">
+            <span className=" text-black opacity-80">#{id}</span>
           </li>
         </ol>
-         
+
         <ol className=" flex items-center gap-2">
           <Button className="bg-white">Export PDF</Button>
           <Button className="bg-white">Mở Form</Button>
@@ -246,11 +276,8 @@ export default function DetailUserHrAllDataTrue() {
           <Button className="bg-white" onClick={handleSave}>
             Lưu
           </Button>
-         
         </ol>
       </nav>
-
-
 
       <Row gutter={16}>
         <Col xs={24} sm={24} md={14}>
@@ -268,91 +295,333 @@ export default function DetailUserHrAllDataTrue() {
         </Col>
 
         <Col xs={24} sm={24} md={10}>
-          <div className="border bg-white rounded-lg p-6 mb-3 h-screen overflow-auto scroll-container cursor-pointer">
-            <h1 className="text-xl font-bold text-center mb-4">
-              Kết quả phỏng vấn
-            </h1>
-            <Form
-              form={formInterview}
-              layout="vertical"
-              initialValues={interviewData}
-              onFinish={handleSubmit}
-              onValuesChange={handleFormInterViewChange}
+          <div className="divide-y h-screen overflow-auto border  scroll-container cursor-pointer pb-20 divide-gray-100 rounded-xl   bg-white">
+            <details
+              className="group p-3 [&_summary::-webkit-details-marker]:hidden"
+              open
             >
-              <Row gutter={16}>
-                <Col span={24}>
-                  <h3 className="font-semibold">Kết quả phỏng vấn</h3>
-                  <Form.Item name="interview_result">
-                    <Radio.Group>
-                      <Radio value={true}>ĐẠT</Radio>
-                      <Radio value={false}>KHÔNG ĐẠT</Radio>
-                    </Radio.Group>
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row gutter={16}>
-                <Col span={12}>
-                  <Form.Item
-                    label="Bộ phận ứng tuyển"
-                    name="recruitment_department"
+              <summary className="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
+                <h2 className="text-base font-medium">Kết quả phỏng vấn</h2>
+
+                <span className="relative size-5 shrink-0">
+                  <svg
+                    className="size-5 shrink-0 transition duration-300 group-open:-rotate-180"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                   >
-                    <Input size="large" placeholder="Bộ phận ứng tuyển" />
-                  </Form.Item>
-                </Col>
-                <Col span={12}>
-                  <Form.Item label="Chức vụ" name="position">
-                    <Input size="large" placeholder="Chức vụ" />
-                  </Form.Item>
-                </Col>
-                <Col span={24}>
-                  <Form.Item
-                    label="Tên người phỏng vấn"
-                    name="interviewer_name"
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </span>
+              </summary>
+              <div className=" ">
+                {isEditing ? (
+                  <>
+                    {' '}
+                    <Form
+                      form={formInterview}
+                      layout="vertical"
+                      initialValues={interviewData}
+                      onFinish={handleSubmit}
+                      onValuesChange={handleFormInterViewChange}
+                    >
+                      <Row gutter={16}>
+                        <Col span={24}>
+                          <Form.Item name="interview_result">
+                            <Radio.Group>
+                              <Radio value={true}>ĐẠT</Radio>
+                              <Radio value={false}>KHÔNG ĐẠT</Radio>
+                            </Radio.Group>
+                          </Form.Item>
+                        </Col>
+                      </Row>
+                      <Row gutter={16}>
+                        <Col span={12}>
+                          <Form.Item
+                            label="Bộ phận ứng tuyển"
+                            name="recruitment_department"
+                          >
+                            <Input
+                              size="large"
+                              placeholder="Bộ phận ứng tuyển"
+                            />
+                          </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                          <Form.Item label="Chức vụ" name="position">
+                            <Input size="large" placeholder="Chức vụ" />
+                          </Form.Item>
+                        </Col>
+                        <Col span={24}>
+                          <Form.Item
+                            label="Tên người phỏng vấn"
+                            name="interviewer_name"
+                          >
+                            <Input
+                              size="large"
+                              placeholder="Tên người phỏng vấn"
+                            />
+                          </Form.Item>
+                        </Col>
+                      </Row>
+                      <h3 className="font-semibold">Tiêu chuẩn lao động</h3>
+                      <Row gutter={16}>
+                        <Col span={16}>
+                          <Form.Item
+                            label="Ngoại hình"
+                            name="appearance_criteria"
+                          >
+                            <Input size="large" />
+                          </Form.Item>
+                        </Col>
+                        <Col span={8}>
+                          <Form.Item label="Chiều cao" name="height">
+                            <Input size="large" />
+                          </Form.Item>
+                        </Col>
+                        <Col span={24}>
+                          <Form.Item label="Tiền án" name="criminal_record">
+                            <Input size="large" />
+                          </Form.Item>
+                        </Col>
+                      </Row>
+                      <h3 className="font-semibold">Học vấn</h3>
+                      <Row gutter={16}>
+                        <Col span={16}>
+                          <Form.Item label="Trình độ" name="education_level">
+                            <Input size="large" />
+                          </Form.Item>
+                        </Col>
+                        <Col span={8}>
+                          <Form.Item
+                            label="Biết đọc, biết viết"
+                            name="reading_writing"
+                          >
+                            <Input size="large" />
+                          </Form.Item>
+                        </Col>
+                        <Col span={24}>
+                          <Form.Item
+                            label="Khả năng tính toán"
+                            name="calculation_ability"
+                          >
+                            <Input size="large" />
+                          </Form.Item>
+                        </Col>
+                      </Row>
+                    </Form>
+                  </>
+                ) : (
+                  <>
+
+                    {/*  <Row gutter={16}>
+                      <Col span={16}>
+                        <div>
+                          <strong>Họ tên ứng viên:</strong>
+                          <Text className="ml-2">{interviewData.height}</Text>
+                        </div>
+                      </Col>
+                     
+                    </Row> */}
+
+
+                    <Row gutter={16}>
+                      <Col span={24}>
+                        <Radio.Group value={interviewData.interview_result}>
+                          <Radio value={true}>ĐẠT</Radio>
+                          <Radio value={false}>KHÔNG ĐẠT</Radio>
+                        </Radio.Group>
+                      </Col>
+                    </Row>
+                    <Row gutter={16}>
+                      <Col span={12}>
+                        <div className="mt-2">
+                          <strong>Bộ phận ứng tuyển</strong>
+                          <Text className="ml-2">{interviewData.recruitment_department}</Text>
+                        </div>
+
+                      </Col>
+                      <Col span={12}>
+                        <div className="mt-2">
+                          <strong>Chức vụ</strong>
+                          <Text className="ml-2">{interviewData.position}</Text>
+                        </div>
+
+                      </Col>
+                      <Col span={24}>
+                        <div className="mt-2">
+                          <strong>Tên người phỏng vấn</strong>
+                          <Text className="ml-2">{interviewData.interviewer_name}</Text>
+                        </div>
+                      </Col>
+                    </Row>
+                    <h3 className="font-semibold">Tiêu chuẩn lao động</h3>
+                    <Row gutter={16}>
+                      <Col span={16}>
+                        <div className="mt-2">
+                          <strong>Ngoại hình</strong>
+                          <Text className="ml-2">{interviewData.appearance_criteria}</Text>
+                        </div>
+
+                      </Col>
+                      <Col span={8}>
+                        <div className="mt-2">
+                          <strong>Chiều cao</strong>
+                          <Text className="ml-2">{interviewData.height}</Text>
+                        </div>
+
+                      </Col>
+                      <Col span={24}>
+                        <div className="mt-2">
+                          <strong>Tiền án</strong>
+                          <Text className="ml-2">{interviewData.criminal_record}</Text>
+                        </div>
+
+                      </Col>
+                    </Row>
+                    <h3 className="font-semibold">Học vấn</h3>
+                    <Row gutter={16}>
+                      <Col span={16}>
+                        <div className="mt-2">
+                          <strong>Trình độ</strong>
+                          <Text className="ml-2">{interviewData.education_level}</Text>
+                        </div>
+
+                      </Col>
+                      <Col span={8}>
+                        <div className="mt-2">
+                          <strong>Biết đọc, biết viết</strong>
+                          <Text className="ml-2">{interviewData.reading_writing}</Text>
+                        </div>
+
+                      </Col>
+                      <Col span={24}>
+                        <div className="mt-2">
+                          <strong>Khả năng tính toán</strong>
+                          <Text className="ml-2">{interviewData.calculation_ability}</Text>
+                        </div>
+                      
+                      </Col>
+                    </Row>
+
+                  </>
+                )}
+              </div>
+            </details>
+
+            <details
+              className="group p-3 [&_summary::-webkit-details-marker]:hidden"
+              open
+            >
+              <summary className="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
+                <h2 className="text-base font-medium">Thông tin khác</h2>
+
+                <span className="relative size-5 shrink-0">
+                  <svg
+                    className="size-5 shrink-0 transition duration-300 group-open:-rotate-180"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                   >
-                    <Input size="large" placeholder="Tên người phỏng vấn" />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <h3 className="font-semibold">Tiêu chuẩn lao động</h3>
-              <Row gutter={16}>
-                <Col span={16}>
-                  <Form.Item label="Ngoại hình" name="appearance_criteria">
-                    <Input size="large" />
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item label="Chiều cao" name="height">
-                    <Input size="large" />
-                  </Form.Item>
-                </Col>
-                <Col span={24}>
-                  <Form.Item label="Tiền án" name="criminal_record">
-                    <Input size="large" />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <h3 className="font-semibold">Học vấn</h3>
-              <Row gutter={16}>
-                <Col span={16}>
-                  <Form.Item label="Trình độ" name="education_level">
-                    <Input size="large" />
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item label="Biết đọc, biết viết" name="reading_writing">
-                    <Input size="large" />
-                  </Form.Item>
-                </Col>
-                <Col span={24}>
-                  <Form.Item
-                    label="Khả năng tính toán"
-                    name="calculation_ability"
-                  >
-                    <Input size="large" />
-                  </Form.Item>
-                </Col>
-              </Row>
-            </Form>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </span>
+              </summary>
+              <div className="">
+                {isEditing ? (
+                  <>
+                    {' '}
+                    <Form
+                      layout="vertical"
+                      form={formMore}
+                      onFinish={handleFinishFormMore}
+                      initialValues={formData}
+                    >
+                      <Row gutter={16}>
+                        <Col span={12}>
+                          <Form.Item label="Nhà máy" name="fac">
+                            <Input size="large" placeholder="Nhà máy" />
+                          </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                          <Form.Item label="Phòng ban" name="department">
+                            <Input size="large" placeholder="Department" />
+                          </Form.Item>
+                        </Col>
+                        <Col span={24}>
+                          <Form.Item label="Team" name="team">
+                            <Input size="large" placeholder="Team" />
+                          </Form.Item>
+                        </Col>
+                      </Row>
+                      <Row gutter={16}>
+                        <Col span={16}>
+                          <Form.Item label="Chức vụ" name="jop_position">
+                            <Input size="large" placeholder="Chức vụ" />
+                          </Form.Item>
+                        </Col>
+                        <Col span={8}>
+                          <Form.Item
+                            label="Loại nhân viên"
+                            name="type_personnel"
+                          >
+                            <Select size="large">
+                              <Select.Option value={false}>
+                                Nhân viên
+                              </Select.Option>
+                              <Select.Option value={true}>
+                                Công nhân
+                              </Select.Option>
+                            </Select>
+                          </Form.Item>
+                        </Col>
+
+                        <Col span={24}>
+                          <Form.Item label="Loại hợp đồng" name="contract_term">
+                            <Input
+                              size="large"
+                              placeholder="Thời hạn hợp đồng"
+                            />
+                          </Form.Item>
+                        </Col>
+                      </Row>
+                      <Row gutter={16}>
+                        <Col span={8}>
+                          <Form.Item label="Phân loại" name="type_classify">
+                            <Input size="large" placeholder="Phân loại" />
+                          </Form.Item>
+                        </Col>
+                        <Col span={8}>
+                          <Form.Item label="Line/Model" name="line_model">
+                            <Input size="large" placeholder="Line/Model" />
+                          </Form.Item>
+                        </Col>
+
+                        <Col span={8}>
+                          <Form.Item label="Part" name="part">
+                            <Input size="large" placeholder="Part" />
+                          </Form.Item>
+                        </Col>
+                      </Row>
+                    </Form>{' '}
+                  </>
+                ) : (
+                  <></>
+                )}
+              </div>
+            </details>
           </div>
         </Col>
       </Row>

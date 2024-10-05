@@ -6,7 +6,7 @@ const CustomTagForm = ({ status }) => {
   let text
 
   switch (status) {
-    case "Submitted":
+    case 'Submitted':
       color = 'green'
       text = 'Submitted'
       break

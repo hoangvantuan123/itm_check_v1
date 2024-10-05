@@ -1,20 +1,24 @@
-import axios from 'axios';
-import { accessToken } from '../../services/tokenService';
-import { HOST_API_PUBLIC_HR } from '../../services';
+import axios from 'axios'
+import { accessToken } from '../../services/tokenService'
+import { HOST_API_PUBLIC_HR } from '../../services'
 
 export const PostSyncData = async (ids) => {
   try {
-    const token = accessToken(); // Lấy token từ dịch vụ
+    const token = accessToken() // Lấy token từ dịch vụ
 
     // Gọi API để đồng bộ hóa dữ liệu
-    const response = await axios.post(`${HOST_API_PUBLIC_HR}hr-all-data/synchronize`, {
-      ids
-    }, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
+    const response = await axios.post(
+      `${HOST_API_PUBLIC_HR}hr-all-data/synchronize`,
+      {
+        ids,
       },
-    });
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      },
+    )
 
     // Kiểm tra mã trạng thái phản hồi
     if (response.status === 200 || response.status === 201) {
@@ -22,12 +26,12 @@ export const PostSyncData = async (ids) => {
         success: true,
         message: response.data.message || 'Operation successful',
         data: response.data,
-      };
+      }
     } else {
       return {
         success: false,
         message: `Unexpected status code: ${response.status}`,
-      };
+      }
     }
   } catch (error) {
     // Xử lý lỗi
@@ -36,6 +40,6 @@ export const PostSyncData = async (ids) => {
       message: error.response
         ? error.response.data.message || 'Có lỗi xảy ra'
         : 'Không thể kết nối tới server',
-    };
+    }
   }
-};
+}

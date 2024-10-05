@@ -1,6 +1,15 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Form, Input, Button, Typography, Dropdown, Menu, Spin,message } from 'antd'
+import {
+  Form,
+  Input,
+  Button,
+  Typography,
+  Dropdown,
+  Menu,
+  Spin,
+  message,
+} from 'antd'
 import Logo from '../../assets/f_logo.png'
 import { GetFindByPhone } from '../../features/hrInterviewCandidate/getFindByPhone'
 const { Title, Text } = Typography
@@ -14,21 +23,20 @@ const PassFormPage = () => {
   const { t } = useTranslation()
   const handleSubmit = async (values) => {
     try {
-      const response = await GetFindByPhone(values.phoneNumber);
-      console.log("response" ,response)
+      const response = await GetFindByPhone(values.phoneNumber)
+      console.log('response', response)
       if (response.success) {
-        const data = response.data.data;
-        setDaa(data);
-        const routerPath = `/public/apply/form/1/${data.router}`;
+        const data = response.data.data
+        setDaa(data)
+        const routerPath = `/public/apply/form/1/${data.router}`
         navigate(`${routerPath}`)
       } else {
-        message.error("Vui lòng thử lại sau.");
+        message.error('Vui lòng thử lại sau.')
       }
     } catch (error) {
-      message.error('Vui lòng thử lại sau.');
+      message.error('Vui lòng thử lại sau.')
     }
-  };
-
+  }
 
   const handleMenuClick = (e) => {
     setLanguage(e.key)

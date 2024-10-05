@@ -11,7 +11,6 @@ export const GetFilterHrInterviewCandidatePageLimit = async (
   try {
     const token = accessToken()
 
-
     const response = await axios.get(
       `${HOST_API_PUBLIC_HR}hr-interview-candidates`,
       {

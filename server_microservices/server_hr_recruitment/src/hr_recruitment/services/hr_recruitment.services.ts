@@ -259,80 +259,103 @@ export class HrRecruitmentServices {
         return { success: false, message: 'Personnel not found' };
       }
 
-      return await this.personnelRepository.manager.transaction(
-        async (entityManager: EntityManager) => {
-          const { families = [], educations = [], languages = [], experiences = [], projects = [], office_skills = [], ...personnelData } = updatePersonnelWithDetailsDto;
+      return await this.personnelRepository.manager.transaction(async (entityManager: EntityManager) => {
+        const {
+          families = [],
+          educations = [],
+          languages = [],
+          experiences = [],
+          projects = [],
+          office_skills = [],
+          ...personnelData
+        } = updatePersonnelWithDetailsDto;
 
-          await entityManager.update(Personnel, { id }, personnelData);
+        // Update Personnel entity
+        await entityManager.update(Personnel, { id }, personnelData);
 
-          for (const family of families) {
+        // Update Families
+        await Promise.all(
+          families.map(async (family) => {
             if (family.id) {
               await entityManager.update(Family, { id: family.id }, family);
             } else {
               const newFamily = entityManager.create(Family, { ...family, personnel: existingPersonnel });
               await entityManager.save(Family, newFamily);
             }
-          }
+          }),
+        );
 
-          // 2. Update Educations
-          for (const education of educations) {
+        // Update Educations
+        await Promise.all(
+          educations.map(async (education) => {
             if (education.id) {
               await entityManager.update(Education, { id: education.id }, education);
             } else {
               const newEducation = entityManager.create(Education, { ...education, personnel: existingPersonnel });
               await entityManager.save(Education, newEducation);
             }
-          }
+          }),
+        );
 
-          // 3. Update Languages
-          for (const language of languages) {
+        // Update Languages
+        await Promise.all(
+          languages.map(async (language) => {
             if (language.id) {
               await entityManager.update(Language, { id: language.id }, language);
             } else {
               const newLanguage = entityManager.create(Language, { ...language, personnel: existingPersonnel });
               await entityManager.save(Language, newLanguage);
             }
-          }
+          }),
+        );
 
-          // 4. Update Experiences
-          for (const experience of experiences) {
+        // Update Experiences
+        await Promise.all(
+          experiences.map(async (experience) => {
             if (experience.id) {
               await entityManager.update(Experience, { id: experience.id }, experience);
             } else {
               const newExperience = entityManager.create(Experience, { ...experience, personnel: existingPersonnel });
               await entityManager.save(Experience, newExperience);
             }
-          }
-          // 4. Update Experiences
-          for (const office_skill of office_skills) {
+          }),
+        );
+
+        // Update OfficeSkills
+        await Promise.all(
+          office_skills.map(async (office_skill) => {
             if (office_skill.id) {
               await entityManager.update(OfficeSkills, { id: office_skill.id }, office_skill);
             } else {
               const newOfficeSkills = entityManager.create(OfficeSkills, { ...office_skill, personnel: existingPersonnel });
               await entityManager.save(OfficeSkills, newOfficeSkills);
             }
-          }
-          for (const project of projects) {
+          }),
+        );
+
+        // Update Projects
+        await Promise.all(
+          projects.map(async (project) => {
             if (project.id) {
               await entityManager.update(Projects, { id: project.id }, project);
             } else {
               const newProjects = entityManager.create(Projects, { ...project, personnel: existingPersonnel });
               await entityManager.save(Projects, newProjects);
             }
-          }
+          }),
+        );
 
-          const updatedPersonnel = await entityManager.findOne(Personnel, {
-            where: { id },
-            relations: ['families', 'educations', 'languages', 'experiences', 'projects', 'office_skills'],
-          });
+        const updatedPersonnel = await entityManager.findOne(Personnel, {
+          where: { id },
+          relations: ['families', 'educations', 'languages', 'experiences', 'projects', 'office_skills'],
+        });
 
-          return {
-            success: true,
-            message: 'Personnel and related details updated successfully',
-            data: updatedPersonnel,
-          };
-        },
-      );
+        return {
+          success: true,
+          message: 'Personnel and related details updated successfully',
+          data: updatedPersonnel,
+        };
+      });
     } catch (error) {
       this.logger.error(`Error updating personnel with id ${id}`, error.stack);
       return {
@@ -341,6 +364,7 @@ export class HrRecruitmentServices {
       };
     }
   }
+
 
   async delete(ids: number[]): Promise<{ success: boolean; message: string }> {
     try {
@@ -464,6 +488,26 @@ export class HrRecruitmentServices {
         current_province: personnel.current_province,
         current_district: personnel.current_district,
         current_ward: personnel.current_ward,
+        type_personnel: personnel.type_personnel,
+        introducer_department: personnel.introducer_department,
+        introducer_introducer_name: personnel.introducer_introducer_name,
+        introducer_phone_number: personnel.introducer_phone_number,
+        candidate_type: personnel.candidate_type,
+        supplier_details: personnel.supplier_details,
+        synchronize: personnel.synchronize,
+        fac: personnel.fac,
+        department: personnel.department,
+        team: personnel.team,
+        jop_position: personnel.jop_position,
+        type_of_degree: personnel.type_of_degree,
+        type_classify: personnel.type_classify,
+        employee_code: personnel.employee_code,
+        contract_term: personnel.contract_term,
+        line_model: personnel.line_model,
+        part: personnel.part,
+
+
+
         families: personnel.families?.map(family => ({
           key: family.id,
           relationship: family.relationship,
@@ -565,7 +609,6 @@ export class HrRecruitmentServices {
         await Promise.all(updatePromises);
       });
 
-      // Trả về phản hồi thành công
       return {
         success: true,
         message: 'Cập nhật thành công',

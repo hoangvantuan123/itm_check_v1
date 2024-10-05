@@ -1,6 +1,16 @@
 import { useState, useEffect } from 'react'
 import { Helmet } from 'react-helmet'
-import { Row, Col, Typography, Button, Form, Input, Radio, message, Pagination  } from 'antd'
+import {
+  Row,
+  Col,
+  Typography,
+  Button,
+  Form,
+  Input,
+  Radio,
+  message,
+  Pagination,
+} from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import './static/css/scroll_container.css'
@@ -13,8 +23,6 @@ import { PutUserInterview } from '../../features/hrRecruitment/putUserInterview'
 const { Text } = Typography
 
 export default function DetailUserHrAllDataFalse() {
-
-
   const { t } = useTranslation()
   const { id } = useParams()
   const navigate = useNavigate()
@@ -25,8 +33,8 @@ export default function DetailUserHrAllDataFalse() {
   const [interviewData, setInterviewData] = useState({})
   const [form] = Form.useForm()
   const [formInterview] = Form.useForm()
-  const [currentPage, setCurrentPage] = useState(1);
-  
+  const [currentPage, setCurrentPage] = useState(1)
+
   const fetchDataUserId = async () => {
     setLoading(true)
     try {
@@ -64,8 +72,6 @@ export default function DetailUserHrAllDataFalse() {
       fetchDataUserId()
     }
   }, [id])
-
-
 
   const handleNavigateToBack = () => {
     navigate(`/u/action=20/data-employee`)
@@ -141,7 +147,7 @@ export default function DetailUserHrAllDataFalse() {
       supplier_details: finalData?.supplierDetails,
       candidate_type: finalData?.candidateType,
       status_form: true,
-      
+
       families:
         finalData?.families?.map((family) => ({
           id: family.key,
@@ -188,8 +194,8 @@ export default function DetailUserHrAllDataFalse() {
             description: experience.description,
           }),
         ) || [],
-        projects: [],
-        office_skills: []
+      projects: [],
+      office_skills: [],
     }
 
     return filterEmptyFields(result)
@@ -214,11 +220,9 @@ export default function DetailUserHrAllDataFalse() {
     formInterview.submit()
   }
 
-
- 
   const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
+    setCurrentPage(page)
+  }
   return (
     <div className="w-full h-screen bg-gray-50 p-3">
       <Helmet>
@@ -229,13 +233,12 @@ export default function DetailUserHrAllDataFalse() {
         aria-label="Breadcrumb"
         className="flex justify-between items-center mb-6"
       >
-        
         <ol className="flex items-center gap-4 text-sm text-gray-700">
           <li onClick={handleNavigateToBack} className="cursor-pointer">
             <span className=" text-black opacity-80">Trở lại</span>
           </li>
         </ol>
-         
+
         <ol className=" flex items-center gap-2">
           <Button className="bg-white">Export PDF</Button>
           <Button className="bg-white">Xóa</Button>
@@ -245,7 +248,6 @@ export default function DetailUserHrAllDataFalse() {
           <Button className="bg-white" onClick={handleSave}>
             Lưu
           </Button>
-         
         </ol>
       </nav>
 
@@ -269,7 +271,6 @@ export default function DetailUserHrAllDataFalse() {
             <h1 className="text-xl font-bold text-center mb-4">
               Kết quả phỏng vấn
             </h1>
-           
           </div>
         </Col>
       </Row>

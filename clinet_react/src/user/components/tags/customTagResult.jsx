@@ -5,7 +5,7 @@ const CustomTagResult = ({ status }) => {
   let text
 
   switch (status) {
-    case "Pending":
+    case 'Pending':
       color = 'green'
       text = 'Pending'
       break

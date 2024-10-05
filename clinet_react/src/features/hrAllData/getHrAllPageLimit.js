@@ -10,21 +10,18 @@ export const GetHrAllPageLimit = async (
 ) => {
   try {
     const token = accessToken()
-    const response = await axios.get(
-      `${HOST_API_PUBLIC_HR}hr-all-data`,
-      {
-        params: {
-          page,
-          limit,
-          startDate,
-          endDate,
-        },
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
+    const response = await axios.get(`${HOST_API_PUBLIC_HR}hr-all-data`, {
+      params: {
+        page,
+        limit,
+        startDate,
+        endDate,
       },
-    )
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
 
     return {
       success: true,

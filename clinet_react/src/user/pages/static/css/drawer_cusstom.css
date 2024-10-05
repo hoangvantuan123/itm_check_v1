@@ -17,15 +17,15 @@
 @media (max-width: 768px) {
   :where(.css-dev-only-do-not-override-qnu6hi).ant-drawer-right
     > .ant-drawer-content-wrapper {
-    padding: 0px; 
+    padding: 0px;
     box-shadow: none;
   }
 
   :where(.css-dev-only-do-not-override-qnu6hi).ant-drawer .ant-drawer-content {
-    border-radius: 0px; 
+    border-radius: 0px;
   }
   :where(.css-dev-only-do-not-override-qnu6hi).ant-drawer .ant-drawer-content {
     border-top-left-radius: 12px;
-    border-top-right-radius: 12px; 
+    border-top-right-radius: 12px;
   }
 }

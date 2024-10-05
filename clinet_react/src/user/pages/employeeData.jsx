@@ -46,7 +46,6 @@ const columnConfig = [
 
   { key: 'interview_result', label: 'Kết quả' },
   { key: 'synchronize', label: 'Đồng bộ ' },
-
 ]
 
 const CloumnIcon = () => {
@@ -112,7 +111,7 @@ const CloumnIcon = () => {
 export default function EmployeeDataiView({ permissions }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const today = moment().startOf('day');
+  const today = moment().startOf('day')
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false)
@@ -123,7 +122,7 @@ export default function EmployeeDataiView({ permissions }) {
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(150)
-  const [dateRange, setDateRange] = useState([null, null]);
+  const [dateRange, setDateRange] = useState([null, null])
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const [nameTags, setNameTags] = useState([])
@@ -149,17 +148,17 @@ export default function EmployeeDataiView({ permissions }) {
 
   const [visibleColumns, setVisibleColumns] = useState(initialVisibleColumns)
   const handleColumnVisibilityChange = (key, isVisible) => {
-    const updatedColumns = { ...visibleColumns, [key]: isVisible };
-    setVisibleColumns(updatedColumns);
-    localStorage.setItem('visibleColumns', JSON.stringify(updatedColumns));
-  };
+    const updatedColumns = { ...visibleColumns, [key]: isVisible }
+    setVisibleColumns(updatedColumns)
+    localStorage.setItem('visibleColumns', JSON.stringify(updatedColumns))
+  }
   useEffect(() => {
-    const storedColumns = localStorage.getItem('visibleColumns');
+    const storedColumns = localStorage.getItem('visibleColumns')
     if (storedColumns) {
-      setVisibleColumns(JSON.parse(storedColumns));
+      setVisibleColumns(JSON.parse(storedColumns))
     }
-  }, []);
-  
+  }, [])
+
   const canCreate = checkActionPermission(
     permissions,
     'hr-recruitment-1-3',
@@ -271,14 +270,13 @@ export default function EmployeeDataiView({ permissions }) {
 
   const handleNavigateToDetail = (record) => {
     if (record.type_personnel === false) {
-      console.log("type_personnel F")
+      console.log('type_personnel F')
       navigate(`/u/action=20/data-employee/detail/type=false/${record.id}`)
     }
     if (record.type_personnel === true) {
-      console.log("type_personnel T")
+      console.log('type_personnel T')
       navigate(`/u/action=20/data-employee/detail/type=true/${record.id}`)
     }
-
   }
 
   const columns = [
@@ -310,10 +308,14 @@ export default function EmployeeDataiView({ permissions }) {
           return visibleColumns[key] ? <CustomTag status={result} /> : null
         }
         if (key === 'synchronize') {
-          return visibleColumns[key] ? <CustomTagSyn status={record.synchronize} /> : null
+          return visibleColumns[key] ? (
+            <CustomTagSyn status={record.synchronize} />
+          ) : null
         }
         if (key === 'type_personnel') {
-          return visibleColumns[key] ? <CustomTypePersonnel status={record.type_personnel} /> : null
+          return visibleColumns[key] ? (
+            <CustomTypePersonnel status={record.type_personnel} />
+          ) : null
         }
         if (key === 'create_date') {
           return visibleColumns[key]
@@ -331,7 +333,7 @@ export default function EmployeeDataiView({ permissions }) {
         const aValue = a[key]
         const bValue = b[key]
         if (key === 'type_personnel') {
-          return (aValue === bValue) ? 0 : aValue ? -1 : 1;
+          return aValue === bValue ? 0 : aValue ? -1 : 1
         }
         if (key === 'create_date') {
           return moment(aValue).isBefore(moment(bValue)) ? -1 : 1
@@ -363,9 +365,11 @@ export default function EmployeeDataiView({ permissions }) {
       <Row gutter={16}>
         {columnConfig.map(({ key, label }) => (
           <Col span={24} key={key} className="mt-3">
-             <Checkbox
+            <Checkbox
               checked={visibleColumns[key]}
-              onChange={(e) => handleColumnVisibilityChange(key, e.target.checked)}
+              onChange={(e) =>
+                handleColumnVisibilityChange(key, e.target.checked)
+              }
             >
               {t(label)}
             </Checkbox>
@@ -403,7 +407,7 @@ export default function EmployeeDataiView({ permissions }) {
           handleTableChange({ current: page, pageSize }),
       }}
       loading={loading}
-    /* scroll={{
+      /* scroll={{
       x: 'calc(100px + 100%)',
       y: 650,
     }} */
@@ -418,11 +422,11 @@ export default function EmployeeDataiView({ permissions }) {
 
   const handleDateChange = (dates) => {
     if (dates) {
-      setDateRange(dates); // Cập nhật state với giá trị được chọn
+      setDateRange(dates) // Cập nhật state với giá trị được chọn
     } else {
-      setDateRange([null, null]); // Nếu không có giá trị, đặt lại thành null
+      setDateRange([null, null]) // Nếu không có giá trị, đặt lại thành null
     }
-  };
+  }
 
   return (
     <div className="w-full h-screen flex flex-col bg-white">
@@ -435,13 +439,13 @@ export default function EmployeeDataiView({ permissions }) {
           {t('Danh sách dữ liệu')}
         </h1>
         <Button
-                        type="primary"
-                        icon={<PlusOutlined />}
-                        className=" rounded-lg h-full border-gray-200 bg-indigo-600 hover:bg-none text-white shadow-sm text-sm"
-                        size="large"
-                      >
-                        {t('Thêm')}
-                      </Button>
+          type="primary"
+          icon={<PlusOutlined />}
+          className=" rounded-lg h-full border-gray-200 bg-indigo-600 hover:bg-none text-white shadow-sm text-sm"
+          size="large"
+        >
+          {t('Thêm')}
+        </Button>
       </div>
       <div className="p-2 mb flex items-center justify-between">
         <span className="inline-flex overflow-hidden">
@@ -451,7 +455,14 @@ export default function EmployeeDataiView({ permissions }) {
               <Option value="2">{t('Grid')}</Option>
               <Option value="3">{t('List')}</Option>
             </Select>
-            {canCreate && <ImportAction fetchData={fetchData} handleOnClickActionImport={handleOnClickActionImport} setActionImport={setActionImport} actionImport={actionImport} />}
+            {canCreate && (
+              <ImportAction
+                fetchData={fetchData}
+                handleOnClickActionImport={handleOnClickActionImport}
+                setActionImport={setActionImport}
+                actionImport={actionImport}
+              />
+            )}
             <RangePicker
               value={dateRange}
               onChange={handleDateChange}
@@ -479,7 +490,9 @@ export default function EmployeeDataiView({ permissions }) {
             >
               <CloumnIcon />
             </Button>
-            {selectedRowKeys != null && selectedRowKeys.length > 0 && (<SynAction selectedRowKeys={selectedRowKeys} />)}
+            {selectedRowKeys != null && selectedRowKeys.length > 0 && (
+              <SynAction selectedRowKeys={selectedRowKeys} />
+            )}
 
             {selectedRowKeys != null && selectedRowKeys.length > 0 && (
               <ShowAction

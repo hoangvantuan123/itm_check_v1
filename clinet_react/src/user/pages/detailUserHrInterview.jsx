@@ -23,7 +23,7 @@ export default function DetailUserHrInterview() {
   const [interviewData, setInterviewData] = useState({})
   const [form] = Form.useForm()
   const [formInterview] = Form.useForm()
-  
+
   const fetchDataUserId = async () => {
     setLoading(true)
     try {
@@ -61,8 +61,6 @@ export default function DetailUserHrInterview() {
       fetchDataUserId()
     }
   }, [id])
-
-
 
   const handleNavigateToBack = () => {
     navigate(`/u/action=17/employee-recruitment-data`)
@@ -138,7 +136,7 @@ export default function DetailUserHrInterview() {
       supplier_details: finalData?.supplierDetails,
       candidate_type: finalData?.candidateType,
       status_form: true,
-      
+
       families:
         finalData?.families?.map((family) => ({
           id: family.key,
@@ -185,8 +183,8 @@ export default function DetailUserHrInterview() {
             description: experience.description,
           }),
         ) || [],
-        projects: [],
-        office_skills: []
+      projects: [],
+      office_skills: [],
     }
 
     return filterEmptyFields(result)

@@ -15,7 +15,7 @@ import {
   Col,
   Dropdown,
   Spin,
-  InputNumber
+  InputNumber,
 } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import * as XLSX from 'xlsx'
@@ -25,9 +25,7 @@ import { TestImportData } from '../../../features/import/test_import'
 
 const { Title } = Typography
 const { Sider, Content } = Layout
-const { Option, OptGroup } = Select;
-
-
+const { Option, OptGroup } = Select
 
 const FileIcon = () => {
   return (
@@ -48,7 +46,13 @@ const FileIcon = () => {
   )
 }
 
-export default function ImportForm({ fetchData, isOpen, onClose, tableInfo, actionImport }) {
+export default function ImportForm({
+  fetchData,
+  isOpen,
+  onClose,
+  tableInfo,
+  actionImport,
+}) {
   const { t } = useTranslation()
   const [fileList, setFileList] = useState([])
   const [fileName, setFileName] = useState(null)
@@ -60,115 +64,117 @@ export default function ImportForm({ fetchData, isOpen, onClose, tableInfo, acti
   const [row, setRow] = useState(0)
   const handleCheck = async () => {
     if (!selectedTable || Object.keys(connectValues).length === 0) {
-      message.error(t('Vui lòng chọn bảng và ít nhất một cột để kiểm tra'));
-      return;
+      message.error(t('Vui lòng chọn bảng và ít nhất một cột để kiểm tra'))
+      return
     }
 
-    setIsLoading(true);
+    setIsLoading(true)
 
     try {
       const mappedData = selectedTable.data.map((row) => {
-        const newRow = {};
+        const newRow = {}
         selectedTable.columns.forEach((col) => {
-          const mappedColumn = connectValues[col];
+          const mappedColumn = connectValues[col]
           if (mappedColumn) {
-            newRow[mappedColumn] = row[col];
+            newRow[mappedColumn] = row[col]
           }
-        });
-        return newRow;
-      });
+        })
+        return newRow
+      })
 
-      const batchSize = 1000;
-      const totalRows = mappedData.length;
-      const promises = [];
+      const batchSize = 1000
+      const totalRows = mappedData.length
+      const promises = []
 
       for (let i = 0; i < totalRows; i += batchSize) {
-        const batch = mappedData.slice(i, i + batchSize);
+        const batch = mappedData.slice(i, i + batchSize)
 
         const data = {
           method: 'execute_import',
           model: actionImport,
           data: batch,
-        };
-
-        promises.push(TestImportData(data));
-      }
-      const results = await Promise.all(promises);
-      results.forEach(result => {
-        if (result.data.status === 200) {
-          message.success(t('Dữ liệu kiểm tra đã được đáp ứng!'));
-        } else if (result.data.status === 400) {
-          message.error(t(`Lỗi: ${result.message}`));
         }
-      });
 
+        promises.push(TestImportData(data))
+      }
+      const results = await Promise.all(promises)
+      results.forEach((result) => {
+        if (result.data.status === 200) {
+          message.success(t('Dữ liệu kiểm tra đã được đáp ứng!'))
+        } else if (result.data.status === 400) {
+          message.error(t(`Lỗi: ${result.message}`))
+        }
+      })
     } catch (error) {
       if (error.response && error.response.data) {
-        const { status, message: errorMessage } = error.response.data;
-        message.error(t(`Đã xảy ra lỗi trong quá trình kiểm tra dữ liệu: ${errorMessage}`));
+        const { status, message: errorMessage } = error.response.data
+        message.error(
+          t(`Đã xảy ra lỗi trong quá trình kiểm tra dữ liệu: ${errorMessage}`),
+        )
       } else {
-        message.error(t('Đã xảy ra lỗi trong quá trình kiểm tra dữ liệu'));
+        message.error(t('Đã xảy ra lỗi trong quá trình kiểm tra dữ liệu'))
       }
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
   const handleUpload = async () => {
     if (!selectedTable || Object.keys(connectValues).length === 0) {
-      message.error(t('Vui lòng chọn bảng và ít nhất một cột để kiểm tra'));
-      return;
+      message.error(t('Vui lòng chọn bảng và ít nhất một cột để kiểm tra'))
+      return
     }
 
-    setIsLoading(true);
+    setIsLoading(true)
 
     try {
       const mappedData = selectedTable.data.map((row) => {
-        const newRow = {};
+        const newRow = {}
         selectedTable.columns.forEach((col) => {
-          const mappedColumn = connectValues[col];
+          const mappedColumn = connectValues[col]
           if (mappedColumn) {
-            newRow[mappedColumn] = row[col];
+            newRow[mappedColumn] = row[col]
           }
-        });
-        return newRow;
-      });
+        })
+        return newRow
+      })
 
-      const batchSize = 1000;
-      const totalRows = mappedData.length;
-      const promises = [];
+      const batchSize = 1000
+      const totalRows = mappedData.length
+      const promises = []
 
       for (let i = 0; i < totalRows; i += batchSize) {
-        const batch = mappedData.slice(i, i + batchSize);
+        const batch = mappedData.slice(i, i + batchSize)
 
         const data = {
           method: 'execute_import',
           model: actionImport,
           data: batch,
-        };
+        }
 
-        promises.push(importData(data));
+        promises.push(importData(data))
       }
 
-      const results = await Promise.all(promises);
-      results.forEach(result => {
+      const results = await Promise.all(promises)
+      results.forEach((result) => {
         if (result.data.status === 200) {
           fetchData()
-          message.success(t('Dữ liệu cập nhật thành công!'));
+          message.success(t('Dữ liệu cập nhật thành công!'))
           onClose()
         } else if (result.data.status === 400) {
-          message.error(t(`Lỗi: ${result.message}`));
+          message.error(t(`Lỗi: ${result.message}`))
         }
-      });
-
+      })
     } catch (error) {
       if (error.response && error.response.data) {
-        const { status, message: errorMessage } = error.response.data;
-        message.error(t(`Đã xảy ra lỗi trong quá trình kiểm tra dữ liệu: ${errorMessage}`));
+        const { status, message: errorMessage } = error.response.data
+        message.error(
+          t(`Đã xảy ra lỗi trong quá trình kiểm tra dữ liệu: ${errorMessage}`),
+        )
       } else {
-        message.error(t('Đã xảy ra lỗi trong quá trình kiểm tra dữ liệu'));
+        message.error(t('Đã xảy ra lỗi trong quá trình kiểm tra dữ liệu'))
       }
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
   }
 
@@ -185,53 +191,14 @@ export default function ImportForm({ fetchData, isOpen, onClose, tableInfo, acti
       return
     }
     setFileName(file.name)
+
     setFileList(fileList)
     setTables([])
-    const newConnectValues = {};
+    const newConnectValues = {}
     const defaultMappings = {
-      'Giới tính': 'gender',
-      'Ngày tuyển dụng': 'interview_date',
-      'Ngày bắt đầu': 'start_date',
-      'Ngày sinh': 'birth_date',
-      'Số CCCD': 'id_number',
-      'Ngày cấp': 'id_issue_date',
-      'Dân tộc': 'ethnicity',
-      'Nơi cấp': 'id_issue_place',
-      'Số bảo hiểm': 'insurance_number',
-      'Mã số thuế': 'tax_number',
-      'Số điện thoại': 'phone_number',
-      'Email': 'email',
-      'Số điện thoại phụ': 'alternate_phone_number',
-      'Tên gọi khác': 'alternate_name',
-      'Mối quan hệ với người gọi khác': 'alternate_relationship',
-      '1 Thôn/xóm/số nhà/đường': 'birth_address',
-      '1 Tỉnh/thành phố': 'birth_province',
-      '1 Quận/huyện/thành phố/Thị xã': 'birth_district',
-      '1 Xã/Phường/thị trấn': 'birth_ward',
-      '2 Thôn/xóm/số nhà/đường': 'current_address',
-      '2 Tỉnh/thành phố': 'current_province',
-      '2 Quận/huyện/thành phố/Thị xã': 'current_district',
-      '2 Xã/Phường/thị trấn': 'current_ward',
-      'Loại': 'type_personnel',
-      'Họ và Tên': 'full_name',
-      'Nhà thầu': 'supplier_details',
-      'Loại ứng viên': 'candidate_type',
-      'Phòng giới thiệu': 'introducer_department',
-      'Người giới thiệu': 'introducer_introducer_name',
-      'Số điện thoại người giới thiệu': 'introducer_phone_number',
-      'ID phỏng vấn ứng viên HR': 'id_hr_interview_candidates',
-      'Đồng bộ hóa': 'synchronize',
-      'Nhà máy': 'fac',
-      'Phòng ban': 'department',
-      'Team': 'team',
-      'Chức vụ': 'jop_position',
-      'Mã nhân viên': 'employee_code',
-      'Bằng cấp': 'type_of_degree',
-      'Phân loại': 'type_classify',
-      'Thời hạn hợp đồng': 'contract_term',
-      'Part': 'part',
-      'Line/Model': 'line_model',
-    };
+      'Gender': 'gender',
+      
+    }
 
     if (file.type === 'text/csv') {
       const reader = new FileReader()
@@ -248,21 +215,22 @@ export default function ImportForm({ fetchData, isOpen, onClose, tableInfo, acti
               return
             }
 
-            const columns = Object.keys(result.data[row])
+            const columns = Object.keys(result.data[0])
             setTables([{ name: 'CSV Data', columns, data: result.data }])
-
 
             tableInfo?.forEach((table) => {
               table.columns.forEach((column) => {
-                for (const [key, mappedName] of Object.entries(defaultMappings)) {
+                for (const [key, mappedName] of Object.entries(
+                  defaultMappings,
+                )) {
                   if (column.name === mappedName) {
-                    newConnectValues[key] = column.name;
+                    newConnectValues[key] = column.name
                   }
                 }
-              });
-            });
+              })
+            })
 
-            setConnectValues(newConnectValues);
+            setConnectValues(newConnectValues)
             message.success(t('Tải lên thành công tệp CSV'))
           },
           header: true,
@@ -280,10 +248,9 @@ export default function ImportForm({ fetchData, isOpen, onClose, tableInfo, acti
         const data = new Uint8Array(e.target.result)
         const workbook = XLSX.read(data, { type: 'array' })
         const allTables = []
-
         workbook.SheetNames.forEach((sheetName) => {
           const worksheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName])
-          const columns = Object.keys(worksheet[row])
+          const columns = Object.keys(worksheet[0])
           allTables.push({ name: sheetName, columns, data: worksheet })
         })
 
@@ -292,20 +259,19 @@ export default function ImportForm({ fetchData, isOpen, onClose, tableInfo, acti
           table.columns.forEach((column) => {
             for (const [key, mappedName] of Object.entries(defaultMappings)) {
               if (column.name === mappedName) {
-                newConnectValues[key] = column.name;
+                newConnectValues[key] = column.name
               }
             }
-          });
-        });
+          })
+        })
 
-        setConnectValues(newConnectValues);
+        setConnectValues(newConnectValues)
         message.success(t('Tải lên thành công tệp XLSX'))
       }
 
       reader.readAsArrayBuffer(file.originFileObj || file)
     }
   }
-
 
   const handleConnectChange = (value, key) => {
     setConnectValues((prevValues) => ({
@@ -341,7 +307,15 @@ export default function ImportForm({ fetchData, isOpen, onClose, tableInfo, acti
           placeholder={t('Nhập, chọn một trường')}
         >
           {tableInfo?.map((table) => (
-            <OptGroup key={table.name} label={<span className="font-bold sticky-header">  Model : {table.name}</span>}>
+            <OptGroup
+              key={table.name}
+              label={
+                <span className="font-bold sticky-header">
+                  {' '}
+                  Model : {table.name}
+                </span>
+              }
+            >
               {table.columns.map((column) => (
                 <Option
                   key={`${table.name}-${column.name}`}
@@ -349,7 +323,8 @@ export default function ImportForm({ fetchData, isOpen, onClose, tableInfo, acti
                   disabled={Object.values(connectValues).includes(column.name)}
                 >
                   <span className="flex items-center gap-3">
-                    <FileIcon />   {t(`execute_import.${column.name}`)} - <span className="italic  text-red-400">{column.type}</span>
+                    <FileIcon /> {t(`execute_import.${column.name}`)} -{' '}
+                    <span className="italic  text-red-400">{column.type}</span>
                   </span>
                 </Option>
               ))}
@@ -381,13 +356,15 @@ export default function ImportForm({ fetchData, isOpen, onClose, tableInfo, acti
       connect: connectValues[col] || '',
       note: `Ghi chú cho ${col}`,
       span:
-        selectedTable.data.length > row ? selectedTable.data[row][col] || '' : '',
+        selectedTable.data.length > row
+          ? selectedTable.data[row][col] || ''
+          : '',
     }))
     : []
 
   const onChange = (value) => {
     setRow(value)
-  };
+  }
   return (
     <Drawer
       title="Import"
@@ -597,7 +574,9 @@ export default function ImportForm({ fetchData, isOpen, onClose, tableInfo, acti
                     className="w-full"
                     size="large"
                     onSelect={(value) => {
-                      const selectedTable = tables.find((table) => table.name === value)
+                      const selectedTable = tables.find(
+                        (table) => table.name === value,
+                      )
                       setSelectedTable(selectedTable)
                       setSelectedColumns([])
                     }}

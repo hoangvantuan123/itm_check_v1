@@ -136,7 +136,7 @@ export default function DetailUserHrRecruitment() {
       supplier_details: finalData?.supplierDetails,
       candidate_type: finalData?.candidateType,
       status_form: true,
-      
+
       families:
         finalData?.families?.map((family) => ({
           id: family.key,
@@ -183,8 +183,8 @@ export default function DetailUserHrRecruitment() {
             description: experience.description,
           }),
         ) || [],
-        projects: [],
-        office_skills: []
+      projects: [],
+      office_skills: [],
     }
 
     return filterEmptyFields(result)

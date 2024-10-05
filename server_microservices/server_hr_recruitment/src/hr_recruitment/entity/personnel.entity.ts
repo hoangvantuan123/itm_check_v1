@@ -112,7 +112,7 @@ export class Personnel {
 
   @Column({ type: 'boolean', default: false })
   synchronize: boolean;
-  
+
   @Column({ type: 'boolean', default: false })
   status_form: boolean;
 
@@ -122,23 +122,211 @@ export class Personnel {
 
   @Column({ type: 'text', nullable: true })
   department: string;
+
   @Column({ type: 'text', nullable: true })
   team: string;
 
   @Column({ type: 'text', nullable: true })
   jop_position: string;
+
   @Column({ type: 'text', nullable: true })
   type_of_degree: string;
+
   @Column({ type: 'text', nullable: true })
   type_classify: string;
+
   @Column({ type: 'text', nullable: true })
   employee_code: string;
+
   @Column({ type: 'text', nullable: true })
   contract_term: string;
+
   @Column({ type: 'text', nullable: true })
   line_model: string;
+
   @Column({ type: 'text', nullable: true })
   part: string;
+
+
+
+  @Column({ nullable: true })
+  erp_department_registration: string;  // Đăng ký bp trên ERP
+
+  @Column({ nullable: true })
+  production: string;
+
+  @Column({ nullable: true })
+  section: string;  // Section
+
+  @Column({ nullable: true })
+  job_field: string;  // Job field
+
+  @Column({ nullable: true })
+  position: string;  // Position
+
+  @Column({ type: 'date', nullable: true })
+  entering_day: Date;  // Entering day
+
+  @Column({ type: 'date', nullable: true })
+  leaving_day: Date;  // Leaving day
+
+  @Column({ nullable: true })
+  probation_days: number;  // PROBATION (day)
+
+  @Column({ type: 'date', nullable: true })
+  official_date_first: Date;  // OFFICIAL DATE 1st/Ngày ký HĐ lần 1
+
+  @Column({ type: 'date', nullable: true })
+  official_dateSecond: Date;  // OFFICIAL DATE 2nd/Ngày ký HĐ lần 2
+
+
+  @Column({ nullable: true })
+  age: number;  // Age
+
+  @Column({ nullable: true })
+  month_count: number;  // Đếm tháng
+
+  @Column({ nullable: true })
+  partner_name: string;  // Partner name
+
+  @Column({ nullable: true })
+  partner_phone_number: string;  // Partner's phone number
+
+  @Column({ nullable: true })
+  number_of_children: number;  // Số con
+
+  @Column({ nullable: true })
+  children_name_1: string;  // Children name 1
+
+  @Column({ type: 'date', nullable: true })
+  children_birth_date_1: Date;  // Children birth date 1
+
+  @Column({ nullable: true })
+  children_gender_1: string;  // Children gender 1
+
+  @Column({ nullable: true })
+  children_name_2: string;  // Children name 2
+
+  @Column({ type: 'date', nullable: true })
+  children_birth_date2: Date;  // Children date birth 2
+
+  @Column({ nullable: true })
+  children_gender_2: string;  // Children gender 2
+
+  @Column({ nullable: true })
+  children_name_3: string;  // Children name 3
+
+  @Column({ type: 'date', nullable: true })
+  children_birth_date_3: Date;  // Children date birth 3
+
+  @Column({ nullable: true })
+  children_gender_3: string;  // Children gender 3
+
+  @Column({ nullable: true })
+  father_name: string;  // Father name
+
+  @Column({ nullable: true })
+  father_phone_number: string;  // Father phone number
+
+  @Column({ nullable: true })
+  mother_name: string;  // Mother name
+
+  @Column({ nullable: true })
+  mother_phone_number: string;  // Mother phone number
+
+
+  @Column({ nullable: true })
+  distance_from_household_to_company: number;  // Khoảng cách từ nơi đăng ký hộ khẩu đến công ty
+
+  @Column({ nullable: true })
+  highest_education_level: string;  // Highest level of education
+
+  @Column({ nullable: true })
+  school_name: string;  // School name
+
+  @Column({ nullable: true })
+  major: string;  // Major
+
+  @Column({ nullable: true })
+  company_name_1: string;  // Company name 1
+
+  @Column({ type: 'date', nullable: true })
+  entrance_day_1: Date;  // Entrance day 1
+
+  @Column({ type: 'date', nullable: true })
+  leaving_day_1: Date;  // Leaving day 1
+
+  @Column({ nullable: true })
+  work_department_1: string;  // Bộ phận làm việc
+
+  @Column({ nullable: true })
+  work_responsibility_1: string;  // Công việc phụ trách
+
+  @Column({ nullable: true })
+  company_name_2: string;  // Company name 2
+
+  @Column({ type: 'date', nullable: true })
+  entrance_day_2: Date;  // Entrance day 2
+
+  @Column({ type: 'date', nullable: true })
+  leaving_day_2: Date;  // Leaving day 2
+
+  @Column({ nullable: true })
+  work_department_2: string;  // Bộ phận làm việc
+
+  @Column({ nullable: true })
+  work_responsibility_2: string;  // Công việc phụ trách
+
+  @Column({ nullable: true })
+  company_name_3: string;  // Company name 3
+
+  @Column({ type: 'date', nullable: true })
+  leaving_day_3: Date;  // Leaving day 3
+
+  @Column({ nullable: true })
+  work_department_3: string;  // Bộ phận làm việc
+
+  @Column({ nullable: true })
+  work_responsibility_3: string;  // Công việc phụ trách
+
+  @Column({ nullable: true })
+  social_insurance: boolean;  // ĐÓNG BHXH
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   @OneToMany(() => HrInterviewCandidate, (candidate) => candidate.personnel)
   @JoinColumn({ name: 'candidate_id' })

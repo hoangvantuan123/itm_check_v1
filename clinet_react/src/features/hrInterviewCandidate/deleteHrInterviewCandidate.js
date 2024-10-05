@@ -5,13 +5,16 @@ import { HOST_API_PUBLIC_HR } from '../../services'
 export const DeleteHrInterviewCandidates = async (ids, token) => {
   try {
     const token = accessToken()
-    const response = await axios.delete(`${HOST_API_PUBLIC_HR}hr-interview-candidates`, {
-      data: { ids },
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
+    const response = await axios.delete(
+      `${HOST_API_PUBLIC_HR}hr-interview-candidates`,
+      {
+        data: { ids },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
       },
-    })
+    )
 
     if (response.status === 200 || response.status === 201) {
       return {

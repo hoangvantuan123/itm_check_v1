@@ -117,12 +117,17 @@ const WorkExperienceTable = ({ form }) => {
       title: 'Năm vào công ty',
       dataIndex: 'joinYear',
       render: (text, record) => (
-        <Form.Item name={['workExperience', record.key, 'joinYear']} style={{ margin: 0 }}>
+        <Form.Item
+          name={['workExperience', record.key, 'joinYear']}
+          style={{ margin: 0 }}
+        >
           <InputNumber
             min={1900} // Giới hạn năm tối thiểu
             max={new Date().getFullYear()} // Giới hạn năm tối đa là năm hiện tại
             value={text ?? null} // Nếu text không tồn tại, đặt giá trị là null
-            onChange={(value) => handleWorkExperienceChange(record.key, 'joinYear', value)}
+            onChange={(value) =>
+              handleWorkExperienceChange(record.key, 'joinYear', value)
+            }
             className="border-none w-28 md:w-full"
             style={{ margin: 0 }}
           />
@@ -133,19 +138,23 @@ const WorkExperienceTable = ({ form }) => {
       title: 'Năm thôi việc',
       dataIndex: 'leaveYear',
       render: (text, record) => (
-        <Form.Item name={['workExperience', record.key, 'leaveYear']} style={{ margin: 0 }}>
+        <Form.Item
+          name={['workExperience', record.key, 'leaveYear']}
+          style={{ margin: 0 }}
+        >
           <InputNumber
             min={record.joinYear ?? 1900}
-            max={new Date().getFullYear()} 
-            value={text ?? null} 
-            onChange={(value) => handleWorkExperienceChange(record.key, 'leaveYear', value)}
+            max={new Date().getFullYear()}
+            value={text ?? null}
+            onChange={(value) =>
+              handleWorkExperienceChange(record.key, 'leaveYear', value)
+            }
             className="border-none w-28 md:w-full"
             style={{ margin: 0 }}
           />
         </Form.Item>
       ),
     },
-
 
     {
       title: 'Công việc phụ trách',

@@ -121,29 +121,34 @@ const DataIcon = () => {
     </svg>
   )
 }
-export default function ImportAction({fetchData, isOpen, handleOnClickActionImport, setActionImport, actionImport }) {
+export default function ImportAction({
+  fetchData,
+  isOpen,
+  handleOnClickActionImport,
+  setActionImport,
+  actionImport,
+}) {
   const userFromLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
   const userNameLogin = userFromLocalStorage?.login || 'none'
   const { t } = useTranslation()
   const [showDropdown, setShowDropdown] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [tableInfo, setTableInfo] = useState(null);
+  const [tableInfo, setTableInfo] = useState(null)
   useEffect(() => {
     if (isModalOpen) {
-
       const fetchTableInfo = async () => {
-        const result = await GetTableName(actionImport);
+        const result = await GetTableName(actionImport)
         if (result.success) {
-          setTableInfo(result.data);
+          setTableInfo(result.data)
         } else {
-          setError(result.message);
+          setError(result.message)
         }
-        setLoading(false);
-      };
+        setLoading(false)
+      }
 
-      fetchTableInfo();
+      fetchTableInfo()
     }
-  }, [isModalOpen, actionImport]);
+  }, [isModalOpen, actionImport])
   const handleOnClickOpenImport = () => {
     setShowDropdown(false)
     setIsModalOpen(true)
@@ -164,8 +169,6 @@ export default function ImportAction({fetchData, isOpen, handleOnClickActionImpo
     </Menu>
   )
 
-
-
   const handleOnClick = () => {
     handleOnClickActionImport()
     setShowDropdown(!showDropdown)
@@ -182,7 +185,13 @@ export default function ImportAction({fetchData, isOpen, handleOnClickActionImpo
           <DataIcon />
         </Button>
       </Dropdown>
-      <ImportForm fetchData={fetchData} isOpen={isModalOpen} tableInfo={tableInfo} actionImport={actionImport} onClose={handleOnClickCloseImport} />
+      <ImportForm
+        fetchData={fetchData}
+        isOpen={isModalOpen}
+        tableInfo={tableInfo}
+        actionImport={actionImport}
+        onClose={handleOnClickCloseImport}
+      />
     </>
   )
 }

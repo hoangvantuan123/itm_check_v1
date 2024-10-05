@@ -84,7 +84,7 @@ export class ImportServices {
                     line_model: record.line_model,
                     part: record.part,
                 } as CreatePersonnelDto;
-            }).filter(record => record.full_name !== undefined && record.gender !== undefined);
+            }).filter(record => record.full_name !== undefined);
 
             if (validBatch.length === 0) {
                 continue;

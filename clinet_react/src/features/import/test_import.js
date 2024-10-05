@@ -13,12 +13,16 @@ export const TestImportData = async (data) => {
     const token = accessToken()
 
     // Gửi yêu cầu POST tới server
-    const response = await axios.post(`${HOST_API_SERVER_IMPORT}test-import`, data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
+    const response = await axios.post(
+      `${HOST_API_SERVER_IMPORT}test-import`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
       },
-    })
+    )
 
     // Kiểm tra phản hồi từ server
     if (response.status === 200 || response.status === 201) {

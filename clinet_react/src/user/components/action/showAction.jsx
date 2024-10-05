@@ -151,64 +151,74 @@ export default function ShowAction({
   }
   const handleUpdateUserInterviewTrue = async () => {
     try {
-      const response = await PutUsersInterviewStatus(selectedRowKeys, true);
+      const response = await PutUsersInterviewStatus(selectedRowKeys, true)
 
       const messagePromise = response.success
         ? Promise.resolve(message.success(`${t('Cập nhật thành công')}`))
-        : Promise.reject(new Error(`${t('Cập nhật thất bại: Yêu cầu không thành công, vui lòng thử lại')}`));
+        : Promise.reject(
+            new Error(
+              `${t('Cập nhật thất bại: Yêu cầu không thành công, vui lòng thử lại')}`,
+            ),
+          )
 
-      await messagePromise; 
+      await messagePromise
 
       if (response.success) {
-        await fetchDataUser(); 
-        setSelectedRowKeys([]);
-        setActionUsers('');
+        await fetchDataUser()
+        setSelectedRowKeys([])
+        setActionUsers('')
       }
     } catch (error) {
-      message.error(`${t('Có lỗi xảy ra, vui lòng thử lại')}`);
+      message.error(`${t('Có lỗi xảy ra, vui lòng thử lại')}`)
     }
-  };
+  }
   const handleDeleteHrInterviewCandidates = async () => {
     try {
-      const response = await DeleteHrInterviewCandidates(selectedRowKeys);
+      const response = await DeleteHrInterviewCandidates(selectedRowKeys)
 
       const messagePromise = response.success
         ? Promise.resolve(message.success(`${t('Xóa thành công các nhóm')}`))
-        : Promise.reject(new Error(`${t('Xóa thất bại: Yêu cầu không thành công, vui lòng thử lại')}`));
+        : Promise.reject(
+            new Error(
+              `${t('Xóa thất bại: Yêu cầu không thành công, vui lòng thử lại')}`,
+            ),
+          )
 
-      await messagePromise; 
+      await messagePromise
 
       if (response.success) {
-        await fetchDataUser(); 
-        setSelectedRowKeys([]);
-        setActionUsers('');
+        await fetchDataUser()
+        setSelectedRowKeys([])
+        setActionUsers('')
       }
     } catch (error) {
-      message.error(`${t('Có lỗi xảy ra, vui lòng thử lại')}`);
+      message.error(`${t('Có lỗi xảy ra, vui lòng thử lại')}`)
     }
-  };
-
+  }
 
   const handleUpdateUserInterviewFalse = async () => {
     try {
-      const response = await PutUsersInterviewStatus(selectedRowKeys, false);
+      const response = await PutUsersInterviewStatus(selectedRowKeys, false)
 
       const messages = response.success
         ? Promise.resolve(message.success(`${t('Cập nhật thành công')}`))
-        : Promise.reject(new Error(`${t('Cập nhật thất bại: Yêu cầu không thành công, vui lòng thử lại')}`));
+        : Promise.reject(
+            new Error(
+              `${t('Cập nhật thất bại: Yêu cầu không thành công, vui lòng thử lại')}`,
+            ),
+          )
 
-      await messages;
+      await messages
 
       if (response.success) {
-        setSelectedRowKeys([]);
-        setActionUsers('');
-        await fetchDataUser();
+        setSelectedRowKeys([])
+        setActionUsers('')
+        await fetchDataUser()
       }
     } catch (error) {
-      message.error(`${t('Có lỗi xảy ra, vui lòng thử lại')}`);
+      message.error(`${t('Có lỗi xảy ra, vui lòng thử lại')}`)
     }
-  };
-
+  }
 
   const handleMenuClick = (e) => {
     setSelectedMenuKey(e.key)
@@ -263,7 +273,10 @@ export default function ShowAction({
           Modal.confirm({ ...modalConfig, onOk: handleDeleteHrInfoIds })
           break
         case 'actionHrInterCandidateIds':
-          Modal.confirm({ ...modalConfig, onOk: handleDeleteHrInterviewCandidates })
+          Modal.confirm({
+            ...modalConfig,
+            onOk: handleDeleteHrInterviewCandidates,
+          })
           break
         default:
           break
@@ -272,7 +285,10 @@ export default function ShowAction({
     if (e.key === 'action_show_6_1') {
       switch (actionUsers) {
         case 'actionHrInfoIds':
-          Modal.confirm({ ...modalSuccess, onOk: handleUpdateUserInterviewTrue })
+          Modal.confirm({
+            ...modalSuccess,
+            onOk: handleUpdateUserInterviewTrue,
+          })
           break
         default:
           break
@@ -281,7 +297,10 @@ export default function ShowAction({
     if (e.key === 'action_show_6_2') {
       switch (actionUsers) {
         case 'actionHrInfoIds':
-          Modal.confirm({ ...modalSuccess, onOk: handleUpdateUserInterviewFalse })
+          Modal.confirm({
+            ...modalSuccess,
+            onOk: handleUpdateUserInterviewFalse,
+          })
           break
         default:
           break
@@ -301,7 +320,6 @@ export default function ShowAction({
           <Menu.Item key="action_show_6_1">{t('ĐẠT')}</Menu.Item>
           <Menu.Item key="action_show_6_2">{t('KHÔNG ĐẠT')}</Menu.Item>
         </Menu.SubMenu>
-
       )}
 
       {actionUsers === 'actionUsers' && (
