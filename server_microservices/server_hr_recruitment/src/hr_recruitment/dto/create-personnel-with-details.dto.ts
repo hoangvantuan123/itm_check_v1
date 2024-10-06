@@ -248,9 +248,9 @@ export class CreatePersonnelWithDetailsDto {
   @IsString()
   full_name: string;
 
-  @IsEnum(['Male', 'Female', 'Other'])
-  gender: 'Male' | 'Female' | 'Other';
-
+  @IsString()
+  gender: string;
+  
   @IsDateString()
   @IsOptional()
   interview_date?: string;

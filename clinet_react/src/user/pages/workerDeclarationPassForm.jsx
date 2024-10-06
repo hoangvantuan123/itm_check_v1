@@ -35,19 +35,14 @@ const WorkerDeclarationPassForm = () => {
       if (response.success) {
         const data = response.data.data
         setDaa(data)
-        if (data.type_personnel === true) {
-          const routerPath = `/public/apply/form/2/${data.router}`
-          navigate(`${routerPath}`)
-        }
-        if (data.type_personnel === false) {
-          const routerPath = `/public/apply/form/1/${data.router}`
-          navigate(`${routerPath}`)
-        }
+        const routerPath = `/public/apply/form/2/${data.router}`
+        navigate(`${routerPath}`)
       } else {
         message.error('Vui lòng thử lại sau.')
       }
     } catch (error) {
-      message.error('Vui lòng thử lại sau.')
+      const routerPath = `/public/apply/form/2/new`
+        navigate(`${routerPath}`)
     }
   }
 

@@ -131,10 +131,10 @@ const UserRouter = () => {
       />
 
       <Route path="/public/apply/form/1" element={<MultiStepFormPage />} />
-      <Route
+  {/*     <Route
         path="/public/apply/form/1/:router"
         element={<MultiStepFormPage />}
-      />
+      /> */}
       <Route
         path="/public/apply/form/2/:router"
         element={<WorkerDeclarationMultiStepForm />}
@@ -373,20 +373,7 @@ const UserRouter = () => {
                         )
                       }
                     />
-                    <Route
-                      path="/u/action=20/data-employee/detail/type=false/:id"
-                      element={
-                        checkActionPermission(
-                          userPermissions,
-                          'hr-recruitment-1-3',
-                          'view',
-                        ) ? (
-                          <DetailUserHrAllDataFalse />
-                        ) : (
-                          <Unauthorized />
-                        )
-                      }
-                    />
+                  
 
                     <Route
                       path="/u/action=20/data-employee"

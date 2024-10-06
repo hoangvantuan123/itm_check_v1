@@ -32,7 +32,6 @@ export default function DetailUserHrAllDataTrue() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [interviewData, setInterviewData] = useState({})
-  console.log("interviewData", interviewData)
   const [form] = Form.useForm()
   const [formInterview] = Form.useForm()
   const [formMore] = Form.useForm()
@@ -141,77 +140,17 @@ export default function DetailUserHrAllDataTrue() {
       current_ward: finalData?.current_ward,
       supplier_details: finalData?.supplierDetails,
       candidate_type: finalData?.candidateType,
-
-      /*  */
-      /*   fac: finalData?.fac,
-        department: finalData?.department,
-        team: finalData?.team,
-        jop_position: finalData?.jop_position,
-        type_personnel: finalData?.type_personnel,
-        contract_term: finalData?.contract_term,
-        type_classify: finalData?.type_classify,
-        line_model: finalData?.line_model,
-        part: finalData?.part,
-        type_of_degree: finalData?.type_of_degree,
-        type_of_degree: finalData?.type_of_degree,
-        employee_code: finalData?.employee_code, */
-
-      families:
-        finalData?.families?.map((family) => ({
-          id: family.key,
-          relationship: family?.relationship,
-          full_name: family?.full_name || null,
-          birth_year: family?.birth_year,
-          workplace: family?.workplace,
-          job: family?.job,
-          phone_number: family?.phone_number,
-          living_together: family?.living_together,
-        })) || [],
-      educations:
-        finalData?.education?.map((education) => ({
-          id: education.key,
-          school: education?.school || null,
-          major: education?.major,
-          years: education?.years,
-          start_year: education?.start_year,
-          graduation_year: education?.graduation_year,
-          grade: education?.grade,
-        })) || [],
-      languages:
-        finalData?.languages?.map((language) => ({
-          id: language.key,
-          language: language?.language,
-          certificate_type: language?.certificate_type,
-          score: language?.score,
-          level: language.level,
-          start_date: language.start_date,
-          end_date: language.end_date,
-          has_bonus: language.has_bonus,
-        })) || [],
-      experiences:
-        finalData?.workExperiences?.map((experience) =>
-          filterEmptyFields({
-            id: experience.key,
-            company_name: experience?.company_name || 'null',
-            position: experience.position,
-            start_date: experience.start_date,
-            end_date: experience.end_date,
-            employee_scale: experience.employee_scale,
-            tasks: experience.tasks,
-            salary: experience.salary,
-            description: experience.description,
-          }),
-        ) || [],
-      projects: [],
-      office_skills: [],
+     
     }
 
     return filterEmptyFields(result)
   }
 
   const handleFinish = async (values) => {
+   
     const submissionData = formatSubmissionData(values)
-    try {
+    console.log('values', values)
+   /*  try {
       const response = await PutHrInfoId(id, submissionData)
       if (response.success) {
         message.success('Cập nhật thành công!')
@@ -220,7 +159,7 @@ export default function DetailUserHrAllDataTrue() {
       }
     } catch (error) {
       message.error('Đã xảy ra lỗi trong quá trình cập nhật.')
-    }
+    } */
   }
   const handleFinishFormMore = async (values) => {
     console.log('values', values)

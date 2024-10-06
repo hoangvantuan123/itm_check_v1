@@ -30,6 +30,20 @@ const EditEducationTable = ({ form, dataSource }) => {
   // Định nghĩa cột cho bảng
   const educationColumns = [
     {
+      title: 'Trình độ',
+      dataIndex: 'highest_education_level',
+      render: (text, record) => (
+        <Input
+          value={text}
+          onChange={(e) =>
+            handleEducationChange(record.key, 'highest_education_level', e.target.value)
+          }
+          className="border-none w-36 md:w-full"
+          style={{ margin: 0 }}
+        />
+      ),
+    },
+    {
       title: 'Trường',
       dataIndex: 'school',
       render: (text, record) => (
@@ -59,12 +73,12 @@ const EditEducationTable = ({ form, dataSource }) => {
     },
     {
       title: 'Năm học',
-      dataIndex: 'years',
+      dataIndex: 'school_year',
       render: (text, record) => (
         <Input
           value={text}
           onChange={(e) =>
-            handleEducationChange(record.key, 'years', e.target.value)
+            handleEducationChange(record.key, 'school_year', e.target.value)
           }
           className="border-none w-36 md:w-full"
           style={{ margin: 0 }}
@@ -73,38 +87,12 @@ const EditEducationTable = ({ form, dataSource }) => {
     },
     {
       title: 'Năm bắt đầu',
-      dataIndex: 'start_year',
-      render: (text, record) => (
-        <InputNumber
-          onChange={(value) =>
-            handleEducationChange(record.key, 'start_year', value)
-          }
-          className="border-none w-28 md:w-full"
-          style={{ margin: 0 }}
-        />
-      ),
-    },
-    {
-      title: 'Năm tốt nghiệp',
-      dataIndex: 'graduation_year',
-      render: (text, record) => (
-        <InputNumber
-          onChange={(value) =>
-            handleEducationChange(record.key, 'graduation_year', value)
-          }
-          className="border-none w-28 md:w-full"
-          style={{ margin: 0 }}
-        />
-      ),
-    },
-    {
-      title: 'Xếp loại',
-      dataIndex: 'grade',
+      dataIndex: 'year_ended',
       render: (text, record) => (
         <Input
           value={text}
           onChange={(e) =>
-            handleEducationChange(record.key, 'grade', e.target.value)
+            handleEducationChange(record.key, 'year_ended', e.target.value)
           }
           className="border-none w-36 md:w-full"
           style={{ margin: 0 }}
@@ -112,13 +100,33 @@ const EditEducationTable = ({ form, dataSource }) => {
       ),
     },
     {
-      title: 'Hành động',
+      title: 'Năm tốt nghiệp',
+      dataIndex: 'year_of_graduation',
       render: (text, record) => (
-        <Button type="link" onClick={() => removeEducation(record.key)}>
-          Xóa
-        </Button>
+        <Input
+          value={text}
+          onChange={(e) =>
+            handleEducationChange(record.key, 'year_of_graduation', e.target.value)
+          }
+          className="border-none w-36 md:w-full"
+          />
       ),
     },
+    {
+      title: 'Xếp loại',
+      dataIndex: 'classification',
+      render: (text, record) => (
+        <Input
+          value={text}
+          onChange={(e) =>
+            handleEducationChange(record.key, 'classification', e.target.value)
+          }
+          className="border-none w-36 md:w-full"
+          style={{ margin: 0 }}
+        />
+      ),
+    },
+ 
   ]
 
   return (

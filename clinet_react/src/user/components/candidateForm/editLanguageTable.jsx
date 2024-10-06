@@ -87,43 +87,9 @@ const EditLanguageTable = ({ form, dataSource }) => {
           style={{ margin: 0 }}
         />
       ),
-    },
-    {
-      title: 'Ngày bắt đầu',
-      dataIndex: 'start_date',
-      render: (text, record) => (
-        <DatePicker
-          value={text ? moment(text) : null}
-          onChange={(date, dateString) =>
-            handleLanguageChange(record.key, 'start_date', dateString)
-          }
-          className="border-none w-28 md:w-full"
-          style={{ margin: 0 }}
-        />
-      ),
-    },
-    {
-      title: 'Ngày kết thúc',
-      dataIndex: 'end_date',
-      render: (text, record) => (
-        <DatePicker
-          value={text ? moment(text) : null}
-          onChange={(date, dateString) =>
-            handleLanguageChange(record.key, 'end_date', dateString)
-          }
-          className="border-none w-28 md:w-full"
-          style={{ margin: 0 }}
-        />
-      ),
-    },
-    {
-      title: 'Hành động',
-      render: (text, record) => (
-        <Button type="link" onClick={() => removeLanguage(record.key)}>
-          Xóa
-        </Button>
-      ),
-    },
+    }
+   
+  
   ]
 
   return (

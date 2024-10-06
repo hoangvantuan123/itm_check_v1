@@ -156,6 +156,7 @@ export class HrRecruitmentServices {
         'personnel.tax_number',
         'interview.id',
         'interview.interview_result',
+        'interview.employee_code',
       ])
       .skip((page - 1) * limit)
       .take(limit)
@@ -448,9 +449,9 @@ export class HrRecruitmentServices {
 
 
   async getPersonnelById(id: number): Promise<any> {
+    // Lấy thông tin nhân sự dựa vào id
     const personnel = await this.personnelRepository.findOne({
-      where: { id },
-      relations: ['families', 'educations', 'languages', 'experiences', 'interviews', 'projects', 'office_skills'],
+      where: { id }
     });
 
     if (!personnel) {
@@ -463,6 +464,7 @@ export class HrRecruitmentServices {
     return {
       status: true,
       data: {
+        // Thông tin cá nhân
         key: personnel.id,
         full_name: personnel.full_name,
         gender: personnel.gender,
@@ -506,78 +508,114 @@ export class HrRecruitmentServices {
         line_model: personnel.line_model,
         part: personnel.part,
 
+        // Thông tin vị trí và hợp đồng
+        erp_department_registration: personnel.erp_department_registration,
+        production: personnel.production,
+        section: personnel.section,
+        job_field: personnel.job_field,
+        position: personnel.position,
+        entering_day: personnel.entering_day,
+        leaving_day: personnel.leaving_day,
+        probation_days: personnel.probation_days,
+        official_date_first: personnel.official_date_first,
+        official_date_second: personnel.official_date_second,
+        age: personnel.age,
+        month_count: personnel.month_count,
+        number_of_children: personnel.number_of_children,
 
+        // Thông tin con cái
+        children: [
+          {
+            children_name: personnel.children_name_1,
+            children_birth_date: personnel.children_birth_date_1,
+            children_gender: personnel.children_gender_1,
+          },
+          {
+            children_name: personnel.children_name_2,
+            children_birth_date: personnel.children_birth_date_2,
+            children_gender: personnel.children_gender_2,
+          },
+          {
+            children_name: personnel.children_name_3,
+            children_birth_date: personnel.children_birth_date_3,
+            children_gender: personnel.children_gender_3,
+          },
+        ],
 
-        families: personnel.families?.map(family => ({
-          key: family.id,
-          relationship: family.relationship,
-          full_name: family.full_name,
-          birth_year: family.birth_year,
-          workplace: family.workplace,
-          job: family.job,
-          phone_number: family.phone_number,
-          living_together: family.living_together,
-        })) ?? [], // Trả về mảng rỗng nếu không có `families`
-        educations: personnel.educations?.map(education => ({
-          key: education.id,
-          school: education.school,
-          major: education.major,
-          years: education.years,
-          start_year: education.start_year,
-          graduation_year: education.graduation_year,
-          grade: education.grade,
-        })) ?? [], // Trả về mảng rỗng nếu không có `educations`
-        languages: personnel.languages?.map(language => ({
-          key: language.id,
-          language: language.language,
-          certificate_type: language.certificate_type,
-          score: language.score,
-          level: language.level,
-          start_date: language.start_date,
-          end_date: language.end_date,
-          has_bonus: language.has_bonus,
-        })) ?? [], // Trả về mảng rỗng nếu không có `languages`
-        experiences: personnel.experiences?.map(experience => ({
-          key: experience.id,
-          company_name: experience.company_name,
-          position: experience.position,
-          start_date: experience.start_date,
-          end_date: experience.end_date,
-          employee_scale: experience.employee_scale,
-          tasks: experience.tasks,
-          salary: experience.salary,
-          description: experience.description,
-        })) ?? [],
-        interviews: personnel.interviews?.map(interview => ({
-          key: interview.id,
-          interview_result: interview.interview_result,
-          recruitment_department: interview.recruitment_department,
-          position: interview.position,
-          interviewer_name: interview.interviewer_name,
-          appearance_criteria: interview.appearance_criteria,
-          height: interview.height,
-          criminal_record: interview.criminal_record,
-          education_level: interview.education_level,
-          reading_writing: interview.reading_writing,
-          calculation_ability: interview.calculation_ability,
-        })) ?? [],
-        projects: personnel.projects?.map(project => ({
-          key: project.id,
-          project_name: project.project_name,
-          start_date: project.start_date,
-          end_date: project.end_date,
-          task: project.task,
-          duration: project.duration,
-          summary: project.summary
-        })) ?? [],
-        office_skills: personnel.office_skills?.map(office_skill => ({
-          key: office_skill.id,
-          skill_name: office_skill.skill_name,
-          skill_level: office_skill.skill_level
-        })) ?? [],
+        families: [
+          {
+            relationship: "Bố",
+            full_name: personnel.father_name,
+            phone_number: personnel.father_phone_number,
+          },
+          {
+            relationship: "Mẹ",
+            full_name: personnel.mother_name,
+            phone_number: personnel.mother_phone_number,
+          },
+          {
+            relationship: "Vợ",
+            full_name: personnel.partner_name,
+            phone_number: personnel.partner_phone_number,
+          },
+        ],
+        experiences: [
+          {
+            tasks: personnel.work_department_1,
+            position: personnel.work_responsibility_1,
+            company_name: personnel.company_name_1,
+            start_date: personnel.entrance_day_1,
+            end_date: personnel.leaving_day_1,
+            salary: personnel.salary_1
+          },
+          {
+            tasks: personnel.work_department_2,
+            position: personnel.work_responsibility_2,
+            company_name: personnel.company_name_2,
+            start_date: personnel.entrance_day_2,
+            end_date: personnel.leaving_day_2,
+            salary: personnel.salary_2
+          }
+        ],
+        educations:
+          [
+            {
+              highest_education_level: personnel.highest_education_level,
+              school: personnel.school_name,
+              major: personnel.major,
+              school_year: personnel.school_year,
+              year_ended: personnel.year_ended,
+              year_of_graduation: personnel.year_of_graduation,
+              classification: personnel.classification,
+            }
+          ],
+        languages:
+          [
+            {
+              language: personnel.language_1,
+              certificate_type: personnel.certificate_type_1,
+              score: personnel.score_1,
+              level: personnel.level_1,
+            },
+            {
+              language: personnel.language_2,
+              certificate_type: personnel.certificate_type_2,
+              score: personnel.score_2,
+              level: personnel.level_2,
+            },
+            {
+              language: personnel.language_3,
+              certificate_type: personnel.certificate_type_3,
+              score: personnel.score_3,
+              level: personnel.level_3,
+            },
+
+          ],
+        distance_from_household_to_company: personnel.distance_from_household_to_company,
       },
     };
   }
+
 
 
 

@@ -33,17 +33,17 @@ const { Content } = Layout
 const { Option } = Select
 
 const columnConfig = [
+  { key: 'employee_code', label: 'CID' },
   { key: 'full_name', label: 'Họ và tên' },
   { key: 'gender', label: 'Giới tính' },
   { key: 'birth_date', label: 'Ngày sinh' },
   { key: 'id_number', label: 'CCCD' },
   { key: 'phone_number', label: 'Số điện thoại' },
-  { key: 'fac', label: 'Nhà máy' },
-  { key: 'department', label: 'Phòng ban' },
+  { key: 'email', label: 'Email' },
+  { key: 'erp_department_registration', label: 'ERP' },
   { key: 'team', label: 'Team' },
-  { key: 'jop_position', label: 'Chức vụ' },
-  { key: 'type_personnel', label: 'Loại' },
-
+  { key: 'part', label: 'Part' },
+  { key: 'position', label: 'Chức vụ' },
   { key: 'interview_result', label: 'Kết quả' },
   { key: 'synchronize', label: 'Đồng bộ ' },
 ]
@@ -269,14 +269,7 @@ export default function EmployeeDataiView({ permissions }) {
   }
 
   const handleNavigateToDetail = (record) => {
-    if (record.type_personnel === false) {
-      console.log('type_personnel F')
-      navigate(`/u/action=20/data-employee/detail/type=false/${record.id}`)
-    }
-    if (record.type_personnel === true) {
-      console.log('type_personnel T')
-      navigate(`/u/action=20/data-employee/detail/type=true/${record.id}`)
-    }
+    navigate(`/u/action=20/data-employee/detail/type=true/${record.id}`)
   }
 
   const columns = [
@@ -407,10 +400,7 @@ export default function EmployeeDataiView({ permissions }) {
           handleTableChange({ current: page, pageSize }),
       }}
       loading={loading}
-      /* scroll={{
-      x: 'calc(100px + 100%)',
-      y: 650,
-    }} */
+   
     />
   )
 

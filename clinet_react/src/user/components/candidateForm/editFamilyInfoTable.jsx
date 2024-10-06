@@ -1,55 +1,47 @@
-import { useState, useEffect, useCallback } from 'react'
-import { Form, Table, Input, Button, Checkbox, InputNumber } from 'antd'
+import { useState, useEffect, useCallback } from 'react';
+import { Form, Table, Input, DatePicker } from 'antd';
+import moment from 'moment'; // Thư viện để xử lý ngày
 
-const EditFamilyInfoTable = ({ form, dataSource }) => {
-  // Khởi tạo trạng thái nội bộ cho dữ liệu thành viên gia đình
-  const [localDataSource, setLocalDataSource] = useState(dataSource || [])
-
-  // Cập nhật localDataSource khi dataSource thay đổi
+const EditFamilyInfoTable = ({ form, dataSource, children }) => {
+  const [localDataSource, setLocalDataSource] = useState(dataSource || []);
+  const [childrenDataSource, setChildrenDataSource] = useState(children || []);
   useEffect(() => {
-    setLocalDataSource(dataSource)
-  }, [dataSource])
+    setLocalDataSource(dataSource);
+    setChildrenDataSource(children);
+  }, [dataSource, children]);
 
-  // Cập nhật form với dữ liệu từ localDataSource mỗi khi thay đổi
   useEffect(() => {
-    form.setFieldsValue({ families: localDataSource })
-  }, [localDataSource, form])
+    form.setFieldsValue({ families: localDataSource });
+    form.setFieldsValue({ children: childrenDataSource });
+  }, [localDataSource, childrenDataSource, form]);
 
-  // Hàm xử lý thay đổi dữ liệu thành viên gia đình
   const handleFamilyMemberChange = useCallback((index, field, value) => {
     setLocalDataSource((prevData) =>
       prevData.map((member, idx) =>
-        idx === index ? { ...member, [field]: value } : member,
-      ),
-    )
-  }, [])
+        idx === index ? { ...member, [field]: value } : member
+      )
+    );
+  }, []);
 
-  // Hàm thêm thành viên mới (Anh/Em/Con) vào danh sách
-  const addSibling = useCallback(() => {
-    if (
-      localDataSource.filter((member) => member.relationship === 'Anh/Em/Con')
-        .length < 3
-    ) {
-      const newMember = {
-        key: localDataSource.length,
-        relationship: 'Anh/Em/Con',
-        full_name: '',
-        birth_year: '',
-        workplace: '',
-        job: '',
-        phone_number: '',
-        livingTogether: false,
-      }
-      setLocalDataSource((prevData) => [...prevData, newMember])
-    }
-  }, [localDataSource])
+  const handleChildrenChange = useCallback((index, field, value) => {
+    setChildrenDataSource((prevData) =>
+      prevData.map((member, idx) =>
+        idx === index ? { ...member, [field]: value } : member
+      )
+    );
+  }, []);
 
-  // Cấu hình các cột của bảng
   const columns = [
     {
       title: 'Quan hệ',
       dataIndex: 'relationship',
-      render: (text) => <span>{text}</span>,
+      render: (text, record, index) => (
+        <Input
+          value={text}
+          onChange={(e) => handleFamilyMemberChange(index, 'relationship', e.target.value)}
+          className="border-none w-full"
+        />
+      ),
     },
     {
       title: 'Họ tên',
@@ -57,48 +49,8 @@ const EditFamilyInfoTable = ({ form, dataSource }) => {
       render: (text, record, index) => (
         <Input
           value={text}
-          onChange={(e) =>
-            handleFamilyMemberChange(index, 'full_name', e.target.value)
-          }
-          className="border-none w-[150px]"
-        />
-      ),
-    },
-    {
-      title: 'Năm sinh',
-      dataIndex: 'birth_year',
-      render: (text, record, index) => (
-        <InputNumber
-          onChange={(value) =>
-            handleFamilyMemberChange(index, 'birth_year', value)
-          }
-          className="border-none w-[80px]"
-        />
-      ),
-    },
-    {
-      title: 'Nơi làm việc',
-      dataIndex: 'workplace',
-      render: (text, record, index) => (
-        <Input
-          value={text}
-          onChange={(e) =>
-            handleFamilyMemberChange(index, 'workplace', e.target.value)
-          }
-          className="border-none w-[120px]"
-        />
-      ),
-    },
-    {
-      title: 'Công việc',
-      dataIndex: 'job',
-      render: (text, record, index) => (
-        <Input
-          value={text}
-          onChange={(e) =>
-            handleFamilyMemberChange(index, 'job', e.target.value)
-          }
-          className="border-none w-[120px]"
+          onChange={(e) => handleFamilyMemberChange(index, 'full_name', e.target.value)}
+          className="border-none w-full"
         />
       ),
     },
@@ -108,26 +60,51 @@ const EditFamilyInfoTable = ({ form, dataSource }) => {
       render: (text, record, index) => (
         <Input
           value={text}
-          onChange={(e) =>
-            handleFamilyMemberChange(index, 'phone_number', e.target.value)
-          }
-          className="border-none w-[120px]"
+          onChange={(e) => handleFamilyMemberChange(index, 'phone_number', e.target.value)}
+          className="border-none w-full"
+        />
+      ),
+    },
+  ];
+
+  const columnsChildren = [
+    {
+      title: 'Họ tên',
+      dataIndex: 'children_name',
+      render: (text, record, index) => (
+        <Input
+          value={text}
+          onChange={(e) => handleChildrenChange(index, 'children_name', e.target.value)}
+          className="border-none w-full"
         />
       ),
     },
     {
-      title: 'Sống chung',
-      dataIndex: 'livingTogether',
-      render: (checked, record, index) => (
-        <Checkbox
-          checked={checked}
-          onChange={(e) =>
-            handleFamilyMemberChange(index, 'livingTogether', e.target.checked)
+      title: 'Năm sinh',
+      dataIndex: 'children_birth_date',
+      render: (text, record, index) => (
+        <DatePicker
+          value={text ? moment(text) : null} 
+          onChange={(date) =>
+            handleChildrenChange(index, 'children_birth_date', date ? date.format('YYYY-MM-DD') : null)
           }
+          format="YYYY-MM-DD" 
+          className="border-none w-full"
         />
       ),
     },
-  ]
+    {
+      title: 'Giới tính',
+      dataIndex: 'children_gender',
+      render: (text, record, index) => (
+        <Input
+          value={text}
+          onChange={(e) => handleChildrenChange(index, 'children_gender', e.target.value)}
+          className="border-none w-full"
+        />
+      ),
+    },
+  ];
 
   return (
     <>
@@ -137,7 +114,20 @@ const EditFamilyInfoTable = ({ form, dataSource }) => {
           dataSource={localDataSource}
           columns={columns}
           pagination={false}
-          rowKey={(record) => record.key}
+          rowKey="key"
+          bordered
+          scroll={{ x: true }}
+          style={{ margin: '0 auto' }}
+          rowClassName="custom-row"
+          size="small"
+        />
+      </Form.Item>
+      <Form.Item name="children">
+        <Table
+          dataSource={childrenDataSource}
+          columns={columnsChildren}
+          pagination={false}
+          rowKey="key"
           bordered
           scroll={{ x: true }}
           style={{ margin: '0 auto' }}
@@ -146,7 +136,7 @@ const EditFamilyInfoTable = ({ form, dataSource }) => {
         />
       </Form.Item>
     </>
-  )
-}
+  );
+};
 
-export default EditFamilyInfoTable
+export default EditFamilyInfoTable;

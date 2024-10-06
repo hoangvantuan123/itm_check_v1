@@ -50,29 +50,26 @@ const ViewDetailUserHrRecruitment = ({
   const familyColumns = [
     { title: 'Quan hệ', dataIndex: 'relationship', key: 'relationship' },
     { title: 'Họ tên', dataIndex: 'full_name', key: 'full_name' },
-    { title: 'Năm sinh', dataIndex: 'birth_year', key: 'birth_year' },
-    { title: 'Nơi làm việc', dataIndex: 'workplace', key: 'workplace' },
-    { title: 'Công việc', dataIndex: 'job', key: 'job' },
     { title: 'Số điện thoại', dataIndex: 'phone_number', key: 'phone_number' },
-    {
-      title: 'Sống cùng',
-      dataIndex: 'living_together',
-      key: 'living_together',
-      render: (text) => (text ? 'Có' : 'Không'),
-    },
+  ]
+  const childrenColumns = [
+    { title: 'Họ tên', dataIndex: 'children_name', key: 'children_name' },
+    { title: 'Năm sinh', dataIndex: 'children_birth_date', key: 'children_birth_date' },
+    { title: 'Giới tính', dataIndex: 'children_gender', key: 'children_gender' },
   ]
 
   const educationColumns = [
+    { title: 'Trình độ', dataIndex: 'highest_education_level', key: 'highest_education_level' },
     { title: 'Trường', dataIndex: 'school', key: 'school' },
     { title: 'Chuyên ngành', dataIndex: 'major', key: 'major' },
-    { title: 'Năm học', dataIndex: 'years', key: 'years' },
-    { title: 'Năm bắt đầu', dataIndex: 'start_year', key: 'start_year' },
+    { title: 'Năm học', dataIndex: 'school_year', key: 'school_year' },
+    { title: 'Năm bắt đầu', dataIndex: 'year_ended', key: 'year_ended' },
     {
       title: 'Năm tốt nghiệp',
-      dataIndex: 'graduation_year',
-      key: 'graduation_year',
+      dataIndex: 'year_of_graduation',
+      key: 'year_of_graduation',
     },
-    { title: 'Xếp loại', dataIndex: 'grade', key: 'grade' },
+    { title: 'Xếp loại', dataIndex: 'classification', key: 'classification' },
   ]
 
   const languageColumns = [
@@ -84,14 +81,6 @@ const ViewDetailUserHrRecruitment = ({
     },
     { title: 'Điểm số', dataIndex: 'score', key: 'score' },
     { title: 'Trình độ', dataIndex: 'level', key: 'level' },
-    { title: 'Ngày bắt đầu', dataIndex: 'start_date', key: 'start_date' },
-    { title: 'Ngày kết thúc', dataIndex: 'end_date', key: 'end_date' },
-    {
-      title: 'Ghi chú',
-      dataIndex: 'has_bonus',
-      key: 'has_bonus',
-      render: (text) => (text ? 'Có' : 'Không'),
-    },
   ]
 
   const experienceColumns = [
@@ -99,14 +88,8 @@ const ViewDetailUserHrRecruitment = ({
     { title: 'Chức vụ', dataIndex: 'position', key: 'position' },
     { title: 'Năm bắt đầu', dataIndex: 'start_date', key: 'start_date' },
     { title: 'Năm kết thúc', dataIndex: 'end_date', key: 'end_date' },
-    {
-      title: 'Quy mô nhân sự',
-      dataIndex: 'employee_scale',
-      key: 'employee_scale',
-    },
     { title: 'Công việc', dataIndex: 'tasks', key: 'tasks' },
     { title: 'Mức lương', dataIndex: 'salary', key: 'salary' },
-    { title: 'Mô tả', dataIndex: 'description', key: 'description' },
   ]
 
   return (
@@ -385,7 +368,7 @@ const ViewDetailUserHrRecruitment = ({
           </Row>
 
           <Divider orientation="left italic">Thông tin gia đình</Divider>
-          <EditFamilyInfoTable form={form} dataSource={formData.families} />
+          <EditFamilyInfoTable form={form} dataSource={formData.families} children={formData.children} />
 
           <Divider orientation="left italic">Tình trạng học vấn</Divider>
           <h2 className="mt-4 mb-2 font-semibold">Học vấn</h2>
@@ -587,6 +570,20 @@ const ViewDetailUserHrRecruitment = ({
             size="small"
             bordered
           />
+
+          <h2 className="mt-4 mb-2 font-semibold">Con cái</h2>
+
+          <Table
+            dataSource={formData.children}
+            columns={childrenColumns}
+            pagination={false}
+            rowKey="phone_number"
+            size="small"
+            bordered
+            className="mt-4"
+          />
+
+
           <Divider orientation="left italic">Tình trạng học vấn</Divider>
 
           <h2 className="mt-4 mb-2 font-semibold">Học vấn</h2>

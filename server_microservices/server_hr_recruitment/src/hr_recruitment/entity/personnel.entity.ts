@@ -177,7 +177,7 @@ export class Personnel {
   official_date_first: Date;  // OFFICIAL DATE 1st/Ngày ký HĐ lần 1
 
   @Column({ type: 'date', nullable: true })
-  official_dateSecond: Date;  // OFFICIAL DATE 2nd/Ngày ký HĐ lần 2
+  official_date_second: Date;  // OFFICIAL DATE 2nd/Ngày ký HĐ lần 2
 
 
   @Column({ nullable: true })
@@ -208,7 +208,7 @@ export class Personnel {
   children_name_2: string;  // Children name 2
 
   @Column({ type: 'date', nullable: true })
-  children_birth_date2: Date;  // Children date birth 2
+  children_birth_date_2: Date;  // Children date birth 2
 
   @Column({ nullable: true })
   children_gender_2: string;  // Children gender 2
@@ -248,82 +248,100 @@ export class Personnel {
   major: string;  // Major
 
   @Column({ nullable: true })
+  school_year: string;  // School year
+
+  @Column({ nullable: true })
+  year_ended: string;  // Year ended
+
+  @Column({ nullable: true })
+  year_of_graduation: string;  // Year of graduation
+
+  @Column({ nullable: true })
+  classification: string;  // Classification
+
+
+
+
+
+  @Column({ nullable: true })
+  work_department_1: string;  // Bộ phận làm việc 1
+
+  @Column({ nullable: true })
+  work_responsibility_1: string;  // Công việc phụ trách 1
+
+  @Column({ nullable: true })
   company_name_1: string;  // Company name 1
 
-  @Column({ type: 'date', nullable: true })
-  entrance_day_1: Date;  // Entrance day 1
+  @Column({ type: 'text', nullable: true })
+  entrance_day_1: string;  // Entrance day 1
 
   @Column({ type: 'date', nullable: true })
   leaving_day_1: Date;  // Leaving day 1
 
   @Column({ nullable: true })
-  work_department_1: string;  // Bộ phận làm việc
+  salary_1: string;  // Salary 1
 
   @Column({ nullable: true })
-  work_responsibility_1: string;  // Công việc phụ trách
+  work_department_2: string;  // Bộ phận làm việc 2
+
+  @Column({ nullable: true })
+  work_responsibility_2: string;  // Công việc phụ trách 2
 
   @Column({ nullable: true })
   company_name_2: string;  // Company name 2
 
-  @Column({ type: 'date', nullable: true })
-  entrance_day_2: Date;  // Entrance day 2
+  @Column({ type: 'text', nullable: true })
+  entrance_day_2: string;  // Entrance day 2
 
   @Column({ type: 'date', nullable: true })
   leaving_day_2: Date;  // Leaving day 2
 
-  @Column({ nullable: true })
-  work_department_2: string;  // Bộ phận làm việc
 
   @Column({ nullable: true })
-  work_responsibility_2: string;  // Công việc phụ trách
+  salary_2: string;  // Salary 2
+  /* Ngôn ngữ 1 */
+  @Column({ nullable: true })
+  language_1: string;
 
   @Column({ nullable: true })
-  company_name_3: string;  // Company name 3
-
-  @Column({ type: 'date', nullable: true })
-  leaving_day_3: Date;  // Leaving day 3
+  certificate_type_1: string;
 
   @Column({ nullable: true })
-  work_department_3: string;  // Bộ phận làm việc
+  score_1: string;
 
   @Column({ nullable: true })
-  work_responsibility_3: string;  // Công việc phụ trách
+  level_1: string;
+  /* Ngôn ngữ 2 */
+  @Column({ nullable: true })
+  language_2: string;
 
   @Column({ nullable: true })
-  social_insurance: boolean;  // ĐÓNG BHXH
+  certificate_type_2: string;
+
+  @Column({ nullable: true })
+  score_2: string;
+
+  @Column({ nullable: true })
+  level_2: string;
+
+  /* Ngôn ngữ 3 */
+  @Column({ nullable: true })
+  language_3: string;
+
+  @Column({ nullable: true })
+  certificate_type_3: string;
+
+  @Column({ nullable: true })
+  score_3: string;
+
+  @Column({ nullable: true })
+  level_3: string;
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  @Column({ nullable: true })
+  social_insurance: string;  // ĐÓNG BHXH
 
 
 
@@ -331,7 +349,6 @@ export class Personnel {
   @OneToMany(() => HrInterviewCandidate, (candidate) => candidate.personnel)
   @JoinColumn({ name: 'candidate_id' })
   candidates: HrInterviewCandidate[];
-
 
   @OneToMany(() => Family, family => family.personnel)
   @JoinColumn({ name: 'family_id' })

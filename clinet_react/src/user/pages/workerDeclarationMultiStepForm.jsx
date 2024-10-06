@@ -25,38 +25,7 @@ const WorkerDeclarationMultiStepForm = () => {
   const [decodedData, setDecodedData] = useState(null)
   const [error, setError] = useState(null)
   const location = useLocation()
-  useEffect(() => {
-    const path = location.pathname
-    const encodedData = path.split('/').pop()
 
-    if (encodedData) {
-      try {
-        const decodedString = atob(encodedData)
-
-        const parsedData = decodedString.includes(':')
-          ? decodedString.split(':')
-          : JSON.parse(decodedString)
-
-        if (Array.isArray(parsedData) && parsedData.length === 4) {
-          setDecodedData({
-            id: Number(parsedData[0]),
-            phoneNumber: parsedData[1],
-            fullName: parsedData[2],
-            email: parsedData[3],
-          })
-        } else {
-          setError('Dữ liệu không hợp lệ, vui lòng kiểm tra lại đường dẫn.')
-          navigate('/public/apply/information/phone')
-        }
-      } catch (error) {
-        setError('Dữ liệu không hợp lệ, vui lòng kiểm tra lại đường dẫn.')
-        navigate('/public/apply/information/phone')
-      }
-    } else {
-      setError('Không tìm thấy dữ liệu trên đường dẫn.')
-      navigate('/public/apply/information/phone')
-    }
-  }, [location, navigate])
 
   const fetchDataUserId = async () => {
     setLoading(true)

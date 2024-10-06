@@ -33,19 +33,18 @@ export class ImportServices {
                 throw new NotFoundException(`Model ${model} không được hỗ trợ`);
         }
     }
-
     private async processHRPersonnelData(importData: any[], tableName: string): Promise<void> {
         const batchSize = 1000;
         const totalBatches = Math.ceil(importData.length / batchSize);
-
+    
         for (let i = 0; i < totalBatches; i++) {
             const batch = importData.slice(i * batchSize, (i + 1) * batchSize);
-
+    
             const validBatch: CreatePersonnelDto[] = batch.map(record => {
                 return {
                     full_name: record.full_name,
                     gender: record.gender,
-                    interview_date: record.interview_date,
+                    interview_date: record.interview_date, 
                     start_date: record.start_date,
                     birth_date: record.birth_date,
                     id_number: record.id_number,
@@ -83,92 +82,133 @@ export class ImportServices {
                     contract_term: record.contract_term,
                     line_model: record.line_model,
                     part: record.part,
+                    erp_department_registration: record.erp_department_registration,
+                    production: record.production,
+                    section: record.section,
+                    job_field: record.job_field,
+                    position: record.position,
+                    entering_day: record.entering_day,
+                    leaving_day: record.leaving_day,
+                    probation_days: record.probation_days,
+                    official_date_first: record.official_date_first,
+                    official_date_second: record.official_date_second,
+                    age: record.age,
+                    month_count: record.month_count,
+                    partner_name: record.partner_name,
+                    partner_phone_number: record.partner_phone_number,
+                    number_of_children: record.number_of_children,
+                    children_name_1: record.children_name_1,
+                    children_birth_date_1: record.children_birth_date_1,
+                    children_gender_1: record.children_gender_1,
+                    children_name_2: record.children_name_2,
+                    children_birth_date_2: record.children_birth_date_2,
+                    children_gender_2: record.children_gender_2,
+                    children_name_3: record.children_name_3,
+                    children_birth_date_3: record.children_birth_date_3,
+                    children_gender_3: record.children_gender_3,
+                    father_name: record.father_name,
+                    father_phone_number: record.father_phone_number,
+                    mother_name: record.mother_name,
+                    mother_phone_number: record.mother_phone_number,
+                    distance_from_household_to_company: record.distance_from_household_to_company,
+                    highest_education_level: record.highest_education_level,
+                    school_name: record.school_name,
+                    major: record.major,
+                    school_year: record.school_year,
+                    year_ended: record.year_ended,
+                    year_of_graduation: record.year_of_graduation,
+                    classification: record.classification,
+                    company_name_1: record.company_name_1,
+                    entrance_day_1: record.entrance_day_1,
+                    leaving_day_1: record.leaving_day_1,
+                    work_department_1: record.work_department_1,
+                    work_responsibility_1: record.work_responsibility_1,
+                    salary_1: record.salary_1,
+                    company_name_2: record.company_name_2,
+                    entrance_day_2: record.entrance_day_2,
+                    leaving_day_2: record.leaving_day_2,
+                    work_department_2: record.work_department_2,
+                    work_responsibility_2: record.work_responsibility_2,
+                    salary_2: record.salary_2,
+                    social_insurance: record.social_insurance,
+
+                    /*  */
+                    language_1: record.language_1,
+                    certificate_type_1: record.certificate_type_1,
+                    score_1: record.score_1 ,
+                    level_1: record.level_1,
+                    /*  */
+                    language_2: record.language_2,
+                    certificate_type_2: record.certificate_type_2,
+                    score_2: record.score_2 ,
+                    level_2: record.level_2,
+                    /*  */
+                    language_3: record.language_3,
+                    certificate_type_3: record.certificate_type_3,
+                    score_3: record.score_3 ,
+                    level_3: record.level_3,
+
+
                 } as CreatePersonnelDto;
             }).filter(record => record.full_name !== undefined);
-
+    
             if (validBatch.length === 0) {
                 continue;
             }
-
+    
             await this.saveBatchToTable(validBatch, tableName);
         }
     }
-
+    
     private async saveBatchToTable(batch: Record<string, any>[], tableName: string): Promise<number[]> {
-        const insertQuery = `INSERT INTO ${tableName} 
-        (full_name, gender, interview_date, start_date, birth_date, id_number, 
-        id_issue_date, ethnicity, id_issue_place, insurance_number, tax_number, 
-        phone_number, email, alternate_phone_number, alternate_name, 
-        alternate_relationship, birth_address, birth_province, birth_district, 
-        birth_ward, current_address, current_province, current_district, 
-        current_ward, type_personnel, candidate_type, supplier_details, 
-        introducer_department, introducer_introducer_name, introducer_phone_number, 
-        fac, department, team, jop_position, type_of_degree, type_classify, 
-        employee_code, contract_term, line_model, part) VALUES `;
-
         const values: string[] = batch.map((record) => {
-            // Chỉ tạo chuỗi giá trị nếu tất cả giá trị đều hợp lệ
-            return `(
-                '${record.full_name ?? ''}', 
-                '${record.gender ?? ''}', 
-                ${record.interview_date ? `'${record.interview_date}'` : 'DEFAULT'}, 
-                ${record.start_date ? `'${record.start_date}'` : 'DEFAULT'}, 
-                ${record.birth_date ? `'${record.birth_date}'` : 'DEFAULT'}, 
-                '${record.id_number ?? ''}', 
-                ${record.id_issue_date ? `'${record.id_issue_date}'` : 'DEFAULT'}, 
-                '${record.ethnicity ?? ''}', 
-                '${record.id_issue_place ?? ''}', 
-                '${record.insurance_number ?? ''}', 
-                '${record.tax_number ?? ''}', 
-                '${record.phone_number ?? ''}', 
-                '${record.email ?? ''}', 
-                '${record.alternate_phone_number ?? ''}', 
-                '${record.alternate_name ?? ''}', 
-                '${record.alternate_relationship ?? ''}', 
-                '${record.birth_address ?? ''}', 
-                '${record.birth_province ?? ''}', 
-                '${record.birth_district ?? ''}', 
-                '${record.birth_ward ?? ''}', 
-                '${record.current_address ?? ''}', 
-                '${record.current_province ?? ''}', 
-                '${record.current_district ?? ''}', 
-                '${record.current_ward ?? ''}', 
-                ${record.type_personnel ?? ''},
-                ${record.candidate_type ? `'${record.candidate_type}'` : 'DEFAULT'},
-                ${record.supplier_details ? `'${record.supplier_details}'` : 'DEFAULT'},
-                ${record.introducer_department ? `'${record.introducer_department}'` : 'DEFAULT'},
-                ${record.introducer_introducer_name ? `'${record.introducer_introducer_name}'` : 'DEFAULT'},
-                ${record.introducer_phone_number ? `'${record.introducer_phone_number}'` : 'DEFAULT'},
-                ${record.fac ? `'${record.fac}'` : 'DEFAULT'},
-                ${record.department ? `'${record.department}'` : 'DEFAULT'},
-                ${record.team ? `'${record.team}'` : 'DEFAULT'},
-                ${record.jop_position ? `'${record.jop_position}'` : 'DEFAULT'},
-                ${record.type_of_degree ? `'${record.type_of_degree}'` : 'DEFAULT'},
-                ${record.type_classify ? `'${record.type_classify}'` : 'DEFAULT'},
-                ${record.employee_code ? `'${record.employee_code}'` : 'DEFAULT'},
-                ${record.contract_term ? `'${record.contract_term}'` : 'DEFAULT'},
-                ${record.line_model ? `'${record.line_model}'` : 'DEFAULT'},
-                ${record.part ? `'${record.part}'` : 'DEFAULT'}
-            )`;
-        }).filter(value => value.trim() !== '()'); // Loại bỏ các giá trị rỗng
-
-        // Kiểm tra nếu không có giá trị nào hợp lệ
+            const filteredColumnsAndValues = Object.keys(record).reduce((acc, col) => {
+                const value = record[col];
+                if (value !== undefined) {
+                    acc.columns.push(col);
+                    
+                    if (value === '') {
+                        acc.values.push('NULL'); 
+                    } else {
+                        acc.values.push(`'${value}'`); 
+                    }
+                }
+                return acc;
+            }, { columns: [], values: [] } as { columns: string[], values: string[] });
+    
+            if (filteredColumnsAndValues.columns.length === 0) return '';
+    
+            return `(${filteredColumnsAndValues.values.join(', ')})`;
+        }).filter(value => value.trim() !== '');
+    
         if (values.length === 0) {
             this.logger.warn(`No valid records to insert into ${tableName}`);
             return [];
         }
-
-        const finalQuery = insertQuery + values.join(', ') + ' RETURNING id';
+    
+        const finalColumns = Object.keys(batch[0]).reduce((acc, col) => {
+            const value = batch[0][col];
+            if (value !== undefined) {
+                acc.push(col);
+            }
+            return acc;
+        }, [] as string[]);
+    
+        const finalQuery = `INSERT INTO ${tableName} (${finalColumns.join(', ')}) VALUES ` + values.join(', ') + ' RETURNING id';
+    
         try {
             const result = await this.entityManager.query(finalQuery);
             const personnelIds = result.map((row: { id: number }) => row.id);
-            await this.saveInterviewResults(personnelIds);
             return personnelIds;
         } catch (error) {
-            this.logger.error(`Lỗi khi ghi dữ liệu vào bảng ${tableName}`, error);
-            throw new NotFoundException(`Không thể ghi dữ liệu vào bảng ${tableName}`);
+            this.logger.error(`Error inserting data into table ${tableName}`, error);
+            throw new NotFoundException(`Unable to insert data into table ${tableName}`);
         }
     }
+    
+    
+    
+    
 
 
     private async saveInterviewResults(personnelIds: number[]): Promise<void> {
@@ -376,8 +416,7 @@ export class ImportServices {
                 '${record.contractor ?? ''}', 
                 '${record.job_position ?? ''}', 
                 '${record.email ?? ''}', 
-                '${record.id_card_number ?? ''}', 
-                ${record.interview_date ? `'${record.interview_date}'` : 'DEFAULT'}
+                '${record.id_card_number ?? ''}'
             )`;
         });
 

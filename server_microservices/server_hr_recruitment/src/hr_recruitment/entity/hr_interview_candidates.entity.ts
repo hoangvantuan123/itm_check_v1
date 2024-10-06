@@ -11,7 +11,7 @@ export class HrInterviewCandidate {
     full_name: string;
 
     @Column({ type: 'text', nullable: true })
-    gender: 'Male' | 'Female' | 'Other';
+    gender: string;
 
     @Column()
     phone_number: string;

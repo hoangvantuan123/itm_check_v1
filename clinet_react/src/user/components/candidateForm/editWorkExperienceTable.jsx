@@ -63,45 +63,36 @@ const EditWorkExperienceTable = ({ form, dataSource }) => {
       title: 'Năm bắt đầu',
       dataIndex: 'start_date',
       render: (text, record) => (
-        <InputNumber
-          onChange={(value) =>
-            handleWorkExperienceChange(record.key, 'start_date', value)
-          }
-          className="border-none w-28 md:w-full"
-          style={{ margin: 0 }}
-        />
+        <Input
+        value={text}
+        onChange={(e) =>
+          handleWorkExperienceChange(
+            record.key,
+            'start_date',
+            e.target.value,
+          )
+        }
+        className="border-none w-36 md:w-full"
+        style={{ margin: 0 }}
+      />
       ),
     },
     {
       title: 'Năm kết thúc',
       dataIndex: 'end_date',
       render: (text, record) => (
-        <InputNumber
-          onChange={(value) =>
-            handleWorkExperienceChange(record.key, 'end_date', value)
-          }
-          className="border-none w-28 md:w-full"
-          style={{ margin: 0 }}
-        />
-      ),
-    },
-
-    {
-      title: 'Quy mô nhân sự',
-      dataIndex: 'employee_scale',
-      render: (text, record) => (
         <Input
-          value={text}
-          onChange={(e) =>
-            handleWorkExperienceChange(
-              record.key,
-              'employee_scale',
-              e.target.value,
-            )
-          }
-          className="border-none w-36 md:w-full"
-          style={{ margin: 0 }}
-        />
+        value={text}
+        onChange={(e) =>
+          handleWorkExperienceChange(
+            record.key,
+            'end_date',
+            e.target.value,
+          )
+        }
+        className="border-none w-36 md:w-full"
+        style={{ margin: 0 }}
+      />
       ),
     },
     {
@@ -132,36 +123,9 @@ const EditWorkExperienceTable = ({ form, dataSource }) => {
         />
       ),
     },
-    {
-      title: 'Mô tả',
-      dataIndex: 'description',
-      render: (text, record) => (
-        <Input
-          value={text}
-          onChange={(e) =>
-            handleWorkExperienceChange(
-              record.key,
-              'description',
-              e.target.value,
-            )
-          }
-          className="border-none w-36 md:w-full"
-          style={{ margin: 0 }}
-        />
-      ),
-    },
-    {
-      title: 'Hành động',
-      render: (text, record) => (
-        <Button
-          className="md:w-full"
-          type="link"
-          onClick={() => removeWorkExperience(record.key)}
-        >
-          Xóa
-        </Button>
-      ),
-    },
+
+  
+
   ]
 
   return (
