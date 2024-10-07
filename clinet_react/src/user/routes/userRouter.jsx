@@ -45,7 +45,6 @@ import DetailUserHrInterview from '../pages/detailUserHrInterview'
 import EmployeeDataiView from '../pages/employeeData'
 import DetailUserHrAllDataTrue from '../pages/detailUserHrAllDataTrue'
 import DetailUserHrAllDataFalse from '../pages/detailUserHrAllDataFalse'
-
 const { Content } = Layout
 
 const UserRouter = () => {
@@ -62,6 +61,7 @@ const UserRouter = () => {
     '/public/apply/information/phone',
     '/public/apply/form/2',
     '/public/apply/thong-bao',
+    '/public/apply/form/new'
   ]
 
   const checkLoginStatus = () => {
@@ -130,11 +130,7 @@ const UserRouter = () => {
         element={<WorkerDeclarationPassForm />}
       />
 
-      <Route path="/public/apply/form/1" element={<MultiStepFormPage />} />
-      {/*     <Route
-        path="/public/apply/form/1/:router"
-        element={<MultiStepFormPage />}
-      /> */}
+      
       <Route
         path="/public/apply/form/2/:router"
         element={<WorkerDeclarationMultiStepForm />}

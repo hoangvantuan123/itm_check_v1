@@ -12,38 +12,42 @@ export class HrRecruitmentController {
   constructor(private readonly personnelService: HrRecruitmentServices) { }
 
   @Post('personnel')
-  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }))
-  async create(@Body() createPersonnelWithDetailsDto: CreatePersonnelWithDetailsDto) {
-    try {
-      const result = await this.personnelService.create(createPersonnelWithDetailsDto);
+@UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }))
+async create(@Body() createPersonnelWithDetailsDto: CreatePersonnelWithDetails2Dto) {
+  try {
+    const result = await this.personnelService.createNew(createPersonnelWithDetailsDto);
 
-      if (result.success) {
-        return {
-          statusCode: HttpStatus.CREATED,
-          message: result.message,
-          data: result.data,
-        };
-      } else {
-        throw new HttpException(
-          {
-            statusCode: HttpStatus.BAD_REQUEST,
-            message: result.message,
-          },
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-    } catch (error) {
-      this.logger.error('Failed to create personnel and related details', error.stack);
-
+    if (result.success) {
+      return {
+        statusCode: HttpStatus.CREATED,
+        message: result.message,
+        data: result.data,
+      };
+    } else {
       throw new HttpException(
         {
-          statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-          message: 'Internal Server Error: Could not create personnel with related details',
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: result.message || 'Bad request: Could not create personnel',
         },
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.BAD_REQUEST,
       );
     }
+  } catch (error) {
+    this.logger.error('Failed to create personnel and related details', error.stack);
+
+    if (error instanceof HttpException) {
+      throw error;
+    }
+
+    throw new HttpException(
+      {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: 'Internal Server Error: Could not create personnel with related details',
+      },
+      HttpStatus.INTERNAL_SERVER_ERROR,
+    );
   }
+}
 
   @Get('personnel')
   async findAll(

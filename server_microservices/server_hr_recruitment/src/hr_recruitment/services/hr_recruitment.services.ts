@@ -111,7 +111,36 @@ export class HrRecruitmentServices {
       };
     }
   }
-
+  async createNew(
+    createPersonnelWithDetailsDto: CreatePersonnelWithDetails2Dto,
+  ): Promise<{ success: boolean; message: string; data?: Personnel }> {
+    try {
+      // Sử dụng transaction manager để xử lý quá trình lưu dữ liệu.
+      return await this.personnelRepository.manager.transaction(
+        async (entityManager: EntityManager) => {
+          const personnelData = { ...createPersonnelWithDetailsDto };
+          
+          // Tạo và lưu personnel trong một transaction.
+          const personnel = this.personnelRepository.create(personnelData);
+          const savedPersonnel = await entityManager.save(Personnel, personnel);
+  
+          return {
+            success: true,
+            message: 'Personnel and related details created successfully',
+            data: savedPersonnel,
+          };
+        },
+      );
+    } catch (error) {
+      this.logger.error('Error creating personnel with details', error.stack);
+      
+      // Trả về lỗi rõ ràng để biết được lý do thất bại.
+      return {
+        success: false,
+        message: error.message || 'Failed to create personnel with details',
+      };
+    }
+  }
 
 
   async findAllPageLimit(

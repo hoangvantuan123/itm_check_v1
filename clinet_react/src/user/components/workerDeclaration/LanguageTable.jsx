@@ -11,6 +11,7 @@ const LanguageTable = ({ form, dataSource }) => {
       setLocalDataSource([
         { id: 1, language: null, certificate_type: null, score: null, level: null },
         { id: 2, language: null, certificate_type: null, score: null, level: null },
+        { id: 3, language: null, certificate_type: null, score: null, level: null },
       ]);
     }
   }, [dataSource]);
