@@ -88,14 +88,14 @@ export class CreatePersonnelDto {
 
   company_name_1?: string;  // Company name 1
   entrance_day_1?: string;  // Entrance day 1
-  leaving_day_1?: Date;  // Leaving day 1
+  leaving_day_1?: string;  // Leaving day 1
   work_department_1?: string;  // Bộ phận làm việc
   work_responsibility_1?: string;  // Công việc phụ trách
   salary_1?: string;  // Công việc phụ trách
 
   company_name_2?: string;  // Company name 2
   entrance_day_2?: string;  // Entrance day 2
-  leaving_day_2?: Date;  // Leaving day 2
+  leaving_day_2?: string;  // Leaving day 2
   work_department_2?: string;  // Bộ phận làm việc
   work_responsibility_2?: string;  // Công việc phụ trách
   salary_2?: string;  // Công việc phụ trách

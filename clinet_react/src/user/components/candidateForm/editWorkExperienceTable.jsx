@@ -9,20 +9,20 @@ const EditWorkExperienceTable = ({ form, dataSource }) => {
   }, [dataSource])
 
   useEffect(() => {
-    form.setFieldsValue({ workExperiences: localDataSource })
+    form.setFieldsValue({ experiences: localDataSource })
   }, [localDataSource, form])
 
-  const handleWorkExperienceChange = useCallback((key, field, value) => {
+  const handleWorkExperienceChange = useCallback((id, field, value) => {
     setLocalDataSource((prevData) =>
       prevData.map((experience) =>
-        experience.key === key ? { ...experience, [field]: value } : experience,
+        experience.id === id ? { ...experience, [field]: value } : experience,
       ),
     )
   }, [])
 
-  const removeWorkExperience = useCallback((key) => {
+  const removeWorkExperience = useCallback((id) => {
     setLocalDataSource((prevData) =>
-      prevData.filter((experience) => experience.key !== key),
+      prevData.filter((experience) => experience.id !== id),
     )
   }, [])
 
@@ -35,7 +35,7 @@ const EditWorkExperienceTable = ({ form, dataSource }) => {
           value={text}
           onChange={(e) =>
             handleWorkExperienceChange(
-              record.key,
+              record.id,
               'company_name',
               e.target.value,
             )
@@ -52,7 +52,7 @@ const EditWorkExperienceTable = ({ form, dataSource }) => {
         <Input
           value={text}
           onChange={(e) =>
-            handleWorkExperienceChange(record.key, 'position', e.target.value)
+            handleWorkExperienceChange(record.id, 'position', e.target.value)
           }
           className="border-none w-36 md:w-full"
           style={{ margin: 0 }}
@@ -64,17 +64,13 @@ const EditWorkExperienceTable = ({ form, dataSource }) => {
       dataIndex: 'start_date',
       render: (text, record) => (
         <Input
-        value={text}
-        onChange={(e) =>
-          handleWorkExperienceChange(
-            record.key,
-            'start_date',
-            e.target.value,
-          )
-        }
-        className="border-none w-36 md:w-full"
-        style={{ margin: 0 }}
-      />
+          value={text}
+          onChange={(e) =>
+            handleWorkExperienceChange(record.id, 'start_date', e.target.value)
+          }
+          className="border-none w-36 md:w-full"
+          style={{ margin: 0 }}
+        />
       ),
     },
     {
@@ -82,17 +78,13 @@ const EditWorkExperienceTable = ({ form, dataSource }) => {
       dataIndex: 'end_date',
       render: (text, record) => (
         <Input
-        value={text}
-        onChange={(e) =>
-          handleWorkExperienceChange(
-            record.key,
-            'end_date',
-            e.target.value,
-          )
-        }
-        className="border-none w-36 md:w-full"
-        style={{ margin: 0 }}
-      />
+          value={text}
+          onChange={(e) =>
+            handleWorkExperienceChange(record.id, 'end_date', e.target.value)
+          }
+          className="border-none w-36 md:w-full"
+          style={{ margin: 0 }}
+        />
       ),
     },
     {
@@ -102,7 +94,7 @@ const EditWorkExperienceTable = ({ form, dataSource }) => {
         <Input
           value={text}
           onChange={(e) =>
-            handleWorkExperienceChange(record.key, 'tasks', e.target.value)
+            handleWorkExperienceChange(record.id, 'tasks', e.target.value)
           }
           className="border-none w-36 md:w-full"
           style={{ margin: 0 }}
@@ -116,26 +108,23 @@ const EditWorkExperienceTable = ({ form, dataSource }) => {
         <Input
           value={text}
           onChange={(e) =>
-            handleWorkExperienceChange(record.key, 'salary', e.target.value)
+            handleWorkExperienceChange(record.id, 'salary', e.target.value)
           }
           className="border-none w-36 md:w-full"
           style={{ margin: 0 }}
         />
       ),
     },
-
-  
-
   ]
 
   return (
     <>
-      <Form.Item name="workExperiences">
+      <Form.Item name="experiences">
         <Table
           dataSource={localDataSource}
           columns={experienceColumns}
           pagination={false}
-          rowKey={(record) => record.key}
+          rowKey={(record) => record.id}
           scroll={{ x: true }}
           bordered
           style={{ margin: '0 auto' }}

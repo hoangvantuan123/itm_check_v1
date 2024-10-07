@@ -8,34 +8,34 @@ const PersonalInformation = ({ form, formData }) => {
   useEffect(() => {
     if (formData) {
       form.setFieldsValue({
-        fullName: formData.full_name,
+        full_name: formData.full_name,
         gender: formData.gender,
-        interviewDate: formData.interview_date
+        interview_date: formData.interview_date
           ? moment(formData.interview_date)
           : null,
-        startDate: formData.start_date ? moment(formData.start_date) : null,
-        dob: formData.birth_date ? moment(formData.birth_date) : null,
-        idNumber: formData.id_number,
-        issuedDate: formData.id_issue_date
+        entering_day: formData.entering_day ? moment(formData.entering_day) : null,
+        birth_date: formData.birth_date ? moment(formData.birth_date) : null,
+        id_number: formData.id_number,
+        id_issue_date: formData.id_issue_date
           ? moment(formData.id_issue_date)
           : null,
         ethnicity: formData.ethnicity,
-        issuedPlace: formData.id_issue_place,
-        insuranceNumber: formData.insurance_number,
-        taxCode: formData.tax_number,
-        phone: formData.phone_number,
+        id_issue_place: formData.id_issue_place,
+        insurance_number: formData.insurance_number,
+        tax_number: formData.tax_number,
+        phone_number: formData.phone_number,
         email: formData.email,
-        emergencyPhone: formData.alternate_phone_number,
-        emergencyContactName: formData.alternate_name,
-        emergencyContactRelation: formData.alternate_relationship,
-        birthAddress: formData.birth_address,
-        birthProvince: formData.birth_province,
-        birthDistrict: formData.birth_district,
-        birthCommune: formData.birth_ward,
-        currentAddress: formData.current_address,
-        currentProvince: formData.current_province,
-        currentDistrict: formData.current_district,
-        currentCommune: formData.current_ward,
+        alternate_phone_number: formData.alternate_phone_number,
+        alternate_name: formData.alternate_name,
+        alternate_relationship: formData.alternate_relationship,
+        birth_address: formData.birth_address,
+        birth_province: formData.birth_province,
+        birth_district: formData.birth_district,
+        birth_ward: formData.birth_ward,
+        current_address: formData.current_address,
+        current_province: formData.current_province,
+        current_district: formData.current_district,
+        current_ward: formData.current_ward,
       })
     }
   }, [formData, form])
@@ -48,7 +48,7 @@ const PersonalInformation = ({ form, formData }) => {
         <Col xs={24} sm={20} md={20}>
           <Form.Item
             label="Họ tên ứng viên:"
-            name="fullName"
+            name="full_name"
             rules={[{ required: true, message: 'Vui lòng nhập họ tên!' }]}
           >
             <Input size="large" placeholder="Nhập họ tên" />
@@ -61,19 +61,17 @@ const PersonalInformation = ({ form, formData }) => {
             rules={[{ required: true, message: 'Vui lòng chọn giới tính!' }]}
           >
             <Select size="large" placeholder="Chọn giới tính">
-              <Option value="Male">Nam</Option>
-              <Option value="Female">Nữ</Option>
-              <Option value="Other">Khác</Option>
+              <Option value="Nam">Nam</Option>
+              <Option value="Nữ">Nữ</Option>
+              <Option value="Khác">Khác</Option>
             </Select>
           </Form.Item>
         </Col>
         <Col xs={12} sm={12} md={12}>
           <Form.Item
             label="Ngày phỏng vấn:"
-            name="interviewDate"
-            rules={[
-              { required: true, message: 'Vui lòng nhập ngày phỏng vấn!' },
-            ]}
+            name="interview_date"
+           
           >
             <DatePicker
               size="large"
@@ -83,7 +81,7 @@ const PersonalInformation = ({ form, formData }) => {
           </Form.Item>
         </Col>
         <Col xs={12} sm={12} md={12}>
-          <Form.Item label="Ngày vào:" name="startDate">
+          <Form.Item label="Ngày vào:" name="entering_day">
             <DatePicker
               size="large"
               style={{ width: '100%' }}
@@ -94,7 +92,7 @@ const PersonalInformation = ({ form, formData }) => {
         <Col xs={24} sm={24} md={24}>
           <Form.Item
             label="Ngày tháng năm sinh:"
-            name="dob"
+            name="birth_date"
             rules={[{ required: true, message: 'Vui lòng nhập ngày sinh!' }]}
           >
             <DatePicker
@@ -108,7 +106,7 @@ const PersonalInformation = ({ form, formData }) => {
           {/* d */}
           <Form.Item
             label="Số CMND:"
-            name="idNumber"
+            name="id_number"
             rules={[{ required: true, message: 'Vui lòng nhập số CMND!' }]}
           >
             <Input
@@ -119,7 +117,7 @@ const PersonalInformation = ({ form, formData }) => {
           </Form.Item>
         </Col>
         <Col xs={14} sm={12} md={8}>
-          <Form.Item label="Ngày cấp:" name="issuedDate">
+          <Form.Item label="Ngày cấp:" name="id_issue_date">
             <DatePicker
               size="large"
               style={{ width: '100%' }}
@@ -133,24 +131,24 @@ const PersonalInformation = ({ form, formData }) => {
           </Form.Item>
         </Col>
         <Col xs={24} sm={24} md={24}>
-          <Form.Item label="Nơi cấp:" name="issuedPlace">
+          <Form.Item label="Nơi cấp:" name="id_issue_place">
             <Input size="large" placeholder="Nhập nơi cấp" />
           </Form.Item>
         </Col>
         <Col xs={24} sm={12} md={12}>
-          <Form.Item label="Số sổ bảo hiểm (nếu có):" name="insuranceNumber">
+          <Form.Item label="Số sổ bảo hiểm (nếu có):" name="insurance_number">
             <Input size="large" placeholder="Nhập số bảo hiểm" />
           </Form.Item>
         </Col>
         <Col xs={24} sm={12} md={12}>
-          <Form.Item label="Mã số thuế cá nhân:" name="taxCode">
+          <Form.Item label="Mã số thuế cá nhân:" name="tax_number">
             <Input size="large" placeholder="Nhập mã số thuế" />
           </Form.Item>
         </Col>
         <Col xs={24} sm={12} md={12}>
           <Form.Item
             label="Số điện thoại liên hệ:"
-            name="phone"
+            name="phone_number"
             rules={[
               { required: true, message: 'Vui lòng nhập số điện thoại!' },
             ]}
@@ -174,7 +172,7 @@ const PersonalInformation = ({ form, formData }) => {
         <Col xs={24} sm={12} md={8}>
           <Form.Item
             label="Số điện thoại liên hệ khi cần thiết:"
-            name="emergencyPhone"
+            name="alternate_phone_number"
             rules={[
               {
                 required: true,
@@ -188,7 +186,7 @@ const PersonalInformation = ({ form, formData }) => {
         <Col xs={24} sm={12} md={8}>
           <Form.Item
             label="Tên:"
-            name="emergencyContactName"
+            name="alternate_name"
             rules={[{ required: true, message: 'Vui lòng nhập tên!' }]}
           >
             <Input size="large" placeholder="Nhập tên người liên hệ" />
@@ -197,7 +195,7 @@ const PersonalInformation = ({ form, formData }) => {
         <Col xs={24} sm={12} md={8}>
           <Form.Item
             label="Quan hệ:"
-            name="emergencyContactRelation"
+            name="alternate_relationship"
             rules={[{ required: true, message: 'Vui lòng nhập quan hệ!' }]}
           >
             <Input size="large" placeholder="Nhập quan hệ" />
@@ -213,7 +211,7 @@ const PersonalInformation = ({ form, formData }) => {
         <Col xs={24} sm={12} md={8}>
           <Form.Item
             label="Tỉnh:"
-            name="birthProvince"
+            name="birth_province"
             rules={[{ required: true, message: 'Vui lòng nhập tỉnh!' }]}
           >
             <Input size="large" placeholder="Nhập tỉnh" />
@@ -222,7 +220,7 @@ const PersonalInformation = ({ form, formData }) => {
         <Col xs={24} sm={12} md={8}>
           <Form.Item
             label="Quận/Huyện:"
-            name="birthDistrict"
+            name="birth_district"
             rules={[{ required: true, message: 'Vui lòng nhập quận/huyện!' }]}
           >
             <Input size="large" placeholder="Nhập quận/huyện" />
@@ -231,7 +229,7 @@ const PersonalInformation = ({ form, formData }) => {
         <Col xs={24} sm={12} md={8}>
           <Form.Item
             label="Xã/Phường:"
-            name="birthCommune"
+            name="birth_ward"
             rules={[{ required: true, message: 'Vui lòng nhập xã/phường!' }]}
           >
             <Input size="large" placeholder="Nhập xã/phường" />
@@ -240,7 +238,7 @@ const PersonalInformation = ({ form, formData }) => {
         <Col xs={24} sm={24} md={24}>
           <Form.Item
             label="Địa chỉ:"
-            name="birthAddress"
+            name="birth_address"
             rules={[{ required: true, message: 'Vui lòng nhập địa chỉ!' }]}
           >
             <Input size="large" placeholder="Nhập địa chỉ" />
@@ -253,7 +251,7 @@ const PersonalInformation = ({ form, formData }) => {
         <Col xs={24} sm={12} md={8}>
           <Form.Item
             label="Tỉnh:"
-            name="currentProvince"
+            name="current_province"
             rules={[{ required: true, message: 'Vui lòng nhập tỉnh!' }]}
           >
             <Input size="large" placeholder="Nhập tỉnh" />
@@ -262,7 +260,7 @@ const PersonalInformation = ({ form, formData }) => {
         <Col xs={24} sm={12} md={8}>
           <Form.Item
             label="Quận/Huyện:"
-            name="currentDistrict"
+            name="current_district"
             rules={[{ required: true, message: 'Vui lòng nhập quận/huyện!' }]}
           >
             <Input size="large" placeholder="Nhập quận/huyện" />
@@ -271,7 +269,7 @@ const PersonalInformation = ({ form, formData }) => {
         <Col xs={24} sm={12} md={8}>
           <Form.Item
             label="Xã/Phường:"
-            name="currentCommune"
+            name="current_ward"
             rules={[{ required: true, message: 'Vui lòng nhập xã/phường!' }]}
           >
             <Input size="large" placeholder="Nhập xã/phường" />
@@ -280,7 +278,7 @@ const PersonalInformation = ({ form, formData }) => {
         <Col xs={24} sm={24} md={24}>
           <Form.Item
             label="Số nhà/Đường/Thôn/Xóm:"
-            name="currentAddress"
+            name="current_address"
             rules={[{ required: true, message: 'Vui lòng nhập địa chỉ!' }]}
           >
             <Input size="large" placeholder="Nhập địa chỉ" />

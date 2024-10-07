@@ -4,6 +4,7 @@ import { HrRecruitmentServices } from '../services/hr_recruitment.services';
 import { Personnel } from '../entity/personnel.entity';
 import { InterviewResult } from '../entity/interview_results.entity';
 import { UpdateInterviewResultDto } from '../dto/update_interview_result.dto';
+import { CreatePersonnelWithDetails2Dto } from '../dto/create-personnel-with-details.dto';
 @Controller('api/sv4/hr-information')
 export class HrRecruitmentController {
   private readonly logger = new Logger(HrRecruitmentController.name);
@@ -66,11 +67,13 @@ export class HrRecruitmentController {
     @Query('nameTags') nameTags?: string,
     @Query('phoneNumberTags') phoneNumberTags?: string,
     @Query('citizenshipIdTags') citizenshipIdTags?: string,
+    @Query('cid') cid?: string,
   ): Promise<{ data: Personnel[]; total: number; totalPages: number }> {
     const filter: Record<string, any> = {
       nameTags: nameTags ? nameTags.split(',') : [],
       phoneNumberTags: phoneNumberTags ? phoneNumberTags.split(',') : [],
       citizenshipIdTags: citizenshipIdTags ? citizenshipIdTags.split(',') : [],
+      cid: cid ? cid.split(',') : [],
     };
 
     const start = startDate ? new Date(startDate) : undefined;
@@ -83,7 +86,7 @@ export class HrRecruitmentController {
   @Put('personnel/:id')
   async update(
     @Param('id') id: number,
-    @Body() updatePersonnelWithDetailsDto: CreatePersonnelWithDetailsDto,
+    @Body() updatePersonnelWithDetailsDto: CreatePersonnelWithDetails2Dto,
   ): Promise<{ success: boolean; message: string; data?: any }> {
     return await this.personnelService.update(id, updatePersonnelWithDetailsDto);
   }

@@ -1,184 +1,174 @@
-import { useState } from 'react'
-import { Form, Table, Input, Button, Checkbox, InputNumber } from 'antd'
+import { useState, useEffect, useCallback } from 'react';
+import { Form, Table, Input, DatePicker } from 'antd';
+import moment from 'moment'; // Thư viện để xử lý ngày
 
-const FamilyInfoTable = () => {
-  const [familyMembers, setFamilyMembers] = useState([
-    {
-      key: 0,
-      relationship: 'Bố',
-      name_family: '',
-      birthYear: null,
-      workplace: '',
-      job: '',
-      phoneNumber: '',
-      livingTogether: false,
-    },
-    {
-      key: 1,
-      relationship: 'Mẹ',
-      name_family: '',
-      birthYear: null,
-      workplace: '',
-      job: '',
-      phoneNumber: '',
-      livingTogether: false,
-    },
-    {
-      key: 2,
-      relationship: 'Vợ/chồng',
-      name_family: '',
-      birthYear: null,
-      workplace: '',
-      job: '',
-      phoneNumber: '',
-      livingTogether: false,
-    },
-    {
-      key: 3,
-      relationship: 'Anh/Em/Con',
-      name_family: '',
-      birthYear: null,
-      workplace: '',
-      job: '',
-      phoneNumber: '',
-      livingTogether: false,
-    },
-  ])
+const FamilyInfoTable = ({ form, dataSource, children }) => {
+  const [localDataSource, setLocalDataSource] = useState([]);
+  const [childrenDataSource, setChildrenDataSource] = useState([]);
 
-  const addSibling = () => {
-    if (
-      familyMembers.filter((member) => member.relationship === 'Anh/Em/Con')
-        .length < 3
-    ) {
-      setFamilyMembers([
-        ...familyMembers,
-        {
-          key: familyMembers.length,
-          relationship: 'Anh/Em/Con',
-          name_family: '',
-          birthYear: null,
-          workplace: '',
-          job: '',
-          phoneNumber: '',
-          livingTogether: false,
-        },
-      ])
+  useEffect(() => {
+    if (dataSource && dataSource.length > 0) {
+      setLocalDataSource(dataSource);
+    } else {
+      setLocalDataSource([
+        { key: 1, relationship: null, full_name: null, phone_number: null },
+        { key: 2, relationship: null, full_name: null, phone_number: null },
+        { key: 3, relationship: null, full_name: null, phone_number: null },
+      ]);
     }
-  }
+
+    if (children && children.length > 0) {
+      setChildrenDataSource(children);
+    } else {
+      setChildrenDataSource([
+        { key: 1, children_name: null, children_birth_date: null, children_gender: null },
+        { key: 2, children_name: null, children_birth_date: null, children_gender: null },
+        { key: 3, children_name: null, children_birth_date: null, children_gender: null },
+      ]);
+    }
+  }, [dataSource, children]);
+
+  useEffect(() => {
+    form.setFieldsValue({ families: localDataSource });
+    form.setFieldsValue({ children: childrenDataSource });
+  }, [localDataSource, childrenDataSource, form]);
+
+  const handleFamilyMemberChange = useCallback((index, field, value) => {
+    setLocalDataSource((prevData) =>
+      prevData.map((member, idx) =>
+        idx === index ? { ...member, [field]: value } : member,
+      ),
+    );
+  }, []);
+
+  const handleChildrenChange = useCallback((index, field, value) => {
+    setChildrenDataSource((prevData) =>
+      prevData.map((member, idx) =>
+        idx === index ? { ...member, [field]: value } : member,
+      ),
+    );
+  }, []);
 
   const columns = [
     {
       title: 'Quan hệ',
       dataIndex: 'relationship',
       render: (text, record, index) => (
-        <Form.Item
-          name={['familyMembers', index, 'relationship']}
-          initialValue={text || ''}
-          style={{ margin: 0 }}
-        >
-          <span>{text}</span>
-        </Form.Item>
+        <Input
+          value={text}
+          onChange={(e) =>
+            handleFamilyMemberChange(index, 'relationship', e.target.value)
+          }
+          className="border-none w-full"
+        />
       ),
     },
     {
       title: 'Họ tên',
-      dataIndex: 'name_family',
+      dataIndex: 'full_name',
       render: (text, record, index) => (
-        <Form.Item
-          name={['familyMembers', index, 'name_family']}
-          style={{ margin: 0 }}
-        >
-          <Input className="border-none w-[150px]" />
-        </Form.Item>
-      ),
-    },
-    {
-      title: 'Năm sinh',
-      dataIndex: 'birthYear',
-      render: (text, record, index) => (
-        <Form.Item
-          name={['familyMembers', index, 'birthYear']}
-          style={{ margin: 0 }}
-        >
-          <InputNumber className="border-none w-[80px]" />
-        </Form.Item>
-      ),
-    },
-    {
-      title: 'Nơi làm việc',
-      dataIndex: 'workplace',
-      render: (text, record, index) => (
-        <Form.Item
-          name={['familyMembers', index, 'workplace']}
-          style={{ margin: 0 }}
-        >
-          <Input className="border-none w-[120px]" />
-        </Form.Item>
-      ),
-    },
-    {
-      title: 'Công việc',
-      dataIndex: 'job',
-      render: (text, record, index) => (
-        <Form.Item name={['familyMembers', index, 'job']} style={{ margin: 0 }}>
-          <Input className="border-none w-[120px]" />
-        </Form.Item>
+        <Input
+          value={text}
+          onChange={(e) =>
+            handleFamilyMemberChange(index, 'full_name', e.target.value)
+          }
+          className="border-none w-full"
+        />
       ),
     },
     {
       title: 'Số điện thoại',
-      dataIndex: 'phoneNumber',
+      dataIndex: 'phone_number',
       render: (text, record, index) => (
-        <Form.Item
-          name={['familyMembers', index, 'phoneNumber']}
-          style={{ margin: 0 }}
-        >
-          <Input className="border-none w-[120px]" />
-        </Form.Item>
+        <Input
+          value={text}
+          onChange={(e) =>
+            handleFamilyMemberChange(index, 'phone_number', e.target.value)
+          }
+          className="border-none w-full"
+        />
+      ),
+    },
+  ];
+
+  const columnsChildren = [
+    {
+      title: 'Họ tên',
+      dataIndex: 'children_name',
+      render: (text, record, index) => (
+        <Input
+          value={text}
+          onChange={(e) =>
+            handleChildrenChange(index, 'children_name', e.target.value)
+          }
+          className="border-none w-full"
+        />
       ),
     },
     {
-      title: 'Sống chung',
-      dataIndex: 'livingTogether',
+      title: 'Năm sinh',
+      dataIndex: 'children_birth_date',
       render: (text, record, index) => (
-        <Form.Item
-          name={['familyMembers', index, 'livingTogether']}
-          valuePropName="checked"
-          style={{ margin: 0 }}
-        >
-          <Checkbox />
-        </Form.Item>
+        <DatePicker
+          value={text ? moment(text) : null}
+          onChange={(date) =>
+            handleChildrenChange(
+              index,
+              'children_birth_date',
+              date ? date.format('YYYY-MM-DD') : null,
+            )
+          }
+          format="YYYY-MM-DD"
+          className="border-none w-full"
+        />
       ),
     },
-  ]
+    {
+      title: 'Giới tính',
+      dataIndex: 'children_gender',
+      render: (text, record, index) => (
+        <Input
+          value={text}
+          onChange={(e) =>
+            handleChildrenChange(index, 'children_gender', e.target.value)
+          }
+          className="border-none w-full"
+        />
+      ),
+    },
+  ];
 
   return (
     <>
-      <h2 className="text-xl font-semibold mb-4">Thông tin gia đình</h2>
-      <Table
-        dataSource={familyMembers}
-        columns={columns}
-        pagination={false}
-        rowKey="key"
-        bordered
-        scroll={{ x: true }}
-        style={{ margin: '0 auto' }}
-        rowClassName="custom-row"
-        size="small"
-      />
-      <Button
-        onClick={addSibling}
-        type="dashed"
-        disabled={
-          familyMembers.filter((member) => member.relationship === 'Anh/Em/Con')
-            .length >= 3
-        }
-        style={{ marginTop: '16px' }}
-      >
-        Thêm hàng
-      </Button>
+      <Form.Item name="families">
+        <Table
+          dataSource={localDataSource}
+          columns={columns}
+          pagination={false}
+          rowKey="key"
+          bordered
+          scroll={{ x: true }}
+          style={{ margin: '0 auto' }}
+          rowClassName="custom-row"
+          size="small"
+        />
+      </Form.Item>
+      <h2 className="text-sm font-semibold mb-4">Con cái</h2>
+      <Form.Item name="children">
+        <Table
+          dataSource={childrenDataSource}
+          columns={columnsChildren}
+          pagination={false}
+          rowKey="key"
+          bordered
+          scroll={{ x: true }}
+          style={{ margin: '0 auto' }}
+          rowClassName="custom-row"
+          size="small"
+        />
+      </Form.Item>
     </>
-  )
-}
+  );
+};
 
-export default FamilyInfoTable
+export default FamilyInfoTable;

@@ -28,6 +28,7 @@ import CustomTag from '../components/candidateForm/customTag'
 import CustomTagSyn from '../components/tags/customTagSyn'
 import SynAction from '../components/action/synAction'
 import CustomTypePersonnel from '../components/tags/customTypePersonnel'
+import AddHR from '../components/add/addHr'
 const { RangePicker } = DatePicker
 const { Content } = Layout
 const { Option } = Select
@@ -44,7 +45,6 @@ const columnConfig = [
   { key: 'team', label: 'Team' },
   { key: 'part', label: 'Part' },
   { key: 'position', label: 'Chức vụ' },
-  { key: 'interview_result', label: 'Kết quả' },
   { key: 'synchronize', label: 'Đồng bộ ' },
 ]
 
@@ -126,11 +126,14 @@ export default function EmployeeDataiView({ permissions }) {
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const [nameTags, setNameTags] = useState([])
+  const [cid, setCid] = useState([])
   const [phoneNumberTags, setPhoneNumberTags] = useState([])
   const [citizenshipIdTags, setCitizenshipIdTags] = useState([])
   const [isDrawerVisibleFilter, setIsDrawerVisibleFilter] = useState(false)
   const [actionUsers, setActionUsers] = useState(null)
   const [actionImport, setActionImport] = useState(null)
+  const [syn, setSyn] = useState(null)
+  const [isModalOpenAddHr, setIsModalOpenAddHr] = useState(false)
   const handleOnClickAction = () => {
     setActionUsers('actionHrInfoIds')
   }
@@ -214,6 +217,8 @@ export default function EmployeeDataiView({ permissions }) {
         nameTags,
         phoneNumberTags,
         citizenshipIdTags,
+        cid,
+        syn
       )
 
       if (response.success) {
@@ -293,13 +298,7 @@ export default function EmployeeDataiView({ permissions }) {
       dataIndex: key,
       key: key,
       render: (text, record) => {
-        if (key === 'interview_result') {
-          const result =
-            record.interviews.length > 0
-              ? record.interviews[0].interview_result
-              : null
-          return visibleColumns[key] ? <CustomTag status={result} /> : null
-        }
+
         if (key === 'synchronize') {
           return visibleColumns[key] ? (
             <CustomTagSyn status={record.synchronize} />
@@ -323,6 +322,9 @@ export default function EmployeeDataiView({ permissions }) {
         },
       }),
       sorter: (a, b) => {
+        if (key === 'synchronize') {
+          return (a[key] === b[key]) ? 0 : (a[key] ? -1 : 1);
+        }
         const aValue = a[key]
         const bValue = b[key]
         if (key === 'type_personnel') {
@@ -400,7 +402,6 @@ export default function EmployeeDataiView({ permissions }) {
           handleTableChange({ current: page, pageSize }),
       }}
       loading={loading}
-   
     />
   )
 
@@ -412,10 +413,19 @@ export default function EmployeeDataiView({ permissions }) {
 
   const handleDateChange = (dates) => {
     if (dates) {
-      setDateRange(dates) // Cập nhật state với giá trị được chọn
+      setDateRange(dates)
     } else {
-      setDateRange([null, null]) // Nếu không có giá trị, đặt lại thành null
+      setDateRange([null, null]) 
     }
+  }
+
+  const openModalAddUser = () => {
+    setIsModalOpenAddHr(true)
+  }
+
+
+  const closeModalAddHr = () => {
+    setIsModalOpenAddHr(false)
   }
 
   return (
@@ -430,6 +440,7 @@ export default function EmployeeDataiView({ permissions }) {
         </h1>
         <Button
           type="primary"
+          onClick={openModalAddUser}
           icon={<PlusOutlined />}
           className=" rounded-lg h-full border-gray-200 bg-indigo-600 hover:bg-none text-white shadow-sm text-sm"
           size="large"
@@ -468,10 +479,14 @@ export default function EmployeeDataiView({ permissions }) {
               isDrawerVisible={isDrawerVisibleFilter}
               nameTags={nameTags}
               setNameTags={setNameTags}
+              setCid={setCid}
+              cid={cid}
               phoneNumberTags={phoneNumberTags}
               setPhoneNumberTags={setPhoneNumberTags}
               citizenshipIdTags={citizenshipIdTags}
               setCitizenshipIdTags={setCitizenshipIdTags}
+              setSyn={setSyn}
+              syn={syn}
             />
             <Button
               size="large"
@@ -481,7 +496,7 @@ export default function EmployeeDataiView({ permissions }) {
               <CloumnIcon />
             </Button>
             {selectedRowKeys != null && selectedRowKeys.length > 0 && (
-              <SynAction selectedRowKeys={selectedRowKeys} />
+              <SynAction fetchData={fetchData} selectedRowKeys={selectedRowKeys} />
             )}
 
             {selectedRowKeys != null && selectedRowKeys.length > 0 && (
@@ -498,7 +513,8 @@ export default function EmployeeDataiView({ permissions }) {
           </div>
         </span>
       </div>
-
+      <AddHR isOpen={isModalOpenAddHr}
+        onClose={closeModalAddHr} fetchData={fetchData} />
       <Layout className="flex-1 overflow-auto bg-white p-2">
         {renderTable()}
         {renderDetailModal()}

@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
-import { Form, Button, message, Drawer, Spin } from 'antd'
+import { Form, Button, message, Drawer, Spin, Divider } from 'antd'
 import { useNavigate, useLocation } from 'react-router-dom'
 
 import FamilyInfoTable from '../components/workerDeclaration/familyInfoTable'
@@ -11,6 +11,7 @@ import { PostPublicHrRecryutment } from '../../features/hrRecruitment/postPublic
 import { PutUserInterview } from '../../features/hrRecruitment/putUserInterview'
 import { GetHrInfoId } from '../../features/hrRecruitment/getPersonnelId'
 import { PutHrInfoId } from '../../features/hrRecruitment/updateHrInfoId'
+import LanguageTable from '../components/workerDeclaration/LanguageTable'
 const WorkerDeclarationMultiStepForm = () => {
   const navigate = useNavigate()
   const [currentStep, setCurrentStep] = useState(0)
@@ -26,20 +27,37 @@ const WorkerDeclarationMultiStepForm = () => {
   const [error, setError] = useState(null)
   const location = useLocation()
 
-
+  useEffect(() => {
+    const path = location.pathname
+    const encodedData = path.split('/').pop()
+    if (encodedData !== 'new') {
+      const decodedString = atob(encodedData)
+      const parsedData = decodedString.includes(':')
+        ? decodedString.split(':')
+        : JSON.parse(decodedString)
+      if (Array.isArray(parsedData)) {
+        setDecodedData({
+          id: Number(parsedData[0]),
+          phoneNumber: parsedData[1],
+          fullName: parsedData[2],
+          email: parsedData[3],
+        })
+      }
+    }
+  }, [location])
   const fetchDataUserId = async () => {
     setLoading(true)
     try {
-      const response = await GetHrInfoId(decodedData.id)
-      if (response.success) {
-        if (response.data.status) {
-          setFormData(response.data.data)
+      const response = await GetHrInfoId(decodedData?.id)
+      if (response?.success) {
+        if (response?.data.status) {
+          setFormData(response?.data.data)
           setError(null)
           if (
-            response.data.data.interviews &&
-            response.data.data.interviews.length > 0
+            response?.data.data.interviews &&
+            response?.data.data.interviews.length > 0
           ) {
-            setInterviewData(response.data.data.interviews[0])
+            setInterviewData(response?.data.data.interviews[0])
           } else {
             setInterviewData({})
           }
@@ -88,77 +106,97 @@ const WorkerDeclarationMultiStepForm = () => {
 
   const formatSubmissionData = (finalData) => {
     const result = {
-      full_name: finalData?.fullName,
+      full_name: finalData?.full_name,
       gender: finalData?.gender,
-      interview_date: finalData?.interviewDate,
-      birth_date: finalData?.dob,
-      id_number: finalData?.idNumber,
-      id_issue_date: finalData?.issuedDate,
+      interview_date: finalData?.interview_date,
+      birth_date: finalData?.birth_date,
+      id_number: finalData?.id_number,
+      id_issue_date: finalData?.id_issue_date,
       ethnicity: finalData?.ethnicity,
-      phone_number: finalData?.phone,
-      alternate_phone_number: finalData?.emergencyPhone,
-      alternate_name: finalData?.emergencyContactName,
-      alternate_relationship: finalData?.emergencyContactRelation,
-      birth_address: finalData?.birthAddress,
-      birth_province: finalData?.birthProvince,
-      birth_district: finalData?.birthDistrict,
-      birth_ward: finalData?.birthCommune,
-      current_address: finalData?.currentAddress,
-      current_province: finalData?.currentProvince,
-      current_district: finalData?.currentDistrict,
-      current_ward: finalData?.currentCommune,
-      type_personnel: true,
+      phone_number: finalData?.phone_number,
+      alternate_phone_number: finalData?.alternate_phone_number,
+      alternate_name: finalData?.alternate_name,
+      alternate_relationship: finalData?.alternate_relationship,
+      birth_address: finalData?.birth_address,
+      birth_province: finalData?.birth_province,
+      birth_district: finalData?.birth_district,
+      birth_ward: finalData?.birth_ward,
+      current_address: finalData?.current_address,
+      current_province: finalData?.current_province,
+      current_district: finalData?.current_district,
+      current_ward: finalData?.current_ward,
       supplier_details: finalData?.supplierDetails,
       candidate_type: finalData?.candidateType,
-      status_form: true,
+      entering_day: finalData?.entering_day,
+      email: finalData?.email,
+      insurance_number: finalData?.insurance_number,
+      tax_number: finalData?.tax_number,
+      /* Gia đình cha mẹ vợ */
+      father_name: finalData?.families[0].full_name,
+      father_phone_number: finalData?.families[0].phone_number,
+      mother_name: finalData?.families[1].full_name,
+      mother_phone_number: finalData?.families[1].phone_number,
+      partner_name: finalData?.families[2].full_name,
+      partner_phone_number: finalData?.families[2].phone_number,
+      /* Con cais */
+      children_name_1: finalData?.children[0].children_name,
+      children_birth_date_1: finalData?.children[0].children_birth_date,
+      children_gender_1: finalData?.children[0].children_gender,
+      /*  */
+      children_name_2: finalData?.children[1].children_name,
+      children_birth_date_2: finalData?.children[1].children_birth_date,
+      children_gender_2: finalData?.children[1].children_gender,
+      /*  */
+      children_name_3: finalData?.children[2].children_name,
+      children_birth_date_3: finalData?.children[2].children_birth_date,
+      children_gender_3: finalData?.children[2].children_gender,
 
-      families:
-        finalData?.familyMembers?.map((family) => ({
-          relationship: family?.relationship,
-          full_name: family?.name_family || null,
-          birth_year: family?.birthYear,
-          workplace: family?.workplace,
-          job: family?.job,
-          phone_number: family?.phoneNumber,
-          living_together: family?.livingTogether,
-        })) || [],
-      educations:
-        finalData?.educationData?.map((education) => ({
-          school: education?.schoolName || null,
-          major: education?.major,
-          years: education?.endYear,
-          start_year: education?.startYear,
-          graduation_year: education?.endYear,
-          grade: education?.grade,
-        })) || [],
-      languages:
-        finalData?.languageData?.map((language) => ({
-          language: language?.language,
-          certificate_type: language?.certificateType,
-          score: language?.score,
-          level: language.level,
-          start_date: language.startDate,
-          end_date: language.endDate,
-          has_bonus: language.note,
-        })) || [],
-      experiences:
-        finalData?.workExperiences?.map((experience) =>
-          filterEmptyFields({
-            company_name: experience?.companyName || 'null',
-            position: experience.position,
-            start_date: experience.joinYear,
-            end_date: experience.leaveYear,
-            employee_scale: experience.employeeScale,
-            tasks: experience.tasks,
-            salary: experience.salary,
-            description: experience.reasonForLeaving,
-          }),
-        ) || [],
-      projects: [],
-      office_skills: [],
+      /* CÔng việc */
+
+      work_department_1: finalData?.experiences[0].tasks,
+      work_responsibility_1: finalData?.experiences[0].position,
+      company_name_1: finalData?.experiences[0].company_name,
+      entrance_day_1: finalData?.experiences[0].start_date,
+      leaving_day_1: finalData?.experiences[0].end_date,
+      salary_1: finalData?.experiences[0].salary,
+
+      work_department_2: finalData?.experiences[1].tasks,
+      work_responsibility_2: finalData?.experiences[1].position,
+      company_name_2: finalData?.experiences[1].company_name,
+      entrance_day_2: finalData?.experiences[1].start_date,
+      leaving_day_2: finalData?.experiences[1].end_date,
+      salary_2: finalData?.experiences[1].salary,
+
+      /*  */
+      highest_education_level: finalData?.educations[0].highest_education_level,
+      school_name: finalData?.educations[0].school,
+      major: finalData?.educations[0].major,
+      school_year: finalData?.educations[0].school_year,
+      year_ended: finalData?.educations[0].year_ended,
+      year_of_graduation: finalData?.educations[0].year_of_graduation,
+      classification: finalData?.educations[0].classification,
+
+
+      /* languages */
+      language_1: finalData?.languages[0].language,
+      certificate_type_1: finalData?.languages[0].certificate_type,
+      score_1: finalData?.languages[0].score,
+      level_1: finalData?.languages[0].level,
+
+      language_2: finalData?.languages[1].language,
+      certificate_type_2: finalData?.languages[1].certificate_type,
+      score_2: finalData?.languages[1].score,
+      level_2: finalData?.languages[1].level,
+
+      language_3: finalData?.languages[2].language,
+      certificate_type_3: finalData?.languages[2].certificate_type,
+      score_3: finalData?.languages[2].score,
+      level_3: finalData?.languages[2].level,
+
+
+
     }
 
-    // Loại bỏ các thuộc tính có giá trị rỗng trong toàn bộ kết quả
     return filterEmptyFields(result)
   }
 
@@ -168,41 +206,48 @@ const WorkerDeclarationMultiStepForm = () => {
       setIsDrawerVisible(true)
     }
   }
-
   const handleDrawerSubmit = async () => {
-    setIsSubmitting(true)
-    const finalData = { ...formData, ...form.getFieldsValue() }
-    const submissionData = formatSubmissionData(finalData)
-
+    setIsSubmitting(true);
+    const finalData = { ...formData, ...form.getFieldsValue() };
+    const submissionData = formatSubmissionData(finalData);
     try {
-      const response = await PutHrInfoId(decodedData?.id, submissionData)
-      if (response.success) {
-        navigate('/public/apply/thong-bao')
+      let response;
+
+      if (decodedData) {
+        response = await PutHrInfoId(decodedData?.id, submissionData);
       } else {
-        message.error('Có lỗi xảy ra khi gửi thông tin!')
+        response = await PostPublicHrRecryutment(submissionData);
+      }
+      if (response.success) {
+        navigate('/public/apply/thong-bao');
+      } else {
+        message.error('Có lỗi xảy ra khi gửi thông tin!');
       }
     } catch (error) {
-      message.error('Có lỗi xảy ra khi gửi thông tin. Vui lòng thử lại!')
+      message.error('Có lỗi xảy ra khi gửi thông tin. Vui lòng thử lại!');
     } finally {
-      setIsSubmitting(false)
-      setIsDrawerVisible(false)
+      setIsSubmitting(false);
+      setIsDrawerVisible(false);
     }
-  }
+  };
+
 
   const steps = [
     {
       title: 'Thông Tin Cá Nhân',
       content: (
         <>
-          <CandidateType
-            form={form}
-            isSupplier={isSupplier}
-            handleCheckboxChange={handleCheckboxChange}
-          />
+
           <PersonalInformation form={form} formData={formData} />
-          <FamilyInfoTable form={form} formData={formData} />
-          <EducationLanguageTable form={form} />
-          <WorkExperienceTable form={form} />
+          <Divider orientation="left italic">Thông tin gia đình</Divider>
+          <FamilyInfoTable form={form} formData={formData} dataSource={formData.families}
+            children={formData.children} />
+          <Divider orientation="left italic">Tình trạng học vấn</Divider>
+          <EducationLanguageTable form={form} dataSource={formData.educations} />
+          <h2 className="mt-4 mb-2 font-semibold">Ngôn ngữ</h2>
+          <LanguageTable form={form} dataSource={formData.languages} />
+          <Divider orientation="left italic">Kinh nghiệm làm việc</Divider>
+          <WorkExperienceTable form={form} dataSource={formData.experiences} />
         </>
       ),
     },

@@ -178,13 +178,12 @@ export default function ImportForm({
     }
   }
 
-
   const handleFileChange = (info) => {
     const { file, fileList } = info
     const isCsvOrXlsx =
       file.type === 'text/csv' ||
       file.type ===
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 
     if (!isCsvOrXlsx) {
       message.error(t('Chỉ hỗ trợ tệp CSV hoặc XLSX'))
@@ -196,15 +195,15 @@ export default function ImportForm({
     setTables([])
     const newConnectValues = {}
     const defaultMappings = {
-      'CID': 'employee_code',
-      'Name': 'full_name',
+      CID: 'employee_code',
+      Name: 'full_name',
       'Đăng ký bp trên ERP': 'erp_department_registration',
-      'Team': 'team',
-      'Part': 'part',
-      'Production': 'production',
-      'Section': 'section',
+      Team: 'team',
+      Part: 'part',
+      Production: 'production',
+      Section: 'section',
       'Job field': 'job_field',
-      'Position': 'position',
+      Position: 'position',
       'Entering day': 'entering_day',
       'Leaving day': 'leaving_day',
       'PROBATION (day)': 'probation_days',
@@ -214,11 +213,11 @@ export default function ImportForm({
       'Ngày cấp': 'id_issue_date',
       'Nơi cấp': 'id_issue_place',
       'Date of birth': 'birth_date',
-      'Tuổi': 'age',
+      Tuổi: 'age',
       'Đếm tháng': 'month_count',
       'Phone Number': 'phone_number',
-      'Gender': 'gender',
-      'Email': 'email',
+      Gender: 'gender',
+      Email: 'email',
       'Partner name': 'partner_name',
       'Partner phone number': 'partner_phone_number',
       'Số con': 'number_of_children',
@@ -244,10 +243,11 @@ export default function ImportForm({
       'Tỉnh 2': 'current_province',
       'Địa chỉ quê quán': 'birth_address',
       'Địa chỉ đăng ký hộ khẩu': 'current_address',
-      'Khoảng cách từ nơi đăng ký hộ khẩu đến công ty': 'distance_from_household_to_company',
+      'Khoảng cách từ nơi đăng ký hộ khẩu đến công ty':
+        'distance_from_household_to_company',
       'Highest level of education': 'highest_education_level',
       'School name': 'school_name',
-      'Major': 'major',
+      Major: 'major',
       'Company name 1': 'company_name_1',
       'Entrance day 1': 'entrance_day_1',
       'Leaving day 1': 'leaving_day_1',
@@ -260,32 +260,30 @@ export default function ImportForm({
       'Work responsibility 2': 'work_responsibility_2',
       'Dân tộc': 'ethnicity',
       'ĐÓNG BHXH': 'social_insurance',
-      'Interview_date': 'interview_date',
+      Interview_date: 'interview_date',
       'Start date': 'start_date',
-      'School year' : 'school_year',
-      'Year ended' : 'year_ended', 
-      'Year of graduation' : 'year_of_graduation' , 
-      'Classification' : 'classification' , 
-      'Salary 2' : 'salary_2' , 
-      "Salary 1": 'salary_1', 
-      
-      'Language 1' : 'language_1', 
-      'Certificate Type 1': 'certificate_type_1' , 
-      'Score 1' : 'score_1', 
-      'Level 1' :  'level_1',
+      'School year': 'school_year',
+      'Year ended': 'year_ended',
+      'Year of graduation': 'year_of_graduation',
+      Classification: 'classification',
+      'Salary 2': 'salary_2',
+      'Salary 1': 'salary_1',
 
-      'Language 2' : 'language_2', 
-      'Certificate Type 2': 'certificate_type_2' , 
-      'Score 2' : 'score_2', 
-      'Level 2' :  'level_2',
+      'Language 1': 'language_1',
+      'Certificate Type 1': 'certificate_type_1',
+      'Score 1': 'score_1',
+      'Level 1': 'level_1',
 
-      'Language 3' : 'language_3', 
-      'Certificate Type 3': 'certificate_type_3' , 
-      'Score 3' : 'score_3', 
-      'Level 3' :  'level_3',
-    };
-    
-    
+      'Language 2': 'language_2',
+      'Certificate Type 2': 'certificate_type_2',
+      'Score 2': 'score_2',
+      'Level 2': 'level_2',
+
+      'Language 3': 'language_3',
+      'Certificate Type 3': 'certificate_type_3',
+      'Score 3': 'score_3',
+      'Level 3': 'level_3',
+    }
 
     if (file.type === 'text/csv') {
       const reader = new FileReader()
@@ -438,15 +436,15 @@ export default function ImportForm({
   }, [isOpen])
   const dataSource = selectedTable
     ? selectedTable.columns.map((col) => ({
-      key: col,
-      name: col,
-      connect: connectValues[col] || '',
-      note: `Ghi chú cho ${col}`,
-      span:
-        selectedTable.data.length > row
-          ? selectedTable.data[row][col] || ''
-          : '',
-    }))
+        key: col,
+        name: col,
+        connect: connectValues[col] || '',
+        note: `Ghi chú cho ${col}`,
+        span:
+          selectedTable.data.length > row
+            ? selectedTable.data[row][col] || ''
+            : '',
+      }))
     : []
 
   const onChange = (value) => {

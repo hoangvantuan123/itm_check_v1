@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Input, Button, Drawer, Select, DatePicker } from 'antd'
+import { Input, Button, Drawer, Select, DatePicker, Radio } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
 import { GetFilterHrInfoPageLimit } from '../../../features/hrRecruitment/getFilterHrInfoPageLimit'
 const { Option } = Select
@@ -56,6 +56,10 @@ export default function FieldActionWorkerRecruitment({
   setPhoneNumberTags,
   citizenshipIdTags,
   setCitizenshipIdTags,
+  setCid,
+  cid,
+  setSyn,
+  syn
 }) {
   const { t } = useTranslation()
 
@@ -70,7 +74,13 @@ export default function FieldActionWorkerRecruitment({
   const handleCitizenshipIdChange = (value) => {
     setCitizenshipIdTags(value)
   }
+  const handleCidChange = (value) => {
+    setCid(value)
+  }
 
+  const handleSynChange = (e) => {
+    setSyn(e.target.value);
+  };
   return (
     <>
       <div className="flex flex-col items-start">
@@ -106,6 +116,23 @@ export default function FieldActionWorkerRecruitment({
           </Button>,
         ].filter(Boolean)}
       >
+        <div className="mb-3">
+          <label className="block mb-1">Mã nhân viên:</label>
+          <Select
+            mode="tags"
+            value={cid}
+            onChange={handleCidChange}
+            placeholder="Enter names"
+            size="large"
+            className="w-full"
+          >
+            {cid.map((tag) => (
+              <Option key={tag} value={tag}>
+                {tag}
+              </Option>
+            ))}
+          </Select>
+        </div>
         <div className="mb-3">
           <label className="block mb-1">Name:</label>
           <Select
@@ -157,6 +184,13 @@ export default function FieldActionWorkerRecruitment({
               </Option>
             ))}
           </Select>
+        </div>
+        <div className="mb-3">
+          <label className="block mb-1">Đồng bộ ERP:</label>
+          <Radio.Group value={syn} onChange={handleSynChange}>
+            <Radio value={true}>ĐÃ ĐỒNG BỘ</Radio>
+            <Radio value={false}>CHƯA ĐỒNG BỘ</Radio>
+          </Radio.Group>
         </div>
         <div className="mb-3">
           <label className="blick mb-1"> Thời gian</label>

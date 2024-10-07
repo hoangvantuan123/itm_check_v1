@@ -9,7 +9,7 @@ const EditEducationTable = ({ form, dataSource }) => {
   }, [dataSource])
 
   useEffect(() => {
-    form.setFieldsValue({ education: localDataSource })
+    form.setFieldsValue({ educations: localDataSource })
   }, [localDataSource, form])
 
   const handleEducationChange = useCallback((key, field, value) => {
@@ -36,7 +36,11 @@ const EditEducationTable = ({ form, dataSource }) => {
         <Input
           value={text}
           onChange={(e) =>
-            handleEducationChange(record.key, 'highest_education_level', e.target.value)
+            handleEducationChange(
+              record.key,
+              'highest_education_level',
+              e.target.value,
+            )
           }
           className="border-none w-36 md:w-full"
           style={{ margin: 0 }}
@@ -106,10 +110,14 @@ const EditEducationTable = ({ form, dataSource }) => {
         <Input
           value={text}
           onChange={(e) =>
-            handleEducationChange(record.key, 'year_of_graduation', e.target.value)
+            handleEducationChange(
+              record.key,
+              'year_of_graduation',
+              e.target.value,
+            )
           }
           className="border-none w-36 md:w-full"
-          />
+        />
       ),
     },
     {
@@ -126,11 +134,10 @@ const EditEducationTable = ({ form, dataSource }) => {
         />
       ),
     },
- 
   ]
 
   return (
-    <Form.Item name="education">
+    <Form.Item name="educations">
       <Table
         dataSource={localDataSource}
         columns={educationColumns}

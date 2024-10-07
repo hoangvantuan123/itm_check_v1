@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Input, Modal, Typography, Button } from 'antd'
+import { Input, Modal, Typography, Button, message } from 'antd'
 import { PostSyncData } from '../../../features/hrAllData/postSyncData'
 
 const { Title } = Typography
@@ -25,36 +25,29 @@ const SynIcon = () => {
 }
 
 export default function SynAction({ fetchData, isOpen, selectedRowKeys }) {
-  const [isModalVisible, setIsModalVisible] = useState(false) // State để quản lý Modal
-  const [loading, setLoading] = useState(false) // State để quản lý trạng thái loading
-  const { t } = useTranslation() // Khởi tạo i18n
+  const [isModalVisible, setIsModalVisible] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const { t } = useTranslation()
 
-  // Hàm mở Modal
   const showModal = () => {
     setIsModalVisible(true)
   }
 
-  // Hàm đóng Modal
   const handleCancel = () => {
     setIsModalVisible(false)
   }
 
-  // Hàm xử lý khi xác nhận
   const handleConfirm = async () => {
-    setLoading(true) // Bắt đầu trạng thái loading
-    const ids = [1, 2, 3] // Thay đổi ids cho phù hợp với yêu cầu của bạn
+    setLoading(true)
     const result = await PostSyncData(selectedRowKeys)
-    setLoading(false) // Kết thúc trạng thái loading
+    setLoading(false)
 
-    // Xử lý kết quả trả về từ PostSyncData
     if (result.success) {
-      // Có thể thêm thông báo thành công ở đây
-      console.log(result.message)
-      setIsModalVisible(false) // Đóng Modal
+      fetchData()
+      setIsModalVisible(false)
+      message.success(`${result.message} ${selectedRowKeys.length} ${t('records_synced')}`);
     } else {
-      // Thông báo lỗi
-      console.error(result.message)
-      // Có thể thêm thông báo hiển thị lỗi cho người dùng
+      message.error(t('sync_failed') + ': ' + result.message); 
     }
   }
 

@@ -13,6 +13,7 @@ import { InterviewResult } from '../entity/interview_results.entity';
 import { OfficeSkills } from '../entity/office_skills.entity';
 import { Projects } from '../entity/project.entity';
 import { CreatePersonnelWithDetailsDto } from '../dto/create_hr_internview_candidate.dto';
+import { CreatePersonnelWithDetails2Dto } from '../dto/create-personnel-with-details.dto';
 import jwt from 'jsonwebtoken';
 import { HrErp } from '../entity/hr.entity';
 @Injectable()
@@ -42,7 +43,20 @@ export class HrAllDataService {
     private readonly projectRepository: Repository<Projects>,
   ) { }
 
+  async create(
+    createPersonnelDto: Partial<Personnel>,
+  ): Promise<{ success: boolean; message: string; data?: Personnel }> {
 
+    const data = this.personnelRepository.create(createPersonnelDto);
+    await this.personnelRepository.save(data);
+    return {
+      success: true,
+      message: 'Group created successfully',
+      data: data,
+    };
+  }
+
+  
   async findAllPageLimit(
     filter: Record<string, any> = {},
     page: number = 1,
@@ -52,7 +66,6 @@ export class HrAllDataService {
   ): Promise<{ data: Personnel[]; total: number; totalPages: number }> {
     const query = this.personnelRepository.createQueryBuilder('personnel');
 
-    query.leftJoinAndSelect('personnel.interviews', 'interview');
     Object.entries(filter).forEach(([key, value]) => {
       if (value) {
         query.andWhere(`personnel.${key} = :${key}`, { [key]: value });
@@ -87,12 +100,10 @@ export class HrAllDataService {
         'personnel.team',
         'personnel.type_personnel',
         'personnel.jop_position',
-        'interview.id',
         'personnel.employee_code',
         'personnel.part',
         'personnel.erp_department_registration',
         'personnel.position',
-        'interview.interview_result',
       ])
       .skip((page - 1) * limit)
       .take(limit)
@@ -139,8 +150,13 @@ export class HrAllDataService {
       query.andWhere(`(${idConditions.join(' OR ')})`);
     }
 
-
-    query.leftJoinAndSelect('personnel.interviews', 'interview');
+    if (filter.cid && filter.cid.length > 0) {
+      const idConditions = filter.cid.map((id: any, index: any) => `personnel.employee_code ILIKE :id${index}`);
+      filter.cid.forEach((id: any, index: any) => {
+        query.setParameter(`id${index}`, `%${id}%`);
+      });
+      query.andWhere(`(${idConditions.join(' OR ')})`);
+    }
 
     if (startDate) {
       query.andWhere('personnel.create_date >= :startDate', { startDate });
@@ -150,6 +166,10 @@ export class HrAllDataService {
       const endOfDay = new Date(endDate);
       endOfDay.setHours(23, 59, 59, 999);
       query.andWhere('personnel.create_date <= :endOfDay', { endOfDay });
+    }
+
+    if (filter.syn !== undefined) {
+      query.andWhere('personnel.synchronize = :syn', { syn: filter.syn });
     }
 
     query.select([
@@ -169,8 +189,6 @@ export class HrAllDataService {
       'personnel.team',
       'personnel.type_personnel',
       'personnel.jop_position',
-      'interview.id',
-      'interview.interview_result',
       'personnel.employee_code',
       'personnel.part',
       'personnel.erp_department_registration',
@@ -200,36 +218,7 @@ export class HrAllDataService {
 
 
 
-  async findByPhoneNumber(phone_number: string): Promise<any> {
-    const candidate = await this.personnelRepository.findOne({
-      where: { phone_number },
-      relations: ['personnel'],
-    });
-
-    if (!candidate) {
-      return {
-        success: false,
-        message: 'Candidate not found with this phone number',
-        redirectUrl: '/your-desired-url',
-      };
-    }
-
-
-    const combinedInfo = `${candidate.id}:${candidate.phone_number}:${candidate.full_name}:${candidate.email}`;
-    const encodedRouter = Buffer.from(combinedInfo).toString('base64');
-
-    return {
-      success: true,
-      data: {
-        idCadidate: candidate.id,
-        phoneNumber: candidate.phone_number,
-        name: candidate.full_name,
-        email: candidate.email,
-        router: encodedRouter,
-        gender: candidate.gender,
-      },
-    };
-  }
+ 
 
 
 

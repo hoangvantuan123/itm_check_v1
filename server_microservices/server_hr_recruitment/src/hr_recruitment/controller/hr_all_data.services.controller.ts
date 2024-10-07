@@ -1,4 +1,4 @@
-import { Body, Req, Controller, Post, HttpException, HttpStatus, Put, UsePipes, Param, Delete, UnauthorizedException, ValidationPipe, Logger, Get, Query } from '@nestjs/common';
+import { Body, Req, Controller, Post, HttpException, HttpStatus, Res, Put, UsePipes, Param, Delete, UnauthorizedException, ValidationPipe, Logger, Get, Query } from '@nestjs/common';
 import { Personnel } from '../entity/personnel.entity';
 import { HrAllDataService } from '../services/hr_all_data.services';
 
@@ -31,11 +31,15 @@ export class HrAllDataController {
     @Query('nameTags') nameTags?: string,
     @Query('phoneNumberTags') phoneNumberTags?: string,
     @Query('citizenshipIdTags') citizenshipIdTags?: string,
+    @Query('cid') cid?: string,
+    @Query('syn') syn?: boolean,
   ): Promise<{ data: Personnel[]; total: number; totalPages: number }> {
     const filter: Record<string, any> = {
       nameTags: nameTags ? nameTags.split(',') : [],
       phoneNumberTags: phoneNumberTags ? phoneNumberTags.split(',') : [],
       citizenshipIdTags: citizenshipIdTags ? citizenshipIdTags.split(',') : [],
+      cid: cid ? cid.split(',') : [],
+      syn: syn !== undefined ? syn : undefined,
     };
 
     const start = startDate ? new Date(startDate) : undefined;
@@ -50,4 +54,22 @@ export class HrAllDataController {
     return this.personnelService.synchronizeHr(ids);
   }
 
+
+
+
+  @Post('new')
+  async create(
+    @Req() req: Request,
+    @Body() createPersonnelDto: Partial<Personnel>,
+  ): Promise<{ success: boolean; message: string; data?: Personnel }> {
+    try {
+      const result = await this.personnelService.create(createPersonnelDto);
+      return result;
+    } catch (error) {
+      return {
+        success: false,
+        message: 'Error creating personnel: ' + error.message,
+      };
+    }
+  }
 }

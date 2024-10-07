@@ -11,7 +11,7 @@ import { UpdateInterviewResultDto } from '../dto/update_interview_result.dto';
 import { OfficeSkills } from '../entity/office_skills.entity';
 import { Projects } from '../entity/project.entity';
 import { CreatePersonnelWithDetailsDto } from '../dto/create-personnel-with-details.dto';
-
+import { CreatePersonnelWithDetails2Dto } from '../dto/create-personnel-with-details.dto';
 @Injectable()
 export class HrRecruitmentServices {
   private readonly logger = new Logger(HrRecruitmentServices.name);
@@ -123,7 +123,6 @@ export class HrRecruitmentServices {
   ): Promise<{ data: Personnel[]; total: number; totalPages: number }> {
     const query = this.personnelRepository.createQueryBuilder('personnel');
 
-    query.leftJoinAndSelect('personnel.interviews', 'interview');
     query.andWhere('personnel.type_personnel = :type_personnel', { type_personnel: true });
 
     Object.entries(filter).forEach(([key, value]) => {
@@ -154,9 +153,6 @@ export class HrRecruitmentServices {
         'personnel.phone_number',
         'personnel.email',
         'personnel.tax_number',
-        'interview.id',
-        'interview.interview_result',
-        'interview.employee_code',
       ])
       .skip((page - 1) * limit)
       .take(limit)
@@ -205,8 +201,15 @@ export class HrRecruitmentServices {
       query.andWhere(`(${idConditions.join(' OR ')})`);
     }
 
+    if (filter.cid && filter.cid.length > 0) {
+      const idConditions = filter.cid.map((id: any, index: any) => `personnel.employee_code ILIKE :id${index}`);
+      filter.cid.forEach((id: any, index: any) => {
+        query.setParameter(`id${index}`, `%${id}%`);
+      });
+      query.andWhere(`(${idConditions.join(' OR ')})`);
+    }
 
-    query.leftJoinAndSelect('personnel.interviews', 'interview');
+
     query.andWhere('personnel.type_personnel = :type_personnel', { type_personnel: true });
 
     if (startDate) {
@@ -231,8 +234,6 @@ export class HrRecruitmentServices {
       'personnel.phone_number',
       'personnel.email',
       'personnel.tax_number',
-      'interview.id',
-      'interview.interview_result',
     ])
       .skip((page - 1) * limit)
       .take(limit)
@@ -252,7 +253,7 @@ export class HrRecruitmentServices {
 
   async update(
     id: number,
-    updatePersonnelWithDetailsDto: CreatePersonnelWithDetailsDto,
+    updatePersonnelWithDetailsDto: CreatePersonnelWithDetails2Dto,
   ): Promise<{ success: boolean; message: string; data?: Personnel }> {
     try {
       const existingPersonnel = await this.personnelRepository.findOne({ where: { id } });
@@ -262,93 +263,13 @@ export class HrRecruitmentServices {
 
       return await this.personnelRepository.manager.transaction(async (entityManager: EntityManager) => {
         const {
-          families = [],
-          educations = [],
-          languages = [],
-          experiences = [],
-          projects = [],
-          office_skills = [],
           ...personnelData
         } = updatePersonnelWithDetailsDto;
 
-        // Update Personnel entity
         await entityManager.update(Personnel, { id }, personnelData);
 
-        // Update Families
-        await Promise.all(
-          families.map(async (family) => {
-            if (family.id) {
-              await entityManager.update(Family, { id: family.id }, family);
-            } else {
-              const newFamily = entityManager.create(Family, { ...family, personnel: existingPersonnel });
-              await entityManager.save(Family, newFamily);
-            }
-          }),
-        );
-
-        // Update Educations
-        await Promise.all(
-          educations.map(async (education) => {
-            if (education.id) {
-              await entityManager.update(Education, { id: education.id }, education);
-            } else {
-              const newEducation = entityManager.create(Education, { ...education, personnel: existingPersonnel });
-              await entityManager.save(Education, newEducation);
-            }
-          }),
-        );
-
-        // Update Languages
-        await Promise.all(
-          languages.map(async (language) => {
-            if (language.id) {
-              await entityManager.update(Language, { id: language.id }, language);
-            } else {
-              const newLanguage = entityManager.create(Language, { ...language, personnel: existingPersonnel });
-              await entityManager.save(Language, newLanguage);
-            }
-          }),
-        );
-
-        // Update Experiences
-        await Promise.all(
-          experiences.map(async (experience) => {
-            if (experience.id) {
-              await entityManager.update(Experience, { id: experience.id }, experience);
-            } else {
-              const newExperience = entityManager.create(Experience, { ...experience, personnel: existingPersonnel });
-              await entityManager.save(Experience, newExperience);
-            }
-          }),
-        );
-
-        // Update OfficeSkills
-        await Promise.all(
-          office_skills.map(async (office_skill) => {
-            if (office_skill.id) {
-              await entityManager.update(OfficeSkills, { id: office_skill.id }, office_skill);
-            } else {
-              const newOfficeSkills = entityManager.create(OfficeSkills, { ...office_skill, personnel: existingPersonnel });
-              await entityManager.save(OfficeSkills, newOfficeSkills);
-            }
-          }),
-        );
-
-        // Update Projects
-        await Promise.all(
-          projects.map(async (project) => {
-            if (project.id) {
-              await entityManager.update(Projects, { id: project.id }, project);
-            } else {
-              const newProjects = entityManager.create(Projects, { ...project, personnel: existingPersonnel });
-              await entityManager.save(Projects, newProjects);
-            }
-          }),
-        );
-
         const updatedPersonnel = await entityManager.findOne(Personnel, {
-          where: { id },
-          relations: ['families', 'educations', 'languages', 'experiences', 'projects', 'office_skills'],
+          where: { id }
         });
 
         return {
@@ -541,7 +462,6 @@ export class HrRecruitmentServices {
             children_gender: personnel.children_gender_3,
           },
         ],
-
         families: [
           {
             relationship: "Bố",
@@ -561,6 +481,7 @@ export class HrRecruitmentServices {
         ],
         experiences: [
           {
+            id: 1,
             tasks: personnel.work_department_1,
             position: personnel.work_responsibility_1,
             company_name: personnel.company_name_1,
@@ -569,6 +490,7 @@ export class HrRecruitmentServices {
             salary: personnel.salary_1
           },
           {
+            id: 2,
             tasks: personnel.work_department_2,
             position: personnel.work_responsibility_2,
             company_name: personnel.company_name_2,
@@ -592,18 +514,21 @@ export class HrRecruitmentServices {
         languages:
           [
             {
+              id: 1,
               language: personnel.language_1,
               certificate_type: personnel.certificate_type_1,
               score: personnel.score_1,
               level: personnel.level_1,
             },
             {
+              id: 2,
               language: personnel.language_2,
               certificate_type: personnel.certificate_type_2,
               score: personnel.score_2,
               level: personnel.level_2,
             },
             {
+              id: 3,
               language: personnel.language_3,
               certificate_type: personnel.certificate_type_3,
               score: personnel.score_3,
@@ -662,8 +587,7 @@ export class HrRecruitmentServices {
 
   async findByPhoneNumber(phone_number: string): Promise<any> {
     const personnel = await this.personnelRepository.findOne({
-      where: { phone_number },
-      relations: ['families', 'educations', 'languages', 'experiences', 'interviews'],
+      where: { phone_number }
     });
 
     if (!personnel) {
@@ -687,6 +611,7 @@ export class HrRecruitmentServices {
     return {
       success: true,
       data: {
+        id: personnel.id,
         type_personnel: personnel.type_personnel,
         phoneNumber: personnel.phone_number,
         name: personnel.full_name,

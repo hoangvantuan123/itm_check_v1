@@ -131,7 +131,7 @@ const UserRouter = () => {
       />
 
       <Route path="/public/apply/form/1" element={<MultiStepFormPage />} />
-  {/*     <Route
+      {/*     <Route
         path="/public/apply/form/1/:router"
         element={<MultiStepFormPage />}
       /> */}
@@ -373,7 +373,6 @@ const UserRouter = () => {
                         )
                       }
                     />
-                  
 
                     <Route
                       path="/u/action=20/data-employee"

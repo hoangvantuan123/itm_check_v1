@@ -1,35 +1,35 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Form, Table, Input, DatePicker } from 'antd';
-import moment from 'moment'; // Thư viện để xử lý ngày
+import { useState, useEffect, useCallback } from 'react'
+import { Form, Table, Input, DatePicker } from 'antd'
+import moment from 'moment' // Thư viện để xử lý ngày
 
 const EditFamilyInfoTable = ({ form, dataSource, children }) => {
-  const [localDataSource, setLocalDataSource] = useState(dataSource || []);
-  const [childrenDataSource, setChildrenDataSource] = useState(children || []);
+  const [localDataSource, setLocalDataSource] = useState(dataSource || [])
+  const [childrenDataSource, setChildrenDataSource] = useState(children || [])
   useEffect(() => {
-    setLocalDataSource(dataSource);
-    setChildrenDataSource(children);
-  }, [dataSource, children]);
+    setLocalDataSource(dataSource)
+    setChildrenDataSource(children)
+  }, [dataSource, children])
 
   useEffect(() => {
-    form.setFieldsValue({ families: localDataSource });
-    form.setFieldsValue({ children: childrenDataSource });
-  }, [localDataSource, childrenDataSource, form]);
+    form.setFieldsValue({ families: localDataSource })
+    form.setFieldsValue({ children: childrenDataSource })
+  }, [localDataSource, childrenDataSource, form])
 
   const handleFamilyMemberChange = useCallback((index, field, value) => {
     setLocalDataSource((prevData) =>
       prevData.map((member, idx) =>
-        idx === index ? { ...member, [field]: value } : member
-      )
-    );
-  }, []);
+        idx === index ? { ...member, [field]: value } : member,
+      ),
+    )
+  }, [])
 
   const handleChildrenChange = useCallback((index, field, value) => {
     setChildrenDataSource((prevData) =>
       prevData.map((member, idx) =>
-        idx === index ? { ...member, [field]: value } : member
-      )
-    );
-  }, []);
+        idx === index ? { ...member, [field]: value } : member,
+      ),
+    )
+  }, [])
 
   const columns = [
     {
@@ -38,7 +38,9 @@ const EditFamilyInfoTable = ({ form, dataSource, children }) => {
       render: (text, record, index) => (
         <Input
           value={text}
-          onChange={(e) => handleFamilyMemberChange(index, 'relationship', e.target.value)}
+          onChange={(e) =>
+            handleFamilyMemberChange(index, 'relationship', e.target.value)
+          }
           className="border-none w-full"
         />
       ),
@@ -49,7 +51,9 @@ const EditFamilyInfoTable = ({ form, dataSource, children }) => {
       render: (text, record, index) => (
         <Input
           value={text}
-          onChange={(e) => handleFamilyMemberChange(index, 'full_name', e.target.value)}
+          onChange={(e) =>
+            handleFamilyMemberChange(index, 'full_name', e.target.value)
+          }
           className="border-none w-full"
         />
       ),
@@ -60,12 +64,14 @@ const EditFamilyInfoTable = ({ form, dataSource, children }) => {
       render: (text, record, index) => (
         <Input
           value={text}
-          onChange={(e) => handleFamilyMemberChange(index, 'phone_number', e.target.value)}
+          onChange={(e) =>
+            handleFamilyMemberChange(index, 'phone_number', e.target.value)
+          }
           className="border-none w-full"
         />
       ),
     },
-  ];
+  ]
 
   const columnsChildren = [
     {
@@ -74,7 +80,9 @@ const EditFamilyInfoTable = ({ form, dataSource, children }) => {
       render: (text, record, index) => (
         <Input
           value={text}
-          onChange={(e) => handleChildrenChange(index, 'children_name', e.target.value)}
+          onChange={(e) =>
+            handleChildrenChange(index, 'children_name', e.target.value)
+          }
           className="border-none w-full"
         />
       ),
@@ -84,11 +92,15 @@ const EditFamilyInfoTable = ({ form, dataSource, children }) => {
       dataIndex: 'children_birth_date',
       render: (text, record, index) => (
         <DatePicker
-          value={text ? moment(text) : null} 
+          value={text ? moment(text) : null}
           onChange={(date) =>
-            handleChildrenChange(index, 'children_birth_date', date ? date.format('YYYY-MM-DD') : null)
+            handleChildrenChange(
+              index,
+              'children_birth_date',
+              date ? date.format('YYYY-MM-DD') : null,
+            )
           }
-          format="YYYY-MM-DD" 
+          format="YYYY-MM-DD"
           className="border-none w-full"
         />
       ),
@@ -99,12 +111,14 @@ const EditFamilyInfoTable = ({ form, dataSource, children }) => {
       render: (text, record, index) => (
         <Input
           value={text}
-          onChange={(e) => handleChildrenChange(index, 'children_gender', e.target.value)}
+          onChange={(e) =>
+            handleChildrenChange(index, 'children_gender', e.target.value)
+          }
           className="border-none w-full"
         />
       ),
     },
-  ];
+  ]
 
   return (
     <>
@@ -136,7 +150,7 @@ const EditFamilyInfoTable = ({ form, dataSource, children }) => {
         />
       </Form.Item>
     </>
-  );
-};
+  )
+}
 
-export default EditFamilyInfoTable;
+export default EditFamilyInfoTable

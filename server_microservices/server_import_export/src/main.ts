@@ -6,6 +6,9 @@ import * as cors from 'cors';
 
 async function bootstrap() {
   const server = express();
+  server.use(express.json({ limit: '50mb' }));
+  server.use(express.urlencoded({ limit: '50mb', extended: true }));
+
   const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
 
   // Cấu hình cors
@@ -22,8 +25,6 @@ async function bootstrap() {
     }),
   );
 
-  server.use(express.json({ limit: '10mb' })); 
-  server.use(express.urlencoded({ limit: '10mb', extended: true })); 
 
   const port = process.env.PORT || 4000;
   await app.listen(port);

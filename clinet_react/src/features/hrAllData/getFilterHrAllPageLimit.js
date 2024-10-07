@@ -1,6 +1,10 @@
 import axios from 'axios'
-import { HOST_API_PUBLIC_HR } from '../../services'
-import { accessToken } from '../../services/tokenService'
+import {
+  HOST_API_PUBLIC_HR
+} from '../../services'
+import {
+  accessToken
+} from '../../services/tokenService'
 
 export const GetFilterHrAllPageLimit = async (
   page = 1,
@@ -10,6 +14,8 @@ export const GetFilterHrAllPageLimit = async (
   nameTags = [],
   phoneNumberTags = [],
   citizenshipIdTags = [],
+  cid = [],
+  syn
 ) => {
   try {
     const token = accessToken()
@@ -17,10 +23,10 @@ export const GetFilterHrAllPageLimit = async (
     const nameTagsString = nameTags.join(',')
     const phoneNumberTagsString = phoneNumberTags.join(',')
     const citizenshipIdTagsString = citizenshipIdTags.join(',')
+    const citString = cid.join(',')
 
     const response = await axios.get(
-      `${HOST_API_PUBLIC_HR}hr-all-data/filter`,
-      {
+      `${HOST_API_PUBLIC_HR}hr-all-data/filter`, {
         params: {
           page,
           limit,
@@ -29,6 +35,8 @@ export const GetFilterHrAllPageLimit = async (
           nameTags: nameTagsString,
           phoneNumberTags: phoneNumberTagsString,
           citizenshipIdTags: citizenshipIdTagsString,
+          cid: citString,
+          syn
         },
         headers: {
           Authorization: `Bearer ${token}`,
@@ -44,9 +52,8 @@ export const GetFilterHrAllPageLimit = async (
   } catch (error) {
     return {
       success: false,
-      message: error.response
-        ? error.response.data.message || 'Có lỗi xảy ra'
-        : 'Không thể kết nối tới server',
+      message: error.response ?
+        error.response.data.message || 'Có lỗi xảy ra' : 'Không thể kết nối tới server',
     }
   }
 }

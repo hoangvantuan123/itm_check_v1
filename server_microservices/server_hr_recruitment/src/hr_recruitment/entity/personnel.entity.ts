@@ -272,11 +272,11 @@ export class Personnel {
   @Column({ nullable: true })
   company_name_1: string;  // Company name 1
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ nullable: true })
   entrance_day_1: string;  // Entrance day 1
 
-  @Column({ type: 'date', nullable: true })
-  leaving_day_1: Date;  // Leaving day 1
+  @Column({ nullable: true })
+  leaving_day_1: string;  // Leaving day 1
 
   @Column({ nullable: true })
   salary_1: string;  // Salary 1
@@ -290,11 +290,11 @@ export class Personnel {
   @Column({ nullable: true })
   company_name_2: string;  // Company name 2
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ nullable: true })
   entrance_day_2: string;  // Entrance day 2
 
-  @Column({ type: 'date', nullable: true })
-  leaving_day_2: Date;  // Leaving day 2
+  @Column({  nullable: true })
+  leaving_day_2: string;  // Leaving day 2
 
 
   @Column({ nullable: true })

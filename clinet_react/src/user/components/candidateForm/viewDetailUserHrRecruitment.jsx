@@ -39,6 +39,9 @@ const ViewDetailUserHrRecruitment = ({
         : null,
       start_date: formData.start_date ? moment(formData.start_date) : null,
       birth_date: formData.birth_date ? moment(formData.birth_date) : null,
+      entering_day: formData.entering_day
+        ? moment(formData.entering_day)
+        : null,
       id_issue_date: formData.id_issue_date
         ? moment(formData.id_issue_date)
         : null,
@@ -54,12 +57,24 @@ const ViewDetailUserHrRecruitment = ({
   ]
   const childrenColumns = [
     { title: 'Họ tên', dataIndex: 'children_name', key: 'children_name' },
-    { title: 'Năm sinh', dataIndex: 'children_birth_date', key: 'children_birth_date' },
-    { title: 'Giới tính', dataIndex: 'children_gender', key: 'children_gender' },
+    {
+      title: 'Năm sinh',
+      dataIndex: 'children_birth_date',
+      key: 'children_birth_date',
+    },
+    {
+      title: 'Giới tính',
+      dataIndex: 'children_gender',
+      key: 'children_gender',
+    },
   ]
 
   const educationColumns = [
-    { title: 'Trình độ', dataIndex: 'highest_education_level', key: 'highest_education_level' },
+    {
+      title: 'Trình độ',
+      dataIndex: 'highest_education_level',
+      key: 'highest_education_level',
+    },
     { title: 'Trường', dataIndex: 'school', key: 'school' },
     { title: 'Chuyên ngành', dataIndex: 'major', key: 'major' },
     { title: 'Năm học', dataIndex: 'school_year', key: 'school_year' },
@@ -132,13 +147,7 @@ const ViewDetailUserHrRecruitment = ({
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item
-                label="Ngày phỏng vấn:"
-                name="interview_date"
-                rules={[
-                  { required: true, message: 'Vui lòng nhập ngày phỏng vấn!' },
-                ]}
-              >
+              <Form.Item label="Ngày phỏng vấn:" name="interview_date">
                 <DatePicker
                   size="large"
                   style={{ width: '100%' }}
@@ -148,7 +157,7 @@ const ViewDetailUserHrRecruitment = ({
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item label="Ngày vào:" name="start_date">
+              <Form.Item label="Ngày vào:" name="entering_day">
                 <DatePicker
                   size="large"
                   style={{ width: '100%' }}
@@ -250,22 +259,12 @@ const ViewDetailUserHrRecruitment = ({
               <Form.Item
                 label="Số điện thoại khi cần thiết:"
                 name="alternate_phone_number"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Vui lòng nhập số điện thoại khẩn cấp!',
-                  },
-                ]}
               >
                 <Input size="large" placeholder="Nhập số điện thoại khẩn cấp" />
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item
-                label="Tên:"
-                name="alternate_name"
-                rules={[{ required: true, message: 'Vui lòng nhập tên!' }]}
-              >
+              <Form.Item label="Tên:" name="alternate_name">
                 <Input size="large" placeholder="Nhập tên người liên hệ" />
               </Form.Item>
             </Col>
@@ -368,7 +367,11 @@ const ViewDetailUserHrRecruitment = ({
           </Row>
 
           <Divider orientation="left italic">Thông tin gia đình</Divider>
-          <EditFamilyInfoTable form={form} dataSource={formData.families} children={formData.children} />
+          <EditFamilyInfoTable
+            form={form}
+            dataSource={formData.families}
+            children={formData.children}
+          />
 
           <Divider orientation="left italic">Tình trạng học vấn</Divider>
           <h2 className="mt-4 mb-2 font-semibold">Học vấn</h2>
@@ -409,7 +412,7 @@ const ViewDetailUserHrRecruitment = ({
             <Col span={12}>
               <div>
                 <strong>Ngày vào:</strong>
-                <Text className="ml-2">{formData.start_date}</Text>
+                <Text className="ml-2">{formData.entering_day}</Text>
               </div>
             </Col>
           </Row>
@@ -582,7 +585,6 @@ const ViewDetailUserHrRecruitment = ({
             bordered
             className="mt-4"
           />
-
 
           <Divider orientation="left italic">Tình trạng học vấn</Divider>
 

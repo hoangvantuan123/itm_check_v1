@@ -31,7 +31,6 @@ const WorkerDeclarationPassForm = () => {
   const handleSubmit = async (values) => {
     try {
       const response = await GetFindByPhone(values.phoneNumber)
-      console.log('response', response)
       if (response.success) {
         const data = response.data.data
         setDaa(data)
@@ -42,7 +41,7 @@ const WorkerDeclarationPassForm = () => {
       }
     } catch (error) {
       const routerPath = `/public/apply/form/2/new`
-        navigate(`${routerPath}`)
+      navigate(`${routerPath}`)
     }
   }
 
