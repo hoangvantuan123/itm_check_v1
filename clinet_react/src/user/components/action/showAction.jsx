@@ -10,6 +10,7 @@ import { DeleteHrInfoIds } from '../../../features/hrRecruitment/deleteHrInfoIds
 import { PutUsersInterviewStatus } from '../../../features/hrRecruitment/putUsersInterviewStatus'
 import ChangePassSelect from '../profile/changePassSelect'
 import { DeleteHrInterviewCandidates } from '../../../features/hrInterviewCandidate/deleteHrInterviewCandidate'
+import { DeleteHrInterIds } from '../../../features/hrInter/deleteHrInfoIds'
 
 const { Title } = Typography
 const SettingIcon = () => {
@@ -195,6 +196,29 @@ export default function ShowAction({
       message.error(`${t('Có lỗi xảy ra, vui lòng thử lại')}`)
     }
   }
+  const handleDeleteHrInter = async () => {
+    try {
+      const response = await DeleteHrInterIds(selectedRowKeys)
+
+      const messagePromise = response.success
+        ? Promise.resolve(message.success(`${t('Xóa thành công các nhóm')}`))
+        : Promise.reject(
+            new Error(
+              `${t('Xóa thất bại: Yêu cầu không thành công, vui lòng thử lại')}`,
+            ),
+          )
+
+      await messagePromise
+
+      if (response.success) {
+        await fetchDataUser()
+        setSelectedRowKeys([])
+        setActionUsers('')
+      }
+    } catch (error) {
+      message.error(`${t('Có lỗi xảy ra, vui lòng thử lại')}`)
+    }
+  }
 
   const handleUpdateUserInterviewFalse = async () => {
     try {
@@ -271,6 +295,9 @@ export default function ShowAction({
 
         case 'actionHrInfoIds':
           Modal.confirm({ ...modalConfig, onOk: handleDeleteHrInfoIds })
+          break
+        case 'actionHrInters':
+          Modal.confirm({ ...modalConfig, onOk: handleDeleteHrInter })
           break
         case 'actionHrInterCandidateIds':
           Modal.confirm({

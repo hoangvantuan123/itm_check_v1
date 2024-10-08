@@ -193,6 +193,24 @@ export default function DetailUserHrAllDataTrue() {
       year_ended: finalData?.educations[0].year_ended,
       year_of_graduation: finalData?.educations[0].year_of_graduation,
       classification: finalData?.educations[0].classification,
+
+
+
+       /* languages */
+       language_1: finalData?.languages[0].language,
+       certificate_type_1: finalData?.languages[0].certificate_type,
+       score_1: finalData?.languages[0].score,
+       level_1: finalData?.languages[0].level,
+ 
+       language_2: finalData?.languages[1].language,
+       certificate_type_2: finalData?.languages[1].certificate_type,
+       score_2: finalData?.languages[1].score,
+       level_2: finalData?.languages[1].level,
+ 
+       language_3: finalData?.languages[2].language,
+       certificate_type_3: finalData?.languages[2].certificate_type,
+       score_3: finalData?.languages[2].score,
+       level_3: finalData?.languages[2].level,/*  */
     }
 
     return filterEmptyFields(result)

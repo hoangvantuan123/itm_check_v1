@@ -15,8 +15,7 @@ export class ImportController {
       await this.importService.processImportData(data);
       return { status: 200, message: 'Dữ liệu đã được nhập khẩu thành công' };
     } catch (error) {
-      return { status: 400, message: `Có lỗi xảy ra trong quá trình nhập dữ liệu` };
-
+      return { status: 400, message: `Có lỗi xảy ra trong quá trình nhập dữ liệu: ${error.message || 'Không xác định'}` };
     }
   }
 

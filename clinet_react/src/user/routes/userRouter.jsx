@@ -130,7 +130,7 @@ const UserRouter = () => {
         element={<WorkerDeclarationPassForm />}
       />
 
-      
+
       <Route
         path="/public/apply/form/2/:router"
         element={<WorkerDeclarationMultiStepForm />}
@@ -298,7 +298,7 @@ const UserRouter = () => {
                       }
                     />
                     <Route
-                      path="/u/action=17/employee-recruitment-data"
+                      path="/u/action=17/employee-interview-data"
                       element={
                         checkActionPermission(
                           userPermissions,
@@ -306,22 +306,6 @@ const UserRouter = () => {
                           'view',
                         ) ? (
                           <EmployeeRecruitment permissions={userPermissions} />
-                        ) : (
-                          <Unauthorized />
-                        )
-                      }
-                    />
-                    <Route
-                      path="/u/action=18/worker-recruitment-data"
-                      element={
-                        checkActionPermission(
-                          userPermissions,
-                          'hr-recruitment-1-2',
-                          'view',
-                        ) ? (
-                          <WorkerRecruitmentPage
-                            permissions={userPermissions}
-                          />
                         ) : (
                           <Unauthorized />
                         )

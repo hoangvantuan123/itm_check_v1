@@ -46,6 +46,7 @@ const columnConfig = [
   { key: 'part', label: 'Part' },
   { key: 'position', label: 'Chức vụ' },
   { key: 'synchronize', label: 'Đồng bộ ' },
+  { key: 'synchronize_erp', label: 'Đồng bộ ERP ' },
 ]
 
 const CloumnIcon = () => {
@@ -298,10 +299,19 @@ export default function EmployeeDataiView({ permissions }) {
       dataIndex: key,
       key: key,
       render: (text, record) => {
-
+        if (key === 'birth_date') {
+          return visibleColumns[key]
+            ? moment(record.birth_date).tz('Asia/Ho_Chi_Minh').format('L')
+            : null;
+        }
         if (key === 'synchronize') {
           return visibleColumns[key] ? (
             <CustomTagSyn status={record.synchronize} />
+          ) : null
+        }
+        if (key === 'synchronize_erp') {
+          return visibleColumns[key] ? (
+            <CustomTagSyn status={record.synchronize_erp} />
           ) : null
         }
         if (key === 'type_personnel') {
@@ -323,6 +333,9 @@ export default function EmployeeDataiView({ permissions }) {
       }),
       sorter: (a, b) => {
         if (key === 'synchronize') {
+          return (a[key] === b[key]) ? 0 : (a[key] ? -1 : 1);
+        }
+        if (key === 'synchronize_erp') {
           return (a[key] === b[key]) ? 0 : (a[key] ? -1 : 1);
         }
         const aValue = a[key]
@@ -415,7 +428,7 @@ export default function EmployeeDataiView({ permissions }) {
     if (dates) {
       setDateRange(dates)
     } else {
-      setDateRange([null, null]) 
+      setDateRange([null, null])
     }
   }
 

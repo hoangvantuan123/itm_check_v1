@@ -115,12 +115,10 @@ export class HrRecruitmentServices {
     createPersonnelWithDetailsDto: CreatePersonnelWithDetails2Dto,
   ): Promise<{ success: boolean; message: string; data?: Personnel }> {
     try {
-      // Sử dụng transaction manager để xử lý quá trình lưu dữ liệu.
       return await this.personnelRepository.manager.transaction(
         async (entityManager: EntityManager) => {
           const personnelData = { ...createPersonnelWithDetailsDto };
           
-          // Tạo và lưu personnel trong một transaction.
           const personnel = this.personnelRepository.create(personnelData);
           const savedPersonnel = await entityManager.save(Personnel, personnel);
   
@@ -457,7 +455,6 @@ export class HrRecruitmentServices {
         contract_term: personnel.contract_term,
         line_model: personnel.line_model,
         part: personnel.part,
-
         // Thông tin vị trí và hợp đồng
         erp_department_registration: personnel.erp_department_registration,
         production: personnel.production,

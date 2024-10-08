@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn, Unique } from 'typeorm';
 import { Family } from './family.entity';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
@@ -10,6 +10,7 @@ import { HrInterviewCandidate } from './hr_interview_candidates.entity';
 import { Projects } from './project.entity';
 import { OfficeSkills } from './office_skills.entity';
 @Entity('hr_personnel')
+
 export class Personnel {
   @PrimaryGeneratedColumn('increment')
   id: number;
@@ -20,19 +21,19 @@ export class Personnel {
   @Column({ type: 'text', nullable: true })
   gender: string;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   interview_date: Date;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   start_date: Date;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   birth_date: Date;
 
   @Column({ type: 'text', nullable: true })
   id_number: string;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   id_issue_date: Date;
 
   @Column({ type: 'text', nullable: true })
@@ -109,9 +110,12 @@ export class Personnel {
   @Column({ nullable: true, type: 'int' })
   id_hr_interview_candidates?: number;
 
-
+  /* Đồng bộ */
   @Column({ type: 'boolean', default: false })
   synchronize: boolean;
+  /*  */
+  @Column({ type: 'boolean', default: false })
+  synchronize_erp: boolean;
 
   @Column({ type: 'boolean', default: false })
   status_form: boolean;
@@ -164,19 +168,19 @@ export class Personnel {
   @Column({ nullable: true })
   position: string;  // Position
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   entering_day: Date;  // Entering day
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   leaving_day: Date;  // Leaving day
 
   @Column({ nullable: true })
   probation_days: number;  // PROBATION (day)
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   official_date_first: Date;  // OFFICIAL DATE 1st/Ngày ký HĐ lần 1
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   official_date_second: Date;  // OFFICIAL DATE 2nd/Ngày ký HĐ lần 2
 
 
@@ -198,7 +202,7 @@ export class Personnel {
   @Column({ nullable: true })
   children_name_1: string;  // Children name 1
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   children_birth_date_1: Date;  // Children birth date 1
 
   @Column({ nullable: true })
@@ -207,7 +211,7 @@ export class Personnel {
   @Column({ nullable: true })
   children_name_2: string;  // Children name 2
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   children_birth_date_2: Date;  // Children date birth 2
 
   @Column({ nullable: true })
@@ -216,7 +220,7 @@ export class Personnel {
   @Column({ nullable: true })
   children_name_3: string;  // Children name 3
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   children_birth_date_3: Date;  // Children date birth 3
 
   @Column({ nullable: true })
@@ -293,7 +297,7 @@ export class Personnel {
   @Column({ nullable: true })
   entrance_day_2: string;  // Entrance day 2
 
-  @Column({  nullable: true })
+  @Column({ nullable: true })
   leaving_day_2: string;  // Leaving day 2
 
 

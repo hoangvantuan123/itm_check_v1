@@ -6,28 +6,25 @@ import 'moment/locale/vi'
 const EditLanguageTable = ({ form, dataSource }) => {
   const [localDataSource, setLocalDataSource] = useState(dataSource)
 
-  // Đồng bộ dữ liệu khi dataSource thay đổi
   useEffect(() => {
     setLocalDataSource(dataSource)
   }, [dataSource])
 
-  // Đồng bộ dữ liệu từ localDataSource vào form
   useEffect(() => {
     form.setFieldsValue({ languages: localDataSource })
   }, [localDataSource, form])
 
-  // Dùng useCallback để ngăn việc tạo lại hàm không cần thiết
-  const handleLanguageChange = useCallback((key, field, value) => {
+  const handleLanguageChange = useCallback((id, field, value) => {
     setLocalDataSource((prevData) =>
       prevData.map((language) =>
-        language.key === key ? { ...language, [field]: value } : language,
+        language.id === id ? { ...language, [field]: value } : language,
       ),
     )
   }, [])
 
   const removeLanguage = useCallback((key) => {
     setLocalDataSource((prevData) =>
-      prevData.filter((language) => language.key !== key),
+      prevData.filter((language) => language.id !== key),
     )
   }, [])
 
@@ -39,7 +36,7 @@ const EditLanguageTable = ({ form, dataSource }) => {
         <Input
           value={text}
           onChange={(e) =>
-            handleLanguageChange(record.key, 'language', e.target.value)
+            handleLanguageChange(record.id, 'language', e.target.value)
           }
           className="border-none w-36 md:w-full"
           style={{ margin: 0 }}
@@ -53,7 +50,7 @@ const EditLanguageTable = ({ form, dataSource }) => {
         <Input
           value={text}
           onChange={(e) =>
-            handleLanguageChange(record.key, 'certificate_type', e.target.value)
+            handleLanguageChange(record.id, 'certificate_type', e.target.value)
           }
           className="border-none w-36 md:w-full"
           style={{ margin: 0 }}
@@ -67,7 +64,7 @@ const EditLanguageTable = ({ form, dataSource }) => {
         <Input
           value={text}
           onChange={(e) =>
-            handleLanguageChange(record.key, 'score', e.target.value)
+            handleLanguageChange(record.id, 'score', e.target.value)
           }
           className="border-none w-36 md:w-full"
           style={{ margin: 0 }}
@@ -81,7 +78,7 @@ const EditLanguageTable = ({ form, dataSource }) => {
         <Input
           value={text}
           onChange={(e) =>
-            handleLanguageChange(record.key, 'level', e.target.value)
+            handleLanguageChange(record.id, 'level', e.target.value)
           }
           className="border-none w-36 md:w-full"
           style={{ margin: 0 }}
@@ -96,7 +93,7 @@ const EditLanguageTable = ({ form, dataSource }) => {
         dataSource={localDataSource}
         columns={languageColumns}
         pagination={false}
-        rowKey={(record) => record.key}
+        rowKey={(record) => record.id}
         bordered
         size="small"
       />

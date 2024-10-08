@@ -1,3 +1,4 @@
+/* EmployeeRecruitment */
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
@@ -18,30 +19,28 @@ import { PlusOutlined } from '@ant-design/icons'
 import AddUserGroups from '../components/add/addUserGroups'
 import { checkActionPermission } from '../../permissions'
 import ImportAction from '../components/action/importAction'
-import moment from 'moment'
-import Search from '../components/search'
-import FieldActionWorkerRecruitment from '../components/action/fieldActionWorkerRecruitment'
+import moment from 'moment-timezone';
+
+import { GetHrInterPageLimit } from '../../features/hrInter/getHrInterPageLimit'
+import { GetFilterHrInterPageLimit } from '../../features/hrInter/getFilterHrAllPageLimit'
 import ShowAction from '../components/action/showAction'
-import { GetHrInterviewPageLimit } from '../../features/hrInterview/getHrInterviewPageLimit'
-import { GetFilterHrInterviewPageLimit } from '../../features/hrInterview/getFilterHrInterviewPageLimit'
-import { GetFilterHrInterviewCandidatePageLimit } from '../../features/hrInterviewCandidate/getHrInterviewCandidate'
-import { GetFilterHrInterviewCandidatesPageLimit } from '../../features/hrInterviewCandidate/getFilterHrCandidatePageLimit'
-import CustomTagForm from '../components/tags/customTagForm'
-import CustomTagResult from '../components/tags/customTagResult'
+import FieldActionInter from '../components/action/fieldActionInter'
+import AddHrInter from '../components/add/addHrInter'
 const { RangePicker } = DatePicker
 const { Content } = Layout
 const { Option } = Select
 
 const columnConfig = [
+  { key: 'employee_code', label: 'CID' },
   { key: 'full_name', label: 'Họ và tên' },
   { key: 'gender', label: 'Giới tính' },
+  { key: 'birth_date', label: 'Ngày sinh' },
+  { key: 'id_number', label: 'CCCD' },
   { key: 'phone_number', label: 'Số điện thoại' },
-  { key: 'email', label: 'Email' },
-  { key: 'id_card_number', label: 'CCCD' },
-  { key: 'job_position', label: 'Vị trí' },
   { key: 'interview_date', label: 'Ngày phỏng vấn' },
-  { key: 'form_status', label: 'Form' },
-  { key: 'interview_status', label: 'Kết quả' },
+  { key: 'email', label: 'Email' },
+  { key: 'applicant_type', label: 'Ứng tuyển' },
+  { key: 'applicant_status', label: 'Trạng thái' },
 ]
 
 const CloumnIcon = () => {
@@ -107,7 +106,7 @@ const CloumnIcon = () => {
 export default function EmployeeRecruitment({ permissions }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const today = moment()
+  const today = moment().startOf('day')
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false)
@@ -118,48 +117,67 @@ export default function EmployeeRecruitment({ permissions }) {
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(150)
-  const [dateRange, setDateRange] = useState([today, today])
+  const [dateRange, setDateRange] = useState([null, null])
+
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
   const [nameTags, setNameTags] = useState([])
+  const [cid, setCid] = useState([])
   const [phoneNumberTags, setPhoneNumberTags] = useState([])
   const [citizenshipIdTags, setCitizenshipIdTags] = useState([])
   const [isDrawerVisibleFilter, setIsDrawerVisibleFilter] = useState(false)
   const [actionUsers, setActionUsers] = useState(null)
   const [actionImport, setActionImport] = useState(null)
+  const [syn, setSyn] = useState(null)
+  const [applicantType, setApplicantType] = useState([])
+  const [interviewDate, setInterviewDate] = useState(null)
+  const [applicantStatus, setApplicantStatus] = useState([])
+  const [isModalOpenAddHr, setIsModalOpenAddHr] = useState(false)
   const handleOnClickAction = () => {
-    setActionUsers('actionHrInterCandidateIds')
+    setActionUsers('actionHrInters')
   }
   const handleOnClickActionImport = () => {
-    setActionImport('hr_interview_candidates')
+    setActionImport('hr_inter')
   }
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys)
   }
+
   const initialVisibleColumns = columnConfig.reduce((acc, { key }) => {
     acc[key] = true
     return acc
   }, {})
 
   const [visibleColumns, setVisibleColumns] = useState(initialVisibleColumns)
+  const handleColumnVisibilityChange = (key, isVisible) => {
+    const updatedColumns = { ...visibleColumns, [key]: isVisible }
+    setVisibleColumns(updatedColumns)
+    localStorage.setItem('visibleColumns', JSON.stringify(updatedColumns))
+  }
+  useEffect(() => {
+    const storedColumns = localStorage.getItem('visibleColumns')
+    if (storedColumns) {
+      setVisibleColumns(JSON.parse(storedColumns))
+    }
+  }, [])
 
   const canCreate = checkActionPermission(
     permissions,
-    'hr-recruitment-1-2',
+    'hr-recruitment-1-3',
     'create',
   )
   const canEdit = checkActionPermission(
     permissions,
-    'hr-recruitment-1-2',
+    'hr-recruitment-1-3',
     'edit',
   )
   const canDelete = checkActionPermission(
     permissions,
-    'hr-recruitment-1-2',
+    'hr-recruitment-1-3',
     'delete',
   )
   const canView = checkActionPermission(
     permissions,
-    'hr-recruitment-1-2',
+    'hr-recruitment-1-3',
     'view',
   )
 
@@ -169,12 +187,7 @@ export default function EmployeeRecruitment({ permissions }) {
       const [startDate, endDate] = dateRange.map((date) =>
         date ? date.format('YYYY-MM-DD') : null,
       )
-      const response = await GetFilterHrInterviewCandidatePageLimit(
-        page,
-        limit,
-        startDate,
-        endDate,
-      )
+      const response = await GetHrInterPageLimit(page, limit, startDate, endDate)
 
       if (response.success) {
         setData(response.data.data)
@@ -188,13 +201,15 @@ export default function EmployeeRecruitment({ permissions }) {
       setLoading(false)
     }
   }
+
   const fetchDataFilter = async () => {
     setLoading(true)
     try {
       const [startDate, endDate] = dateRange.map((date) =>
         date ? date.format('YYYY-MM-DD') : null,
       )
-      const response = await GetFilterHrInterviewCandidatesPageLimit(
+      const interViewDateFilter = interviewDate ? interviewDate.format('YYYY-MM-DD') : null;
+      const response = await GetFilterHrInterPageLimit(
         page,
         limit,
         startDate,
@@ -202,6 +217,9 @@ export default function EmployeeRecruitment({ permissions }) {
         nameTags,
         phoneNumberTags,
         citizenshipIdTags,
+        cid,
+        syn,
+        interViewDateFilter
       )
 
       if (response.success) {
@@ -256,8 +274,8 @@ export default function EmployeeRecruitment({ permissions }) {
     }
   }
 
-  const handleNavigateToDetail = (id) => {
-    navigate(`/u/action=19/worker-interview-data/detail/${id}`)
+  const handleNavigateToDetail = (record) => {
+    navigate(`/u/action=20/data-employee/detail/type=true/${record.id}`)
   }
 
   const columns = [
@@ -281,32 +299,32 @@ export default function EmployeeRecruitment({ permissions }) {
       dataIndex: key,
       key: key,
       render: (text, record) => {
-        if (key === 'form_status') {
-          return visibleColumns[key] ? (
-            <CustomTagForm status={record.form_status} />
-          ) : null
-        }
-        if (key === 'interview_status') {
-          return visibleColumns[key] ? (
-            <CustomTagResult status={record.interview_status} />
-          ) : null
-        }
-        if (key === 'create_date') {
+        if (key === 'birth_date') {
           return visibleColumns[key]
-            ? moment(record.create_date).format('lll')
+            ? moment(record.birth_date).tz('Asia/Ho_Chi_Minh').format('L')
+            : null;
+        }
+
+
+        if (key === 'interview_date') {
+          return visibleColumns[key]
+            ? moment(record.interview_date).format('L')
             : null
         }
         return visibleColumns[key] ? text : null
       },
       onCell: (record) => ({
         onClick: () => {
-          showDetailModal(record)
-          handleNavigateToDetail(record?.personnel?.id)
+          handleNavigateToDetail(record)
         },
       }),
       sorter: (a, b) => {
+
         const aValue = a[key]
         const bValue = b[key]
+        if (key === 'type_personnel') {
+          return aValue === bValue ? 0 : aValue ? -1 : 1
+        }
         if (key === 'create_date') {
           return moment(aValue).isBefore(moment(bValue)) ? -1 : 1
         } else if (key === 'tax_number' || key === 'phone_number') {
@@ -340,10 +358,7 @@ export default function EmployeeRecruitment({ permissions }) {
             <Checkbox
               checked={visibleColumns[key]}
               onChange={(e) =>
-                setVisibleColumns({
-                  ...visibleColumns,
-                  [key]: e.target.checked,
-                })
+                handleColumnVisibilityChange(key, e.target.checked)
               }
             >
               {t(label)}
@@ -382,10 +397,6 @@ export default function EmployeeRecruitment({ permissions }) {
           handleTableChange({ current: page, pageSize }),
       }}
       loading={loading}
-      /* scroll={{
-      x: 'calc(100px + 100%)',
-      y: 650,
-    }} */
     />
   )
 
@@ -394,6 +405,24 @@ export default function EmployeeRecruitment({ permissions }) {
 
     await fetchDataFilter()
   }
+
+  const handleDateChange = (dates) => {
+    if (dates) {
+      setDateRange(dates)
+    } else {
+      setDateRange([null, null])
+    }
+  }
+
+  const openModalAddUser = () => {
+    setIsModalOpenAddHr(true)
+  }
+
+
+  const closeModalAddHr = () => {
+    setIsModalOpenAddHr(false)
+  }
+
   return (
     <div className="w-full h-screen flex flex-col bg-white">
       <Helmet>
@@ -404,8 +433,16 @@ export default function EmployeeRecruitment({ permissions }) {
         <h1 className="text-xl font-bold text-gray-900">
           {t('Danh sách dữ liệu')}
         </h1>
+        <Button
+          type="primary"
+          onClick={openModalAddUser}
+          icon={<PlusOutlined />}
+          className=" rounded-lg h-full border-gray-200 bg-indigo-600 hover:bg-none text-white shadow-sm text-sm"
+          size="large"
+        >
+          {t('Thêm')}
+        </Button>
       </div>
-
       <div className="p-2 mb flex items-center justify-between">
         <span className="inline-flex overflow-hidden">
           <div className="flex items-center gap-2">
@@ -424,12 +461,12 @@ export default function EmployeeRecruitment({ permissions }) {
             )}
             <RangePicker
               value={dateRange}
-              onChange={setDateRange}
+              onChange={handleDateChange}
               format="YYYY-MM-DD"
               className="cursor-pointer"
               size="large"
             />
-            <FieldActionWorkerRecruitment
+            <FieldActionInter
               dateRange={dateRange}
               setDateRange={setDateRange}
               handleApplyFilter={handleApplyFilter}
@@ -437,10 +474,21 @@ export default function EmployeeRecruitment({ permissions }) {
               isDrawerVisible={isDrawerVisibleFilter}
               nameTags={nameTags}
               setNameTags={setNameTags}
+              setCid={setCid}
+              cid={cid}
               phoneNumberTags={phoneNumberTags}
               setPhoneNumberTags={setPhoneNumberTags}
               citizenshipIdTags={citizenshipIdTags}
               setCitizenshipIdTags={setCitizenshipIdTags}
+              setSyn={setSyn}
+              syn={syn}
+              setApplicantType={setApplicantType}
+              applicantType={applicantType}
+              setInterviewDate={setInterviewDate}
+              interviewDate={interviewDate}
+              setApplicantStatus={setApplicantStatus}
+              applicantStatus={applicantStatus}
+
             />
             <Button
               size="large"
@@ -449,6 +497,8 @@ export default function EmployeeRecruitment({ permissions }) {
             >
               <CloumnIcon />
             </Button>
+
+
             {selectedRowKeys != null && selectedRowKeys.length > 0 && (
               <ShowAction
                 handleOnClickAction={handleOnClickAction}
@@ -463,7 +513,8 @@ export default function EmployeeRecruitment({ permissions }) {
           </div>
         </span>
       </div>
-
+      <AddHrInter isOpen={isModalOpenAddHr}
+        onClose={closeModalAddHr} fetchData={fetchData} />
       <Layout className="flex-1 overflow-auto bg-white p-2">
         {renderTable()}
         {renderDetailModal()}

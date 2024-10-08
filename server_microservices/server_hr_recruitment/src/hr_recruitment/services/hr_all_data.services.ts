@@ -15,14 +15,12 @@ import { Projects } from '../entity/project.entity';
 import { CreatePersonnelWithDetailsDto } from '../dto/create_hr_internview_candidate.dto';
 import { CreatePersonnelWithDetails2Dto } from '../dto/create-personnel-with-details.dto';
 import jwt from 'jsonwebtoken';
-import { HrErp } from '../entity/hr.entity';
 @Injectable()
 export class HrAllDataService {
   constructor(
     @InjectRepository(HrInterviewCandidate)
     private readonly candidateRepository: Repository<HrInterviewCandidate>,
-    @InjectRepository(HrErp)
-    private readonly hrErpRepository: Repository<HrErp>,
+ 
 
     @InjectRepository(Personnel)
     private readonly personnelRepository: Repository<Personnel>,
@@ -104,6 +102,7 @@ export class HrAllDataService {
         'personnel.part',
         'personnel.erp_department_registration',
         'personnel.position',
+        'personnel.synchronize_erp',
       ])
       .skip((page - 1) * limit)
       .take(limit)
@@ -193,6 +192,7 @@ export class HrAllDataService {
       'personnel.part',
       'personnel.erp_department_registration',
       'personnel.position',
+      'personnel.synchronize_erp',
     ])
       .skip((page - 1) * limit)
       .take(limit)
@@ -214,7 +214,7 @@ export class HrAllDataService {
     );
   }
 
-
+  
 
 
 
