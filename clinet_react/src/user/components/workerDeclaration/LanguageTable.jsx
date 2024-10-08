@@ -1,32 +1,50 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Table, Input, Form } from 'antd';
+import { useState, useEffect, useCallback } from 'react'
+import { Table, Input, Form } from 'antd'
 
 const LanguageTable = ({ form, dataSource }) => {
-  const [localDataSource, setLocalDataSource] = useState([]);
+  const [localDataSource, setLocalDataSource] = useState([])
 
   useEffect(() => {
     if (dataSource && dataSource.length > 0) {
-      setLocalDataSource(dataSource);
+      setLocalDataSource(dataSource)
     } else {
       setLocalDataSource([
-        { id: 1, language: null, certificate_type: null, score: null, level: null },
-        { id: 2, language: null, certificate_type: null, score: null, level: null },
-        { id: 3, language: null, certificate_type: null, score: null, level: null },
-      ]);
+        {
+          id: 1,
+          language: null,
+          certificate_type: null,
+          score: null,
+          level: null,
+        },
+        {
+          id: 2,
+          language: null,
+          certificate_type: null,
+          score: null,
+          level: null,
+        },
+        {
+          id: 3,
+          language: null,
+          certificate_type: null,
+          score: null,
+          level: null,
+        },
+      ])
     }
-  }, [dataSource]);
+  }, [dataSource])
 
   useEffect(() => {
-    form.setFieldsValue({ languages: localDataSource });
-  }, [localDataSource, form]);
+    form.setFieldsValue({ languages: localDataSource })
+  }, [localDataSource, form])
 
   const handleLanguageChange = useCallback((id, field, value) => {
     setLocalDataSource((prevData) =>
       prevData.map((language) =>
         language.id === id ? { ...language, [field]: value } : language,
       ),
-    );
-  }, []);
+    )
+  }, [])
 
   const languageColumns = [
     {
@@ -85,7 +103,7 @@ const LanguageTable = ({ form, dataSource }) => {
         />
       ),
     },
-  ];
+  ]
 
   return (
     <Form.Item name="languages">
@@ -98,7 +116,7 @@ const LanguageTable = ({ form, dataSource }) => {
         size="small"
       />
     </Form.Item>
-  );
-};
+  )
+}
 
-export default LanguageTable;
+export default LanguageTable

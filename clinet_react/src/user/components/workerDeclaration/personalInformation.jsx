@@ -13,7 +13,9 @@ const PersonalInformation = ({ form, formData }) => {
         interview_date: formData.interview_date
           ? moment(formData.interview_date)
           : null,
-        entering_day: formData.entering_day ? moment(formData.entering_day) : null,
+        entering_day: formData.entering_day
+          ? moment(formData.entering_day)
+          : null,
         birth_date: formData.birth_date ? moment(formData.birth_date) : null,
         id_number: formData.id_number,
         id_issue_date: formData.id_issue_date
@@ -68,11 +70,7 @@ const PersonalInformation = ({ form, formData }) => {
           </Form.Item>
         </Col>
         <Col xs={12} sm={12} md={12}>
-          <Form.Item
-            label="Ngày phỏng vấn:"
-            name="interview_date"
-           
-          >
+          <Form.Item label="Ngày phỏng vấn:" name="interview_date">
             <DatePicker
               size="large"
               style={{ width: '100%' }}

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Input, Button, Drawer, Select, DatePicker, Radio } from 'antd'
 const { Option } = Select
 const { RangePicker } = DatePicker
-import moment from 'moment'; 
+import moment from 'moment'
 const FieldIcon = () => (
   <svg
     className="w-4 h-4 opacity-65"
@@ -64,7 +64,7 @@ export default function FieldActionInter({
   applicantType,
   applicantStatus,
   setInterviewDate,
-  interviewDate
+  interviewDate,
 }) {
   const { t } = useTranslation()
 
@@ -83,13 +83,11 @@ export default function FieldActionInter({
     setCid(value)
   }
 
-
-
   const handtApplicantType = (e) => {
-    setApplicantType(e);
+    setApplicantType(e)
   }
   const handtApplicantStatus = (e) => {
-    setApplicantStatus(e);
+    setApplicantStatus(e)
   }
 
   return (
@@ -127,7 +125,6 @@ export default function FieldActionInter({
           </Button>,
         ].filter(Boolean)}
       >
-
         <div className="mb-3">
           <label className="block mb-1">Name:</label>
           <Select
@@ -197,15 +194,12 @@ export default function FieldActionInter({
             mode="tags"
             value={applicantType}
             onChange={handtApplicantType}
-            placeholder="Enter names"
+            placeholder="Loại ứng viên"
             size="large"
             className="w-full"
           >
-            {applicantType.map((tag) => (
-              <Option key={tag} value={tag}>
-                {tag}
-              </Option>
-            ))}
+            <Option value="worker">{t('Công nhân')}</Option>
+            <Option value="staff">{t('Nhân viên')}</Option>
           </Select>
         </div>
         <div className="mb-3">
@@ -214,15 +208,15 @@ export default function FieldActionInter({
             mode="tags"
             value={applicantStatus}
             onChange={handtApplicantStatus}
-            placeholder="Enter names"
+            placeholder="Trạng thái"
             size="large"
             className="w-full"
           >
-            {applicantStatus.map((tag) => (
-              <Option key={tag} value={tag}>
-                {tag}
-              </Option>
-            ))}
+            <Option value="waiting_interview">Lên lịch phỏng vấn</Option>
+            <Option value="interviewed">Đã phỏng vấn</Option>
+            <Option value="waiting_result">Đang đợi kết quả</Option>
+            <Option value="accepted">Đã nhận</Option>
+            <Option value="rejected">Không đạt</Option>
           </Select>
         </div>
         <div className="mb-3">

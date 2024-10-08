@@ -45,9 +45,11 @@ export default function SynAction({ fetchData, isOpen, selectedRowKeys }) {
     if (result.success) {
       fetchData()
       setIsModalVisible(false)
-      message.success(`${result.message} ${selectedRowKeys.length} ${t('records_synced')}`);
+      message.success(
+        `${result.message} ${selectedRowKeys.length} ${t('records_synced')}`,
+      )
     } else {
-      message.error(t('sync_failed') + ': ' + result.message); 
+      message.error(t('sync_failed') + ': ' + result.message)
     }
   }
 

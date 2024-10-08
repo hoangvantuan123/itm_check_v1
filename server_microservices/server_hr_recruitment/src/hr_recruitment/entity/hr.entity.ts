@@ -118,8 +118,6 @@ export class HrErp {
   employee_code: string;
 
 
-
-
   @Column({ type: 'json', nullable: true })
   candidates_json: any[];  
 

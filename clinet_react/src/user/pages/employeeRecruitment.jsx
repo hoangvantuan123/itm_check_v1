@@ -19,13 +19,14 @@ import { PlusOutlined } from '@ant-design/icons'
 import AddUserGroups from '../components/add/addUserGroups'
 import { checkActionPermission } from '../../permissions'
 import ImportAction from '../components/action/importAction'
-import moment from 'moment-timezone';
+import moment from 'moment-timezone'
 
 import { GetHrInterPageLimit } from '../../features/hrInter/getHrInterPageLimit'
 import { GetFilterHrInterPageLimit } from '../../features/hrInter/getFilterHrAllPageLimit'
 import ShowAction from '../components/action/showAction'
 import FieldActionInter from '../components/action/fieldActionInter'
 import AddHrInter from '../components/add/addHrInter'
+import CustomTagInter from '../components/tags/customTagInter'
 const { RangePicker } = DatePicker
 const { Content } = Layout
 const { Option } = Select
@@ -187,7 +188,12 @@ export default function EmployeeRecruitment({ permissions }) {
       const [startDate, endDate] = dateRange.map((date) =>
         date ? date.format('YYYY-MM-DD') : null,
       )
-      const response = await GetHrInterPageLimit(page, limit, startDate, endDate)
+      const response = await GetHrInterPageLimit(
+        page,
+        limit,
+        startDate,
+        endDate,
+      )
 
       if (response.success) {
         setData(response.data.data)
@@ -208,7 +214,9 @@ export default function EmployeeRecruitment({ permissions }) {
       const [startDate, endDate] = dateRange.map((date) =>
         date ? date.format('YYYY-MM-DD') : null,
       )
-      const interViewDateFilter = interviewDate ? interviewDate.format('YYYY-MM-DD') : null;
+      const interViewDateFilter = interviewDate
+        ? interviewDate.format('YYYY-MM-DD')
+        : null
       const response = await GetFilterHrInterPageLimit(
         page,
         limit,
@@ -219,7 +227,9 @@ export default function EmployeeRecruitment({ permissions }) {
         citizenshipIdTags,
         cid,
         syn,
-        interViewDateFilter
+        interViewDateFilter,
+        applicantType,
+        applicantStatus,
       )
 
       if (response.success) {
@@ -275,7 +285,7 @@ export default function EmployeeRecruitment({ permissions }) {
   }
 
   const handleNavigateToDetail = (record) => {
-    navigate(`/u/action=20/data-employee/detail/type=true/${record.id}`)
+    navigate(`/u/action=17/employee-interview-data/detail/${record.id}`)
   }
 
   const columns = [
@@ -302,10 +312,18 @@ export default function EmployeeRecruitment({ permissions }) {
         if (key === 'birth_date') {
           return visibleColumns[key]
             ? moment(record.birth_date).tz('Asia/Ho_Chi_Minh').format('L')
-            : null;
+            : null
         }
-
-
+        if (key === 'applicant_type') {
+          return visibleColumns[key] ? (
+            <CustomTagInter status={record.applicant_type} />
+          ) : null
+        }
+        if (key === 'applicant_status') {
+          return visibleColumns[key] ? (
+            <CustomTagInter status={record.applicant_status} />
+          ) : null
+        }
         if (key === 'interview_date') {
           return visibleColumns[key]
             ? moment(record.interview_date).format('L')
@@ -319,7 +337,6 @@ export default function EmployeeRecruitment({ permissions }) {
         },
       }),
       sorter: (a, b) => {
-
         const aValue = a[key]
         const bValue = b[key]
         if (key === 'type_personnel') {
@@ -418,7 +435,6 @@ export default function EmployeeRecruitment({ permissions }) {
     setIsModalOpenAddHr(true)
   }
 
-
   const closeModalAddHr = () => {
     setIsModalOpenAddHr(false)
   }
@@ -488,7 +504,6 @@ export default function EmployeeRecruitment({ permissions }) {
               interviewDate={interviewDate}
               setApplicantStatus={setApplicantStatus}
               applicantStatus={applicantStatus}
-
             />
             <Button
               size="large"
@@ -497,7 +512,6 @@ export default function EmployeeRecruitment({ permissions }) {
             >
               <CloumnIcon />
             </Button>
-
 
             {selectedRowKeys != null && selectedRowKeys.length > 0 && (
               <ShowAction
@@ -513,8 +527,11 @@ export default function EmployeeRecruitment({ permissions }) {
           </div>
         </span>
       </div>
-      <AddHrInter isOpen={isModalOpenAddHr}
-        onClose={closeModalAddHr} fetchData={fetchData} />
+      <AddHrInter
+        isOpen={isModalOpenAddHr}
+        onClose={closeModalAddHr}
+        fetchData={fetchData}
+      />
       <Layout className="flex-1 overflow-auto bg-white p-2">
         {renderTable()}
         {renderDetailModal()}

@@ -445,31 +445,30 @@ const Sidebar = ({ permissions }) => {
                   'hr-recruitment-1-1',
                   'view',
                 ) && (
-                    <Menu.Item key="hr-recruitment-1-1">
-                      <Link
-                        to="/u/action=17/employee-interview-data"
-                        className="flex items-center justify-start"
-                      >
-                        {t('Tuyển dụng')}
-                      </Link>
-                    </Menu.Item>
-                  )}
+                  <Menu.Item key="hr-recruitment-1-1">
+                    <Link
+                      to="/u/action=17/employee-interview-data"
+                      className="flex items-center justify-start"
+                    >
+                      {t('Tuyển dụng')}
+                    </Link>
+                  </Menu.Item>
+                )}
 
-              
                 {checkMenuPermission(
                   permissions,
                   'hr-recruitment-1-3',
                   'view',
                 ) && (
-                    <Menu.Item key="hr-recruitment-1-3">
-                      <Link
-                        to="/u/action=20/data-employee"
-                        className="flex items-center justify-start"
-                      >
-                        {t('Danh sách nhân sự')}
-                      </Link>
-                    </Menu.Item>
-                  )}
+                  <Menu.Item key="hr-recruitment-1-3">
+                    <Link
+                      to="/u/action=20/data-employee"
+                      className="flex items-center justify-start"
+                    >
+                      {t('Danh sách nhân sự')}
+                    </Link>
+                  </Menu.Item>
+                )}
               </SubMenu>
             )}
 
@@ -535,30 +534,30 @@ const Sidebar = ({ permissions }) => {
                       'setting-2-1-1',
                       'view',
                     ) && (
-                        <Menu.Item key="setting-2-1-1">
-                          <Link
-                            to="/u/action=4/technique_access"
-                            className="flex items-center justify-start"
-                          >
-                            {t('side_bar.technique_access')}
-                          </Link>
-                        </Menu.Item>
-                      )}
+                      <Menu.Item key="setting-2-1-1">
+                        <Link
+                          to="/u/action=4/technique_access"
+                          className="flex items-center justify-start"
+                        >
+                          {t('side_bar.technique_access')}
+                        </Link>
+                      </Menu.Item>
+                    )}
 
                     {checkMenuPermission(
                       permissions,
                       'setting-2-1-2',
                       'view',
                     ) && (
-                        <Menu.Item key="setting-2-1-2">
-                          <Link
-                            to="/u/action=5/technique_menu"
-                            className="flex items-center justify-start"
-                          >
-                            {t('side_bar.technique_menu')}
-                          </Link>
-                        </Menu.Item>
-                      )}
+                      <Menu.Item key="setting-2-1-2">
+                        <Link
+                          to="/u/action=5/technique_menu"
+                          className="flex items-center justify-start"
+                        >
+                          {t('side_bar.technique_menu')}
+                        </Link>
+                      </Menu.Item>
+                    )}
                   </SubMenu>
                 )}
 
@@ -577,30 +576,30 @@ const Sidebar = ({ permissions }) => {
                       'setting-3-1-1',
                       'view',
                     ) && (
-                        <Menu.Item key="setting-3-1-1">
-                          <Link
-                            to="/a/action=8/personnel"
-                            className="flex items-center justify-start"
-                          >
-                            {t('Nhân viên')}
-                          </Link>
-                        </Menu.Item>
-                      )}
+                      <Menu.Item key="setting-3-1-1">
+                        <Link
+                          to="/a/action=8/personnel"
+                          className="flex items-center justify-start"
+                        >
+                          {t('Nhân viên')}
+                        </Link>
+                      </Menu.Item>
+                    )}
 
                     {checkMenuPermission(
                       permissions,
                       'setting-3-1-2',
                       'view',
                     ) && (
-                        <Menu.Item key="setting-3-1-2">
-                          <Link
-                            to="/a/action=9/working_time"
-                            className="flex items-center justify-start"
-                          >
-                            {t('Thời gian làm việc')}
-                          </Link>
-                        </Menu.Item>
-                      )}
+                      <Menu.Item key="setting-3-1-2">
+                        <Link
+                          to="/a/action=9/working_time"
+                          className="flex items-center justify-start"
+                        >
+                          {t('Thời gian làm việc')}
+                        </Link>
+                      </Menu.Item>
+                    )}
                   </SubMenu>
                 )}
               </SubMenu>
@@ -619,8 +618,9 @@ const Sidebar = ({ permissions }) => {
               >
                 {activeTab === 'home' ? <ActiveHomeIcon /> : <HomeIcon />}
                 <span
-                  className={`mt-2 text-xs ${activeTab === 'home' ? 'text-blue-500' : 'text-gray-500'
-                    }`}
+                  className={`mt-2 text-xs ${
+                    activeTab === 'home' ? 'text-blue-500' : 'text-gray-500'
+                  }`}
                 >
                   {t('footer_app.home')}
                 </span>
@@ -635,8 +635,9 @@ const Sidebar = ({ permissions }) => {
               >
                 {activeTab === 'work' ? <ActiveWorkIcon /> : <WorkIcon />}
                 <span
-                  className={`mt-2 text-xs ${activeTab === 'work' ? 'text-blue-500' : 'text-gray-500'
-                    }`}
+                  className={`mt-2 text-xs ${
+                    activeTab === 'work' ? 'text-blue-500' : 'text-gray-500'
+                  }`}
                 >
                   {t('side_bar.work')}
                 </span>
@@ -655,10 +656,11 @@ const Sidebar = ({ permissions }) => {
                   <NotificationIcon />
                 )}
                 <span
-                  className={`mt-2 text-xs ${activeTab === 'notifications'
+                  className={`mt-2 text-xs ${
+                    activeTab === 'notifications'
                       ? 'text-blue-500'
                       : 'text-gray-500'
-                    }`}
+                  }`}
                 >
                   {t('side_bar.notifications')}
                 </span>
@@ -673,8 +675,9 @@ const Sidebar = ({ permissions }) => {
               >
                 {activeTab === 'profile' ? <ActiveUserIcon /> : <UserIcon />}
                 <span
-                  className={`mt-2 text-xs ${activeTab === 'profile' ? 'text-blue-500' : 'text-gray-500'
-                    }`}
+                  className={`mt-2 text-xs ${
+                    activeTab === 'profile' ? 'text-blue-500' : 'text-gray-500'
+                  }`}
                 >
                   {t('footer_app.profile')}
                 </span>

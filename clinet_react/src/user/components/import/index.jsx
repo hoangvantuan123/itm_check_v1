@@ -46,9 +46,6 @@ const FileIcon = () => {
   )
 }
 
-
-
-
 export default function ImportForm({
   fetchData,
   isOpen,
@@ -182,31 +179,32 @@ export default function ImportForm({
   }
 
   const handleFileChange = (info) => {
-    const { file, fileList } = info;
+    const { file, fileList } = info
     const isCsvOrXlsx =
       file.type === 'text/csv' ||
-      file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+      file.type ===
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 
     if (!isCsvOrXlsx) {
-      message.error(t('Chỉ hỗ trợ tệp CSV hoặc XLSX'));
-      return;
+      message.error(t('Chỉ hỗ trợ tệp CSV hoặc XLSX'))
+      return
     }
 
-    setFileName(file.name);
-    setFileList(fileList);
-    setTables([]);
+    setFileName(file.name)
+    setFileList(fileList)
+    setTables([])
 
-    const newConnectValues = {};
+    const newConnectValues = {}
     const defaultMappings = {
-      'CID': 'employee_code',
-      'Name': 'full_name',
+      CID: 'employee_code',
+      Name: 'full_name',
       'Đăng ký bp trên ERP': 'erp_department_registration',
-      'Team': 'team',
-      'Part': 'part',
-      'Production': 'production',
-      'Section': 'section',
+      Team: 'team',
+      Part: 'part',
+      Production: 'production',
+      Section: 'section',
       'Job field': 'job_field',
-      'Position': 'position',
+      Position: 'position',
       'Entering day': 'entering_day',
       'Leaving day': 'leaving_day',
       'PROBATION (day)': 'probation_days',
@@ -216,11 +214,11 @@ export default function ImportForm({
       'Ngày cấp': 'id_issue_date',
       'Nơi cấp': 'id_issue_place',
       'Date of birth': 'birth_date',
-      'Tuổi': 'age',
+      Tuổi: 'age',
       'Đếm tháng': 'month_count',
       'Phone Number': 'phone_number',
-      'Gender': 'gender',
-      'Email': 'email',
+      Gender: 'gender',
+      Email: 'email',
       'Partner name': 'partner_name',
       'Partner phone number': 'partner_phone_number',
       'Số con': 'number_of_children',
@@ -250,7 +248,7 @@ export default function ImportForm({
         'distance_from_household_to_company',
       'Highest level of education': 'highest_education_level',
       'School name': 'school_name',
-      'Major': 'major',
+      Major: 'major',
       'Company name 1': 'company_name_1',
       'Entrance day 1': 'entrance_day_1',
       'Leaving day 1': 'leaving_day_1',
@@ -263,12 +261,12 @@ export default function ImportForm({
       'Work responsibility 2': 'work_responsibility_2',
       'Dân tộc': 'ethnicity',
       'ĐÓNG BHXH': 'social_insurance',
-      'Interview_date': 'interview_date',
+      Interview_date: 'interview_date',
       'Start date': 'start_date',
       'School year': 'school_year',
       'Year ended': 'year_ended',
       'Year of graduation': 'year_of_graduation',
-      'Classification': 'classification',
+      Classification: 'classification',
       'Salary 2': 'salary_2',
       'Salary 1': 'salary_1',
 
@@ -286,7 +284,7 @@ export default function ImportForm({
       'Certificate Type 3': 'certificate_type_3',
       'Score 3': 'score_3',
       'Level 3': 'level_3',
-    };
+    }
 
     const dateFields = [
       'Interview_date',
@@ -303,19 +301,19 @@ export default function ImportForm({
       'Entrance day 1',
       'Entrance day 2',
       'Leaving day 1',
-      'Leaving day 2'
-    ];
+      'Leaving day 2',
+    ]
 
     const ExcelDateToJSDate = (date) => {
-      return new Date(Math.round((date - 25569) * 86400 * 1000));
-    };
+      return new Date(Math.round((date - 25569) * 86400 * 1000))
+    }
 
     const formatDateToString = (date) => {
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng 0-11
-      const day = String(date.getDate()).padStart(2, '0');
-      return `${year}-${month}-${day}`; // Trả về định dạng YYYY-MM-DD
-    };
+      const year = date.getFullYear()
+      const month = String(date.getMonth() + 1).padStart(2, '0') // Tháng 0-11
+      const day = String(date.getDate()).padStart(2, '0')
+      return `${year}-${month}-${day}` // Trả về định dạng YYYY-MM-DD
+    }
 
     if (file.type === 'text/csv') {
       const reader = new FileReader()
@@ -357,50 +355,52 @@ export default function ImportForm({
 
       reader.readAsText(file)
     } else if (
-      file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      file.type ===
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     ) {
-      const reader = new FileReader();
+      const reader = new FileReader()
       reader.onload = (e) => {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const allTables = [];
+        const data = new Uint8Array(e.target.result)
+        const workbook = XLSX.read(data, { type: 'array' })
+        const allTables = []
 
         workbook.SheetNames.forEach((sheetName) => {
-          const worksheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-          const columns = Object.keys(worksheet[0]);
-          const wrappedData = worksheet.map(row => {
-            return Object.fromEntries(Object.entries(row).map(([key, value]) => {
-              if (dateFields.includes(key) && !isNaN(value)) {
-                const dateValue = ExcelDateToJSDate(Number(value));
-                value = formatDateToString(dateValue);
-              }
-              return [key, String(value)];
-            }));
-          });
+          const worksheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName])
+          const columns = Object.keys(worksheet[0])
+          const wrappedData = worksheet.map((row) => {
+            return Object.fromEntries(
+              Object.entries(row).map(([key, value]) => {
+                if (dateFields.includes(key) && !isNaN(value)) {
+                  const dateValue = ExcelDateToJSDate(Number(value))
+                  value = formatDateToString(dateValue)
+                }
+                return [key, String(value)]
+              }),
+            )
+          })
 
-          allTables.push({ name: sheetName, columns, data: wrappedData });
-        });
+          allTables.push({ name: sheetName, columns, data: wrappedData })
+        })
 
-        setTables(allTables);
+        setTables(allTables)
 
         tableInfo?.forEach((table) => {
           table.columns.forEach((column) => {
             for (const [key, mappedName] of Object.entries(defaultMappings)) {
               if (column.name === mappedName) {
-                newConnectValues[key] = column.name;
+                newConnectValues[key] = column.name
               }
             }
-          });
-        });
+          })
+        })
 
-        setConnectValues(newConnectValues);
-        message.success(t('Tải lên thành công tệp XLSX'));
-      };
+        setConnectValues(newConnectValues)
+        message.success(t('Tải lên thành công tệp XLSX'))
+      }
 
-      reader.readAsArrayBuffer(file.originFileObj || file);
+      reader.readAsArrayBuffer(file.originFileObj || file)
     }
-  };
-
+  }
 
   const handleConnectChange = (value, key) => {
     setConnectValues((prevValues) => ({
@@ -480,15 +480,15 @@ export default function ImportForm({
   }, [isOpen])
   const dataSource = selectedTable
     ? selectedTable.columns.map((col) => ({
-      key: col,
-      name: col,
-      connect: connectValues[col] || '',
-      note: `Ghi chú cho ${col}`,
-      span:
-        selectedTable.data.length > row
-          ? selectedTable.data[row][col] || ''
-          : '',
-    }))
+        key: col,
+        name: col,
+        connect: connectValues[col] || '',
+        note: `Ghi chú cho ${col}`,
+        span:
+          selectedTable.data.length > row
+            ? selectedTable.data[row][col] || ''
+            : '',
+      }))
     : []
 
   const onChange = (value) => {

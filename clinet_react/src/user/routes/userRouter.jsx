@@ -61,7 +61,7 @@ const UserRouter = () => {
     '/public/apply/information/phone',
     '/public/apply/form/2',
     '/public/apply/thong-bao',
-    '/public/apply/form/new'
+    '/public/apply/form/new',
   ]
 
   const checkLoginStatus = () => {
@@ -118,18 +118,10 @@ const UserRouter = () => {
 
   return (
     <Routes>
-      {/* Các route không yêu cầu đăng nhập */}
-
-      {/*   <Route
-        path="/public/apply/recruitment/phone"
-        element={<PassFormPage />}
-      /> */}
-
       <Route
         path="/public/apply/information/phone"
         element={<WorkerDeclarationPassForm />}
       />
-
 
       <Route
         path="/public/apply/form/2/:router"
@@ -312,14 +304,16 @@ const UserRouter = () => {
                       }
                     />
                     <Route
-                      path="/u/action=18/worker-recruitment-data/detail/:id"
+                      path="/u/action=17/employee-interview-data/detail/:id"
                       element={
                         checkActionPermission(
                           userPermissions,
-                          'hr-recruitment-1-2',
+                          'hr-recruitment-1-1',
                           'view',
                         ) ? (
-                          <DetailUserHrRecruitment />
+                          <DetailUserHrRecruitment
+                            permissions={userPermissions}
+                          />
                         ) : (
                           <Unauthorized />
                         )

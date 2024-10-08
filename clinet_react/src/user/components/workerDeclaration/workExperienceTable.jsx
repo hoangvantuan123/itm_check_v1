@@ -1,35 +1,54 @@
-import { useEffect, useState, useCallback } from 'react';
-import { Table, Input, Form } from 'antd';
+import { useEffect, useState, useCallback } from 'react'
+import { Table, Input, Form } from 'antd'
 
 const WorkExperienceTable = ({ form, dataSource }) => {
-  const [localDataSource, setLocalDataSource] = useState([]);
+  const [localDataSource, setLocalDataSource] = useState([])
 
   useEffect(() => {
     if (dataSource && dataSource.length > 0) {
-      setLocalDataSource(dataSource);
+      setLocalDataSource(dataSource)
     } else {
       setLocalDataSource([
-        { id: 1, tasks: null, position: null, company_name: null, start_date: null, end_date: null, salary: null },
-        { id: 2, tasks: null, position: null, company_name: null, start_date: null, end_date: null, salary: null },
-      ]);
+        {
+          id: 1,
+          tasks: null,
+          position: null,
+          company_name: null,
+          start_date: null,
+          end_date: null,
+          salary: null,
+        },
+        {
+          id: 2,
+          tasks: null,
+          position: null,
+          company_name: null,
+          start_date: null,
+          end_date: null,
+          salary: null,
+        },
+      ])
     }
-  }, [dataSource]);
+  }, [dataSource])
 
   useEffect(() => {
-    form.setFieldsValue({ experiences: localDataSource });
-  }, [localDataSource, form]);
+    form.setFieldsValue({ experiences: localDataSource })
+  }, [localDataSource, form])
 
-  const handleWorkExperienceChange = useCallback((id, field, value) => {
-    setLocalDataSource((prevData) => {
-      const updatedData = prevData.map((experience) =>
-        experience.id === id ? { ...experience, [field]: value } : experience
-      );
+  const handleWorkExperienceChange = useCallback(
+    (id, field, value) => {
+      setLocalDataSource((prevData) => {
+        const updatedData = prevData.map((experience) =>
+          experience.id === id ? { ...experience, [field]: value } : experience,
+        )
 
-      form.setFieldsValue({ experiences: updatedData });
+        form.setFieldsValue({ experiences: updatedData })
 
-      return updatedData;
-    });
-  }, [form]);
+        return updatedData
+      })
+    },
+    [form],
+  )
 
   const experienceColumns = [
     {
@@ -38,7 +57,13 @@ const WorkExperienceTable = ({ form, dataSource }) => {
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) => handleWorkExperienceChange(record.id, 'company_name', e.target.value)}
+          onChange={(e) =>
+            handleWorkExperienceChange(
+              record.id,
+              'company_name',
+              e.target.value,
+            )
+          }
           className="border-none w-36 md:w-full"
           style={{ margin: 0 }}
         />
@@ -50,7 +75,9 @@ const WorkExperienceTable = ({ form, dataSource }) => {
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) => handleWorkExperienceChange(record.id, 'position', e.target.value)}
+          onChange={(e) =>
+            handleWorkExperienceChange(record.id, 'position', e.target.value)
+          }
           className="border-none w-36 md:w-full"
           style={{ margin: 0 }}
         />
@@ -62,7 +89,9 @@ const WorkExperienceTable = ({ form, dataSource }) => {
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) => handleWorkExperienceChange(record.id, 'start_date', e.target.value)}
+          onChange={(e) =>
+            handleWorkExperienceChange(record.id, 'start_date', e.target.value)
+          }
           className="border-none w-36 md:w-full"
           style={{ margin: 0 }}
         />
@@ -74,7 +103,9 @@ const WorkExperienceTable = ({ form, dataSource }) => {
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) => handleWorkExperienceChange(record.id, 'end_date', e.target.value)}
+          onChange={(e) =>
+            handleWorkExperienceChange(record.id, 'end_date', e.target.value)
+          }
           className="border-none w-36 md:w-full"
           style={{ margin: 0 }}
         />
@@ -86,7 +117,9 @@ const WorkExperienceTable = ({ form, dataSource }) => {
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) => handleWorkExperienceChange(record.id, 'tasks', e.target.value)}
+          onChange={(e) =>
+            handleWorkExperienceChange(record.id, 'tasks', e.target.value)
+          }
           className="border-none w-36 md:w-full"
           style={{ margin: 0 }}
         />
@@ -98,13 +131,15 @@ const WorkExperienceTable = ({ form, dataSource }) => {
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) => handleWorkExperienceChange(record.id, 'salary', e.target.value)}
+          onChange={(e) =>
+            handleWorkExperienceChange(record.id, 'salary', e.target.value)
+          }
           className="border-none w-36 md:w-full"
           style={{ margin: 0 }}
         />
       ),
     },
-  ];
+  ]
 
   return (
     <>
@@ -122,7 +157,7 @@ const WorkExperienceTable = ({ form, dataSource }) => {
         />
       </Form.Item>
     </>
-  );
-};
+  )
+}
 
-export default WorkExperienceTable;
+export default WorkExperienceTable

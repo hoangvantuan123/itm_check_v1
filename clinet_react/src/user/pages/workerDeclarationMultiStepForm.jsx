@@ -176,7 +176,6 @@ const WorkerDeclarationMultiStepForm = () => {
       year_of_graduation: finalData?.educations[0].year_of_graduation,
       classification: finalData?.educations[0].classification,
 
-
       /* languages */
       language_1: finalData?.languages[0].language,
       certificate_type_1: finalData?.languages[0].certificate_type,
@@ -192,9 +191,6 @@ const WorkerDeclarationMultiStepForm = () => {
       certificate_type_3: finalData?.languages[2].certificate_type,
       score_3: finalData?.languages[2].score,
       level_3: finalData?.languages[2].level,
-
-
-
     }
 
     return filterEmptyFields(result)
@@ -207,43 +203,48 @@ const WorkerDeclarationMultiStepForm = () => {
     }
   }
   const handleDrawerSubmit = async () => {
-    setIsSubmitting(true);
-    const finalData = { ...formData, ...form.getFieldsValue() };
-    const submissionData = formatSubmissionData(finalData);
+    setIsSubmitting(true)
+    const finalData = { ...formData, ...form.getFieldsValue() }
+    const submissionData = formatSubmissionData(finalData)
     try {
-      let response;
+      let response
 
       if (decodedData) {
-        response = await PutHrInfoId(decodedData?.id, submissionData);
+        response = await PutHrInfoId(decodedData?.id, submissionData)
       } else {
-        response = await PostPublicHrRecryutment(submissionData);
+        response = await PostPublicHrRecryutment(submissionData)
       }
       if (response.success) {
-        navigate('/public/apply/thong-bao');
+        navigate('/public/apply/thong-bao')
       } else {
-        message.error('Có lỗi xảy ra khi gửi thông tin!');
+        message.error('Có lỗi xảy ra khi gửi thông tin!')
       }
     } catch (error) {
-      message.error('Có lỗi xảy ra khi gửi thông tin. Vui lòng thử lại!');
+      message.error('Có lỗi xảy ra khi gửi thông tin. Vui lòng thử lại!')
     } finally {
-      setIsSubmitting(false);
-      setIsDrawerVisible(false);
+      setIsSubmitting(false)
+      setIsDrawerVisible(false)
     }
-  };
-
+  }
 
   const steps = [
     {
       title: 'Thông Tin Cá Nhân',
       content: (
         <>
-
           <PersonalInformation form={form} formData={formData} />
           <Divider orientation="left italic">Thông tin gia đình</Divider>
-          <FamilyInfoTable form={form} formData={formData} dataSource={formData.families}
-            children={formData.children} />
+          <FamilyInfoTable
+            form={form}
+            formData={formData}
+            dataSource={formData.families}
+            children={formData.children}
+          />
           <Divider orientation="left italic">Tình trạng học vấn</Divider>
-          <EducationLanguageTable form={form} dataSource={formData.educations} />
+          <EducationLanguageTable
+            form={form}
+            dataSource={formData.educations}
+          />
           <h2 className="mt-4 mb-2 font-semibold">Ngôn ngữ</h2>
           <LanguageTable form={form} dataSource={formData.languages} />
           <Divider orientation="left italic">Kinh nghiệm làm việc</Divider>

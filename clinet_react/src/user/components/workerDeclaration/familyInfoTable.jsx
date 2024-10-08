@@ -1,53 +1,68 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Form, Table, Input, DatePicker } from 'antd';
-import moment from 'moment'; // Thư viện để xử lý ngày
+import { useState, useEffect, useCallback } from 'react'
+import { Form, Table, Input, DatePicker } from 'antd'
+import moment from 'moment' // Thư viện để xử lý ngày
 
 const FamilyInfoTable = ({ form, dataSource, children }) => {
-  const [localDataSource, setLocalDataSource] = useState([]);
-  const [childrenDataSource, setChildrenDataSource] = useState([]);
+  const [localDataSource, setLocalDataSource] = useState([])
+  const [childrenDataSource, setChildrenDataSource] = useState([])
 
   useEffect(() => {
     if (dataSource && dataSource.length > 0) {
-      setLocalDataSource(dataSource);
+      setLocalDataSource(dataSource)
     } else {
       setLocalDataSource([
         { key: 1, relationship: null, full_name: null, phone_number: null },
         { key: 2, relationship: null, full_name: null, phone_number: null },
         { key: 3, relationship: null, full_name: null, phone_number: null },
-      ]);
+      ])
     }
 
     if (children && children.length > 0) {
-      setChildrenDataSource(children);
+      setChildrenDataSource(children)
     } else {
       setChildrenDataSource([
-        { key: 1, children_name: null, children_birth_date: null, children_gender: null },
-        { key: 2, children_name: null, children_birth_date: null, children_gender: null },
-        { key: 3, children_name: null, children_birth_date: null, children_gender: null },
-      ]);
+        {
+          key: 1,
+          children_name: null,
+          children_birth_date: null,
+          children_gender: null,
+        },
+        {
+          key: 2,
+          children_name: null,
+          children_birth_date: null,
+          children_gender: null,
+        },
+        {
+          key: 3,
+          children_name: null,
+          children_birth_date: null,
+          children_gender: null,
+        },
+      ])
     }
-  }, [dataSource, children]);
+  }, [dataSource, children])
 
   useEffect(() => {
-    form.setFieldsValue({ families: localDataSource });
-    form.setFieldsValue({ children: childrenDataSource });
-  }, [localDataSource, childrenDataSource, form]);
+    form.setFieldsValue({ families: localDataSource })
+    form.setFieldsValue({ children: childrenDataSource })
+  }, [localDataSource, childrenDataSource, form])
 
   const handleFamilyMemberChange = useCallback((index, field, value) => {
     setLocalDataSource((prevData) =>
       prevData.map((member, idx) =>
         idx === index ? { ...member, [field]: value } : member,
       ),
-    );
-  }, []);
+    )
+  }, [])
 
   const handleChildrenChange = useCallback((index, field, value) => {
     setChildrenDataSource((prevData) =>
       prevData.map((member, idx) =>
         idx === index ? { ...member, [field]: value } : member,
       ),
-    );
-  }, []);
+    )
+  }, [])
 
   const columns = [
     {
@@ -89,7 +104,7 @@ const FamilyInfoTable = ({ form, dataSource, children }) => {
         />
       ),
     },
-  ];
+  ]
 
   const columnsChildren = [
     {
@@ -136,7 +151,7 @@ const FamilyInfoTable = ({ form, dataSource, children }) => {
         />
       ),
     },
-  ];
+  ]
 
   return (
     <>
@@ -168,7 +183,7 @@ const FamilyInfoTable = ({ form, dataSource, children }) => {
         />
       </Form.Item>
     </>
-  );
-};
+  )
+}
 
-export default FamilyInfoTable;
+export default FamilyInfoTable

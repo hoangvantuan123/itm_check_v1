@@ -79,13 +79,13 @@ export default function DetailUserHrAllDataTrue() {
 
     if (
       currentFields.official_date_first !==
-      (formData.official_date_first
-        ? moment(formData.official_date_first)
-        : null) ||
+        (formData.official_date_first
+          ? moment(formData.official_date_first)
+          : null) ||
       currentFields.official_date_second !==
-      (formData.official_date_second
-        ? moment(formData.official_date_second)
-        : null)
+        (formData.official_date_second
+          ? moment(formData.official_date_second)
+          : null)
     ) {
       form.setFieldsValue({
         official_date_first: formData.official_date_first
@@ -194,23 +194,21 @@ export default function DetailUserHrAllDataTrue() {
       year_of_graduation: finalData?.educations[0].year_of_graduation,
       classification: finalData?.educations[0].classification,
 
+      /* languages */
+      language_1: finalData?.languages[0].language,
+      certificate_type_1: finalData?.languages[0].certificate_type,
+      score_1: finalData?.languages[0].score,
+      level_1: finalData?.languages[0].level,
 
+      language_2: finalData?.languages[1].language,
+      certificate_type_2: finalData?.languages[1].certificate_type,
+      score_2: finalData?.languages[1].score,
+      level_2: finalData?.languages[1].level,
 
-       /* languages */
-       language_1: finalData?.languages[0].language,
-       certificate_type_1: finalData?.languages[0].certificate_type,
-       score_1: finalData?.languages[0].score,
-       level_1: finalData?.languages[0].level,
- 
-       language_2: finalData?.languages[1].language,
-       certificate_type_2: finalData?.languages[1].certificate_type,
-       score_2: finalData?.languages[1].score,
-       level_2: finalData?.languages[1].level,
- 
-       language_3: finalData?.languages[2].language,
-       certificate_type_3: finalData?.languages[2].certificate_type,
-       score_3: finalData?.languages[2].score,
-       level_3: finalData?.languages[2].level,/*  */
+      language_3: finalData?.languages[2].language,
+      certificate_type_3: finalData?.languages[2].certificate_type,
+      score_3: finalData?.languages[2].score,
+      level_3: finalData?.languages[2].level /*  */,
     }
 
     return filterEmptyFields(result)
@@ -281,8 +279,7 @@ export default function DetailUserHrAllDataTrue() {
           <Button className="bg-white">Mở Form</Button>
           <Button className="bg-white">Xóa</Button>
           <Button className="bg-white" onClick={toggleEdit}>
-            {isEditing ? (<>  Thoát</>) : (<> Chỉnh sửa</>)}
-
+            {isEditing ? <> Thoát</> : <> Chỉnh sửa</>}
           </Button>
           <Button className="bg-white" onClick={handleSave}>
             Lưu

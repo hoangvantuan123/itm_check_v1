@@ -1,33 +1,51 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Table, Input, Form } from 'antd';
+import { useState, useEffect, useCallback } from 'react'
+import { Table, Input, Form } from 'antd'
 
 const EducationLanguageTable = ({ form, dataSource }) => {
-  const [localDataSource, setLocalDataSource] = useState([]);
+  const [localDataSource, setLocalDataSource] = useState([])
 
   useEffect(() => {
     // Nếu có dữ liệu từ dataSource, sử dụng nó. Ngược lại, sử dụng dữ liệu mẫu.
     if (dataSource && dataSource.length > 0) {
-      setLocalDataSource(dataSource);
+      setLocalDataSource(dataSource)
     } else {
       // Dữ liệu mẫu
       setLocalDataSource([
-        { key: 1, highest_education_level: null, school: null, major: null, school_year: null, year_ended: null, year_of_graduation: null, classification: null },
-        { key: 2, highest_education_level: null, school: null, major: null, school_year: null, year_ended: null, year_of_graduation: null, classification: null },
-      ]);
+        {
+          key: 1,
+          highest_education_level: null,
+          school: null,
+          major: null,
+          school_year: null,
+          year_ended: null,
+          year_of_graduation: null,
+          classification: null,
+        },
+        {
+          key: 2,
+          highest_education_level: null,
+          school: null,
+          major: null,
+          school_year: null,
+          year_ended: null,
+          year_of_graduation: null,
+          classification: null,
+        },
+      ])
     }
-  }, [dataSource]);
+  }, [dataSource])
 
   useEffect(() => {
-    form.setFieldsValue({ educations: localDataSource });
-  }, [localDataSource, form]);
+    form.setFieldsValue({ educations: localDataSource })
+  }, [localDataSource, form])
 
   const handleEducationChange = useCallback((key, field, value) => {
     setLocalDataSource((prevData) =>
       prevData.map((education) =>
         education.key === key ? { ...education, [field]: value } : education,
       ),
-    );
-  }, []);
+    )
+  }, [])
 
   const educationColumns = [
     {
@@ -135,7 +153,7 @@ const EducationLanguageTable = ({ form, dataSource }) => {
         />
       ),
     },
-  ];
+  ]
 
   return (
     <Form.Item name="educations">
@@ -148,7 +166,7 @@ const EducationLanguageTable = ({ form, dataSource }) => {
         size="small"
       />
     </Form.Item>
-  );
-};
+  )
+}
 
-export default EducationLanguageTable;
+export default EducationLanguageTable

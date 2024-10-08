@@ -1,18 +1,15 @@
 import axios from 'axios'
-import {
-  HOST_API_PUBLIC_HR
-} from '../../services'
-import {
-  accessToken
-} from '../../services/tokenService'
+import { HOST_API_PUBLIC_HR } from '../../services'
+import { accessToken } from '../../services/tokenService'
 
 export const DeleteHrInterIds = async (ids, token) => {
   try {
     const token = accessToken()
     const response = await axios.delete(
-      `${HOST_API_PUBLIC_HR}hr-inter-data/delete`, {
+      `${HOST_API_PUBLIC_HR}hr-inter-data/delete`,
+      {
         data: {
-          ids
+          ids,
         },
         headers: {
           Authorization: `Bearer ${token}`,
@@ -37,9 +34,9 @@ export const DeleteHrInterIds = async (ids, token) => {
     // Xử lý lỗi tốt hơn
     return {
       success: false,
-      message: error.response ?
-        error.response.data.message || 'Có lỗi xảy ra' :
-        'Không thể kết nối tới server',
+      message: error.response
+        ? error.response.data.message || 'Có lỗi xảy ra'
+        : 'Không thể kết nối tới server',
     }
   }
 }

@@ -219,7 +219,7 @@ export default function EmployeeDataiView({ permissions }) {
         phoneNumberTags,
         citizenshipIdTags,
         cid,
-        syn
+        syn,
       )
 
       if (response.success) {
@@ -302,7 +302,7 @@ export default function EmployeeDataiView({ permissions }) {
         if (key === 'birth_date') {
           return visibleColumns[key]
             ? moment(record.birth_date).tz('Asia/Ho_Chi_Minh').format('L')
-            : null;
+            : null
         }
         if (key === 'synchronize') {
           return visibleColumns[key] ? (
@@ -333,10 +333,10 @@ export default function EmployeeDataiView({ permissions }) {
       }),
       sorter: (a, b) => {
         if (key === 'synchronize') {
-          return (a[key] === b[key]) ? 0 : (a[key] ? -1 : 1);
+          return a[key] === b[key] ? 0 : a[key] ? -1 : 1
         }
         if (key === 'synchronize_erp') {
-          return (a[key] === b[key]) ? 0 : (a[key] ? -1 : 1);
+          return a[key] === b[key] ? 0 : a[key] ? -1 : 1
         }
         const aValue = a[key]
         const bValue = b[key]
@@ -436,7 +436,6 @@ export default function EmployeeDataiView({ permissions }) {
     setIsModalOpenAddHr(true)
   }
 
-
   const closeModalAddHr = () => {
     setIsModalOpenAddHr(false)
   }
@@ -509,7 +508,10 @@ export default function EmployeeDataiView({ permissions }) {
               <CloumnIcon />
             </Button>
             {selectedRowKeys != null && selectedRowKeys.length > 0 && (
-              <SynAction fetchData={fetchData} selectedRowKeys={selectedRowKeys} />
+              <SynAction
+                fetchData={fetchData}
+                selectedRowKeys={selectedRowKeys}
+              />
             )}
 
             {selectedRowKeys != null && selectedRowKeys.length > 0 && (
@@ -526,8 +528,11 @@ export default function EmployeeDataiView({ permissions }) {
           </div>
         </span>
       </div>
-      <AddHR isOpen={isModalOpenAddHr}
-        onClose={closeModalAddHr} fetchData={fetchData} />
+      <AddHR
+        isOpen={isModalOpenAddHr}
+        onClose={closeModalAddHr}
+        fetchData={fetchData}
+      />
       <Layout className="flex-1 overflow-auto bg-white p-2">
         {renderTable()}
         {renderDetailModal()}

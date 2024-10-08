@@ -337,6 +337,7 @@ export class HrInter {
 
     @Column({ nullable: true })
     applicant_status: string;
+    
     @Column({ nullable: true })
     applicant_type: string;
 

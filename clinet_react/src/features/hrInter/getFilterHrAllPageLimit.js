@@ -1,10 +1,6 @@
 import axios from 'axios'
-import {
-  HOST_API_PUBLIC_HR
-} from '../../services'
-import {
-  accessToken
-} from '../../services/tokenService'
+import { HOST_API_PUBLIC_HR } from '../../services'
+import { accessToken } from '../../services/tokenService'
 
 export const GetFilterHrInterPageLimit = async (
   page = 1,
@@ -16,7 +12,9 @@ export const GetFilterHrInterPageLimit = async (
   citizenshipIdTags = [],
   cid = [],
   syn,
-  interViewDateFilter
+  interViewDateFilter,
+  applicantType = [],
+  applicantStatus = [],
 ) => {
   try {
     const token = accessToken()
@@ -24,10 +22,13 @@ export const GetFilterHrInterPageLimit = async (
     const nameTagsString = nameTags.join(',')
     const phoneNumberTagsString = phoneNumberTags.join(',')
     const citizenshipIdTagsString = citizenshipIdTags.join(',')
+    const applicantTypeTagString = applicantType.join(',')
+    const applicantStatusString = applicantStatus.join(',')
     const citString = cid.join(',')
 
     const response = await axios.get(
-      `${HOST_API_PUBLIC_HR}hr-inter-data/filter`, {
+      `${HOST_API_PUBLIC_HR}hr-inter-data/filter`,
+      {
         params: {
           page,
           limit,
@@ -37,8 +38,10 @@ export const GetFilterHrInterPageLimit = async (
           phoneNumberTags: phoneNumberTagsString,
           citizenshipIdTags: citizenshipIdTagsString,
           cid: citString,
-          syn, 
-          interViewDateFilter
+          syn,
+          interViewDateFilter,
+          applicantType: applicantTypeTagString,
+          applicantStatus: applicantStatusString,
         },
         headers: {
           Authorization: `Bearer ${token}`,
@@ -54,8 +57,9 @@ export const GetFilterHrInterPageLimit = async (
   } catch (error) {
     return {
       success: false,
-      message: error.response ?
-        error.response.data.message || 'Có lỗi xảy ra' : 'Không thể kết nối tới server',
+      message: error.response
+        ? error.response.data.message || 'Có lỗi xảy ra'
+        : 'Không thể kết nối tới server',
     }
   }
 }

@@ -33,6 +33,8 @@ export class HrInerController {
         @Query('cid') cid?: string,
         @Query('syn') syn?: boolean,
         @Query('interViewDateFilter') interViewDateFilter?: boolean,
+        @Query('applicantType') applicantType?: string,
+        @Query('applicantStatus') applicantStatus?: string,
     ): Promise<{ data: HrInter[]; total: number; totalPages: number }> {
         const filter: Record<string, any> = {
             nameTags: nameTags ? nameTags.split(',') : [],
@@ -41,6 +43,8 @@ export class HrInerController {
             cid: cid ? cid.split(',') : [],
             syn: syn !== undefined ? syn : undefined,
             interViewDateFilter: interViewDateFilter !== undefined ? interViewDateFilter : undefined,
+            applicantType: applicantType ? applicantType.split(',') : [],
+            applicantStatus: applicantStatus ? applicantStatus.split(',') : [],
         };
 
         const start = startDate ? new Date(startDate) : undefined;
@@ -81,5 +85,24 @@ export class HrInerController {
         }
     }
 
+    @Get('detail/:id')
+    async getPersonnel(@Param('id') id: number) {
+      return this.hrInterService.getPersonnelInterById(id);
+    }
 
+    @Put('detail/:id')
+    async updateInterview(
+      @Param('id') id: number,
+      @Body() updateDto: Partial<HrInter>,
+      @Req() req: Request,
+    ): Promise<{ success: boolean; message: string }> {
+      try {
+        await this.hrInterService.updateUserInterviewId(id, updateDto);
+        return { success: true, message: 'User updated successfully' };
+      } catch (error) {
+        throw new UnauthorizedException('Failed to authenticate. Please try again.');
+      }
+  
+    }
+  
 }

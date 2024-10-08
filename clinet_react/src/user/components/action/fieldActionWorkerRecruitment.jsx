@@ -59,7 +59,7 @@ export default function FieldActionWorkerRecruitment({
   setCid,
   cid,
   setSyn,
-  syn
+  syn,
 }) {
   const { t } = useTranslation()
 
@@ -79,8 +79,8 @@ export default function FieldActionWorkerRecruitment({
   }
 
   const handleSynChange = (e) => {
-    setSyn(e.target.value);
-  };
+    setSyn(e.target.value)
+  }
   return (
     <>
       <div className="flex flex-col items-start">

@@ -397,7 +397,6 @@ export class HrRecruitmentServices {
 
 
   async getPersonnelById(id: number): Promise<any> {
-    // Lấy thông tin nhân sự dựa vào id
     const personnel = await this.personnelRepository.findOne({
       where: { id }
     });

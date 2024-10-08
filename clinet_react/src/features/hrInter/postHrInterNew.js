@@ -1,18 +1,15 @@
 import axios from 'axios'
-import {
-  HOST_API_PUBLIC_HR
-} from '../../services'
+import { HOST_API_PUBLIC_HR } from '../../services'
 
-import {
-  accessToken
-} from '../../services/tokenService'
+import { accessToken } from '../../services/tokenService'
 
 export const PostHrInterNew = async (data) => {
   try {
     const token = accessToken()
     const response = await axios.post(
       `${HOST_API_PUBLIC_HR}hr-inter-data/new`,
-      data, {
+      data,
+      {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -36,8 +33,9 @@ export const PostHrInterNew = async (data) => {
     // Xử lý lỗi tốt hơn
     return {
       success: false,
-      message: error.response ?
-        error.response.data.message || 'Có lỗi xảy ra' : 'Không thể kết nối tới server',
+      message: error.response
+        ? error.response.data.message || 'Có lỗi xảy ra'
+        : 'Không thể kết nối tới server',
     }
   }
 }
