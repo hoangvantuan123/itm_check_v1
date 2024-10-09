@@ -87,22 +87,34 @@ export class HrInerController {
 
     @Get('detail/:id')
     async getPersonnel(@Param('id') id: number) {
-      return this.hrInterService.getPersonnelInterById(id);
+        return this.hrInterService.getPersonnelInterById(id);
     }
 
     @Put('detail/:id')
     async updateInterview(
-      @Param('id') id: number,
-      @Body() updateDto: Partial<HrInter>,
-      @Req() req: Request,
+        @Param('id') id: number,
+        @Body() updateDto: Partial<HrInter>,
+        @Req() req: Request,
     ): Promise<{ success: boolean; message: string }> {
-      try {
-        await this.hrInterService.updateUserInterviewId(id, updateDto);
-        return { success: true, message: 'User updated successfully' };
-      } catch (error) {
-        throw new UnauthorizedException('Failed to authenticate. Please try again.');
-      }
-  
+        try {
+            await this.hrInterService.updateUserInterviewId(id, updateDto);
+            return { success: true, message: 'User updated successfully' };
+        } catch (error) {
+            throw new UnauthorizedException('Failed to authenticate. Please try again.');
+        }
+
     }
-  
+
+    @Post('synchronize')
+    async synchronizeHr(@Body('ids') ids: number[]): Promise<void> {
+        return this.hrInterService.synchronizeHr(ids);
+    }
+
+    @Get('find-by-phone/:phone_number')
+    async findByPhone(
+        @Param('phone_number') phoneNumber: string,
+    ) {
+        return await this.hrInterService.findByPhoneNumber(phoneNumber);
+    }
+
 }

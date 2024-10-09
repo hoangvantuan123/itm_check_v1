@@ -1,161 +1,88 @@
-import { useState, useEffect, lazy, Suspense } from 'react'
-import { Form, Button, Steps, message, Spin, Drawer } from 'antd'
-import { PostPublicHrInterviewCandidate } from '../../features/hrInterviewCandidate/postPublicHrInterviewCandidate'
+import { useState, useCallback, useEffect } from 'react'
+import { Form, Button, message, Drawer, Spin, Divider } from 'antd'
 import { useNavigate, useLocation } from 'react-router-dom'
-// Import các components cần thiết
-const FamilyInfoTable = lazy(() => import('../components/jobs/familyInfoTable'))
-const EducationLanguageTable = lazy(
-  () => import('../components/jobs/educationLanguageTable'),
-)
-const OfficeSkillsTable = lazy(
-  () => import('../components/jobs/officeSkillsTable'),
-)
-const WorkExperienceTable = lazy(
-  () => import('../components/jobs/workExperienceTable'),
-)
-const IntroducedRelativeTable = lazy(
-  () => import('../components/jobs/introducedRelativeTable'),
-)
-const ApplicationInformation = lazy(
-  () => import('../components/jobs/applicationInformation'),
-)
-const PersonalInformation = lazy(
-  () => import('../components/jobs/personalInformation'),
-)
-const CandidateType = lazy(() => import('../components/jobs/candidateType'))
 
-const { Step } = Steps
-
+import FamilyInfoTable from '../components/inter/familyInfoTable'
+import EducationLanguageTable from '../components/inter/educationLanguageTable'
+import WorkExperienceTable from '../components/inter/workExperienceTable'
+import PersonalInformation from '../components/inter/personalInformation'
+import { GetHrInterId } from '../../features/hrInter/getInterId'
+import { PutUserInter } from '../../features/hrInter/putUserInter'
+import { PostHrInterNew } from '../../features/hrInter/postHrInterNew'
+import LanguageTable from '../components/inter/LanguageTable'
 const MultiStepFormPage = () => {
   const navigate = useNavigate()
   const [currentStep, setCurrentStep] = useState(0)
   const [isSupplier, setIsSupplier] = useState(false)
-  const [familyMembers, setFamilyMembers] = useState([
-    {
-      key: 0,
-      relationship: 'Bố',
-      name_family: '',
-      birthYear: '',
-      workplace: '',
-      job: '',
-      phoneNumber: '',
-      livingTogether: false,
-    },
-    {
-      key: 1,
-      relationship: 'Mẹ',
-      name_family: '',
-      birthYear: '',
-      workplace: '',
-      job: '',
-      phoneNumber: '',
-      livingTogether: false,
-    },
-    {
-      key: 2,
-      relationship: 'Vợ/chồng',
-      name_family: '',
-      birthYear: '',
-      workplace: '',
-      job: '',
-      phoneNumber: '',
-      livingTogether: false,
-    },
-    {
-      key: 3,
-      relationship: 'Anh/Em/Con',
-      name_family: '',
-      birthYear: '',
-      workplace: '',
-      job: '',
-      phoneNumber: '',
-      livingTogether: false,
-    },
-  ])
-  const [educationData, setEducationData] = useState([
-    {
-      key: 0,
-      schoolName: '',
-      major: '',
-      years: '',
-      startYear: '',
-      endYear: '',
-      grade: '',
-    },
-  ])
-  const [languageData, setLanguageData] = useState([
-    {
-      key: 0,
-      language: 'Tiếng Hàn',
-      certificateType: '',
-      score: '',
-      level: '',
-      startDate: null,
-      endDate: null,
-      note: '',
-    },
-  ])
-  const initialWorkExperience = {
-    key: Date.now(),
-    companyName: '',
-    position: '',
-    employeeScale: '',
-    joinYear: null,
-    leaveYear: null,
-    tasks: '',
-    salary: '',
-    reasonForLeaving: '',
-  }
-
-  const initialProject = {
-    key: Date.now(),
-    projectName: '',
-    startDate: null,
-    endDate: null,
-    task: '',
-    duration: '',
-    summary: '',
-  }
-
-  const [workExperiences, setWorkExperiences] = useState([
-    initialWorkExperience,
-  ])
-  const [projects, setProjects] = useState([initialProject])
   const [form] = Form.useForm()
-  const [isDrawerVisible, setIsDrawerVisible] = useState(false)
-  const [formData, setFormData] = useState({
-    info: {},
-    familyData: [],
-    educationData: [],
-    languageData: [],
-    officeSkillsData: {
-      officeSkills: [],
-      softwareSkills: [],
-    },
-    workExperienceData: [],
-    projectsData: [],
-    applicationData: {},
-  })
-  const [isMobile, setIsMobile] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [decodedData, setDecodedData] = useState(null)
-  const [error, setError] = useState('')
-  const location = useLocation()
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 920)
-    }
-    window.addEventListener('resize', handleResize)
-    handleResize()
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [])
+  const [formData, setFormData] = useState([])
 
-  const handleCheckboxChange = (event) => {
-    const selectedValue = event.target.value
-    setIsSupplier(selectedValue === 'Supplier')
+  const [loading, setLoading] = useState(true)
+  const [interviewData, setInterviewData] = useState({})
+  const [isDrawerVisible, setIsDrawerVisible] = useState(false)
+  const [decodedData, setDecodedData] = useState(null)
+  const [error, setError] = useState(null)
+  const location = useLocation()
+
+  useEffect(() => {
+    const path = location.pathname
+    const encodedData = path.split('/').pop()
+    if (encodedData !== 'new') {
+      const decodedString = atob(encodedData)
+      const parsedData = decodedString.includes(':')
+        ? decodedString.split(':')
+        : JSON.parse(decodedString)
+      if (Array.isArray(parsedData)) {
+        setDecodedData({
+          id: Number(parsedData[0]),
+          phoneNumber: parsedData[1],
+          fullName: parsedData[2],
+          email: parsedData[3],
+        })
+      }
+    }
+  }, [location])
+  const fetchDataUserId = async () => {
+    setLoading(true)
+    try {
+      const response = await GetHrInterId(decodedData?.id)
+      if (response?.success) {
+        if (response?.data.status) {
+          setFormData(response?.data.data)
+          setError(null)
+          if (
+            response?.data.data.interviews &&
+            response?.data.data.interviews.length > 0
+          ) {
+            setInterviewData(response?.data.data.interviews[0])
+          } else {
+            setInterviewData({})
+          }
+        } else {
+          setError('Không có dữ liệu cho ID này.')
+          setFormData({})
+        }
+      } else {
+        setError('Dữ liệu không khả dụng.')
+        setFormData({})
+      }
+    } catch (error) {
+      setError(error.message || 'Đã xảy ra lỗi')
+      setFormData({})
+    } finally {
+      setLoading(false)
+    }
   }
+  useEffect(() => {
+    if (decodedData) {
+      fetchDataUserId()
+    }
+  }, [decodedData])
+
+  const handleCheckboxChange = useCallback((event) => {
+    setIsSupplier(event.target.value === 'Supplier')
+  }, [])
 
   const validateCurrentStep = async () => {
     try {
@@ -165,54 +92,6 @@ const MultiStepFormPage = () => {
       message.error('Vui lòng điền vào tất cả các trường bắt buộc!')
       return false
     }
-  }
-
-  const saveCurrentStepData = () => {
-    const currentValues = form.getFieldsValue()
-    const updatedData = { ...formData }
-
-    switch (currentStep) {
-      case 0:
-        updatedData.info = currentValues
-        break
-      case 1:
-        updatedData.applicationData = currentValues
-        break
-      case 2:
-        updatedData.familyData = familyMembers
-        break
-      case 3:
-        updatedData.educationData = educationData
-        updatedData.languageData = languageData
-        updatedData.officeSkillsData = {
-          officeSkills: currentValues.officeSkills,
-          softwareSkills: currentValues.softwareSkills,
-        }
-        updatedData.workExperienceData = workExperiences
-        updatedData.projectsData = projects
-        break
-      case 4:
-        updatedData.applicationData = {
-          ...updatedData.applicationData,
-          ...currentValues,
-        }
-        break
-      default:
-        break
-    }
-    setFormData(updatedData)
-  }
-
-  const nextStep = async () => {
-    const isValid = await validateCurrentStep()
-    if (isValid) {
-      saveCurrentStepData()
-      setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1))
-    }
-  }
-
-  const prevStep = () => {
-    setCurrentStep((prev) => Math.max(prev - 1, 0))
   }
 
   const filterEmptyFields = (data) => {
@@ -225,96 +104,92 @@ const MultiStepFormPage = () => {
 
   const formatSubmissionData = (finalData) => {
     const result = {
-      full_name: finalData?.info?.fullName,
-      gender: finalData?.info?.gender,
-      interview_date: finalData?.info?.interviewDate,
-      birth_date: finalData?.info?.dob,
-      id_number: finalData?.info?.idNumber,
-      phone_number: finalData?.info?.phone,
-      alternate_phone_number: finalData?.info?.emergencyPhone,
-      alternate_name: finalData?.info?.emergencyContactName,
-      alternate_relationship: finalData?.info?.emergencyContactRelation,
-      birth_address: finalData?.info?.birthAddress,
-      birth_province: finalData?.info?.birthProvince,
-      birth_district: finalData?.info?.birthDistrict,
-      birth_ward: finalData?.info?.birthCommune,
-      current_address: finalData?.info?.currentAddress,
-      current_province: finalData?.info?.currentProvince,
-      current_district: finalData?.info?.currentDistrict,
-      current_ward: finalData?.info?.currentCommune,
-      type_personnel: false,
-      candidate_type: finalData?.info?.candidateType,
-      introducer_department: finalData?.introducer?.department,
-      introducer_introducer_name: finalData?.introducer?.introducerName,
-      introducer_phone_number: finalData?.introducer?.phoneNumber,
-      id_hr_interview_candidates: decodedData?.id,
-      families:
-        finalData?.familyData?.map((family) => ({
-          relationship: family?.relationship,
-          full_name: family?.name_family || null,
-          birth_year: family?.birthYear || null,
-          workplace: family?.workplace || null,
-          job: family?.job || null,
-          phone_number: family?.phoneNumber || null,
-          living_together: family?.livingTogether || null,
-        })) || [],
-      educations:
-        finalData?.educationData?.map((education) => ({
-          school: education?.schoolName || null,
-          major: education?.major || null,
-          years: education?.endYear || null,
-          start_year: education?.startYear || null,
-          graduation_year: education?.endYear || null,
-          grade: education?.grade || null,
-        })) || [],
-      languages:
-        finalData?.languageData?.map((language) => ({
-          language: language?.language || null,
-          certificate_type: language?.certificateType || null,
-          score: language?.score || null,
-          level: language.level || null,
-          start_date: language.startDate || null,
-          end_date: language.endDate || null,
-          has_bonus: language.note || null,
-        })) || [],
-      experiences:
-        finalData?.workExperienceData?.map((experience) =>
-          filterEmptyFields({
-            company_name: experience?.companyName || 'null',
-            position: experience.position || null,
-            start_date: experience.joinYear || null,
-            end_date: experience.leaveYear || null,
-            employee_scale: experience.employeeScale || null,
-            tasks: experience.tasks || null,
-            salary: experience.salary || null,
-            description: experience.reasonForLeaving || null,
-          }),
-        ) || [],
-      projects:
-        finalData?.projectsData?.map((project) =>
-          filterEmptyFields({
-            project_name: project?.projectName || 'null',
-            start_date: project.startDate || null,
-            end_date: project.endDate || null,
-            task: project.task || null,
-            duration: project.duration || null,
-            summary: project.summary || null,
-          }),
-        ) || [],
-      office_skills: [
-        ...(finalData?.officeSkillsData?.officeSkills?.map((skill) =>
-          filterEmptyFields({
-            skill_name: skill?.skill || null,
-            skill_level: skill?.level || null,
-          }),
-        ) || []),
-        ...(finalData?.officeSkillsData?.softwareSkills?.map((softwareSkill) =>
-          filterEmptyFields({
-            skill_name: softwareSkill?.skill || null,
-            skill_level: softwareSkill?.level || null,
-          }),
-        ) || []),
-      ],
+      full_name: finalData?.full_name,
+      gender: finalData?.gender,
+      interview_date: finalData?.interview_date,
+      birth_date: finalData?.birth_date,
+      id_number: finalData?.id_number,
+      id_issue_date: finalData?.id_issue_date,
+      ethnicity: finalData?.ethnicity,
+      phone_number: finalData?.phone_number,
+      alternate_phone_number: finalData?.alternate_phone_number,
+      alternate_name: finalData?.alternate_name,
+      alternate_relationship: finalData?.alternate_relationship,
+      birth_address: finalData?.birth_address,
+      birth_province: finalData?.birth_province,
+      birth_district: finalData?.birth_district,
+      birth_ward: finalData?.birth_ward,
+      current_address: finalData?.current_address,
+      current_province: finalData?.current_province,
+      current_district: finalData?.current_district,
+      current_ward: finalData?.current_ward,
+      supplier_details: finalData?.supplierDetails,
+      candidate_type: finalData?.candidateType,
+      entering_day: finalData?.entering_day,
+      email: finalData?.email,
+      insurance_number: finalData?.insurance_number,
+      tax_number: finalData?.tax_number,
+      status_form: true,
+      /* Gia đình cha mẹ vợ */
+      father_name: finalData?.families[0].full_name,
+      father_phone_number: finalData?.families[0].phone_number,
+      mother_name: finalData?.families[1].full_name,
+      mother_phone_number: finalData?.families[1].phone_number,
+      partner_name: finalData?.families[2].full_name,
+      partner_phone_number: finalData?.families[2].phone_number,
+      /* Con cais */
+      children_name_1: finalData?.children[0].children_name,
+      children_birth_date_1: finalData?.children[0].children_birth_date,
+      children_gender_1: finalData?.children[0].children_gender,
+      /*  */
+      children_name_2: finalData?.children[1].children_name,
+      children_birth_date_2: finalData?.children[1].children_birth_date,
+      children_gender_2: finalData?.children[1].children_gender,
+      /*  */
+      children_name_3: finalData?.children[2].children_name,
+      children_birth_date_3: finalData?.children[2].children_birth_date,
+      children_gender_3: finalData?.children[2].children_gender,
+
+      /* CÔng việc */
+
+      work_department_1: finalData?.experiences[0].tasks,
+      work_responsibility_1: finalData?.experiences[0].position,
+      company_name_1: finalData?.experiences[0].company_name,
+      entrance_day_1: finalData?.experiences[0].start_date,
+      leaving_day_1: finalData?.experiences[0].end_date,
+      salary_1: finalData?.experiences[0].salary,
+
+      work_department_2: finalData?.experiences[1].tasks,
+      work_responsibility_2: finalData?.experiences[1].position,
+      company_name_2: finalData?.experiences[1].company_name,
+      entrance_day_2: finalData?.experiences[1].start_date,
+      leaving_day_2: finalData?.experiences[1].end_date,
+      salary_2: finalData?.experiences[1].salary,
+
+      /*  */
+      highest_education_level: finalData?.educations[0].highest_education_level,
+      school_name: finalData?.educations[0].school,
+      major: finalData?.educations[0].major,
+      school_year: finalData?.educations[0].school_year,
+      year_ended: finalData?.educations[0].year_ended,
+      year_of_graduation: finalData?.educations[0].year_of_graduation,
+      classification: finalData?.educations[0].classification,
+
+      /* languages */
+      language_1: finalData?.languages[0].language,
+      certificate_type_1: finalData?.languages[0].certificate_type,
+      score_1: finalData?.languages[0].score,
+      level_1: finalData?.languages[0].level,
+
+      language_2: finalData?.languages[1].language,
+      certificate_type_2: finalData?.languages[1].certificate_type,
+      score_2: finalData?.languages[1].score,
+      level_2: finalData?.languages[1].level,
+
+      language_3: finalData?.languages[2].language,
+      certificate_type_3: finalData?.languages[2].certificate_type,
+      score_3: finalData?.languages[2].score,
+      level_3: finalData?.languages[2].level,
     }
 
     return filterEmptyFields(result)
@@ -326,46 +201,19 @@ const MultiStepFormPage = () => {
       setIsDrawerVisible(true)
     }
   }
-
-  useEffect(() => {
-    const path = location.pathname
-    const encodedData = path.split('/').pop()
-
-    if (encodedData) {
-      try {
-        const decodedString = atob(encodedData)
-
-        const parsedData = decodedString.includes(':')
-          ? decodedString.split(':')
-          : JSON.parse(decodedString)
-
-        if (Array.isArray(parsedData) && parsedData.length === 4) {
-          setDecodedData({
-            id: Number(parsedData[0]),
-            phoneNumber: parsedData[1],
-            fullName: parsedData[2],
-            email: parsedData[3],
-          })
-        } else {
-          setError('Dữ liệu không hợp lệ, vui lòng kiểm tra lại đường dẫn.')
-          navigate('/public/apply/recruitment/phone')
-        }
-      } catch (error) {
-        setError('Dữ liệu không hợp lệ, vui lòng kiểm tra lại đường dẫn.')
-        navigate('/public/apply/recruitment/phone')
-      }
-    } else {
-      setError('Không tìm thấy dữ liệu trên đường dẫn.')
-      navigate('/public/apply/recruitment/phone')
-    }
-  }, [location, navigate])
-
   const handleDrawerSubmit = async () => {
     setIsSubmitting(true)
     const finalData = { ...formData, ...form.getFieldsValue() }
+    console.log("finalData" , finalData)
     const submissionData = formatSubmissionData(finalData)
     try {
-      const response = await PostPublicHrInterviewCandidate(submissionData)
+      let response
+
+      if (decodedData) {
+        response = await PutUserInter(decodedData?.id, submissionData)
+      } else {
+        response = await PostHrInterNew(submissionData)
+      }
       if (response.success) {
         navigate('/public/apply/thong-bao')
       } else {
@@ -383,72 +231,25 @@ const MultiStepFormPage = () => {
     {
       title: 'Thông Tin Cá Nhân',
       content: (
-        <Suspense fallback={<Spin />}>
-          <CandidateType
-            isSupplier={isSupplier}
-            handleCheckboxChange={handleCheckboxChange}
-          />
-          <PersonalInformation form={form} />
-        </Suspense>
-      ),
-    },
-    {
-      title: 'Vị trí ứng tuyển',
-      content: (
-        <Suspense fallback={<Spin />}>
-          <ApplicationInformation form={form} />
-        </Suspense>
-      ),
-    },
-    {
-      title: 'Thông tin gia đình',
-      content: (
-        <Suspense fallback={<Spin />}>
+        <>
+          <PersonalInformation form={form} formData={formData} />
+          <Divider orientation="left italic">Thông tin gia đình</Divider>
           <FamilyInfoTable
             form={form}
-            isMobile={isMobile}
-            setFamilyMembers={setFamilyMembers}
-            familyMembers={familyMembers}
+            formData={formData}
+            dataSource={formData.families}
+            children={formData.children}
           />
-        </Suspense>
-      ),
-    },
-    {
-      title: 'Học vấn và Kỹ năng',
-      content: (
-        <Suspense fallback={<Spin />}>
+          <Divider orientation="left italic">Tình trạng học vấn</Divider>
           <EducationLanguageTable
             form={form}
-            isMobile={isMobile}
-            setEducationData={setEducationData}
-            educationData={educationData}
-            languageData={languageData}
-            setLanguageData={setLanguageData}
+            dataSource={formData.educations}
           />
-          <OfficeSkillsTable
-            form={form}
-            isMobile={isMobile}
-            formData={formData}
-          />
-          <WorkExperienceTable
-            form={form}
-            isMobile={isMobile}
-            initialWorkExperience={initialWorkExperience}
-            initialProject={initialProject}
-            projects={projects}
-            setProjects={setProjects}
-            workExperiences={workExperiences}
-            setWorkExperiences={setWorkExperiences}
-          />
-        </Suspense>
-      ),
-    },
-    {
-      title: 'Vị trí ứng tuyển',
-      content: (
-        <Suspense fallback={<Spin />}>
-          <IntroducedRelativeTable form={form} />
-        </Suspense>
+          <h2 className="mt-4 mb-2 font-semibold">Ngôn ngữ</h2>
+          <LanguageTable form={form} dataSource={formData.languages} />
+          <Divider orientation="left italic">Kinh nghiệm làm việc</Divider>
+          <WorkExperienceTable form={form} dataSource={formData.experiences} />
+        </>
       ),
     },
   ]
@@ -456,34 +257,26 @@ const MultiStepFormPage = () => {
   return (
     <div className="flex items-center justify-center h-screen overflow-auto p-3">
       <div className="lg:max-w-5xl w-full h-screen">
-        <h1 className="text-2xl font-bold text-center p-4">TỜ KHAI ỨNG VIÊN</h1>
+        <h1 className="text-2xl font-bold text-center p-4">
+          MẪU KHAI ỨNG VIÊN
+        </h1>
         <p className="text-center mb-4">Mẫu tờ khai thông tin cá nhân online</p>
 
         <Form form={form} layout="vertical" className="pb-10">
           {steps[currentStep].content}
-          <Form.Item className="mt-4 w-full flex relative gap-4 justify-between">
+          <Form.Item className="mt-4">
             <Button
-              className="flex-1"
-              type="default"
+              className=" w-full bg border py-6 border-indigo-600 bg-indigo-600 text-white"
+              onClick={handleSubmit}
               size="large"
-              onClick={prevStep}
-              disabled={currentStep === 0}
+              loading={isSubmitting}
             >
-              Quay Lại
-            </Button>
-
-            <Button
-              size="large"
-              className="ml-3 flex-1 border-gray-200 bg-indigo-600 text-white text-sm"
-              onClick={
-                currentStep === steps.length - 1 ? handleSubmit : nextStep
-              }
-            >
-              {currentStep === steps.length - 1 ? 'Gửi thông tin' : 'Tiếp Theo'}
+              Gửi thông tin
             </Button>
           </Form.Item>
         </Form>
 
+        {/* Drawer xác nhận */}
         <Drawer
           placement="bottom"
           onClose={() => setIsDrawerVisible(false)}

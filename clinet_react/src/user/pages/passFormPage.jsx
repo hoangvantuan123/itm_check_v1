@@ -11,7 +11,7 @@ import {
   message,
 } from 'antd'
 import Logo from '../../assets/f_logo.png'
-import { GetFindByPhone } from '../../features/hrInterviewCandidate/getFindByPhone'
+import { GetFindByPhone } from '../../features/hrInter/getFindByPhone'
 const { Title, Text } = Typography
 import { useTranslation } from 'react-i18next'
 const PassFormPage = () => {
@@ -24,17 +24,23 @@ const PassFormPage = () => {
   const handleSubmit = async (values) => {
     try {
       const response = await GetFindByPhone(values.phoneNumber)
-      console.log('response', response)
       if (response.success) {
         const data = response.data.data
         setDaa(data)
-        const routerPath = `/public/apply/form/1/${data.router}`
-        navigate(`${routerPath}`)
+        if (data.status_form === true) {
+          const routerPath = `/public/close`
+          navigate(`${routerPath}`)
+        } else {
+          const routerPath = `/public/apply/form/1/${data.router}`
+          navigate(`${routerPath}`)
+        }
+
       } else {
         message.error('Vui lòng thử lại sau.')
       }
     } catch (error) {
-      message.error('Vui lòng thử lại sau.')
+      const routerPath = `/public/apply/form/1/new`
+      navigate(`${routerPath}`)
     }
   }
 
@@ -55,8 +61,7 @@ const PassFormPage = () => {
     <div className="flex flex-col h-screen bg-white p-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center justify-between border p-2 rounded-lg bg-slate-600 ">
-          {/* <img src={Logo} alt="Logo" className="mr-2" style={{ maxHeight: '40px' }} /> */}{' '}
-          {/* Adjust logo size */}
+          {/* <img src={Logo} alt="Logo" className="mr-2" style={{ maxHeight: '40px' }} /> */}
         </div>
         <Dropdown overlay={menu} trigger={['click']}>
           <Button className="border-none p-2 bg-none shadow-none">
@@ -67,7 +72,7 @@ const PassFormPage = () => {
 
       <div className="flex-grow flex flex-col items-center justify-center">
         <Title level={2} className="text-center">
-          {t('Chào mừng bạn đến biểu mẫu khai báo trực tuyến!')}
+          {t('Biểu mẫu khai báo nhân sự trực tuyến!')}
         </Title>
         <Text
           type="secondary"

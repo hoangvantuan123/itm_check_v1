@@ -16,7 +16,6 @@ import {
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet'
 import { PlusOutlined } from '@ant-design/icons'
-import AddUserGroups from '../components/add/addUserGroups'
 import { checkActionPermission } from '../../permissions'
 import ImportAction from '../components/action/importAction'
 import moment from 'moment-timezone'
@@ -27,6 +26,8 @@ import ShowAction from '../components/action/showAction'
 import FieldActionInter from '../components/action/fieldActionInter'
 import AddHrInter from '../components/add/addHrInter'
 import CustomTagInter from '../components/tags/customTagInter'
+import CustomTagSyn from '../components/tags/customTagSyn'
+import SynActionHrInter from '../components/action/synActionHrInter'
 const { RangePicker } = DatePicker
 const { Content } = Layout
 const { Option } = Select
@@ -41,7 +42,14 @@ const columnConfig = [
   { key: 'interview_date', label: 'Ngày phỏng vấn' },
   { key: 'email', label: 'Email' },
   { key: 'applicant_type', label: 'Ứng tuyển' },
+  { key: 'team', label: 'Team' },
+  { key: 'part', label: 'Part' },
+  { key: 'production', label: 'Production' },
+  { key: 'section', label: 'Section' },
+  { key: 'job_field', label: 'Job field' },
+  { key: 'position', label: 'Position' },
   { key: 'applicant_status', label: 'Trạng thái' },
+  { key: 'synchronize', label: 'Đồng bộ' },
 ]
 
 const CloumnIcon = () => {
@@ -152,10 +160,10 @@ export default function EmployeeRecruitment({ permissions }) {
   const handleColumnVisibilityChange = (key, isVisible) => {
     const updatedColumns = { ...visibleColumns, [key]: isVisible }
     setVisibleColumns(updatedColumns)
-    localStorage.setItem('visibleColumns', JSON.stringify(updatedColumns))
+    localStorage.setItem('visibleColumns2', JSON.stringify(updatedColumns))
   }
   useEffect(() => {
-    const storedColumns = localStorage.getItem('visibleColumns')
+    const storedColumns = localStorage.getItem('visibleColumns2')
     if (storedColumns) {
       setVisibleColumns(JSON.parse(storedColumns))
     }
@@ -314,11 +322,7 @@ export default function EmployeeRecruitment({ permissions }) {
             ? moment(record.birth_date).tz('Asia/Ho_Chi_Minh').format('L')
             : null
         }
-        if (key === 'applicant_type') {
-          return visibleColumns[key] ? (
-            <CustomTagInter status={record.applicant_type} />
-          ) : null
-        }
+       
         if (key === 'applicant_status') {
           return visibleColumns[key] ? (
             <CustomTagInter status={record.applicant_status} />
@@ -328,6 +332,11 @@ export default function EmployeeRecruitment({ permissions }) {
           return visibleColumns[key]
             ? moment(record.interview_date).format('L')
             : null
+        }
+        if (key === 'synchronize') {
+          return visibleColumns[key] ? (
+            <CustomTagSyn status={record.synchronize} />
+          ) : null
         }
         return visibleColumns[key] ? text : null
       },
@@ -341,6 +350,9 @@ export default function EmployeeRecruitment({ permissions }) {
         const bValue = b[key]
         if (key === 'type_personnel') {
           return aValue === bValue ? 0 : aValue ? -1 : 1
+        }
+        if (key === 'synchronize') {
+          return a[key] === b[key] ? 0 : a[key] ? -1 : 1
         }
         if (key === 'create_date') {
           return moment(aValue).isBefore(moment(bValue)) ? -1 : 1
@@ -459,7 +471,7 @@ export default function EmployeeRecruitment({ permissions }) {
           {t('Thêm')}
         </Button>
       </div>
-      <div className="p-2 mb flex items-center justify-between">
+      <div className="p-2  flex items-center justify-between">
         <span className="inline-flex overflow-hidden">
           <div className="flex items-center gap-2">
             <Select defaultValue="Table" className="w-28" size="large">
@@ -512,7 +524,12 @@ export default function EmployeeRecruitment({ permissions }) {
             >
               <CloumnIcon />
             </Button>
-
+            {selectedRowKeys != null && selectedRowKeys.length > 0 && (
+              <SynActionHrInter
+                fetchData={fetchData}
+                selectedRowKeys={selectedRowKeys}
+              />
+            )}
             {selectedRowKeys != null && selectedRowKeys.length > 0 && (
               <ShowAction
                 handleOnClickAction={handleOnClickAction}
@@ -527,6 +544,7 @@ export default function EmployeeRecruitment({ permissions }) {
           </div>
         </span>
       </div>
+
       <AddHrInter
         isOpen={isModalOpenAddHr}
         onClose={closeModalAddHr}

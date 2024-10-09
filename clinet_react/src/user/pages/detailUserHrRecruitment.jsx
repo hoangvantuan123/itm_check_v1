@@ -12,7 +12,7 @@ import {
   Pagination,
   Select,
   DatePicker,
-  Space
+  Space,
 } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -22,7 +22,15 @@ import { GetHrInterId } from '../../features/hrInter/getInterId'
 import NoData from './noData'
 import Spinner from './load'
 import { PutUserInter } from '../../features/hrInter/putUserInter'
-import { UserAddOutlined, HourglassOutlined, CheckCircleOutlined, CheckOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import {
+  UserAddOutlined,
+  HourglassOutlined,
+  CheckCircleOutlined,
+  CheckOutlined,
+  CloseCircleOutlined,
+  UserOutlined,
+  ToolOutlined,
+} from '@ant-design/icons'
 
 const { Text } = Typography
 import moment from 'moment'
@@ -38,7 +46,10 @@ export default function DetailUserHrRecruitment() {
   const [interviewData, setInterviewData] = useState({})
   const [form] = Form.useForm()
   const [formMore] = Form.useForm()
-  const [formFilled, setFormFilled] = useState(false);
+  const [formFilled, setFormFilled] = useState(false)
+  const [status, setStatus] = useState(null)
+  const [type, setType] = useState(null)
+
   const fetchDataUserId = async () => {
     setLoading(true)
     try {
@@ -46,6 +57,8 @@ export default function DetailUserHrRecruitment() {
       if (response.success) {
         if (response.data.status) {
           setFormData(response.data.data)
+          setStatus(response.data.data?.applicant_status)
+          setType(response.data.data?.applicant_type)
           setError(null)
           if (
             response.data.data.interviews &&
@@ -74,7 +87,6 @@ export default function DetailUserHrRecruitment() {
   useEffect(() => {
     if (!id || !formData) return
     fetchDataUserId()
-
     const currentFields = form.getFieldsValue([
       'official_date_first',
       'official_date_second',
@@ -82,13 +94,13 @@ export default function DetailUserHrRecruitment() {
 
     if (
       currentFields.official_date_first !==
-        (formData.official_date_first
-          ? moment(formData.official_date_first)
-          : null) ||
+      (formData.official_date_first
+        ? moment(formData.official_date_first)
+        : null) ||
       currentFields.official_date_second !==
-        (formData.official_date_second
-          ? moment(formData.official_date_second)
-          : null)
+      (formData.official_date_second
+        ? moment(formData.official_date_second)
+        : null)
     ) {
       form.setFieldsValue({
         official_date_first: formData.official_date_first
@@ -218,6 +230,7 @@ export default function DetailUserHrRecruitment() {
   }
 
   const handleFinish = async (values) => {
+    setDataMore(values)
     const formattedData = formatSubmissionData(values)
 
     const submissionData = dataMore
@@ -235,15 +248,87 @@ export default function DetailUserHrRecruitment() {
     }
   }
   const handleFinishFormMore = async (values) => {
-    setDataMore(values)
+    try {
+      const response = await PutUserInter(id, values)
+      if (response.success) {
+        message.success('Cập nhật thành công!')
+      } else {
+        message.error(`Cập nhật thất bại: ${response.message}`)
+      }
+    } catch (error) {
+      message.error('Đã xảy ra lỗi trong quá trình cập nhật.')
+    }
   }
   const handleSave = () => {
     form.submit()
     formMore.submit()
   }
-  const toggleFormStatus = () => {
-    setFormFilled(!formFilled); // Đảo ngược trạng thái nhập form
-  };
+
+  const handleChange = async (value) => {
+    const submissionData = {
+      applicant_status: value,
+    }
+    try {
+      const response = await PutUserInter(id, submissionData)
+      if (response.success) {
+        setStatus(value)
+        message.success('Cập nhật thành công!')
+      } else {
+        message.error(`Cập nhật thất bại: ${response.message}`)
+      }
+    } catch (error) {
+      message.error('Đã xảy ra lỗi trong quá trình cập nhật.')
+    }
+  }
+  const handleChangeSatusFormTrue = async (value) => {
+    const submissionData = {
+      status_form: false,
+    }
+    try {
+      const response = await PutUserInter(id, submissionData)
+      if (response.success) {
+        setStatus(value)
+        message.success('Form nhập đã được mở!')
+      } else {
+        message.error(`Cập nhật thất bại: ${response.message}`)
+      }
+    } catch (error) {
+      message.error('Đã xảy ra lỗi trong quá trình cập nhật.')
+    }
+  }
+  const handleChangeSatusFormFalse = async (value) => {
+    const submissionData = {
+      status_form: true,
+    }
+    try {
+      const response = await PutUserInter(id, submissionData)
+      if (response.success) {
+        setStatus(value)
+        message.success('Form nhập đã được đóng!')
+      } else {
+        message.error(`Cập nhật thất bại: ${response.message}`)
+      }
+    } catch (error) {
+      message.error('Đã xảy ra lỗi trong quá trình cập nhật.')
+    }
+  }
+
+  const handleChangeType = async (value) => {
+    const submissionData = {
+      applicant_type: value,
+    }
+    try {
+      const response = await PutUserInter(id, submissionData)
+      if (response.success) {
+        setType(value)
+        message.success('Cập nhật thành công!')
+      } else {
+        message.error(`Cập nhật thất bại: ${response.message}`)
+      }
+    } catch (error) {
+      message.error('Đã xảy ra lỗi trong quá trình cập nhật.')
+    }
+  }
   return (
     <div className="w-full h-screen bg-gray-50 p-3">
       <Helmet>
@@ -281,7 +366,16 @@ export default function DetailUserHrRecruitment() {
 
         <ol className=" flex items-center gap-2">
           <Button className="bg-white">Export PDF</Button>
-          <Button className="bg-white">Mở Form</Button>
+          {formData?.status_form ? (
+            <>
+              <Button className="bg-white" onClick={handleChangeSatusFormTrue}>Mở Form</Button>
+            </>
+          ) : (
+            <>
+              {' '}
+              <Button className="bg-white" onClick={handleChangeSatusFormFalse}>Đóng Form</Button>
+            </>
+          )}
           <Button className="bg-white">Xóa</Button>
           <Button className="bg-white" onClick={toggleEdit}>
             {isEditing ? <> Thoát</> : <> Chỉnh sửa</>}
@@ -292,43 +386,66 @@ export default function DetailUserHrRecruitment() {
         </ol>
       </nav>
       <Space direction="vertical" className="mb-3">
-      <Row gutter={16}>
-        <Col>
-          <Select style={{ width: 300 }}  placeholder="Trạng thái">
-            <Option value="waiting_interview" key="waiting_interview">
-              <UserAddOutlined style={{ marginRight: 8 }} />
-              Lên lịch phỏng vấn
-            </Option>
-            <Option value="interviewed" key="interviewed">
-              <HourglassOutlined style={{ marginRight: 8 }} />
-              Đã phỏng vấn
-            </Option>
-            <Option value="waiting_result" key="waiting_result">
-              <CheckCircleOutlined style={{ marginRight: 8 }} />
-              Đang đợi kết quả
-            </Option>
-            <Option value="accepted" key="accepted">
-              <CheckOutlined style={{ marginRight: 8, color: 'green' }} />
-              Đã nhận
-            </Option>
-            <Option value="rejected" key="rejected">
-              <CloseCircleOutlined style={{ marginRight: 8, color: 'red' }} />
-              Không đạt
-            </Option>
-          </Select>
-        </Col>
-        <Col>
-          <Select  placeholder="Chọn loại ứng viên" style={{ width: 300 }}>
-            <Option value="worker">Công nhân</Option>
-            <Option value="staff">Nhân viên</Option>
-          </Select>
-        </Col>
-        <Col> <Button danger>
-        {formFilled ? 'Đã nhập form' : 'Chưa nhập form'}
-  </Button></Col>
-      </Row>
-    
-    </Space>
+        <Row gutter={16}>
+          <Col>
+            <Select
+              value={status}
+              onChange={handleChange}
+              style={{ width: 300 }}
+              placeholder="Trạng thái"
+            >
+              <Option value="waiting_interview" key="waiting_interview">
+                <UserAddOutlined style={{ marginRight: 8 }} />
+                Lên lịch phỏng vấn
+              </Option>
+              <Option value="interviewed" key="interviewed">
+                <HourglassOutlined style={{ marginRight: 8 }} />
+                Đã phỏng vấn
+              </Option>
+              <Option value="waiting_result" key="waiting_result">
+                <CheckCircleOutlined style={{ marginRight: 8 }} />
+                Đang đợi kết quả
+              </Option>
+              <Option value="accepted" key="accepted">
+                <CheckOutlined style={{ marginRight: 8, color: 'green' }} />
+                Đã nhận
+              </Option>
+              <Option value="rejected" key="rejected">
+                <CloseCircleOutlined style={{ marginRight: 8, color: 'red' }} />
+                Không đạt
+              </Option>
+            </Select>
+          </Col>
+          <Col>
+            <Select
+              value={type}
+              onChange={handleChangeType}
+              placeholder="Chọn loại ứng viên"
+              style={{ width: 300 }}
+            >
+              <Option value="worker">
+                <ToolOutlined style={{ marginRight: 8 }} /> Công nhân
+              </Option>
+              <Option value="staff">
+                <UserOutlined style={{ marginRight: 8 }} /> Nhân viên
+              </Option>
+            </Select>
+          </Col>
+          <Col>
+            {' '}
+            {formData?.status_form ? (
+              <>
+                <Button danger>Đã nhập</Button>
+              </>
+            ) : (
+              <>
+                {' '}
+                <Button danger>Chưa nhập</Button>
+              </>
+            )}
+          </Col>
+        </Row>
+      </Space>
       <Row gutter={16}>
         <Col xs={24} sm={24} md={14}>
           <div className="border background bg-white rounded-lg p-6 h-screen overflow-auto scroll-container cursor-pointer">
@@ -345,7 +462,7 @@ export default function DetailUserHrRecruitment() {
         </Col>
 
         <Col xs={24} sm={24} md={10}>
-          <div className="divide-y h-screen overflow-auto border  scroll-container cursor-pointer pb-20 divide-gray-100 rounded-xl   bg-white">
+          <div className="divide-y h-screen overflow-auto border  scroll-container cursor-pointer pb-24 divide-gray-100 rounded-xl   bg-white">
             <details
               className="group p-3 [&_summary::-webkit-details-marker]:hidden"
               open

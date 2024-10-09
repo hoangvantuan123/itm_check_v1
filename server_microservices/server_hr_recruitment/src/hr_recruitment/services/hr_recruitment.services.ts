@@ -118,10 +118,10 @@ export class HrRecruitmentServices {
       return await this.personnelRepository.manager.transaction(
         async (entityManager: EntityManager) => {
           const personnelData = { ...createPersonnelWithDetailsDto };
-          
+
           const personnel = this.personnelRepository.create(personnelData);
           const savedPersonnel = await entityManager.save(Personnel, personnel);
-  
+
           return {
             success: true,
             message: 'Personnel and related details created successfully',
@@ -131,7 +131,7 @@ export class HrRecruitmentServices {
       );
     } catch (error) {
       this.logger.error('Error creating personnel with details', error.stack);
-      
+
       // Trả về lỗi rõ ràng để biết được lý do thất bại.
       return {
         success: false,
@@ -261,6 +261,7 @@ export class HrRecruitmentServices {
       'personnel.phone_number',
       'personnel.email',
       'personnel.tax_number',
+      
     ])
       .skip((page - 1) * limit)
       .take(limit)
@@ -472,16 +473,19 @@ export class HrRecruitmentServices {
         // Thông tin con cái
         children: [
           {
+            id: 1,
             children_name: personnel.children_name_1,
             children_birth_date: personnel.children_birth_date_1,
             children_gender: personnel.children_gender_1,
           },
           {
+            id: 2,
             children_name: personnel.children_name_2,
             children_birth_date: personnel.children_birth_date_2,
             children_gender: personnel.children_gender_2,
           },
           {
+            id: 3,
             children_name: personnel.children_name_3,
             children_birth_date: personnel.children_birth_date_3,
             children_gender: personnel.children_gender_3,
@@ -489,16 +493,19 @@ export class HrRecruitmentServices {
         ],
         families: [
           {
+            id: 1,
             relationship: "Bố",
             full_name: personnel.father_name,
             phone_number: personnel.father_phone_number,
           },
           {
+            id: 2,
             relationship: "Mẹ",
             full_name: personnel.mother_name,
             phone_number: personnel.mother_phone_number,
           },
           {
+            id: 3,
             relationship: "Vợ",
             full_name: personnel.partner_name,
             phone_number: personnel.partner_phone_number,
@@ -631,8 +638,12 @@ export class HrRecruitmentServices {
       };
     }
     const combinedInfo = `${personnel.id}:${personnel.phone_number}:${personnel.full_name}:${personnel.email}`;
-    const encodedRouter = Buffer.from(combinedInfo).toString('base64');
+    let encodedRouter = Buffer.from(combinedInfo).toString('base64');
 
+    encodedRouter = encodedRouter
+      .replace(/\+/g, 'A')
+      .replace(/\//g, 'B')
+      .replace(/=+$/, '');
     return {
       success: true,
       data: {

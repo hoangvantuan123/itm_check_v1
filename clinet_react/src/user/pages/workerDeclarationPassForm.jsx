@@ -15,11 +15,6 @@ import { GetFindByPhone } from '../../features/hrRecruitment/getFindByPhone'
 const { Title, Text } = Typography
 import { useTranslation } from 'react-i18next'
 
-// Hàm mã hóa Base64
-const encodePhoneNumber = (phoneNumber) => {
-  return btoa(phoneNumber)
-}
-
 const WorkerDeclarationPassForm = () => {
   const [phoneNumber, setPhoneNumber] = useState('')
   const [language, setLanguage] = useState('Tiếng Việt')

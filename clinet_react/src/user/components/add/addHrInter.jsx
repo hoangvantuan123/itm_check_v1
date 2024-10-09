@@ -42,6 +42,12 @@ export default function AddHrInter({ isOpen, onClose, fetchData }) {
       applicant_status,
       applicant_type,
       interview_date,
+      team,
+      part,
+      production,
+      section,
+      job_field,
+      position
     } = values
 
     const data = {
@@ -55,6 +61,12 @@ export default function AddHrInter({ isOpen, onClose, fetchData }) {
       applicant_status,
       applicant_type,
       interview_date,
+      team,
+      part,
+      production,
+      section,
+      job_field,
+      position
     }
 
     try {
@@ -169,16 +181,67 @@ export default function AddHrInter({ isOpen, onClose, fetchData }) {
           </Col>
         </Row>
         <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              label={t('Team')}
+              name="team"
+              style={{ textAlign: 'left' }}
+            >
+              <Input size="large" placeholder={t('Team')} />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              label={t('Part')}
+              name="part"
+              style={{ textAlign: 'left' }}
+            >
+              <Input size="large" placeholder={t('Part')} />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              label={t('Production')}
+              name="production"
+              style={{ textAlign: 'left' }}
+            >
+              <Input size="large" placeholder={t('Production')} />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              label={t('Section')}
+              name="section"
+              style={{ textAlign: 'left' }}
+            >
+              <Input size="large" placeholder={t('Section')} />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              label={t('Job field')}
+              name="job_field"
+              style={{ textAlign: 'left' }}
+            >
+              <Input size="large" placeholder={t('Job field')} />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              label={t('Position')}
+              name="position"
+              style={{ textAlign: 'left' }}
+            >
+              <Input size="large" placeholder={t('Position')} />
+            </Form.Item>
+          </Col>
           <Col span={24}>
             <Form.Item
               label={t('Loại ứng viên')}
               name="applicant_type"
               style={{ textAlign: 'left' }}
             >
-              <Select size="large" placeholder={t('Chọn loại ứng viên')}>
-                <Option value="worker">{t('Công nhân')}</Option>
-                <Option value="staff">{t('Nhân viên')}</Option>
-              </Select>
+              <Input size="large" placeholder={t('Loại ứng viên')} />
             </Form.Item>
           </Col>
           <Col span={24}>

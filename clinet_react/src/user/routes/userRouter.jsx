@@ -45,6 +45,7 @@ import DetailUserHrInterview from '../pages/detailUserHrInterview'
 import EmployeeDataiView from '../pages/employeeData'
 import DetailUserHrAllDataTrue from '../pages/detailUserHrAllDataTrue'
 import DetailUserHrAllDataFalse from '../pages/detailUserHrAllDataFalse'
+import ClosePage from '../pages/closePage'
 const { Content } = Layout
 
 const UserRouter = () => {
@@ -59,9 +60,12 @@ const UserRouter = () => {
   const skippedRoutes = [
     '/public/apply/form/1',
     '/public/apply/information/phone',
+    '/public/apply/inter/phone',
     '/public/apply/form/2',
+    '/public/apply/form/1',
     '/public/apply/thong-bao',
     '/public/apply/form/new',
+    '/public/close',
   ]
 
   const checkLoginStatus = () => {
@@ -122,10 +126,19 @@ const UserRouter = () => {
         path="/public/apply/information/phone"
         element={<WorkerDeclarationPassForm />}
       />
+      <Route
+        path="/public/close"
+        element={<ClosePage />}
+      />
+      <Route path="/public/apply/inter/phone" element={<PassFormPage />} />
 
       <Route
         path="/public/apply/form/2/:router"
         element={<WorkerDeclarationMultiStepForm />}
+      />
+      <Route
+        path="/public/apply/form/1/:router"
+        element={<MultiStepFormPage />}
       />
       <Route path="/public/apply/thong-bao" element={<SuccessNotification />} />
 

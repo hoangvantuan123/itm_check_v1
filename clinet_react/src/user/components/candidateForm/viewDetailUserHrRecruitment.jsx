@@ -120,22 +120,12 @@ const ViewDetailUserHrRecruitment = ({
         >
           <Row gutter={16}>
             <Col span={16}>
-              <Form.Item
-                label="Họ tên ứng viên:"
-                name="full_name"
-                rules={[{ required: true, message: 'Vui lòng nhập họ tên!' }]}
-              >
+              <Form.Item label="Họ tên ứng viên:" name="full_name">
                 <Input size="large" placeholder="Nhập họ tên" />
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item
-                label="Giới tính:"
-                name="gender"
-                rules={[
-                  { required: true, message: 'Vui lòng chọn giới tính!' },
-                ]}
-              >
+              <Form.Item label="Giới tính:" name="gender">
                 <Select size="large" placeholder="Chọn giới tính">
                   <Option value="Male">Nam</Option>
                   <Option value="Female">Nữ</Option>
@@ -170,13 +160,7 @@ const ViewDetailUserHrRecruitment = ({
 
           <Row gutter={16}>
             <Col span={24}>
-              <Form.Item
-                label="Ngày tháng năm sinh:"
-                name="birth_date"
-                rules={[
-                  { required: true, message: 'Vui lòng nhập ngày sinh!' },
-                ]}
-              >
+              <Form.Item label="Ngày tháng năm sinh:" name="birth_date">
                 <DatePicker
                   size="large"
                   style={{ width: '100%' }}
@@ -189,11 +173,7 @@ const ViewDetailUserHrRecruitment = ({
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item
-                label="Số CCCD:"
-                name="id_number"
-                rules={[{ required: true, message: 'Vui lòng nhập số CMND!' }]}
-              >
+              <Form.Item label="Số CCCD:" name="id_number">
                 <Input size="large" />
               </Form.Item>
             </Col>
@@ -237,13 +217,7 @@ const ViewDetailUserHrRecruitment = ({
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item
-                label="Số điện thoại liên hệ:"
-                name="phone_number"
-                rules={[
-                  { required: true, message: 'Vui lòng nhập số điện thoại!' },
-                ]}
-              >
+              <Form.Item label="Số điện thoại liên hệ:" name="phone_number">
                 <Input size="large" placeholder="Nhập số điện thoại" />
               </Form.Item>
             </Col>
@@ -281,42 +255,22 @@ const ViewDetailUserHrRecruitment = ({
           </h3>
           <Row gutter={16} className="mt-2">
             <Col span={8}>
-              <Form.Item
-                label="Tỉnh:"
-                name="birth_province"
-                rules={[{ required: true, message: 'Vui lòng nhập tỉnh!' }]}
-              >
+              <Form.Item label="Tỉnh:" name="birth_province">
                 <Input size="large" placeholder="Nhập tỉnh" />
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item
-                label="Quận/Huyện:"
-                name="birth_district"
-                rules={[
-                  { required: true, message: 'Vui lòng nhập quận/huyện!' },
-                ]}
-              >
+              <Form.Item label="Quận/Huyện:" name="birth_district">
                 <Input size="large" placeholder="Nhập quận/huyện" />
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item
-                label="Xã/Phường:"
-                name="birth_ward"
-                rules={[
-                  { required: true, message: 'Vui lòng nhập xã/phường!' },
-                ]}
-              >
+              <Form.Item label="Xã/Phường:" name="birth_ward">
                 <Input size="large" placeholder="Nhập xã/phường" />
               </Form.Item>
             </Col>
             <Col span={24}>
-              <Form.Item
-                label="Địa chỉ:"
-                name="birth_address"
-                rules={[{ required: true, message: 'Vui lòng nhập địa chỉ!' }]}
-              >
+              <Form.Item label="Địa chỉ:" name="birth_address">
                 <Input size="large" placeholder="Nhập địa chỉ" />
               </Form.Item>
             </Col>
@@ -325,42 +279,22 @@ const ViewDetailUserHrRecruitment = ({
           <h3 className="mb-2 mt-2 italic">Địa chỉ nơi ở hiện tại</h3>
           <Row gutter={16} className="mt-2">
             <Col span={8}>
-              <Form.Item
-                label="Tỉnh:"
-                name="current_province"
-                rules={[{ required: true, message: 'Vui lòng nhập tỉnh!' }]}
-              >
+              <Form.Item label="Tỉnh:" name="current_province">
                 <Input size="large" placeholder="Nhập tỉnh" />
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item
-                label="Quận/Huyện:"
-                name="current_district"
-                rules={[
-                  { required: true, message: 'Vui lòng nhập quận/huyện!' },
-                ]}
-              >
+              <Form.Item label="Quận/Huyện:" name="current_district">
                 <Input size="large" placeholder="Nhập quận/huyện" />
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item
-                label="Xã/Phường:"
-                name="current_ward"
-                rules={[
-                  { required: true, message: 'Vui lòng nhập xã/phường!' },
-                ]}
-              >
+              <Form.Item label="Xã/Phường:" name="current_ward">
                 <Input size="large" placeholder="Nhập xã/phường" />
               </Form.Item>
             </Col>
             <Col span={24}>
-              <Form.Item
-                label="Số nhà/Đường:"
-                name="current_address"
-                rules={[{ required: true, message: 'Vui lòng nhập địa chỉ!' }]}
-              >
+              <Form.Item label="Số nhà/Đường:" name="current_address">
                 <Input size="large" placeholder="Nhập địa chỉ" />
               </Form.Item>
             </Col>
@@ -387,7 +321,7 @@ const ViewDetailUserHrRecruitment = ({
           />
         </Form>
       ) : (
-        <div className="pb-20">
+        <div className=" pb-28">
           <Row gutter={16}>
             <Col span={16}>
               <div>

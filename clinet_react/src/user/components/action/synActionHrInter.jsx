@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Input, Modal, Typography, Button, message } from 'antd'
-import { PostSyncData } from '../../../features/hrAllData/postSyncData'
+import { PostSyncData } from '../../../features/hrInter/postSyncData'
 
 const { Title } = Typography
 
@@ -24,7 +24,11 @@ const SynIcon = () => {
   )
 }
 
-export default function SynAction({ fetchData, isOpen, selectedRowKeys }) {
+export default function SynActionHrInter({
+  fetchData,
+  isOpen,
+  selectedRowKeys,
+}) {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [loading, setLoading] = useState(false)
   const { t } = useTranslation()
@@ -82,7 +86,12 @@ export default function SynAction({ fetchData, isOpen, selectedRowKeys }) {
           </Button>,
         ]}
       >
-        <p>{t('Bạn có chắc chắn đồng bộ dữ liệu sang ERP không')}?</p>
+        <p>
+          {t(
+            'Bạn có chắc chắn đồng bộ dữ liệu sang bảng dữ liệu mới để xác nhận lên ERP không',
+          )}
+          ?
+        </p>
       </Modal>
     </>
   )
