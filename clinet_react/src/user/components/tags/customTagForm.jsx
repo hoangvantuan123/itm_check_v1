@@ -1,7 +1,6 @@
 import { Tag } from 'antd'
 
 const CustomTagForm = ({ status }) => {
-  console.log('status')
   let color
   let text
 
@@ -14,6 +13,14 @@ const CustomTagForm = ({ status }) => {
       color = 'volcano'
       text = 'Not Send Yet'
       break
+      case true:
+        color = 'green'
+        text = 'Đã nhập Form'
+        break
+      case false:
+        color = 'volcano'
+        text = 'Chưa nhập Form'
+        break
     default:
       color = 'default'
       text = 'Chưa đánh giá'

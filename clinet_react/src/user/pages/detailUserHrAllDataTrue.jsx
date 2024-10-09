@@ -24,6 +24,7 @@ import { PutHrInfoId } from '../../features/hrRecruitment/updateHrInfoId'
 import { PutUserInterview } from '../../features/hrRecruitment/putUserInterview'
 const { Text } = Typography
 import moment from 'moment'
+import CustomTagSyn from '../components/tags/customTagSyn'
 export default function DetailUserHrAllDataTrue() {
   const { t } = useTranslation()
   const { id } = useParams()
@@ -278,6 +279,12 @@ export default function DetailUserHrAllDataTrue() {
           </li>
           <li className="cursor-pointer">
             <span className=" text-black opacity-80">#{id}</span>
+          </li>
+          <li className="cursor-pointer ml-5">
+          <CustomTagSyn status={formData?.synchronize}/>
+          </li>
+          <li className="cursor-pointer">
+          <CustomTagSyn status={formData?.synchronize_erp}/>
           </li>
         </ol>
 

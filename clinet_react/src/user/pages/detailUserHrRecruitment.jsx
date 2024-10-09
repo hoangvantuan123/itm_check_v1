@@ -13,6 +13,8 @@ import {
   Select,
   DatePicker,
   Space,
+  Dropdown,
+  Menu
 } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -22,6 +24,7 @@ import { GetHrInterId } from '../../features/hrInter/getInterId'
 import NoData from './noData'
 import Spinner from './load'
 import { PutUserInter } from '../../features/hrInter/putUserInter'
+import { DeleteHrInterIds } from '../../features/hrInter/deleteHrInfoIds'
 import {
   UserAddOutlined,
   HourglassOutlined,
@@ -31,9 +34,13 @@ import {
   UserOutlined,
   ToolOutlined,
 } from '@ant-design/icons'
+import { DownloadOutlined, FilePdfOutlined, FileExcelOutlined, FileWordOutlined, DeleteOutlined, FormOutlined } from '@ant-design/icons';
+
 
 const { Text } = Typography
 import moment from 'moment'
+import CustomTagSyn from '../components/tags/customTagSyn'
+import CustomTagForm from '../components/tags/customTagForm'
 export default function DetailUserHrRecruitment() {
   const { t } = useTranslation()
   const { id } = useParams()
@@ -323,7 +330,73 @@ export default function DetailUserHrRecruitment() {
     }
   }
 
- 
+  const handleDeleteHrInter = async () => {
+    try {
+      const response = await DeleteHrInterIds([id])
+
+      const messagePromise = response.success
+        ? Promise.resolve(message.success(`${t('Xóa thành công')}`))
+        : Promise.reject(
+            new Error(
+              `${t('Xóa thất bại: Yêu cầu không thành công, vui lòng thử lại')}`,
+            ),
+          )
+
+      await messagePromise
+
+      if (response.success) {
+        handleNavigateToBack()
+      }
+    } catch (error) {
+      message.error(`${t('Có lỗi xảy ra, vui lòng thử lại')}`)
+    }
+  }
+
+  const handleMenuClick = (e) => {
+    switch (e.key) {
+      case 'export-pdf':
+        console.log('Xuất PDF');
+        break;
+      case 'export-excel':
+        console.log('Xuất Excel');
+        break;
+      case 'export-word':
+        console.log('Xuất Word');
+        break;
+      case 'open-form':
+        handleChangeSatusFormTrue();
+        break;
+      case 'close-form':
+        handleChangeSatusFormFalse();
+        break;
+      case 'delete':
+        handleDeleteHrInter()
+        break;
+      case 'sync-data':
+        console.log('Đồng bộ dữ liệu');
+        break;
+      case 'toggle-edit':
+        toggleEdit();
+        break;
+      default:
+        break;
+    }
+  };
+
+  const menu = (
+    <Menu onClick={handleMenuClick}>
+       <Menu.SubMenu key="export" title="Xuất" icon={<DownloadOutlined />}>
+      <Menu.Item key="export-pdf" icon={<FilePdfOutlined />}>Xuất PDF</Menu.Item>
+      <Menu.Item key="export-excel" icon={<FileExcelOutlined />}>Xuất Excel</Menu.Item>
+      <Menu.Item key="export-word" icon={<FileWordOutlined />}>Xuất Word</Menu.Item>
+    </Menu.SubMenu>
+    <Menu.Item key="open-form" icon={<FormOutlined />}>Mở Form</Menu.Item>
+    <Menu.Item key="close-form" icon={<FormOutlined />}>Đóng Form</Menu.Item>
+    <Menu.Item key="delete" style={{ color: 'red' }} icon={<DeleteOutlined />}>
+      Xóa
+    </Menu.Item>
+    </Menu>
+  );
   return (
     <div className="w-full h-screen bg-gray-50 p-3">
       <Helmet>
@@ -357,21 +430,22 @@ export default function DetailUserHrRecruitment() {
           <li className="cursor-pointer">
             <span className=" text-black opacity-80">#{id}</span>
           </li>
+          <li className="cursor-pointer ml-5">
+          <CustomTagSyn status={formData?.synchronize}/>
+          </li>
+          <li className="cursor-pointer">
+            <CustomTagForm status={formData?.status_form}/>
+          </li>
         </ol>
 
         <ol className=" flex items-center gap-2">
-          <Button className="bg-white">Export PDF</Button>
-          {formData?.status_form ? (
-            <>
-              <Button className="bg-white" onClick={handleChangeSatusFormTrue}>Mở Form</Button>
-            </>
-          ) : (
-            <>
-              {' '}
-              <Button className="bg-white" onClick={handleChangeSatusFormFalse}>Đóng Form</Button>
-            </>
-          )}
-          <Button className="bg-white">Xóa</Button>
+        <Dropdown overlay={menu}  placement="bottomRight">
+    <Button className="bg-white">
+      Menu
+    </Button>
+  </Dropdown>
+         
+          <Button className="bg-white">Đồng bộ dữ liệu</Button>
           <Button className="bg-white" onClick={toggleEdit}>
             {isEditing ? <> Thoát</> : <> Chỉnh sửa</>}
           </Button>
@@ -412,19 +486,8 @@ export default function DetailUserHrRecruitment() {
             </Select>
           </Col>
         
-          <Col>
-            {' '}
-            {formData?.status_form ? (
-              <>
-                <Button danger>Đã nhập</Button>
-              </>
-            ) : (
-              <>
-                {' '}
-                <Button danger>Chưa nhập</Button>
-              </>
-            )}
-          </Col>
+        
+         
         </Row>
       </Space>
       <Row gutter={16}>

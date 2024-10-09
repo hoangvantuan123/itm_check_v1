@@ -25,7 +25,7 @@ const CustomTagSyn = ({ status }) => {
   }
 
   return (
-    <Tag color={color}>
+    <Tag color={color} >
       {icon} {text}
     </Tag>
   )

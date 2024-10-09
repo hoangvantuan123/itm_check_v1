@@ -455,6 +455,7 @@ export class HrRecruitmentServices {
         contract_term: personnel.contract_term,
         line_model: personnel.line_model,
         part: personnel.part,
+        synchronize_erp: personnel.synchronize_erp,
         // Thông tin vị trí và hợp đồng
         erp_department_registration: personnel.erp_department_registration,
         production: personnel.production,
