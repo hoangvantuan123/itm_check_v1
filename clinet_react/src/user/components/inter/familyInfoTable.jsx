@@ -273,13 +273,13 @@ const FamilyInfoTable = ({ form, dataSource, children }) => {
       )}
       {isMobile ? (
         <>
-          <h2 className="text-sm font-semibold mb-4">Con cái</h2>
+          <h2 className="text-sm italic mb-4">Con cái</h2>
           <Form.Item name="children">{renderKanban2()}</Form.Item>
         </>
       ) : (
         <>
           <Form.Item name="children">
-            <h2 className="text-sm font-semibold mb-4">Con cái</h2>
+            <h2 className="text-sm italic mb-4">Con cái</h2>
             <Table
               dataSource={childrenDataSource}
               columns={columnsChildren}

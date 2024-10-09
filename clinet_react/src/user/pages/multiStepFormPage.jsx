@@ -10,6 +10,7 @@ import { GetHrInterId } from '../../features/hrInter/getInterId'
 import { PutUserInter } from '../../features/hrInter/putUserInter'
 import { PostHrInterNew } from '../../features/hrInter/postHrInterNew'
 import LanguageTable from '../components/inter/LanguageTable'
+import SkillTable from '../components/inter/skillTable'
 const MultiStepFormPage = () => {
   const navigate = useNavigate()
   const [currentStep, setCurrentStep] = useState(0)
@@ -190,6 +191,14 @@ const MultiStepFormPage = () => {
       certificate_type_3: finalData?.languages[2].certificate_type,
       score_3: finalData?.languages[2].score,
       level_3: finalData?.languages[2].level,
+      
+      office_skill_excel	: finalData?.skills[0].level,
+      office_skill_word	: finalData?.skills[1].level,
+      office_skill_powerpoint	: finalData?.skills[2].level,
+      software_skill_autocad	: finalData?.skills[3].level,
+      software_skill_solidworks	: finalData?.skills[4].level,
+      software_skill_erp	: finalData?.skills[5].level,
+      software_skill_mes: finalData?.skills[6].level,
     }
 
     return filterEmptyFields(result)
@@ -237,16 +246,18 @@ const MultiStepFormPage = () => {
           <FamilyInfoTable
             form={form}
             formData={formData}
-            dataSource={formData.families}
-            children={formData.children}
+            dataSource={formData?.families}
+            children={formData?.children}
           />
           <Divider orientation="left italic">Tình trạng học vấn</Divider>
           <EducationLanguageTable
             form={form}
-            dataSource={formData.educations}
+            dataSource={formData?.educations}
           />
-          <h2 className="mt-4 mb-2 font-semibold">Ngôn ngữ</h2>
-          <LanguageTable form={form} dataSource={formData.languages} />
+          <h2 className="mt-4 mb-2 italic">Ngôn ngữ</h2>
+          <LanguageTable form={form} dataSource={formData?.languages} />
+          <h2 className="mt-4 mb-2 italic">Kỹ năng</h2>
+          <SkillTable form={form} dataSource={formData?.skills}/>
           <Divider orientation="left italic">Kinh nghiệm làm việc</Divider>
           <WorkExperienceTable form={form} dataSource={formData.experiences} />
         </>

@@ -41,7 +41,6 @@ const columnConfig = [
   { key: 'phone_number', label: 'Số điện thoại' },
   { key: 'interview_date', label: 'Ngày phỏng vấn' },
   { key: 'email', label: 'Email' },
-  { key: 'applicant_type', label: 'Ứng tuyển' },
   { key: 'team', label: 'Team' },
   { key: 'part', label: 'Part' },
   { key: 'production', label: 'Production' },

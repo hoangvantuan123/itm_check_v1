@@ -377,6 +377,15 @@ export class HrInterServices {
 
           ],
         distance_from_household_to_company: inter.distance_from_household_to_company,
+        skills : [
+            { id: 1, skill: 'Excel', level: inter.office_skill_excel },
+            { id: 2, skill: 'Word', level: inter.office_skill_word },
+            { id: 3, skill: 'PowerPoint', level: inter.office_skill_powerpoint },
+            { id: 4, skill: 'Autocad', level: inter.software_skill_autocad },
+            { id: 5, skill: 'SolidWorks', level: inter.software_skill_solidworks },
+            { id: 6, skill: 'ERP', level: inter.software_skill_erp },
+            { id: 7, skill: 'MES', level: inter.software_skill_mes },
+        ]
       },
     };
   }
@@ -418,8 +427,7 @@ export class HrInterServices {
 
     encodedRouter = encodedRouter
       .replace(/\+/g, 'A')
-      .replace(/\//g, 'B')
-      .replace(/=+$/, '');
+      .replace(/\//g, 'B') .replace(/=+$/, '');
     return {
       success: true,
       data: {

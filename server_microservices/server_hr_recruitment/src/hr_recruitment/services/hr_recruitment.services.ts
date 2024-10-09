@@ -569,6 +569,15 @@ export class HrRecruitmentServices {
 
           ],
         distance_from_household_to_company: personnel.distance_from_household_to_company,
+        skills : [
+          { id: 1, skill: 'Excel', level: personnel.office_skill_excel },
+          { id: 2, skill: 'Word', level: personnel.office_skill_word },
+          { id: 3, skill: 'PowerPoint', level: personnel.office_skill_powerpoint },
+          { id: 4, skill: 'Autocad', level: personnel.software_skill_autocad },
+          { id: 5, skill: 'SolidWorks', level: personnel.software_skill_solidworks },
+          { id: 6, skill: 'ERP', level: personnel.software_skill_erp },
+          { id: 7, skill: 'MES', level: personnel.software_skill_mes },
+      ]
       },
     };
   }

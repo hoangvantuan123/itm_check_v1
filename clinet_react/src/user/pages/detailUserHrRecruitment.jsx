@@ -224,6 +224,16 @@ export default function DetailUserHrRecruitment() {
       certificate_type_3: finalData?.languages[2].certificate_type,
       score_3: finalData?.languages[2].score,
       level_3: finalData?.languages[2].level /*  */,
+
+
+      office_skill_excel	: finalData?.skills[0].level,
+      office_skill_word	: finalData?.skills[1].level,
+      office_skill_powerpoint	: finalData?.skills[2].level,
+      software_skill_autocad	: finalData?.skills[3].level,
+      software_skill_solidworks	: finalData?.skills[4].level,
+      software_skill_erp	: finalData?.skills[5].level,
+      software_skill_mes: finalData?.skills[6].level,
+      
     }
 
     return filterEmptyFields(result)
@@ -313,22 +323,7 @@ export default function DetailUserHrRecruitment() {
     }
   }
 
-  const handleChangeType = async (value) => {
-    const submissionData = {
-      applicant_type: value,
-    }
-    try {
-      const response = await PutUserInter(id, submissionData)
-      if (response.success) {
-        setType(value)
-        message.success('Cập nhật thành công!')
-      } else {
-        message.error(`Cập nhật thất bại: ${response.message}`)
-      }
-    } catch (error) {
-      message.error('Đã xảy ra lỗi trong quá trình cập nhật.')
-    }
-  }
+ 
   return (
     <div className="w-full h-screen bg-gray-50 p-3">
       <Helmet>
@@ -416,21 +411,7 @@ export default function DetailUserHrRecruitment() {
               </Option>
             </Select>
           </Col>
-          <Col>
-            <Select
-              value={type}
-              onChange={handleChangeType}
-              placeholder="Chọn loại ứng viên"
-              style={{ width: 300 }}
-            >
-              <Option value="worker">
-                <ToolOutlined style={{ marginRight: 8 }} /> Công nhân
-              </Option>
-              <Option value="staff">
-                <UserOutlined style={{ marginRight: 8 }} /> Nhân viên
-              </Option>
-            </Select>
-          </Col>
+        
           <Col>
             {' '}
             {formData?.status_form ? (

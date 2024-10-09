@@ -235,15 +235,7 @@ export default function AddHrInter({ isOpen, onClose, fetchData }) {
               <Input size="large" placeholder={t('Position')} />
             </Form.Item>
           </Col>
-          <Col span={24}>
-            <Form.Item
-              label={t('Loại ứng viên')}
-              name="applicant_type"
-              style={{ textAlign: 'left' }}
-            >
-              <Input size="large" placeholder={t('Loại ứng viên')} />
-            </Form.Item>
-          </Col>
+          
           <Col span={24}>
             <Form.Item
               label={t('Trạng thái ứng tuyển')}

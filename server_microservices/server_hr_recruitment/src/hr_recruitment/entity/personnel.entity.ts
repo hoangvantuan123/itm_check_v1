@@ -344,10 +344,27 @@ export class Personnel {
 
 
 
+ 
   @Column({ nullable: true })
-  social_insurance: string;  // ĐÓNG BHXH
+  office_skill_excel	: string
 
+  @Column({ nullable: true })
+  office_skill_word	: string
 
+  @Column({ nullable: true })
+  office_skill_powerpoint	: string
+
+  @Column({ nullable: true })
+  software_skill_autocad	: string
+
+  @Column({ nullable: true })
+  software_skill_solidworks	: string
+
+  @Column({ nullable: true })
+  software_skill_erp	: string
+
+  @Column({ nullable: true })
+  software_skill_mes: string
 
 
   @OneToMany(() => HrInterviewCandidate, (candidate) => candidate.personnel)

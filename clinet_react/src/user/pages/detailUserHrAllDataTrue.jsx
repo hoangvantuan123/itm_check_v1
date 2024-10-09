@@ -209,6 +209,13 @@ export default function DetailUserHrAllDataTrue() {
       certificate_type_3: finalData?.languages[2].certificate_type,
       score_3: finalData?.languages[2].score,
       level_3: finalData?.languages[2].level /*  */,
+      office_skill_excel	: finalData?.skills[0].level,
+      office_skill_word	: finalData?.skills[1].level,
+      office_skill_powerpoint	: finalData?.skills[2].level,
+      software_skill_autocad	: finalData?.skills[3].level,
+      software_skill_solidworks	: finalData?.skills[4].level,
+      software_skill_erp	: finalData?.skills[5].level,
+      software_skill_mes: finalData?.skills[6].level,
     }
 
     return filterEmptyFields(result)

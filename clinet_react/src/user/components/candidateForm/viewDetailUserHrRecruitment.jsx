@@ -10,11 +10,13 @@ import {
   DatePicker,
   Typography,
   Select,
+  Card
 } from 'antd'
 import EditLanguageTable from './editLanguageTable'
 import EditWorkExperienceTable from './editWorkExperienceTable'
 import EditEducationTable from './editEducationTable'
 import EditFamilyInfoTable from './editFamilyInfoTable'
+import SkillTable from '../workerDeclaration/skillTable'
 const { Text } = Typography
 const { Option } = Select
 import moment from 'moment'
@@ -303,18 +305,20 @@ const ViewDetailUserHrRecruitment = ({
           <Divider orientation="left italic">Thông tin gia đình</Divider>
           <EditFamilyInfoTable
             form={form}
-            dataSource={formData.families}
-            children={formData.children}
+            dataSource={formData?.families}
+            children={formData?.children}
           />
 
           <Divider orientation="left italic">Tình trạng học vấn</Divider>
-          <h2 className="mt-4 mb-2 font-semibold">Học vấn</h2>
-          <EditEducationTable form={form} dataSource={formData.educations} />
+          <h2 className="mt-4 mb-2 italic">Học vấn</h2>
+          <EditEducationTable form={form} dataSource={formData?.educations} />
 
-          <h2 className="mt-4 mb-2 font-semibold">Ngôn ngữ</h2>
-          <EditLanguageTable form={form} dataSource={formData.languages} />
-
+          <h2 className="mt-4 mb-2 italic">Ngôn ngữ</h2>
+          <EditLanguageTable form={form} dataSource={formData?.languages} />
+          <h2 className="mt-4 mb-2  italic">Kỹ năng</h2>
+          <SkillTable form={form} dataSource={formData?.skills} />
           <Divider orientation="left italic">Kinh nghiệm làm việc</Divider>
+
           <EditWorkExperienceTable
             form={form}
             dataSource={formData.experiences}
@@ -522,7 +526,7 @@ const ViewDetailUserHrRecruitment = ({
 
           <Divider orientation="left italic">Tình trạng học vấn</Divider>
 
-          <h2 className="mt-4 mb-2 font-semibold">Học vấn</h2>
+          <h2 className="mt-4 mb-2 italic">Học vấn</h2>
           <Table
             dataSource={formData.educations}
             columns={educationColumns}
@@ -532,7 +536,7 @@ const ViewDetailUserHrRecruitment = ({
             bordered
           />
 
-          <h2 className="mt-4 mb-2 font-semibold">Ngôn ngữ</h2>
+          <h2 className="mt-4 mb-2 italic">Ngôn ngữ</h2>
           <Table
             dataSource={formData.languages}
             columns={languageColumns}
@@ -541,6 +545,18 @@ const ViewDetailUserHrRecruitment = ({
             size="small"
             bordered
           />
+
+<h2 className="mt-4 mb-2 italic">Kỹ năng</h2>
+<Row gutter={16}>
+      {formData?.skills.map((skill) => (
+        <Col span={12} key={skill.id} style={{ marginBottom: 16 }}>
+          <Card>
+            <p><strong>Kỹ năng:</strong> {skill.skill}</p>
+            <p><strong>Level:</strong> {skill.level}</p>
+          </Card>
+        </Col>
+      ))}
+    </Row>
           <Divider orientation="left italic">Kinh nghiệm làm việc</Divider>
 
           <Table

@@ -196,29 +196,29 @@ export default function ImportForm({
 
     const newConnectValues = {}
     const defaultMappings = {
-      CID: 'employee_code',
-      Name: 'full_name',
+      'CID': 'employee_code',
+      'Name': 'full_name',
       'Đăng ký bp trên ERP': 'erp_department_registration',
-      Team: 'team',
-      Part: 'part',
-      Production: 'production',
-      Section: 'section',
+      'Team': 'team',
+      'Part': 'part',
+      'Production': 'production',
+      'Section': 'section',
       'Job field': 'job_field',
-      Position: 'position',
+      'Position': 'position',
       'Entering day': 'entering_day',
       'Leaving day': 'leaving_day',
       'PROBATION (day)': 'probation_days',
       'Ngày ký HĐ lần 1': 'official_date_first',
       'Ngày ký HĐ lần 2': 'official_date_second',
-      'Số chứng minh thư': 'id_number',
+      'CCCD': 'id_number',
       'Ngày cấp': 'id_issue_date',
       'Nơi cấp': 'id_issue_place',
       'Date of birth': 'birth_date',
-      Tuổi: 'age',
+      'Tuổi': 'age',
       'Đếm tháng': 'month_count',
       'Phone Number': 'phone_number',
-      Gender: 'gender',
-      Email: 'email',
+      'Gender': 'gender',
+      'Email': 'email',
       'Partner name': 'partner_name',
       'Partner phone number': 'partner_phone_number',
       'Số con': 'number_of_children',
@@ -248,7 +248,7 @@ export default function ImportForm({
         'distance_from_household_to_company',
       'Highest level of education': 'highest_education_level',
       'School name': 'school_name',
-      Major: 'major',
+      'Major': 'major',
       'Company name 1': 'company_name_1',
       'Entrance day 1': 'entrance_day_1',
       'Leaving day 1': 'leaving_day_1',
@@ -261,12 +261,12 @@ export default function ImportForm({
       'Work responsibility 2': 'work_responsibility_2',
       'Dân tộc': 'ethnicity',
       'ĐÓNG BHXH': 'social_insurance',
-      Interview_date: 'interview_date',
+      'Interview date': 'interview_date',
       'Start date': 'start_date',
       'School year': 'school_year',
       'Year ended': 'year_ended',
       'Year of graduation': 'year_of_graduation',
-      Classification: 'classification',
+      'Classification': 'classification',
       'Salary 2': 'salary_2',
       'Salary 1': 'salary_1',
 
@@ -287,7 +287,7 @@ export default function ImportForm({
     }
 
     const dateFields = [
-      'Interview_date',
+      'Interview date',
       'Start date',
       'Date of birth',
       'Ngày cấp',
@@ -669,6 +669,21 @@ export default function ImportForm({
             className="  h-[calc(100vh-120px)] overflow-hidden"
           >
             <Col xs={24} sm={4} className=" border-r">
+
+            <Button
+                  size="large"
+                  onClick={handleUpload}
+                  className="w-full mb-5 border-gray-300 bg-blue-500 text-white text-sm hover:bg-blue-600"
+                >
+                  {t('Nhập')}
+                </Button>
+               {/*  <Button
+                  size="large"
+                  onClick={handleCheck}
+                  className="w-full mt-5 border-gray-300 text-black   text-sm hover:bg-gray-600"
+                >
+                  {t('Kiểm tra')}
+                </Button> */}
               <div>
                 <h3 className="text-base font-semibold">{t('Tệp đã nhập')}</h3>
                 <div className="mt-4 mb-3">
@@ -718,20 +733,7 @@ export default function ImportForm({
                   </Select>
                 </div>
 
-                <Button
-                  size="large"
-                  onClick={handleUpload}
-                  className="w-full mt-5 border-gray-300 bg-blue-500 text-white text-sm hover:bg-blue-600"
-                >
-                  {t('Nhập')}
-                </Button>
-                <Button
-                  size="large"
-                  onClick={handleCheck}
-                  className="w-full mt-5 border-gray-300 text-black   text-sm hover:bg-gray-600"
-                >
-                  {t('Kiểm tra')}
-                </Button>
+               
               </div>
             </Col>
             <Col xs={24} sm={20}>

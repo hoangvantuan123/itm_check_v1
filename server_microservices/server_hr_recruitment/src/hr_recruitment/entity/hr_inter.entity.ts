@@ -337,11 +337,32 @@ export class HrInter {
 
     @Column({ nullable: true })
     applicant_status: string;
-    
+
     @Column({ nullable: true })
     applicant_type: string;
 
 
+    @Column({ nullable: true })
+    office_skill_excel	: string
+
+    @Column({ nullable: true })
+    office_skill_word	: string
+
+    @Column({ nullable: true })
+    office_skill_powerpoint	: string
+
+    @Column({ nullable: true })
+    software_skill_autocad	: string
+
+    @Column({ nullable: true })
+    software_skill_solidworks	: string
+
+    @Column({ nullable: true })
+    software_skill_erp	: string
+
+    @Column({ nullable: true })
+    software_skill_mes: string
+    
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     create_date: Date;
 

@@ -375,6 +375,33 @@ export class CreatePersonnelWithDetailsDto {
   introducer_phone_number?: string;
 
 
+  @IsString()
+  @IsOptional()
+  office_skill_excel	: string
+
+  @IsString()
+  @IsOptional()
+  office_skill_word	: string
+
+  @IsString()
+  @IsOptional()
+  office_skill_powerpoint	: string
+
+  @IsString()
+  @IsOptional()
+  software_skill_autocad	: string
+
+  @IsString()
+  @IsOptional()
+  software_skill_solidworks	: string
+
+  @IsString()
+  @IsOptional()
+  software_skill_erp	: string
+
+  @IsString()
+  @IsOptional()
+  software_skill_mes: string
 
 
 
