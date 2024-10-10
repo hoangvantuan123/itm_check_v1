@@ -7,7 +7,7 @@ export const PutUserID = async (id, data) => {
     const token = accessToken()
     const response = await axios.put(`${HOST_API_SERVER_P}/user/${id}`, data, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
     })

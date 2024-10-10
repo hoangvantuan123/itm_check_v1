@@ -11,7 +11,7 @@ export const PostHrInterNew = async (data) => {
       data,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       },

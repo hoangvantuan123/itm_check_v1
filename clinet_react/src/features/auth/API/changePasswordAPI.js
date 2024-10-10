@@ -13,7 +13,7 @@ export const changePassword = async (oldPassword, newPassword) => {
       },
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       },

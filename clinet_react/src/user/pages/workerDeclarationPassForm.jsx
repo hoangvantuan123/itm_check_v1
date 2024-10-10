@@ -10,7 +10,7 @@ import {
   Spin,
   message,
 } from 'antd'
-import Logo from '../../assets/f_logo.png'
+import Logo from '../../assets/ItmLogo.png'
 import { GetFindByPhone } from '../../features/hrRecruitment/getFindByPhone'
 const { Title, Text } = Typography
 import { useTranslation } from 'react-i18next'
@@ -56,8 +56,8 @@ const WorkerDeclarationPassForm = () => {
   return (
     <div className="flex flex-col h-screen bg-white p-6">
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center justify-between border p-2 rounded-lg bg-slate-600 ">
-          {/* <img src={Logo} alt="Logo" className="mr-2" style={{ maxHeight: '40px' }} /> */}
+      <div className="flex items-center justify-between ">
+          <img src={Logo} alt="Logo" className="mr-2" style={{ maxHeight: '40px' }} />
         </div>
         <Dropdown overlay={menu} trigger={['click']}>
           <Button className="border-none p-2 bg-none shadow-none">

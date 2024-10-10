@@ -38,6 +38,8 @@ const PersonalInformation = ({ form, formData }) => {
         current_province: formData.current_province,
         current_district: formData.current_district,
         current_ward: formData.current_ward,
+        status_desired_base_salaryform: formData.status_desired_base_salaryform,
+        desired_total_salary: formData.desired_total_salary,
       })
     }
   }, [formData, form])
@@ -280,6 +282,26 @@ const PersonalInformation = ({ form, formData }) => {
             rules={[{ required: true, message: 'Vui lòng nhập địa chỉ!' }]}
           >
             <Input size="large" placeholder="Nhập địa chỉ" />
+          </Form.Item>
+        </Col>
+      </Row>
+      <h3 className=" italic mb-2">Mức lương</h3>
+      <Row gutter={16}>
+      
+        <Col xs={24} sm={12} md={12}>
+          <Form.Item
+            label="Mức lương CB mong muốn:"
+            name="desired_base_salary"
+          >
+            <Input size="large" placeholder="Nhập thông tin" />
+          </Form.Item>
+        </Col>
+        <Col xs={24} sm={12} md={12}>
+          <Form.Item
+            label="Mức lương tổng mong muốn:"
+            name="desired_total_salary"
+          >
+            <Input size="large" placeholder="Nhập thông tin" />
           </Form.Item>
         </Col>
       </Row>

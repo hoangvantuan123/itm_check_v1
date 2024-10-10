@@ -21,7 +21,7 @@ export const GetFilterHrInterviewCandidatePageLimit = async (
           endDate,
         },
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       },

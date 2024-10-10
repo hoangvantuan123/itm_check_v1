@@ -9,7 +9,7 @@ export const GetHrInterId = async (id) => {
       `${HOST_API_PUBLIC_HR}hr-inter-data/detail/${id}`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       },

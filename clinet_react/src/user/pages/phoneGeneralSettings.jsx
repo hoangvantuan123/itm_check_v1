@@ -18,7 +18,7 @@ import decodeJWT from '../../utils/decode-JWT'
 const { Title, Text } = Typography
 const { TabPane } = Tabs
 import { UsergroupAddOutlined } from '@ant-design/icons'
-import './static/css/scroll_container.css'
+import '../../static/css/scroll_container.scss'
 const { Option } = Select
 import 'moment/locale/vi'
 

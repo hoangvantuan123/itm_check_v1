@@ -9,7 +9,7 @@ export const GetUserPermissions = async () => {
       `${HOST_API_SERVER_P}/details/7e7c585f91ff5c2b64e75c2cfdb650e60d5f81f87b3fdd24144dfd82dc7a6d42`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       },

@@ -450,7 +450,7 @@ export default function EmployeeDataiView({ permissions }) {
         <h1 className="text-xl font-bold text-gray-900">
           {t('Danh sách dữ liệu')}
         </h1>
-        <Button
+        {canCreate && <Button
           type="primary"
           onClick={openModalAddUser}
           icon={<PlusOutlined />}
@@ -458,7 +458,8 @@ export default function EmployeeDataiView({ permissions }) {
           size="large"
         >
           {t('Thêm')}
-        </Button>
+        </Button>}
+
       </div>
       <div className="p-2 mb flex items-center justify-between">
         <span className="inline-flex overflow-hidden">
@@ -507,7 +508,7 @@ export default function EmployeeDataiView({ permissions }) {
             >
               <CloumnIcon />
             </Button>
-            {selectedRowKeys != null && selectedRowKeys.length > 0 && (
+            {selectedRowKeys != null && selectedRowKeys.length > 0 &&   canEdit &&(
               <SynAction
                 fetchData={fetchData}
                 selectedRowKeys={selectedRowKeys}

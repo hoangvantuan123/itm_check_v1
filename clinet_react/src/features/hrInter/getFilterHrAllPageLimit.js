@@ -44,7 +44,7 @@ export const GetFilterHrInterPageLimit = async (
           applicantStatus: applicantStatusString,
         },
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       },

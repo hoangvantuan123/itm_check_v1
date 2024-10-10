@@ -344,29 +344,34 @@ export class Personnel {
 
 
 
- 
-  @Column({ nullable: true })
-  office_skill_excel	: string
 
   @Column({ nullable: true })
-  office_skill_word	: string
+  office_skill_excel: string
 
   @Column({ nullable: true })
-  office_skill_powerpoint	: string
+  office_skill_word: string
 
   @Column({ nullable: true })
-  software_skill_autocad	: string
+  office_skill_powerpoint: string
 
   @Column({ nullable: true })
-  software_skill_solidworks	: string
+  software_skill_autocad: string
 
   @Column({ nullable: true })
-  software_skill_erp	: string
+  software_skill_solidworks: string
+
+  @Column({ nullable: true })
+  software_skill_erp: string
 
   @Column({ nullable: true })
   software_skill_mes: string
 
+  @Column({ nullable: true })
+  desired_base_salary: string
 
+  @Column({ nullable: true })
+  desired_total_salary: string
+  
   @OneToMany(() => HrInterviewCandidate, (candidate) => candidate.personnel)
   @JoinColumn({ name: 'candidate_id' })
   candidates: HrInterviewCandidate[];

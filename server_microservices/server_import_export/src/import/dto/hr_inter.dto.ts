@@ -122,4 +122,8 @@ export class CreateHrInterDto {
     applicant_status?: string;
     applicant_type?: string;
 
+    desired_base_salary?: string;
+    desired_total_salary?: string;
+
+
 }

@@ -9,7 +9,7 @@ export const GetHrInfoId = async (id) => {
       `${HOST_API_PUBLIC_HR}hr-information/personnel/${id}`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       },

@@ -15,7 +15,7 @@ export const importData = async (data) => {
     // Gửi yêu cầu POST tới server
     const response = await axios.post(`${HOST_API_SERVER_IMPORT}import`, data, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
     })

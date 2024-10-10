@@ -569,6 +569,8 @@ export class ImportServices {
 
                     applicant_status: record.applicant_status,
                     applicant_type: record.applicant_type,
+                    desired_base_salary: record.desired_base_salary,
+                    desired_total_salary: record.desired_total_salary,
 
 
                 } as CreateHrInterDto;

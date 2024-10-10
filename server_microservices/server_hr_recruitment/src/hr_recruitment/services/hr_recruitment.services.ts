@@ -183,7 +183,7 @@ export class HrRecruitmentServices {
       ])
       .skip((page - 1) * limit)
       .take(limit)
-      .orderBy('personnel.create_date', 'DESC');
+      .orderBy('personnel.id', 'DESC');
 
     const [data, total] = await query.getManyAndCount();
 
@@ -265,7 +265,7 @@ export class HrRecruitmentServices {
     ])
       .skip((page - 1) * limit)
       .take(limit)
-      .orderBy('personnel.create_date', 'DESC');
+      .orderBy('personnel.id', 'DESC');
 
     const [data, total] = await query.getManyAndCount();
 
@@ -470,6 +470,7 @@ export class HrRecruitmentServices {
         age: personnel.age,
         month_count: personnel.month_count,
         number_of_children: personnel.number_of_children,
+        status_form: personnel.status_form,
 
         // Thông tin con cái
         children: [

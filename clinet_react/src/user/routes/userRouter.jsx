@@ -332,20 +332,7 @@ const UserRouter = () => {
                         )
                       }
                     />
-                    <Route
-                      path="/u/action=19/worker-interview-data/detail/:id"
-                      element={
-                        checkActionPermission(
-                          userPermissions,
-                          'hr-recruitment-1-1',
-                          'view',
-                        ) ? (
-                          <DetailUserHrInterview />
-                        ) : (
-                          <Unauthorized />
-                        )
-                      }
-                    />
+                   
                     <Route
                       path="/u/action=20/data-employee/detail/type=true/:id"
                       element={
@@ -354,7 +341,7 @@ const UserRouter = () => {
                           'hr-recruitment-1-3',
                           'view',
                         ) ? (
-                          <DetailUserHrAllDataTrue />
+                          <DetailUserHrAllDataTrue   permissions={userPermissions} />
                         ) : (
                           <Unauthorized />
                         )

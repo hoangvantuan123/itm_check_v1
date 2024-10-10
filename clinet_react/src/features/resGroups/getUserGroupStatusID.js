@@ -9,7 +9,7 @@ export const GetUserGroupStatusID = async (id) => {
       `${HOST_API_SERVER_P}/user_group/status/${id}`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       },

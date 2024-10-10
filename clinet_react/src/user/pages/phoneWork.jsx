@@ -18,7 +18,7 @@ import decodeJWT from '../../utils/decode-JWT'
 const { Title, Text } = Typography
 const { TabPane } = Tabs
 import 'moment/locale/vi'
-import './static/css/scroll_container.css'
+import '../../static/css/scroll_container.scss'
 import TimeTracking from './TimeTracking'
 import ListView from '../components/work/viewList'
 import TableView from '../components/work/viewTable'

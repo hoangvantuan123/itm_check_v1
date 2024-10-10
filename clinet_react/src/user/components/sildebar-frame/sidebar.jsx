@@ -436,7 +436,7 @@ const Sidebar = ({ permissions }) => {
                     >
                       <HrRecruitmentIcon />
                     </span>
-                    {!collapsed && <span>{t('Tuyển dụng')}</span>}
+                    {!collapsed && <span>{t('side_bar.recruitment')}</span>}
                   </span>
                 }
               >
@@ -450,7 +450,7 @@ const Sidebar = ({ permissions }) => {
                       to="/u/action=17/employee-interview-data"
                       className="flex items-center justify-start"
                     >
-                      {t('Tuyển dụng')}
+                      {t('side_bar.recruitment')}
                     </Link>
                   </Menu.Item>
                 )}
@@ -465,7 +465,7 @@ const Sidebar = ({ permissions }) => {
                       to="/u/action=20/data-employee"
                       className="flex items-center justify-start"
                     >
-                      {t('Danh sách nhân sự')}
+                        {t('side_bar.data_recruitment')}
                     </Link>
                   </Menu.Item>
                 )}

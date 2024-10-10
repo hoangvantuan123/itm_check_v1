@@ -20,7 +20,7 @@ export const GetHrInterviewPageLimit = async (
           endDate,
         },
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       },

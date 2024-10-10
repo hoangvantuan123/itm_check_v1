@@ -106,7 +106,7 @@ export class HrAllDataService {
       ])
       .skip((page - 1) * limit)
       .take(limit)
-      .orderBy('personnel.create_date', 'DESC');
+      .orderBy('personnel.id', 'DESC');
 
     const [data, total] = await query.getManyAndCount();
 
@@ -196,7 +196,7 @@ export class HrAllDataService {
     ])
       .skip((page - 1) * limit)
       .take(limit)
-      .orderBy('personnel.create_date', 'DESC');
+      .orderBy('personnel.id', 'DESC');
 
     const [data, total] = await query.getManyAndCount();
 

@@ -8,7 +8,7 @@ export const RefreshToken = async (token) => {
       {},
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       },

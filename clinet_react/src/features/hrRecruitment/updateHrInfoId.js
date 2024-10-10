@@ -1,16 +1,19 @@
 import axios from 'axios'
-import { accessToken } from '../../services/tokenService'
-import { HOST_API_PUBLIC_HR } from '../../services'
+import {
+  accessToken
+} from '../../services/tokenService'
+import {
+  HOST_API_PUBLIC_HR
+} from '../../services'
 export const PutHrInfoId = async (id, data) => {
   try {
     const token = accessToken()
 
     const response = await axios.put(
       `${HOST_API_PUBLIC_HR}hr-information/personnel/${id}`,
-      data,
-      {
+      data, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       },
@@ -31,9 +34,9 @@ export const PutHrInfoId = async (id, data) => {
   } catch (error) {
     return {
       success: false,
-      message: error.response
-        ? error.response.data.message || 'Có lỗi xảy ra'
-        : 'Không thể kết nối tới server',
+      message: error.response ?
+        error.response.data.message || 'Có lỗi xảy ra' :
+        'Không thể kết nối tới server',
     }
   }
 }

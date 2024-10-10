@@ -12,7 +12,7 @@ export const DeleteResUserGroups = async (ids) => {
       {
         data: { ids },
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       },

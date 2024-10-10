@@ -362,6 +362,12 @@ export class HrInter {
 
     @Column({ nullable: true })
     software_skill_mes: string
+
+    @Column({ nullable: true })
+    desired_base_salary: string
+    
+    @Column({ nullable: true })
+    desired_total_salary: string
     
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     create_date: Date;

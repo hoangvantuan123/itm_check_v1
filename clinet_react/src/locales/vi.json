@@ -30,7 +30,9 @@
     "work": "Công việc",
     "time_tracking": "Chấm công",
     "payroll": "Lương",
-    "notifications": "Thông báo"
+    "notifications": "Thông báo",
+    "recruitment": "Tuyển dụng",
+    "data_recruitment": "Danh sách nhân sự"
   },
   "footer_app": {
     "home": "Trang chủ",
@@ -237,5 +239,30 @@
   "tables": {
     "hr_personnel": "Nhân sự",
     "hr_language": "Ngôn ngữ"
+  },
+  "hr_recruitment_1_1" :{
+    "title": "Tìm kiếm nhân sự",
+    "search_placeholder": "Tìm kiếm nhân sự",
+    "filter_placeholder": "Lọc theo",
+    "sort_placeholder": "Sắp xếp theo",
+    "employee_code": "Mã nhân viên",
+    "full_name": "Họ và tên",
+    "gender": "Giới tính",
+    "birth_date": "Ngày sinh",
+    "id_number": "Căn cước công dân",
+    "phone_number": "Số điện thoại",
+    "interview_date": "Ngày phỏng vấn",
+    "email": "Email",
+    "team": "Đội",
+    "part": "Phần",
+    "production": "Sản xuất",
+    "section": "Phần",
+    "job_field": "Lĩnh vực công việc",
+    "position": "Chức vụ",
+    "applicant_status": "Trạng thái",
+    "synchronize": "Đồng bộ",
+    "select_display_column" : "Cột hiển thị"
+
+    
   }
 }

@@ -18,7 +18,7 @@ import {
 } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import './static/css/scroll_container.css'
+import '../../static/css/scroll_container.scss'
 import ViewDetailUserHrRecruitment from '../components/candidateForm/viewDetailUserHrRecruitment'
 import { GetHrInterId } from '../../features/hrInter/getInterId'
 import NoData from './noData'
@@ -34,14 +34,15 @@ import {
   UserOutlined,
   ToolOutlined,
 } from '@ant-design/icons'
+import { PostSyncData } from '../../features/hrInter/postSyncData'
 import { DownloadOutlined, FilePdfOutlined, FileExcelOutlined, FileWordOutlined, DeleteOutlined, FormOutlined } from '@ant-design/icons';
-
+import { checkActionPermission } from '../../permissions'
 
 const { Text } = Typography
 import moment from 'moment'
 import CustomTagSyn from '../components/tags/customTagSyn'
 import CustomTagForm from '../components/tags/customTagForm'
-export default function DetailUserHrRecruitment() {
+export default function DetailUserHrRecruitment({ permissions }) {
   const { t } = useTranslation()
   const { id } = useParams()
   const navigate = useNavigate()
@@ -57,6 +58,16 @@ export default function DetailUserHrRecruitment() {
   const [status, setStatus] = useState(null)
   const [type, setType] = useState(null)
 
+  const canEdit = checkActionPermission(
+    permissions,
+    'hr-recruitment-1-1',
+    'edit',
+  )
+  const canDelete = checkActionPermission(
+    permissions,
+    'hr-recruitment-1-1',
+    'delete',
+  )
   const fetchDataUserId = async () => {
     setLoading(true)
     try {
@@ -230,17 +241,17 @@ export default function DetailUserHrRecruitment() {
       language_3: finalData?.languages[2].language,
       certificate_type_3: finalData?.languages[2].certificate_type,
       score_3: finalData?.languages[2].score,
-      level_3: finalData?.languages[2].level /*  */,
+      level_3: finalData?.languages[2].level,
 
 
-      office_skill_excel	: finalData?.skills[0].level,
-      office_skill_word	: finalData?.skills[1].level,
-      office_skill_powerpoint	: finalData?.skills[2].level,
-      software_skill_autocad	: finalData?.skills[3].level,
-      software_skill_solidworks	: finalData?.skills[4].level,
-      software_skill_erp	: finalData?.skills[5].level,
+      office_skill_excel: finalData?.skills[0].level,
+      office_skill_word: finalData?.skills[1].level,
+      office_skill_powerpoint: finalData?.skills[2].level,
+      software_skill_autocad: finalData?.skills[3].level,
+      software_skill_solidworks: finalData?.skills[4].level,
+      software_skill_erp: finalData?.skills[5].level,
       software_skill_mes: finalData?.skills[6].level,
-      
+
     }
 
     return filterEmptyFields(result)
@@ -305,6 +316,7 @@ export default function DetailUserHrRecruitment() {
       const response = await PutUserInter(id, submissionData)
       if (response.success) {
         setStatus(value)
+        fetchDataUserId()
         message.success('Form nhập đã được mở!')
       } else {
         message.error(`Cập nhật thất bại: ${response.message}`)
@@ -321,6 +333,7 @@ export default function DetailUserHrRecruitment() {
       const response = await PutUserInter(id, submissionData)
       if (response.success) {
         setStatus(value)
+        fetchDataUserId()
         message.success('Form nhập đã được đóng!')
       } else {
         message.error(`Cập nhật thất bại: ${response.message}`)
@@ -337,10 +350,10 @@ export default function DetailUserHrRecruitment() {
       const messagePromise = response.success
         ? Promise.resolve(message.success(`${t('Xóa thành công')}`))
         : Promise.reject(
-            new Error(
-              `${t('Xóa thất bại: Yêu cầu không thành công, vui lòng thử lại')}`,
-            ),
-          )
+          new Error(
+            `${t('Xóa thất bại: Yêu cầu không thành công, vui lòng thử lại')}`,
+          ),
+        )
 
       await messagePromise
 
@@ -351,17 +364,26 @@ export default function DetailUserHrRecruitment() {
       message.error(`${t('Có lỗi xảy ra, vui lòng thử lại')}`)
     }
   }
-
+  const handleSync = async () => {
+    const result = await PostSyncData([id])
+    if (result.success) {
+      message.success(
+        `${result.message} id ${id}`,
+      )
+    } else {
+      message.error(t('sync_failed') + ': ' + result.message)
+    }
+  }
   const handleMenuClick = (e) => {
     switch (e.key) {
       case 'export-pdf':
-        console.log('Xuất PDF');
+        message.success('Chức năng đang được phát triển!')
         break;
       case 'export-excel':
-        console.log('Xuất Excel');
+        message.success('Chức năng đang được phát triển!')
         break;
       case 'export-word':
-        console.log('Xuất Word');
+        message.success('Chức năng đang được phát triển!')
         break;
       case 'open-form':
         handleChangeSatusFormTrue();
@@ -371,9 +393,6 @@ export default function DetailUserHrRecruitment() {
         break;
       case 'delete':
         handleDeleteHrInter()
-        break;
-      case 'sync-data':
-        console.log('Đồng bộ dữ liệu');
         break;
       case 'toggle-edit':
         toggleEdit();
@@ -385,16 +404,17 @@ export default function DetailUserHrRecruitment() {
 
   const menu = (
     <Menu onClick={handleMenuClick}>
-       <Menu.SubMenu key="export" title="Xuất" icon={<DownloadOutlined />}>
-      <Menu.Item key="export-pdf" icon={<FilePdfOutlined />}>Xuất PDF</Menu.Item>
-      <Menu.Item key="export-excel" icon={<FileExcelOutlined />}>Xuất Excel</Menu.Item>
-      <Menu.Item key="export-word" icon={<FileWordOutlined />}>Xuất Word</Menu.Item>
-    </Menu.SubMenu>
-    <Menu.Item key="open-form" icon={<FormOutlined />}>Mở Form</Menu.Item>
-    <Menu.Item key="close-form" icon={<FormOutlined />}>Đóng Form</Menu.Item>
-    <Menu.Item key="delete" style={{ color: 'red' }} icon={<DeleteOutlined />}>
-      Xóa
-    </Menu.Item>
+      <Menu.SubMenu key="export" title="Xuất" icon={<DownloadOutlined />}>
+        <Menu.Item key="export-pdf" icon={<FilePdfOutlined />}>Xuất PDF</Menu.Item>
+        <Menu.Item key="export-excel" icon={<FileExcelOutlined />}>Xuất Excel</Menu.Item>
+        <Menu.Item key="export-word" icon={<FileWordOutlined />}>Xuất Word</Menu.Item>
+      </Menu.SubMenu>
+      {canEdit && <>       <Menu.Item key="open-form" icon={<FormOutlined />}>Mở Form</Menu.Item>
+        <Menu.Item key="close-form" icon={<FormOutlined />}>Đóng Form</Menu.Item></>}
+      {canDelete && <Menu.Item key="delete" style={{ color: 'red' }} icon={<DeleteOutlined />}>
+        Xóa
+      </Menu.Item>}
+
     </Menu>
   );
   return (
@@ -431,65 +451,71 @@ export default function DetailUserHrRecruitment() {
             <span className=" text-black opacity-80">#{id}</span>
           </li>
           <li className="cursor-pointer ml-5">
-          <CustomTagSyn status={formData?.synchronize}/>
+            <CustomTagSyn status={formData?.synchronize} />
           </li>
           <li className="cursor-pointer">
-            <CustomTagForm status={formData?.status_form}/>
+            <CustomTagForm status={formData?.status_form} />
           </li>
         </ol>
 
         <ol className=" flex items-center gap-2">
-        <Dropdown overlay={menu}  placement="bottomRight">
-    <Button className="bg-white">
-      Menu
-    </Button>
-  </Dropdown>
-         
-          <Button className="bg-white">Đồng bộ dữ liệu</Button>
-          <Button className="bg-white" onClick={toggleEdit}>
+          <Dropdown overlay={menu} placement="bottomRight">
+            <Button className="bg-white">
+              Action
+            </Button>
+          </Dropdown>
+
+          {canEdit && <Button className="bg-white" onClick={handleSync}>Duyệt đồng bộ</Button>}
+
+          {canEdit && <Button className="bg-white" onClick={toggleEdit}>
             {isEditing ? <> Thoát</> : <> Chỉnh sửa</>}
-          </Button>
-          <Button className="bg-white" onClick={handleSave}>
+          </Button>}
+
+          {canEdit && <Button className="bg-white" onClick={handleSave}>
             Lưu
-          </Button>
+          </Button>}
+
         </ol>
       </nav>
-      <Space direction="vertical" className="mb-3">
-        <Row gutter={16}>
-          <Col>
-            <Select
-              value={status}
-              onChange={handleChange}
-              style={{ width: 300 }}
-              placeholder="Trạng thái"
-            >
-              <Option value="waiting_interview" key="waiting_interview">
-                <UserAddOutlined style={{ marginRight: 8 }} />
-                Lên lịch phỏng vấn
-              </Option>
-              <Option value="interviewed" key="interviewed">
-                <HourglassOutlined style={{ marginRight: 8 }} />
-                Đã phỏng vấn
-              </Option>
-              <Option value="waiting_result" key="waiting_result">
-                <CheckCircleOutlined style={{ marginRight: 8 }} />
-                Đang đợi kết quả
-              </Option>
-              <Option value="accepted" key="accepted">
-                <CheckOutlined style={{ marginRight: 8, color: 'green' }} />
-                Đã nhận
-              </Option>
-              <Option value="rejected" key="rejected">
-                <CloseCircleOutlined style={{ marginRight: 8, color: 'red' }} />
-                Không đạt
-              </Option>
-            </Select>
-          </Col>
-        
-        
-         
-        </Row>
-      </Space>
+      {canEdit &&
+
+        <Space direction="vertical" className="mb-3">
+          <Row gutter={16}>
+            <Col>
+              <Select
+                value={status}
+                onChange={handleChange}
+                style={{ width: 300 }}
+                placeholder="Trạng thái"
+              >
+                <Option value="waiting_interview" key="waiting_interview">
+                  <UserAddOutlined style={{ marginRight: 8 }} />
+                  Lên lịch phỏng vấn
+                </Option>
+                <Option value="interviewed" key="interviewed">
+                  <HourglassOutlined style={{ marginRight: 8 }} />
+                  Đã phỏng vấn
+                </Option>
+                <Option value="waiting_result" key="waiting_result">
+                  <CheckCircleOutlined style={{ marginRight: 8 }} />
+                  Đang đợi kết quả
+                </Option>
+                <Option value="accepted" key="accepted">
+                  <CheckOutlined style={{ marginRight: 8, color: 'green' }} />
+                  Đã nhận
+                </Option>
+                <Option value="rejected" key="rejected">
+                  <CloseCircleOutlined style={{ marginRight: 8, color: 'red' }} />
+                  Không đạt
+                </Option>
+              </Select>
+            </Col>
+
+
+
+          </Row>
+        </Space>
+      }
       <Row gutter={16}>
         <Col xs={24} sm={24} md={14}>
           <div className="border background bg-white rounded-lg p-6 h-screen overflow-auto scroll-container cursor-pointer">
@@ -628,10 +654,31 @@ export default function DetailUserHrRecruitment() {
                           </Form.Item>
                         </Col>
                       </Row>
+                      <h3 className=" italic mb-2">Mức lương</h3>
+                      <Row gutter={16}>
+
+                        <Col xs={24} sm={12} md={12}>
+                          <Form.Item
+                            label="Mức lương CB mong muốn:"
+                            name="desired_base_salary"
+                          >
+                            <Input size="large" placeholder="Nhập thông tin" />
+                          </Form.Item>
+                        </Col>
+                        <Col xs={24} sm={12} md={12}>
+                          <Form.Item
+                            label="Mức lương tổng mong muốn:"
+                            name="desired_total_salary"
+                          >
+                            <Input size="large" placeholder="Nhập thông tin" />
+                          </Form.Item>
+                        </Col>
+                      </Row>
                     </Form>
                   </>
                 ) : (
                   <>
+                    <h3 className=" italic mb-1 mt-2">Vị trí ứng tuyển</h3>
                     <Row gutter={16}>
                       <Col span={12}>
                         <div className="mt-3">
@@ -647,6 +694,7 @@ export default function DetailUserHrRecruitment() {
                           </Text>
                         </div>
                       </Col>
+
                       <Col span={24}>
                         <div className="mt-3">
                           <strong>Team:</strong>
@@ -704,6 +752,25 @@ export default function DetailUserHrRecruitment() {
                           <strong>Ngày ký HĐ lần 2:</strong>
                           <Text className="ml-2">
                             {formData.official_date_second}
+                          </Text>
+                        </div>
+                      </Col>
+                    </Row>
+                    <h3 className=" italic mb-1 mt-2">Mức lương</h3>
+                    <Row gutter={16}>
+                      <Col span={12}>
+                        <div className="mt-3">
+                          <strong>Mức lương CB mong muốn:</strong>
+                          <Text className="ml-2">
+                            {formData?.desired_base_salary}
+                          </Text>
+                        </div>
+                      </Col>
+                      <Col span={12}>
+                        <div className="mt-3">
+                          <strong>Mức lương tổng mong muốn:</strong>
+                          <Text className="ml-2">
+                            {formData?.desired_total_salary}
                           </Text>
                         </div>
                       </Col>

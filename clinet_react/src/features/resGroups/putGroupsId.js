@@ -10,7 +10,7 @@ export const PutGroupId = async (id, data) => {
       data,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       },

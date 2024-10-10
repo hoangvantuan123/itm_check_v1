@@ -14,7 +14,7 @@ export const GetFindByPhone = async (phone_number) => {
       `${HOST_API_PUBLIC_HR}hr-interview-candidates/find-by-phone/${phone_number}`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       },

@@ -26,7 +26,7 @@ const { Title, Text } = Typography
 const { TabPane } = Tabs
 const { Option } = Select
 import 'moment/locale/vi'
-import './static/css/scroll_container.css'
+import '../../static/css/scroll_container.scss'
 import DefaultAvatar from '../../assets/default-avatar.png'
 import PhoneGeneralSettings from './phoneGeneralSettings'
 import KeyMenu02 from '../components/auth/menu-key/key-02'

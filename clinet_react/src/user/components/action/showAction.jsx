@@ -342,12 +342,7 @@ export default function ShowAction({
       <Menu.Item key="action_show_2">{t('Xuất danh sách')}</Menu.Item>
       <Menu.Item key="action_show_3">{t('Lưu trữ')}</Menu.Item>
       <Menu.Item key="action_show_4">{t('Bỏ lưu trữ')}</Menu.Item>
-      {actionUsers === 'actionHrInfoIds' && (
-        <Menu.SubMenu key="sub_menu_duyet" title={t('Duyệt')}>
-          <Menu.Item key="action_show_6_1">{t('ĐẠT')}</Menu.Item>
-          <Menu.Item key="action_show_6_2">{t('KHÔNG ĐẠT')}</Menu.Item>
-        </Menu.SubMenu>
-      )}
+    
 
       {actionUsers === 'actionUsers' && (
         <Menu.Item key="action_show_6">{t('Đổi mật khẩu')}</Menu.Item>

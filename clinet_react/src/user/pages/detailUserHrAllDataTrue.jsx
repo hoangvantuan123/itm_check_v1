@@ -12,20 +12,28 @@ import {
   Pagination,
   Select,
   DatePicker,
+  Menu,
+  Dropdown,
+  Space
 } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import './static/css/scroll_container.css'
+import '../../static/css/scroll_container.scss'
 import ViewDetailUserHrRecruitment from '../components/candidateForm/viewDetailUserHrRecruitment'
 import { GetHrInfoId } from '../../features/hrRecruitment/getPersonnelId'
 import NoData from './noData'
 import Spinner from './load'
 import { PutHrInfoId } from '../../features/hrRecruitment/updateHrInfoId'
-import { PutUserInterview } from '../../features/hrRecruitment/putUserInterview'
+import { DeleteHrInfoIds } from '../../features/hrRecruitment/deleteHrInfoIds'
+import { DownloadOutlined, FilePdfOutlined, FileExcelOutlined, FileWordOutlined, DeleteOutlined, FormOutlined } from '@ant-design/icons';
+import { checkActionPermission } from '../../permissions'
+
+
 const { Text } = Typography
 import moment from 'moment'
 import CustomTagSyn from '../components/tags/customTagSyn'
-export default function DetailUserHrAllDataTrue() {
+import CustomTagForm from '../components/tags/customTagForm'
+export default function DetailUserHrAllDataTrue({ permissions }) {
   const { t } = useTranslation()
   const { id } = useParams()
   const navigate = useNavigate()
@@ -37,6 +45,16 @@ export default function DetailUserHrAllDataTrue() {
   const [interviewData, setInterviewData] = useState({})
   const [form] = Form.useForm()
   const [formMore] = Form.useForm()
+  const canEdit = checkActionPermission(
+    permissions,
+    'hr-recruitment-1-3',
+    'edit',
+  )
+  const canDelete = checkActionPermission(
+    permissions,
+    'hr-recruitment-1-3',
+    'delete',
+  )
   const fetchDataUserId = async () => {
     setLoading(true)
     try {
@@ -80,13 +98,13 @@ export default function DetailUserHrAllDataTrue() {
 
     if (
       currentFields.official_date_first !==
-        (formData.official_date_first
-          ? moment(formData.official_date_first)
-          : null) ||
+      (formData.official_date_first
+        ? moment(formData.official_date_first)
+        : null) ||
       currentFields.official_date_second !==
-        (formData.official_date_second
-          ? moment(formData.official_date_second)
-          : null)
+      (formData.official_date_second
+        ? moment(formData.official_date_second)
+        : null)
     ) {
       form.setFieldsValue({
         official_date_first: formData.official_date_first
@@ -210,13 +228,14 @@ export default function DetailUserHrAllDataTrue() {
       certificate_type_3: finalData?.languages[2].certificate_type,
       score_3: finalData?.languages[2].score,
       level_3: finalData?.languages[2].level /*  */,
-      office_skill_excel	: finalData?.skills[0].level,
-      office_skill_word	: finalData?.skills[1].level,
-      office_skill_powerpoint	: finalData?.skills[2].level,
-      software_skill_autocad	: finalData?.skills[3].level,
-      software_skill_solidworks	: finalData?.skills[4].level,
-      software_skill_erp	: finalData?.skills[5].level,
-      software_skill_mes: finalData?.skills[6].level,
+      office_skill_excel: finalData?.skills[0].level,
+      office_skill_word: finalData?.skills[1].level,
+      office_skill_powerpoint: finalData?.skills[2].level,
+      software_skill_autocad: finalData?.skills[3].level,
+      software_skill_solidworks: finalData?.skills[4].level,
+      software_skill_erp: finalData?.skills[5].level,
+      software_skill_mes: finalData?.skills[6].level
+
     }
 
     return filterEmptyFields(result)
@@ -247,6 +266,104 @@ export default function DetailUserHrAllDataTrue() {
     formMore.submit()
   }
 
+
+  const handleDeleteHr = async () => {
+    try {
+      const response = await DeleteHrInfoIds([id])
+
+      const messagePromise = response.success
+        ? Promise.resolve(message.success(`${t('Xóa thành công')}`))
+        : Promise.reject(
+          new Error(
+            `${t('Xóa thất bại: Yêu cầu không thành công, vui lòng thử lại')}`,
+          ),
+        )
+
+      await messagePromise
+
+      if (response.success) {
+        handleNavigateToBack()
+      }
+    } catch (error) {
+      message.error(`${t('Có lỗi xảy ra, vui lòng thử lại')}`)
+    }
+  }
+  const handleChangeSatusFormTrue = async (value) => {
+    const submissionData = {
+      status_form: false,
+    }
+    try {
+      const response = await PutHrInfoId(id, submissionData)
+      if (response.success) {
+        fetchDataUserId()
+        message.success('Form nhập đã được mở!')
+      } else {
+        message.error(`Cập nhật thất bại: ${response.message}`)
+      }
+    } catch (error) {
+      message.error('Đã xảy ra lỗi trong quá trình cập nhật.')
+    }
+  }
+  const handleChangeSatusFormFalse = async (value) => {
+    const submissionData = {
+      status_form: true,
+    }
+    try {
+      const response = await PutHrInfoId(id, submissionData)
+      if (response.success) {
+        fetchDataUserId()
+        message.success('Form nhập đã được đóng!')
+      } else {
+        message.error(`Cập nhật thất bại: ${response.message}`)
+      }
+    } catch (error) {
+      message.error('Đã xảy ra lỗi trong quá trình cập nhật.')
+    }
+  }
+  const handleMenuClick = (e) => {
+    switch (e.key) {
+      case 'export-pdf':
+        message.success('Chức năng đang được phát triển!')
+        break;
+      case 'export-excel':
+        message.success('Chức năng đang được phát triển!')
+        break;
+      case 'export-word':
+        message.success('Chức năng đang được phát triển!')
+        break;
+      case 'open-form':
+        handleChangeSatusFormTrue();
+        break;
+      case 'close-form':
+        handleChangeSatusFormFalse();
+        break;
+      case 'delete':
+        handleDeleteHr()
+        break;
+      case 'toggle-edit':
+        toggleEdit();
+        break;
+      default:
+        break;
+    }
+  };
+
+  const menu = (
+    <Menu onClick={handleMenuClick}>
+      <Menu.SubMenu key="export" title="Xuất" icon={<DownloadOutlined />}>
+        <Menu.Item key="export-pdf" icon={<FilePdfOutlined />}>Xuất PDF</Menu.Item>
+        <Menu.Item key="export-excel" icon={<FileExcelOutlined />}>Xuất Excel</Menu.Item>
+        <Menu.Item key="export-word" icon={<FileWordOutlined />}>Xuất Word</Menu.Item>
+      </Menu.SubMenu>
+      {canEdit && <>       <Menu.Item key="open-form" icon={<FormOutlined />}>Mở Form</Menu.Item>
+        <Menu.Item key="close-form" icon={<FormOutlined />}>Đóng Form</Menu.Item></>}
+
+      {canDelete && <Menu.Item key="delete" style={{ color: 'red' }} icon={<DeleteOutlined />}>
+        Xóa
+      </Menu.Item>}
+
+    </Menu>
+  );
   return (
     <div className="w-full h-screen bg-gray-50 p-3">
       <Helmet>
@@ -281,23 +398,34 @@ export default function DetailUserHrAllDataTrue() {
             <span className=" text-black opacity-80">#{id}</span>
           </li>
           <li className="cursor-pointer ml-5">
-          <CustomTagSyn status={formData?.synchronize}/>
+            <CustomTagSyn status={formData?.synchronize} />
           </li>
           <li className="cursor-pointer">
-          <CustomTagSyn status={formData?.synchronize_erp}/>
+            <CustomTagSyn status={formData?.synchronize_erp} />
+          </li>
+          <li className="cursor-pointer">
+            <CustomTagForm status={formData?.status_form} />
           </li>
         </ol>
 
         <ol className=" flex items-center gap-2">
-          <Button className="bg-white">Export PDF</Button>
-          <Button className="bg-white">Mở Form</Button>
-          <Button className="bg-white">Xóa</Button>
-          <Button className="bg-white" onClick={toggleEdit}>
-            {isEditing ? <> Thoát</> : <> Chỉnh sửa</>}
-          </Button>
-          <Button className="bg-white" onClick={handleSave}>
-            Lưu
-          </Button>
+          <Dropdown overlay={menu} placement="bottomRight">
+            <Button className="bg-white">
+              Action
+            </Button>
+          </Dropdown>
+          {canEdit && <>
+
+            <Button className="bg-white">Xác nhận đồng bộ</Button>
+
+            <Button className="bg-white" onClick={toggleEdit}>
+              {isEditing ? <> Thoát</> : <> Chỉnh sửa</>}
+            </Button>
+            <Button className="bg-white" onClick={handleSave}>
+              Lưu
+            </Button>
+          </>}
+
         </ol>
       </nav>
 
@@ -443,6 +571,7 @@ export default function DetailUserHrAllDataTrue() {
                   </>
                 ) : (
                   <>
+                    <h3 className=" italic mb-1 mt-2">Vị trí ứng tuyển</h3>
                     <Row gutter={16}>
                       <Col span={12}>
                         <div className="mt-3">

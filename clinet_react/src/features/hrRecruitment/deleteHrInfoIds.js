@@ -10,7 +10,7 @@ export const DeleteHrInfoIds = async (ids, token) => {
       {
         data: { ids },
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       },

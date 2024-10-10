@@ -31,7 +31,7 @@ export const GetFilterHrInfoPageLimit = async (
           citizenshipIdTags: citizenshipIdTagsString,
         },
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       },

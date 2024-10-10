@@ -8,7 +8,7 @@ export const GetAllDepartments = async () => {
     const response = await axios.get(`${HOST_API_SERVER_P}/hr_department/all`, {
       params: {},
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
     })

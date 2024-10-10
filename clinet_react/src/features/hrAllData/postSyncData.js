@@ -13,7 +13,7 @@ export const PostSyncData = async (ids) => {
       },
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       },

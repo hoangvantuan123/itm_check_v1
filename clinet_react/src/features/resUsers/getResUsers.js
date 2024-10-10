@@ -11,7 +11,7 @@ export const GetAllResUsers = async (page = 1, limit = 10) => {
         limit,
       },
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
     })

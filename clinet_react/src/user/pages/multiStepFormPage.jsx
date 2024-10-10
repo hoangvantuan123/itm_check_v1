@@ -11,6 +11,8 @@ import { PutUserInter } from '../../features/hrInter/putUserInter'
 import { PostHrInterNew } from '../../features/hrInter/postHrInterNew'
 import LanguageTable from '../components/inter/LanguageTable'
 import SkillTable from '../components/inter/skillTable'
+import Logo from '../../assets/ItmLogo.png'
+import '../../static/css/drawer_cusstom.scss'
 const MultiStepFormPage = () => {
   const navigate = useNavigate()
   const [currentStep, setCurrentStep] = useState(0)
@@ -191,14 +193,19 @@ const MultiStepFormPage = () => {
       certificate_type_3: finalData?.languages[2].certificate_type,
       score_3: finalData?.languages[2].score,
       level_3: finalData?.languages[2].level,
-      
-      office_skill_excel	: finalData?.skills[0].level,
-      office_skill_word	: finalData?.skills[1].level,
-      office_skill_powerpoint	: finalData?.skills[2].level,
-      software_skill_autocad	: finalData?.skills[3].level,
-      software_skill_solidworks	: finalData?.skills[4].level,
-      software_skill_erp	: finalData?.skills[5].level,
+
+      office_skill_excel: finalData?.skills[0].level,
+      office_skill_word: finalData?.skills[1].level,
+      office_skill_powerpoint: finalData?.skills[2].level,
+      software_skill_autocad: finalData?.skills[3].level,
+      software_skill_solidworks: finalData?.skills[4].level,
+      software_skill_erp: finalData?.skills[5].level,
       software_skill_mes: finalData?.skills[6].level,
+
+
+
+      desired_base_salary: finalData?.desired_base_salary,
+      desired_total_salary: finalData?.desired_total_salary,
     }
 
     return filterEmptyFields(result)
@@ -213,7 +220,7 @@ const MultiStepFormPage = () => {
   const handleDrawerSubmit = async () => {
     setIsSubmitting(true)
     const finalData = { ...formData, ...form.getFieldsValue() }
-    console.log("finalData" , finalData)
+    console.log("finalData", finalData)
     const submissionData = formatSubmissionData(finalData)
     try {
       let response
@@ -257,7 +264,7 @@ const MultiStepFormPage = () => {
           <h2 className="mt-4 mb-2 italic">Ngôn ngữ</h2>
           <LanguageTable form={form} dataSource={formData?.languages} />
           <h2 className="mt-4 mb-2 italic">Kỹ năng</h2>
-          <SkillTable form={form} dataSource={formData?.skills}/>
+          <SkillTable form={form} dataSource={formData?.skills} />
           <Divider orientation="left italic">Kinh nghiệm làm việc</Divider>
           <WorkExperienceTable form={form} dataSource={formData.experiences} />
         </>
@@ -268,10 +275,23 @@ const MultiStepFormPage = () => {
   return (
     <div className="flex items-center justify-center h-screen overflow-auto p-3">
       <div className="lg:max-w-5xl w-full h-screen">
-        <h1 className="text-2xl font-bold text-center p-4">
-          MẪU KHAI ỨNG VIÊN
-        </h1>
-        <p className="text-center mb-4">Mẫu tờ khai thông tin cá nhân online</p>
+        <div className=" flex flex-col ">
+          <div className=" flex items-start mt-2">
+            <img
+              src={Logo}
+              alt="Description of image"
+              className="  w-64 h-auto   m-0    rounded-lg"
+            />
+          </div>
+          <div>
+
+            <h1 className="text-xl font-bold text-center mt-9 ">
+              TỜ KHAI ỨNG VIÊN
+            </h1>
+            <p className="text-center mb-4">Mẫu tờ khai thông tin cá nhân online</p>
+          </div>
+
+        </div>
 
         <Form form={form} layout="vertical" className="pb-10">
           {steps[currentStep].content}

@@ -12,7 +12,7 @@ export const changePasswordIds = async (userIds, newPassword) => {
       },
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       },

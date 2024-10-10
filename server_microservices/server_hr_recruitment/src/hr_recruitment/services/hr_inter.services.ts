@@ -9,8 +9,8 @@ import { HrInter } from '../entity/hr_inter.entity';
 @Injectable()
 export class HrInterServices {
   constructor(
-    @InjectRepository(HrInterviewCandidate)
-    private readonly candidateRepository: Repository<HrInterviewCandidate>,
+    @InjectRepository(Personnel)
+    private readonly personnelRepository: Repository<Personnel>,
     @InjectRepository(HrInter)
     private readonly hrInterRepository: Repository<HrInter>,
 
@@ -93,7 +93,7 @@ export class HrInterServices {
       ])
       .skip((page - 1) * limit)
       .take(limit)
-      .orderBy('hr_inter.create_date', 'DESC');
+      .orderBy('hr_inter.id', 'DESC');
 
     const [data, total] = await query.getManyAndCount();
 
@@ -174,7 +174,7 @@ export class HrInterServices {
       ])
       .skip((page - 1) * limit)
       .take(limit)
-      .orderBy('hr_inter.create_date', 'DESC');
+      .orderBy('hr_inter.id', 'DESC');
 
     const [data, total] = await query.getManyAndCount();
 
@@ -277,6 +277,8 @@ export class HrInterServices {
         applicant_status: inter.applicant_status,
         applicant_type: inter.applicant_type,
         status_form: inter.status_form,
+        desired_base_salary: inter.desired_base_salary,
+        desired_total_salary: inter.desired_total_salary,
 
         // Thông tin con cái
         children: [
@@ -377,14 +379,14 @@ export class HrInterServices {
 
           ],
         distance_from_household_to_company: inter.distance_from_household_to_company,
-        skills : [
-            { id: 1, skill: 'Excel', level: inter.office_skill_excel },
-            { id: 2, skill: 'Word', level: inter.office_skill_word },
-            { id: 3, skill: 'PowerPoint', level: inter.office_skill_powerpoint },
-            { id: 4, skill: 'Autocad', level: inter.software_skill_autocad },
-            { id: 5, skill: 'SolidWorks', level: inter.software_skill_solidworks },
-            { id: 6, skill: 'ERP', level: inter.software_skill_erp },
-            { id: 7, skill: 'MES', level: inter.software_skill_mes },
+        skills: [
+          { id: 1, skill: 'Excel', level: inter.office_skill_excel },
+          { id: 2, skill: 'Word', level: inter.office_skill_word },
+          { id: 3, skill: 'PowerPoint', level: inter.office_skill_powerpoint },
+          { id: 4, skill: 'Autocad', level: inter.software_skill_autocad },
+          { id: 5, skill: 'SolidWorks', level: inter.software_skill_solidworks },
+          { id: 6, skill: 'ERP', level: inter.software_skill_erp },
+          { id: 7, skill: 'MES', level: inter.software_skill_mes },
         ]
       },
     };
@@ -400,13 +402,260 @@ export class HrInterServices {
   }
 
 
+  /*  async synchronizeHr(ids: number[]): Promise<void> {
+     await this.hrInterRepository.update(
+       { id: In(ids) },
+       { synchronize: true }
+     );
+   } */
+
   async synchronizeHr(ids: number[]): Promise<void> {
+    const personnels = await this.hrInterRepository.createQueryBuilder('p')
+      .where('p.id IN (:...ids)', { ids })
+      .andWhere('p.synchronize = false')
+      .select([
+        'p.full_name',
+        'p.gender',
+        'p.interview_date',
+        'p.start_date',
+        'p.birth_date',
+        'p.id_number',
+        'p.id_issue_date',
+        'p.ethnicity',
+        'p.id_issue_place',
+        'p.insurance_number',
+        'p.tax_number',
+        'p.phone_number',
+        'p.email',
+        'p.alternate_phone_number',
+        'p.alternate_name',
+        'p.alternate_relationship',
+        'p.birth_address',
+        'p.birth_province',
+        'p.birth_district',
+        'p.birth_ward',
+        'p.current_address',
+        'p.current_province',
+        'p.current_district',
+        'p.current_ward',
+        'p.type_personnel',
+        'p.introducer_department',
+        'p.introducer_introducer_name',
+        'p.introducer_phone_number',
+        'p.candidate_type',
+        'p.supplier_details',
+        'p.status_form',
+        'p.fac',
+        'p.department',
+        'p.team',
+        'p.jop_position',
+        'p.type_of_degree',
+        'p.type_classify',
+        'p.employee_code',
+        'p.contract_term',
+        'p.line_model',
+        'p.part',
+        'p.erp_department_registration',
+        'p.production',
+        'p.section',
+        'p.job_field',
+        'p.position',
+        'p.entering_day',
+        'p.leaving_day',
+        'p.probation_days',
+        'p.official_date_first',
+        'p.official_date_second',
+        'p.age',
+        'p.month_count',
+        'p.partner_name',
+        'p.partner_phone_number',
+        'p.number_of_children',
+        'p.children_name_1',
+        'p.children_birth_date_1',
+        'p.children_gender_1',
+        'p.children_name_2',
+        'p.children_birth_date_2',
+        'p.children_gender_2',
+        'p.children_name_3',
+        'p.children_birth_date_3',
+        'p.children_gender_3',
+        'p.father_name',
+        'p.father_phone_number',
+        'p.mother_name',
+        'p.mother_phone_number',
+        'p.distance_from_household_to_company',
+        'p.highest_education_level',
+        'p.school_name',
+        'p.major',
+        'p.school_year',
+        'p.year_ended',
+        'p.year_of_graduation',
+        'p.classification',
+        'p.work_department_1',
+        'p.work_responsibility_1',
+        'p.company_name_1',
+        'p.entrance_day_1',
+        'p.leaving_day_1',
+        'p.salary_1',
+        'p.work_department_2',
+        'p.work_responsibility_2',
+        'p.company_name_2',
+        'p.entrance_day_2',
+        'p.leaving_day_2',
+        'p.salary_2',
+        'p.language_1',
+        'p.certificate_type_1',
+        'p.score_1',
+        'p.level_1',
+        'p.language_2',
+        'p.certificate_type_2',
+        'p.score_2',
+        'p.level_2',
+        'p.language_3',
+        'p.certificate_type_3',
+        'p.score_3',
+        'p.level_3',
+        'p.social_insurance',
+        'p.applicant_status',
+        'p.applicant_type',
+        'p.office_skill_excel',
+        'p.office_skill_word',
+        'p.office_skill_powerpoint',
+        'p.software_skill_autocad',
+        'p.software_skill_solidworks',
+        'p.software_skill_erp',
+        'p.software_skill_mes',
+        'p.desired_base_salary',
+        'p.desired_total_salary',
+      ])
+      .groupBy('p.id')
+      .orderBy('p.id')
+      .getRawMany();
+
+    if (!personnels || personnels.length === 0) {
+      return;
+    }
+    const hrErpRecords = personnels.map((personnel) => ({
+      full_name: personnel.p_full_name,
+      gender: personnel.p_gender,
+      interview_date: personnel.p_interview_date,
+      start_date: personnel.p_start_date,
+      birth_date: personnel.p_birth_date,
+      id_number: personnel.p_id_number,
+      id_issue_date: personnel.p_id_issue_date,
+      ethnicity: personnel.p_ethnicity,
+      id_issue_place: personnel.p_id_issue_place,
+      insurance_number: personnel.p_insurance_number,
+      tax_number: personnel.p_tax_number,
+      phone_number: personnel.p_phone_number,
+      email: personnel.p_email,
+      alternate_phone_number: personnel.p_alternate_phone_number,
+      alternate_name: personnel.p_alternate_name,
+      alternate_relationship: personnel.p_alternate_relationship,
+      birth_address: personnel.p_birth_address,
+      birth_province: personnel.p_birth_province,
+      birth_district: personnel.p_birth_district,
+      birth_ward: personnel.p_birth_ward,
+      current_address: personnel.p_current_address,
+      current_province: personnel.p_current_province,
+      current_district: personnel.p_current_district,
+      current_ward: personnel.p_current_ward,
+      type_personnel: personnel.p_type_personnel,
+      introducer_department: personnel.p_introducer_department,
+      introducer_introducer_name: personnel.p_introducer_introducer_name,
+      introducer_phone_number: personnel.p_introducer_phone_number,
+      candidate_type: personnel.p_candidate_type,
+      supplier_details: personnel.p_supplier_details,
+      status_form: personnel.p_status_form,
+      fac: personnel.p_fac,
+      department: personnel.p_department,
+      team: personnel.p_team,
+      jop_position: personnel.p_jop_position,
+      type_of_degree: personnel.p_type_of_degree,
+      type_classify: personnel.p_type_classify,
+      employee_code: personnel.p_employee_code,
+      contract_term: personnel.p_contract_term,
+      line_model: personnel.p_line_model,
+      part: personnel.p_part,
+      erp_department_registration: personnel.p_erp_department_registration,
+      production: personnel.p_production,
+      section: personnel.p_section,
+      job_field: personnel.p_job_field,
+      position: personnel.p_position,
+      entering_day: personnel.p_entering_day,
+      leaving_day: personnel.p_leaving_day,
+      probation_days: personnel.p_probation_days,
+      official_date_first: personnel.p_official_date_first,
+      official_date_second: personnel.p_official_date_second,
+      age: personnel.p_age,
+      month_count: personnel.p_month_count,
+      partner_name: personnel.p_partner_name,
+      partner_phone_number: personnel.p_partner_phone_number,
+      number_of_children: personnel.p_number_of_children,
+      children_name_1: personnel.p_children_name_1,
+      children_birth_date_1: personnel.p_children_birth_date_1,
+      children_gender_1: personnel.p_children_gender_1,
+      children_name_2: personnel.p_children_name_2,
+      children_birth_date_2: personnel.p_children_birth_date_2,
+      children_gender_2: personnel.p_children_gender_2,
+      children_name_3: personnel.p_children_name_3,
+      children_birth_date_3: personnel.p_children_birth_date_3,
+      children_gender_3: personnel.p_children_gender_3,
+      father_name: personnel.p_father_name,
+      father_phone_number: personnel.p_father_phone_number,
+      mother_name: personnel.p_mother_name,
+      mother_phone_number: personnel.p_mother_phone_number,
+      distance_from_household_to_company: personnel.p_distance_from_household_to_company,
+      highest_education_level: personnel.p_highest_education_level,
+      school_name: personnel.p_school_name,
+      major: personnel.p_major,
+      school_year: personnel.p_school_year,
+      year_ended: personnel.p_year_ended,
+      year_of_graduation: personnel.p_year_of_graduation,
+      classification: personnel.p_classification,
+      work_department_1: personnel.p_work_department_1,
+      work_responsibility_1: personnel.p_work_responsibility_1,
+      company_name_1: personnel.p_company_name_1,
+      entrance_day_1: personnel.p_entrance_day_1,
+      leaving_day_1: personnel.p_leaving_day_1,
+      salary_1: personnel.p_salary_1,
+      work_department_2: personnel.p_work_department_2,
+      work_responsibility_2: personnel.p_work_responsibility_2,
+      company_name_2: personnel.p_company_name_2,
+      entrance_day_2: personnel.p_entrance_day_2,
+      leaving_day_2: personnel.p_leaving_day_2,
+      salary_2: personnel.p_salary_2,
+      language_1: personnel.p_language_1,
+      certificate_type_1: personnel.p_certificate_type_1,
+      score_1: personnel.p_score_1,
+      level_1: personnel.p_level_1,
+      language_2: personnel.p_language_2,
+      certificate_type_2: personnel.p_certificate_type_2,
+      score_2: personnel.p_score_2,
+      level_2: personnel.p_level_2,
+      language_3: personnel.p_language_3,
+      certificate_type_3: personnel.p_certificate_type_3,
+      score_3: personnel.p_score_3,
+      level_3: personnel.p_level_3,
+      social_insurance: personnel.p_social_insurance,
+      applicant_status: personnel.p_applicant_status,
+      applicant_type: personnel.p_applicant_type,
+      office_skill_excel: personnel.p_office_skill_excel,
+      office_skill_word: personnel.p_office_skill_word,
+      office_skill_powerpoint: personnel.p_office_skill_powerpoint,
+      software_skill_autocad: personnel.p_software_skill_autocad,
+      software_skill_solidworks: personnel.p_software_skill_solidworks,
+      software_skill_erp: personnel.p_software_skill_erp,
+      software_skill_mes: personnel.p_software_skill_mes,
+      desired_base_salary: personnel.p_desired_base_salary,
+      desired_total_salary: personnel.p_desired_total_salary,
+    }));
+    await this.personnelRepository.save(hrErpRecords);
     await this.hrInterRepository.update(
       { id: In(ids) },
       { synchronize: true }
     );
   }
-
 
 
   async findByPhoneNumber(phone_number: string): Promise<any> {
@@ -427,7 +676,7 @@ export class HrInterServices {
 
     encodedRouter = encodedRouter
       .replace(/\+/g, 'A')
-      .replace(/\//g, 'B') .replace(/=+$/, '');
+      .replace(/\//g, 'B').replace(/=+$/, '');
     return {
       success: true,
       data: {

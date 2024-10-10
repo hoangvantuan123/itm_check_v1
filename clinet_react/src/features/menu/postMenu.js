@@ -15,7 +15,7 @@ export const PostMenu = async (name, sequence, parent_id, key) => {
       },
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       },

@@ -12,7 +12,7 @@ export const DeleteHrInterIds = async (ids, token) => {
           ids,
         },
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       },

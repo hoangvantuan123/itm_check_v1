@@ -8,7 +8,7 @@ export const DeleteMenus = async (ids) => {
     const response = await axios.delete(`${HOST_API_SERVER_P}/menu`, {
       data: { ids },
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
     })

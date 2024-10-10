@@ -13,6 +13,7 @@ import { GetHrInfoId } from '../../features/hrRecruitment/getPersonnelId'
 import { PutHrInfoId } from '../../features/hrRecruitment/updateHrInfoId'
 import LanguageTable from '../components/workerDeclaration/LanguageTable'
 import SkillTable from '../components/workerDeclaration/skillTable'
+import Logo from '../../assets/ItmLogo.png'
 const WorkerDeclarationMultiStepForm = () => {
   const navigate = useNavigate()
   const [currentStep, setCurrentStep] = useState(0)
@@ -132,6 +133,7 @@ const WorkerDeclarationMultiStepForm = () => {
       email: finalData?.email,
       insurance_number: finalData?.insurance_number,
       tax_number: finalData?.tax_number,
+      status_form: true,
       /* Gia đình cha mẹ vợ */
       father_name: finalData?.families[0].full_name,
       father_phone_number: finalData?.families[0].phone_number,
@@ -194,12 +196,12 @@ const WorkerDeclarationMultiStepForm = () => {
       level_3: finalData?.languages[2].level,
 
 
-      office_skill_excel	: finalData?.skills[0].level,
-      office_skill_word	: finalData?.skills[1].level,
-      office_skill_powerpoint	: finalData?.skills[2].level,
-      software_skill_autocad	: finalData?.skills[3].level,
-      software_skill_solidworks	: finalData?.skills[4].level,
-      software_skill_erp	: finalData?.skills[5].level,
+      office_skill_excel: finalData?.skills[0].level,
+      office_skill_word: finalData?.skills[1].level,
+      office_skill_powerpoint: finalData?.skills[2].level,
+      software_skill_autocad: finalData?.skills[3].level,
+      software_skill_solidworks: finalData?.skills[4].level,
+      software_skill_erp: finalData?.skills[5].level,
       software_skill_mes: finalData?.skills[6].level,
     }
 
@@ -269,11 +271,23 @@ const WorkerDeclarationMultiStepForm = () => {
   return (
     <div className="flex items-center justify-center h-screen overflow-auto p-3">
       <div className="lg:max-w-5xl w-full h-screen">
-        <h1 className="text-2xl font-bold text-center p-4">
-          MẪU KHAI ỨNG VIÊN
-        </h1>
-        <p className="text-center mb-4">Mẫu tờ khai thông tin cá nhân online</p>
+        <div className=" flex flex-col ">
+          <div className=" flex items-start mt-2">
+            <img
+              src={Logo}
+              alt="Description of image"
+              className="  w-64 h-auto   m-0    rounded-lg"
+            />
+          </div>
+          <div>
 
+            <h1 className="text-xl font-bold text-center mt-9 ">
+              TỜ KHAI ỨNG VIÊN
+            </h1>
+            <p className="text-center mb-4">Mẫu tờ khai thông tin cá nhân online</p>
+          </div>
+
+        </div>
         <Form form={form} layout="vertical" className="pb-10">
           {steps[currentStep].content}
           <Form.Item className="mt-4">

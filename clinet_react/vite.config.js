@@ -12,4 +12,11 @@ export default defineConfig({
     jsxFactory: 'React.createElement',
     jsxInject: `import React from 'react'`,
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@import "./src/static/css/styles.scss";`, 
+      },
+    },
+  },
 })

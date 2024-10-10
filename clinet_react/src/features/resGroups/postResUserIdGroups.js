@@ -13,7 +13,7 @@ export const PostResUserIdGroups = async (userId, groupIds) => {
       },
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       },

@@ -33,22 +33,22 @@ const { Content } = Layout
 const { Option } = Select
 
 const columnConfig = [
-  { key: 'employee_code', label: 'CID' },
-  { key: 'full_name', label: 'Họ và tên' },
-  { key: 'gender', label: 'Giới tính' },
-  { key: 'birth_date', label: 'Ngày sinh' },
-  { key: 'id_number', label: 'CCCD' },
-  { key: 'phone_number', label: 'Số điện thoại' },
-  { key: 'interview_date', label: 'Ngày phỏng vấn' },
-  { key: 'email', label: 'Email' },
-  { key: 'team', label: 'Team' },
-  { key: 'part', label: 'Part' },
-  { key: 'production', label: 'Production' },
-  { key: 'section', label: 'Section' },
-  { key: 'job_field', label: 'Job field' },
-  { key: 'position', label: 'Position' },
-  { key: 'applicant_status', label: 'Trạng thái' },
-  { key: 'synchronize', label: 'Đồng bộ' },
+  { key: 'employee_code', label: 'employee_code' },
+  { key: 'full_name', label: 'full_name' },
+  { key: 'gender', label: 'gender' },
+  { key: 'birth_date', label: 'birth_date' },
+  { key: 'id_number', label: 'id_number' },
+  { key: 'phone_number', label: 'phone_number' },
+  { key: 'interview_date', label: 'interview_date' },
+  { key: 'email', label: 'email' },
+  { key: 'team', label: 'team' },
+  { key: 'part', label: 'part' },
+  { key: 'production', label: 'production' },
+  { key: 'section', label: 'section' },
+  { key: 'job_field', label: 'job_field' },
+  { key: 'position', label: 'position' },
+  { key: 'applicant_status', label: 'applicant_status' },
+  { key: 'synchronize', label: 'synchronize' },
 ]
 
 const CloumnIcon = () => {
@@ -170,22 +170,22 @@ export default function EmployeeRecruitment({ permissions }) {
 
   const canCreate = checkActionPermission(
     permissions,
-    'hr-recruitment-1-3',
+    'hr-recruitment-1-1',
     'create',
   )
   const canEdit = checkActionPermission(
     permissions,
-    'hr-recruitment-1-3',
+    'hr-recruitment-1-1',
     'edit',
   )
   const canDelete = checkActionPermission(
     permissions,
-    'hr-recruitment-1-3',
+    'hr-recruitment-1-1',
     'delete',
   )
   const canView = checkActionPermission(
     permissions,
-    'hr-recruitment-1-3',
+    'hr-recruitment-1-1',
     'view',
   )
 
@@ -312,7 +312,7 @@ export default function EmployeeRecruitment({ permissions }) {
       ),
     },
     ...columnConfig.map(({ key, label }) => ({
-      title: t(label),
+      title: t(`hr_recruitment_1_1.${label}`),
       dataIndex: key,
       key: key,
       render: (text, record) => {
@@ -321,7 +321,7 @@ export default function EmployeeRecruitment({ permissions }) {
             ? moment(record.birth_date).tz('Asia/Ho_Chi_Minh').format('L')
             : null
         }
-       
+
         if (key === 'applicant_status') {
           return visibleColumns[key] ? (
             <CustomTagInter status={record.applicant_status} />
@@ -374,7 +374,7 @@ export default function EmployeeRecruitment({ permissions }) {
 
   const renderColumnVisibilityDrawer = () => (
     <Drawer
-      title={t('Chọn cột hiển thị')}
+      title={t('hr_recruitment_1_1.select_display_column')}
       placement="right"
       closable
       onClose={() => setIsDrawerVisible(false)}
@@ -389,7 +389,7 @@ export default function EmployeeRecruitment({ permissions }) {
                 handleColumnVisibilityChange(key, e.target.checked)
               }
             >
-              {t(label)}
+              {t(`hr_recruitment_1_1.${label}`)}
             </Checkbox>
           </Col>
         ))}
@@ -460,15 +460,17 @@ export default function EmployeeRecruitment({ permissions }) {
         <h1 className="text-xl font-bold text-gray-900">
           {t('Danh sách dữ liệu')}
         </h1>
-        <Button
-          type="primary"
-          onClick={openModalAddUser}
-          icon={<PlusOutlined />}
-          className=" rounded-lg h-full border-gray-200 bg-indigo-600 hover:bg-none text-white shadow-sm text-sm"
-          size="large"
-        >
-          {t('Thêm')}
-        </Button>
+        {canCreate && (
+          <Button
+            type="primary"
+            onClick={openModalAddUser}
+            icon={<PlusOutlined />}
+            className=" rounded-lg h-full border-gray-200 bg-indigo-600 hover:bg-none text-white shadow-sm text-sm"
+            size="large"
+          >
+            {t('Thêm')}
+          </Button>
+        )}
       </div>
       <div className="p-2  flex items-center justify-between">
         <span className="inline-flex overflow-hidden">
@@ -523,7 +525,7 @@ export default function EmployeeRecruitment({ permissions }) {
             >
               <CloumnIcon />
             </Button>
-            {selectedRowKeys != null && selectedRowKeys.length > 0 && (
+            {selectedRowKeys != null && selectedRowKeys.length > 0 && canEdit && (
               <SynActionHrInter
                 fetchData={fetchData}
                 selectedRowKeys={selectedRowKeys}
