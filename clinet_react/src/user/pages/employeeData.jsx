@@ -135,6 +135,7 @@ export default function EmployeeDataiView({ permissions }) {
   const [actionImport, setActionImport] = useState(null)
   const [syn, setSyn] = useState(null)
   const [isModalOpenAddHr, setIsModalOpenAddHr] = useState(false)
+  const [table] = useState('hr_personnel')
   const handleOnClickAction = () => {
     setActionUsers('actionHrInfoIds')
   }
@@ -524,6 +525,7 @@ export default function EmployeeDataiView({ permissions }) {
                 selectedRowKeys={selectedRowKeys}
                 fetchDataUser={fetchData}
                 canDelete={canDelete}
+                table={table}
               />
             )}
           </div>

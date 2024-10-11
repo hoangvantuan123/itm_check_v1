@@ -404,15 +404,15 @@ export default function DetailUserHrRecruitment({ permissions }) {
 
   const menu = (
     <Menu onClick={handleMenuClick}>
-      <Menu.SubMenu key="export" title="Xuất" icon={<DownloadOutlined />}>
-        <Menu.Item key="export-pdf" icon={<FilePdfOutlined />}>Xuất PDF</Menu.Item>
-        <Menu.Item key="export-excel" icon={<FileExcelOutlined />}>Xuất Excel</Menu.Item>
-        <Menu.Item key="export-word" icon={<FileWordOutlined />}>Xuất Word</Menu.Item>
+      <Menu.SubMenu key="export" title= {t('hr_recruitment_1_1.export')} icon={<DownloadOutlined />}>
+        <Menu.Item key="export-pdf" icon={<FilePdfOutlined />}>{t('hr_recruitment_1_1.export_pdf')} </Menu.Item>
+        <Menu.Item key="export-excel" icon={<FileExcelOutlined />}>{t('hr_recruitment_1_1.export_excel')}</Menu.Item>
+        <Menu.Item key="export-word" icon={<FileWordOutlined />}>{t('hr_recruitment_1_1.export_word')}</Menu.Item>
       </Menu.SubMenu>
-      {canEdit && <>       <Menu.Item key="open-form" icon={<FormOutlined />}>Mở Form</Menu.Item>
-        <Menu.Item key="close-form" icon={<FormOutlined />}>Đóng Form</Menu.Item></>}
+      {canEdit && <>       <Menu.Item key="open-form" icon={<FormOutlined />}>{t('hr_recruitment_1_1.open_form')}</Menu.Item>
+        <Menu.Item key="close-form" icon={<FormOutlined />}>{t('hr_recruitment_1_1.close_form')}</Menu.Item></>}
       {canDelete && <Menu.Item key="delete" style={{ color: 'red' }} icon={<DeleteOutlined />}>
-        Xóa
+      {t('hr_recruitment_1_1.delete')}
       </Menu.Item>}
 
     </Menu>
@@ -420,7 +420,7 @@ export default function DetailUserHrRecruitment({ permissions }) {
   return (
     <div className="w-full h-screen bg-gray-50 p-3">
       <Helmet>
-        <title>ITM - {t('Công nhân')}</title>
+        <title>ITM - #{id}</title>
       </Helmet>
 
       <nav
@@ -430,7 +430,7 @@ export default function DetailUserHrRecruitment({ permissions }) {
         <ol className="flex items-center gap-1 text-sm text-gray-700">
           <li onClick={handleNavigateToBack} className="cursor-pointer">
             <span className=" text-black hover:text-indigo-950 opacity-80">
-              Trở lại
+            {t('hr_recruitment_1_1.cancel')}
             </span>
           </li>
           <li className="rtl:rotate-180">
@@ -461,18 +461,18 @@ export default function DetailUserHrRecruitment({ permissions }) {
         <ol className=" flex items-center gap-2">
           <Dropdown overlay={menu} placement="bottomRight">
             <Button className="bg-white">
-              Action
+            {t('hr_recruitment_1_1.action')}
             </Button>
           </Dropdown>
 
-          {canEdit && <Button className="bg-white" onClick={handleSync}>Duyệt đồng bộ</Button>}
+          {canEdit && <Button className="bg-white" onClick={handleSync}> {t('hr_recruitment_1_1.syn')}</Button>}
 
           {canEdit && <Button className="bg-white" onClick={toggleEdit}>
-            {isEditing ? <> Thoát</> : <> Chỉnh sửa</>}
+            {isEditing ? <>  {t('hr_recruitment_1_1.exit')}</> : <> {t('hr_recruitment_1_1.edit')}</>}
           </Button>}
 
           {canEdit && <Button className="bg-white" onClick={handleSave}>
-            Lưu
+          {t('hr_recruitment_1_1.save')}
           </Button>}
 
         </ol>
@@ -490,23 +490,23 @@ export default function DetailUserHrRecruitment({ permissions }) {
               >
                 <Option value="waiting_interview" key="waiting_interview">
                   <UserAddOutlined style={{ marginRight: 8 }} />
-                  Lên lịch phỏng vấn
+                  {t('hr_recruitment_1_1.waiting_interview')}
                 </Option>
                 <Option value="interviewed" key="interviewed">
                   <HourglassOutlined style={{ marginRight: 8 }} />
-                  Đã phỏng vấn
+                  {t('hr_recruitment_1_1.interviewed')}
                 </Option>
                 <Option value="waiting_result" key="waiting_result">
                   <CheckCircleOutlined style={{ marginRight: 8 }} />
-                  Đang đợi kết quả
+                  {t('hr_recruitment_1_1.waiting_result')}
                 </Option>
                 <Option value="accepted" key="accepted">
                   <CheckOutlined style={{ marginRight: 8, color: 'green' }} />
-                  Đã nhận
+                  {t('hr_recruitment_1_1.accepted')}
                 </Option>
                 <Option value="rejected" key="rejected">
                   <CloseCircleOutlined style={{ marginRight: 8, color: 'red' }} />
-                  Không đạt
+                  {t('hr_recruitment_1_1.rejected')}
                 </Option>
               </Select>
             </Col>
@@ -538,7 +538,7 @@ export default function DetailUserHrRecruitment({ permissions }) {
               open
             >
               <summary className="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
-                <h2 className="text-base font-medium">Thông tin khác</h2>
+                <h2 className="text-base font-medium">{t('hr_recruitment_1_1.other')}</h2>
 
                 <span className="relative size-5 shrink-0">
                   <svg
@@ -577,50 +577,50 @@ export default function DetailUserHrRecruitment({ permissions }) {
                     >
                       <Row gutter={16}>
                         <Col span={12}>
-                          <Form.Item label="Mã nhân viên" name="employee_code">
+                          <Form.Item label={t('hr_recruitment_1_1.employee_code')} name="employee_code">
                             <Input size="large" placeholder="Nhà máy" />
                           </Form.Item>
                         </Col>
                         <Col span={12}>
                           <Form.Item
-                            label="Đăng ký trên ERP"
+                            label={t('hr_recruitment_1_1.erp_department_registration')}
                             name="erp_department_registration"
                           >
                             <Input size="large" placeholder="ERP" />
                           </Form.Item>
                         </Col>
                         <Col span={24}>
-                          <Form.Item label="Team" name="team">
+                          <Form.Item label={t('hr_recruitment_1_1.team')} name="team">
                             <Input size="large" placeholder="Team" />
                           </Form.Item>
                         </Col>
                       </Row>
                       <Row gutter={16}>
                         <Col span={16}>
-                          <Form.Item label="Part" name="part">
+                          <Form.Item label={t('hr_recruitment_1_1.part')} name="part">
                             <Input size="large" placeholder="Part" />
                           </Form.Item>
                         </Col>
                         <Col span={8}>
-                          <Form.Item label="Production" name="production">
+                          <Form.Item label={t('hr_recruitment_1_1.production')} name="production">
                             <Input size="large" placeholder="Production" />
                           </Form.Item>
                         </Col>
 
                         <Col span={24}>
-                          <Form.Item label="Section" name="section">
+                          <Form.Item label={t('hr_recruitment_1_1.section')} name="section">
                             <Input size="large" placeholder="Section" />
                           </Form.Item>
                         </Col>
                       </Row>
                       <Row gutter={16}>
                         <Col span={12}>
-                          <Form.Item label="Job field" name="job_field">
+                          <Form.Item label={t('hr_recruitment_1_1.job_field')} name="job_field">
                             <Input size="large" placeholder="Job field" />
                           </Form.Item>
                         </Col>
                         <Col span={12}>
-                          <Form.Item label="Position" name="position">
+                          <Form.Item label={t('hr_recruitment_1_1.position')} name="position">
                             <Input size="large" placeholder="Positionl" />
                           </Form.Item>
                         </Col>
@@ -629,7 +629,7 @@ export default function DetailUserHrRecruitment({ permissions }) {
                       <Row gutter={16}>
                         <Col span={12}>
                           <Form.Item
-                            label="Ngày ký HĐ lần 1"
+                            label={t('hr_recruitment_1_1.official_date_first')}
                             name="official_date_first"
                           >
                             <DatePicker
@@ -642,7 +642,7 @@ export default function DetailUserHrRecruitment({ permissions }) {
                         </Col>
                         <Col span={12}>
                           <Form.Item
-                            label="Ngày ký HĐ lần 2"
+                            label={t('hr_recruitment_1_1.official_date_second')}
                             name="official_date_second"
                           >
                             <DatePicker
@@ -654,12 +654,12 @@ export default function DetailUserHrRecruitment({ permissions }) {
                           </Form.Item>
                         </Col>
                       </Row>
-                      <h3 className=" italic mb-2">Mức lương</h3>
+                      <h3 className=" italic mb-2">{t('hr_recruitment_1_1.salary')}</h3>
                       <Row gutter={16}>
 
                         <Col xs={24} sm={12} md={12}>
                           <Form.Item
-                            label="Mức lương CB mong muốn:"
+                            label={t('hr_recruitment_1_1.desired_base_salary')}
                             name="desired_base_salary"
                           >
                             <Input size="large" placeholder="Nhập thông tin" />
@@ -667,7 +667,7 @@ export default function DetailUserHrRecruitment({ permissions }) {
                         </Col>
                         <Col xs={24} sm={12} md={12}>
                           <Form.Item
-                            label="Mức lương tổng mong muốn:"
+                            label={t('hr_recruitment_1_1.desired_total_salary')}
                             name="desired_total_salary"
                           >
                             <Input size="large" placeholder="Nhập thông tin" />
@@ -678,17 +678,17 @@ export default function DetailUserHrRecruitment({ permissions }) {
                   </>
                 ) : (
                   <>
-                    <h3 className=" italic mb-1 mt-2">Vị trí ứng tuyển</h3>
+                    <h3 className=" italic mb-1 mt-2">{t('hr_recruitment_1_1.position_applied_for')}</h3>
                     <Row gutter={16}>
                       <Col span={12}>
                         <div className="mt-3">
-                          <strong>Mã nhân viên:</strong>
+                          <strong>{t('hr_recruitment_1_1.employee_code')}</strong>
                           <Text className="ml-2">{formData.employee_code}</Text>
                         </div>
                       </Col>
                       <Col span={12}>
                         <div className="mt-3">
-                          <strong>Đăng ký trên ERP:</strong>
+                          <strong>{t('hr_recruitment_1_1.erp_department_registration')}:</strong>
                           <Text className="ml-2">
                             {formData.erp_department_registration}
                           </Text>
@@ -697,7 +697,7 @@ export default function DetailUserHrRecruitment({ permissions }) {
 
                       <Col span={24}>
                         <div className="mt-3">
-                          <strong>Team:</strong>
+                          <strong>{t('hr_recruitment_1_1.team')}:</strong>
                           <Text className="ml-2">{formData.team}</Text>
                         </div>
                       </Col>
@@ -705,20 +705,20 @@ export default function DetailUserHrRecruitment({ permissions }) {
                     <Row gutter={16}>
                       <Col span={16}>
                         <div className="mt-3">
-                          <strong>Part:</strong>
+                          <strong>{t('hr_recruitment_1_1.part')}:</strong>
                           <Text className="ml-2">{formData.part}</Text>
                         </div>
                       </Col>
                       <Col span={8}>
                         <div className="mt-3">
-                          <strong>Production:</strong>
+                          <strong>{t('hr_recruitment_1_1.production')}:</strong>
                           <Text className="ml-2">{formData.production}</Text>
                         </div>
                       </Col>
 
                       <Col span={24}>
                         <div className="mt-3">
-                          <strong>Section:</strong>
+                          <strong>{t('hr_recruitment_1_1.section')}:</strong>
                           <Text className="ml-2">{formData.section}</Text>
                         </div>
                       </Col>
@@ -726,13 +726,13 @@ export default function DetailUserHrRecruitment({ permissions }) {
                     <Row gutter={16}>
                       <Col span={12}>
                         <div className="mt-3">
-                          <strong>Job field:</strong>
+                          <strong>{t('hr_recruitment_1_1.job_field')}:</strong>
                           <Text className="ml-2">{formData.job_field}</Text>
                         </div>
                       </Col>
                       <Col span={12}>
                         <div className="mt-3">
-                          <strong>Position:</strong>
+                          <strong>{t('hr_recruitment_1_1.position')}:</strong>
                           <Text className="ml-2">{formData.position}</Text>
                         </div>
                       </Col>
@@ -741,7 +741,7 @@ export default function DetailUserHrRecruitment({ permissions }) {
                     <Row gutter={16}>
                       <Col span={12}>
                         <div className="mt-3">
-                          <strong>Ngày ký HĐ lần 1:</strong>
+                          <strong>{t('hr_recruitment_1_1.official_date_firstF')}:</strong>
                           <Text className="ml-2">
                             {formData.official_date_firstF}
                           </Text>
@@ -749,18 +749,18 @@ export default function DetailUserHrRecruitment({ permissions }) {
                       </Col>
                       <Col span={12}>
                         <div className="mt-3">
-                          <strong>Ngày ký HĐ lần 2:</strong>
+                          <strong>{t('hr_recruitment_1_1.official_date_second')}:</strong>
                           <Text className="ml-2">
                             {formData.official_date_second}
                           </Text>
                         </div>
                       </Col>
                     </Row>
-                    <h3 className=" italic mb-1 mt-2">Mức lương</h3>
+                    <h3 className=" italic mb-1 mt-2">{t('hr_recruitment_1_1.salary')}</h3>
                     <Row gutter={16}>
                       <Col span={12}>
                         <div className="mt-3">
-                          <strong>Mức lương CB mong muốn:</strong>
+                          <strong>{t('hr_recruitment_1_1.desired_base_salary')}:</strong>
                           <Text className="ml-2">
                             {formData?.desired_base_salary}
                           </Text>
@@ -768,7 +768,7 @@ export default function DetailUserHrRecruitment({ permissions }) {
                       </Col>
                       <Col span={12}>
                         <div className="mt-3">
-                          <strong>Mức lương tổng mong muốn:</strong>
+                          <strong>{t('hr_recruitment_1_1.desired_total_salary')}:</strong>
                           <Text className="ml-2">
                             {formData?.desired_total_salary}
                           </Text>

@@ -3,8 +3,9 @@ import * as cors from 'cors';
 import { ImportModule } from './import/import.module';
 import { ExportModule } from './export/export.module';
 
+
 @Module({
-  imports: [ImportModule],
+  imports: [ImportModule, ExportModule],
   providers: [],
 })
 export class AppModule {

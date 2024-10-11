@@ -248,7 +248,7 @@ export default function DetailUserHrAllDataTrue({ permissions }) {
       ? { ...formattedData, ...dataMore }
       : formattedData
     try {
-      const response = await PutHrInfoId(id, submissionData)
+      const response = await PutHrInfoId(id, formattedData)
       if (response.success) {
         message.success('Cập nhật thành công!')
       } else {
@@ -259,7 +259,16 @@ export default function DetailUserHrAllDataTrue({ permissions }) {
     }
   }
   const handleFinishFormMore = async (values) => {
-    setDataMore(values)
+    try {
+      const response = await PutHrInfoId(id, values)
+      if (response.success) {
+        message.success('Cập nhật thành công!')
+      } else {
+        message.error(`Cập nhật thất bại: ${response.message}`)
+      }
+    } catch (error) {
+      message.error('Đã xảy ra lỗi trong quá trình cập nhật.')
+    }
   }
   const handleSave = () => {
     form.submit()

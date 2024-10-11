@@ -29,6 +29,13 @@
         border-top-left-radius: 12px;
         border-top-right-radius: 12px;
     }
+    :where(.css-qnu6hi).ant-drawer-right>.ant-drawer-content-wrapper{
+        padding: 12px;
+        box-shadow: none;
+    }
+    :where(.css-qnu6hi).ant-drawer .ant-drawer-content{
+        border-radius: 12px;
+    }
 }
 
 @media (max-width: 768px) {

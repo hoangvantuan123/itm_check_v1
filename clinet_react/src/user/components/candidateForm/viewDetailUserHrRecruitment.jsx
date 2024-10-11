@@ -12,6 +12,7 @@ import {
   Select,
   Card
 } from 'antd'
+import { useTranslation } from 'react-i18next'
 import EditLanguageTable from './editLanguageTable'
 import EditWorkExperienceTable from './editWorkExperienceTable'
 import EditEducationTable from './editEducationTable'
@@ -32,7 +33,7 @@ const ViewDetailUserHrRecruitment = ({
   const handleFormChange = (changedValues) => {
     setFormData({ ...formData, ...changedValues })
   }
-
+  const { t } = useTranslation()
   useEffect(() => {
     const formattedData = {
       ...formData,
@@ -53,19 +54,19 @@ const ViewDetailUserHrRecruitment = ({
 
   // Columns for the tables
   const familyColumns = [
-    { title: 'Quan hệ', dataIndex: 'relationship', key: 'relationship' },
-    { title: 'Họ tên', dataIndex: 'full_name', key: 'full_name' },
-    { title: 'Số điện thoại', dataIndex: 'phone_number', key: 'phone_number' },
+    { title: t('family_columns.relationship'), dataIndex: 'relationship', key: 'relationship' },
+    { title:  t('family_columns.full_name'), dataIndex: 'full_name', key: 'full_name' },
+    { title:  t('family_columns.phone_number'), dataIndex: 'phone_number', key: 'phone_number' },
   ]
   const childrenColumns = [
-    { title: 'Họ tên', dataIndex: 'children_name', key: 'children_name' },
+    { title:t('children_columns.children_name'), dataIndex: 'children_name', key: 'children_name' },
     {
-      title: 'Năm sinh',
+      title: t('children_columns.children_birth_date'),
       dataIndex: 'children_birth_date',
       key: 'children_birth_date',
     },
     {
-      title: 'Giới tính',
+      title: t('children_columns.children_gender'),
       dataIndex: 'children_gender',
       key: 'children_gender',
     },
@@ -546,17 +547,17 @@ const ViewDetailUserHrRecruitment = ({
             bordered
           />
 
-<h2 className="mt-4 mb-2 italic">Kỹ năng</h2>
-<Row gutter={16}>
-      {formData?.skills.map((skill) => (
-        <Col span={12} key={skill.id} style={{ marginBottom: 16 }}>
-          <Card>
-            <p><strong>Kỹ năng:</strong> {skill.skill}</p>
-            <p><strong>Level:</strong> {skill.level}</p>
-          </Card>
-        </Col>
-      ))}
-    </Row>
+          <h2 className="mt-4 mb-2 italic">Kỹ năng</h2>
+          <Row gutter={16}>
+            {formData?.skills.map((skill) => (
+              <Col span={12} key={skill.id} style={{ marginBottom: 16 }}>
+                <Card>
+                  <p><strong>Kỹ năng:</strong> {skill.skill}</p>
+                  <p><strong>Level:</strong> {skill.level}</p>
+                </Card>
+              </Col>
+            ))}
+          </Row>
           <Divider orientation="left italic">Kinh nghiệm làm việc</Divider>
 
           <Table

@@ -263,7 +263,8 @@ export class Personnel {
   @Column({ nullable: true })
   classification: string;  // Classification
 
-
+  @Column({ nullable: true })
+  social_insurance: string;  
 
 
 

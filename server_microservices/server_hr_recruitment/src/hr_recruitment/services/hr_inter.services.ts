@@ -134,8 +134,9 @@ export class HrInterServices {
     addFilterCondition('applicantStatus', 'hr_inter.applicant_status');
 
     if (filter.interViewDateFilter) {
-      query.andWhere('DATE(hr_inter.interview_date) = :interViewDate', { interViewDate: filter.interViewDateFilter });
+      query.andWhere('DATE(hr_inter.interview_date) = :interViewDateFilter', { interViewDateFilter: filter.interViewDateFilter });
     }
+
     if (startDate) {
       query.andWhere('hr_inter.create_date >= :startDate', { startDate });
     }

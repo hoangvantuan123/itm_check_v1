@@ -17,6 +17,7 @@ async function bootstrap() {
         'http://localhost:3000',
         'https://devbeta.online',
         'https://www.devbeta.online',
+        'http://192.168.60.248:90'
       ],
       credentials: true,
       methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],

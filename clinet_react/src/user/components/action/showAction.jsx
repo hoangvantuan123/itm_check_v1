@@ -11,6 +11,8 @@ import { PutUsersInterviewStatus } from '../../../features/hrRecruitment/putUser
 import ChangePassSelect from '../profile/changePassSelect'
 import { DeleteHrInterviewCandidates } from '../../../features/hrInterviewCandidate/deleteHrInterviewCandidate'
 import { DeleteHrInterIds } from '../../../features/hrInter/deleteHrInfoIds'
+import ExportDataView from '../export'
+import ExportDataViewIds from '../export/exportIds'
 
 const { Title } = Typography
 const SettingIcon = () => {
@@ -45,13 +47,28 @@ export default function ShowAction({
   setActionUsers,
   canDelete,
   userData,
+  table
 }) {
   const { t } = useTranslation()
   const [showDropdown, setShowDropdown] = useState(false)
   const [selectedMenuKey, setSelectedMenuKey] = useState('')
+  const [exportOpen, setExportOpen] = useState(false)
+  const [exportOpenIds, setExportOpenIds] = useState(false)
 
   const [isOpen, setIsOpen] = useState(false)
 
+  const handleExportOpen = () => {
+    setExportOpen(true)
+  }
+  const handleExportOpenIds = () => {
+    setExportOpenIds(true)
+  }
+  const handleExportClose = () => {
+    setExportOpen(false)
+  }
+  const handleExportCloseIds = () => {
+    setExportOpenIds(false)
+  }
   const handleCancelOpenDrawer = () => {
     setIsOpen(false)
   }
@@ -157,10 +174,10 @@ export default function ShowAction({
       const messagePromise = response.success
         ? Promise.resolve(message.success(`${t('Cập nhật thành công')}`))
         : Promise.reject(
-            new Error(
-              `${t('Cập nhật thất bại: Yêu cầu không thành công, vui lòng thử lại')}`,
-            ),
-          )
+          new Error(
+            `${t('Cập nhật thất bại: Yêu cầu không thành công, vui lòng thử lại')}`,
+          ),
+        )
 
       await messagePromise
 
@@ -180,10 +197,10 @@ export default function ShowAction({
       const messagePromise = response.success
         ? Promise.resolve(message.success(`${t('Xóa thành công các nhóm')}`))
         : Promise.reject(
-            new Error(
-              `${t('Xóa thất bại: Yêu cầu không thành công, vui lòng thử lại')}`,
-            ),
-          )
+          new Error(
+            `${t('Xóa thất bại: Yêu cầu không thành công, vui lòng thử lại')}`,
+          ),
+        )
 
       await messagePromise
 
@@ -203,10 +220,10 @@ export default function ShowAction({
       const messagePromise = response.success
         ? Promise.resolve(message.success(`${t('Xóa thành công các nhóm')}`))
         : Promise.reject(
-            new Error(
-              `${t('Xóa thất bại: Yêu cầu không thành công, vui lòng thử lại')}`,
-            ),
-          )
+          new Error(
+            `${t('Xóa thất bại: Yêu cầu không thành công, vui lòng thử lại')}`,
+          ),
+        )
 
       await messagePromise
 
@@ -227,10 +244,10 @@ export default function ShowAction({
       const messages = response.success
         ? Promise.resolve(message.success(`${t('Cập nhật thành công')}`))
         : Promise.reject(
-            new Error(
-              `${t('Cập nhật thất bại: Yêu cầu không thành công, vui lòng thử lại')}`,
-            ),
-          )
+          new Error(
+            `${t('Cập nhật thất bại: Yêu cầu không thành công, vui lòng thử lại')}`,
+          ),
+        )
 
       await messages
 
@@ -337,12 +354,12 @@ export default function ShowAction({
 
   const menu = (
     <Menu onClick={handleMenuClick}>
-      <Menu.Item key="action_show_1">{t('Nhập danh sách')}</Menu.Item>
+      <Menu.Item key="action_show_1" onClick={handleExportOpenIds}>{t('Xuất danh sách đã chọn')}</Menu.Item>
 
-      <Menu.Item key="action_show_2">{t('Xuất danh sách')}</Menu.Item>
+      <Menu.Item key="action_show_2" onClick={handleExportOpen}>{t('Xuất danh theo bộ lọc')}</Menu.Item>
       <Menu.Item key="action_show_3">{t('Lưu trữ')}</Menu.Item>
       <Menu.Item key="action_show_4">{t('Bỏ lưu trữ')}</Menu.Item>
-    
+
 
       {actionUsers === 'actionUsers' && (
         <Menu.Item key="action_show_6">{t('Đổi mật khẩu')}</Menu.Item>
@@ -382,6 +399,11 @@ export default function ShowAction({
           setIsOpen={setIsOpen}
         />
       )}
+
+
+
+      <ExportDataView isOpen={exportOpen} onClose={handleExportClose} setExportOpen={setExportOpen} table={table} />
+      <ExportDataViewIds isOpen={exportOpenIds} onClose={handleExportCloseIds} table={table} selectedRowKeys={selectedRowKeys} />
     </>
   )
 }

@@ -140,6 +140,7 @@ export default function EmployeeRecruitment({ permissions }) {
   const [interviewDate, setInterviewDate] = useState(null)
   const [applicantStatus, setApplicantStatus] = useState([])
   const [isModalOpenAddHr, setIsModalOpenAddHr] = useState(false)
+  const [table] = useState('hr_inter')
   const handleOnClickAction = () => {
     setActionUsers('actionHrInters')
   }
@@ -221,9 +222,7 @@ export default function EmployeeRecruitment({ permissions }) {
       const [startDate, endDate] = dateRange.map((date) =>
         date ? date.format('YYYY-MM-DD') : null,
       )
-      const interViewDateFilter = interviewDate
-        ? interviewDate.format('YYYY-MM-DD')
-        : null
+      const interViewDateFilter = interviewDate ? interviewDate.format('YYYY-MM-DD') : ''
       const response = await GetFilterHrInterPageLimit(
         page,
         limit,
@@ -453,12 +452,12 @@ export default function EmployeeRecruitment({ permissions }) {
   return (
     <div className="w-full h-screen flex flex-col bg-white">
       <Helmet>
-        <title>ITM - {t('Phỏng vấn')}</title>
+        <title>ITM - {t('hr_recruitment_1_1.recruitment')}</title>
       </Helmet>
 
       <div className="p-2 flex items-center justify-between">
         <h1 className="text-xl font-bold text-gray-900">
-          {t('Danh sách dữ liệu')}
+        {t('hr_recruitment_1_1.data')}
         </h1>
         {canCreate && (
           <Button
@@ -468,7 +467,7 @@ export default function EmployeeRecruitment({ permissions }) {
             className=" rounded-lg h-full border-gray-200 bg-indigo-600 hover:bg-none text-white shadow-sm text-sm"
             size="large"
           >
-            {t('Thêm')}
+            {t('hr_recruitment_1_1.add')}
           </Button>
         )}
       </div>
@@ -540,6 +539,7 @@ export default function EmployeeRecruitment({ permissions }) {
                 selectedRowKeys={selectedRowKeys}
                 fetchDataUser={fetchData}
                 canDelete={canDelete}
+                table={table}
               />
             )}
           </div>
@@ -550,6 +550,7 @@ export default function EmployeeRecruitment({ permissions }) {
         isOpen={isModalOpenAddHr}
         onClose={closeModalAddHr}
         fetchData={fetchData}
+
       />
       <Layout className="flex-1 overflow-auto bg-white p-2">
         {renderTable()}

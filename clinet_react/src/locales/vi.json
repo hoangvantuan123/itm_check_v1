@@ -240,8 +240,10 @@
     "hr_personnel": "Nhân sự",
     "hr_language": "Ngôn ngữ"
   },
-  "hr_recruitment_1_1" :{
+  "hr_recruitment_1_1": {
     "title": "Tìm kiếm nhân sự",
+    "recruitment": "Tuyển dụng",
+    "data": "Danh sách dữ liệu",
     "search_placeholder": "Tìm kiếm nhân sự",
     "filter_placeholder": "Lọc theo",
     "sort_placeholder": "Sắp xếp theo",
@@ -253,16 +255,56 @@
     "phone_number": "Số điện thoại",
     "interview_date": "Ngày phỏng vấn",
     "email": "Email",
-    "team": "Đội",
-    "part": "Phần",
+    "team": "Team",
+    "part": "Part",
     "production": "Sản xuất",
     "section": "Phần",
     "job_field": "Lĩnh vực công việc",
     "position": "Chức vụ",
     "applicant_status": "Trạng thái",
     "synchronize": "Đồng bộ",
-    "select_display_column" : "Cột hiển thị"
-
-    
+    "select_display_column": "Cột hiển thị",
+    "export": "Xuất",
+    "export_pdf": "Xuất PDF",
+    "add": "Thêm",
+    "export_excel": "Xuất Excel",
+    "export_word": "Xuất Word",
+    "open_form": "Mở Form",
+    "close_form": "Đóng Form",
+    "delete": "Xóa",
+    "cancel": "Trả lại",
+    "action": "Action",
+    "syn": "Duyệt đồng bộ",
+    "exit": "Thoát",
+    "edit": "Chỉnh sửa",
+    "save": "Lưu",
+    "waiting_interview": "Lên lịch phỏng vấn",
+    "interviewed": "Đã phỏng vấn",
+    "waiting_result": "Đang đợi kết quả",
+    "accepted": "Đạt",
+    "rejected": "Không đạt",
+    "other": "Thông tin khác",
+    "erp_department_registration": "Đăng ký trên ERP",
+    "official_date_first": "Ngày ký HĐ lần 1",
+    "official_date_second": "Ngày ký HĐ lần 2",
+    "desired_base_salary": "Mức lương CB mong muốn",
+    "desired_total_salary": "Mức lương tổng mong muốn",
+    "position_applied_for": " Vị trí ứng tuyển",
+    "salary": "Mức lương"
+  },
+  "family_columns": {
+    "relationship": "Quan hệ",
+    "full_name": "Họ tên",
+    "phone_number": "Số điện thoại"
+  },
+  "children_columns": {
+    "children_name": "Họ tên",
+    "children_birth_date": "Năm sinh",
+    "children_gender": "Giới tính"
+  } ,
+  "education_columns" :{
+    "highest_education_level" : "Trình độ học vấn",
+    "school" : "Trường",
+    "major" :""
   }
 }
