@@ -36,8 +36,8 @@ import { registerUser } from '../../features/auth/API/registerAPI'
 import { GetUserGroupsPageLimitID } from '../../features/resUsers/getUserGroupsPageLimitID'
 import { GetAllHrEmployeePageLimit } from '../../features/hr/getHrEmployeePageLimit'
 import { GetAllDepartments } from '../../features/hr/getHrDepartmentsAll'
-import '../../static/css/scroll_container.scss'
-import '../../static/css/drawer_cusstom.scss'
+import '../../static/css/scroll_container.css'
+import '../../static/css/drawer_cusstom.css'
 import ImportForm from '../components/import'
 const { Option } = Select
 const { Title } = Typography

@@ -12,7 +12,7 @@ import { PostHrInterNew } from '../../features/hrInter/postHrInterNew'
 import LanguageTable from '../components/inter/LanguageTable'
 import SkillTable from '../components/inter/skillTable'
 import Logo from '../../assets/ItmLogo.png'
-import '../../static/css/drawer_cusstom.scss'
+import '../../static/css/drawer_cusstom.css'
 const MultiStepFormPage = () => {
   const navigate = useNavigate()
   const [currentStep, setCurrentStep] = useState(0)

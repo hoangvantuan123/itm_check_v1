@@ -16,7 +16,7 @@ import {
 } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet'
-import '../../static/css/drawer_cusstom.scss'
+import '../../static/css/drawer_cusstom.css'
 import { PlusOutlined, SearchOutlined, EyeOutlined } from '@ant-design/icons'
 import Search from '../components/search'
 import PhoneSettingAction from '../components/phone/usersSettingAction'

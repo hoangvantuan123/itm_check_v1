@@ -26,7 +26,7 @@ const { Title, Text } = Typography
 const { TabPane } = Tabs
 const { Option } = Select
 import 'moment/locale/vi'
-import '../../static/css/scroll_container.scss'
+import '../../static/css/scroll_container.css'
 import DefaultAvatar from '../../assets/default-avatar.png'
 import PhoneGeneralSettings from './phoneGeneralSettings'
 import KeyMenu02 from '../components/auth/menu-key/key-02'
@@ -203,7 +203,7 @@ export default function Profile({ permissions }) {
     </Menu>
   )
   return (
-    <div className="w-full h-screen bg-slate-50">
+    <div className="w-full h-screen bg-white">
       <Helmet>
         <title>{userNameLogin}</title>
       </Helmet>

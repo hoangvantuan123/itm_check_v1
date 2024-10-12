@@ -15,6 +15,7 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import { loginAuth } from '../../features/auth/API/authAPI'
 import decodeJWT from '../../utils/decode-JWT'
 import BG from '../../assets/bgr.jpg'
+import Logo from '../../assets/ItmLogo.png'
 import Cookies from 'js-cookie'
 
 const { Title, Text } = Typography
@@ -71,32 +72,30 @@ export default function Login() {
       <Helmet>
         <title>{t('auth.login')}</title>
       </Helmet>
-      <div className="min-h-screen  flex flex-col lg:flex-row items-center justify-center overflow-hidden bg-gray-50">
+      <div className="min-h-screen  flex flex-col lg:flex-row items-center justify-center overflow-hidden ">
         {/* Cột chứa ảnh */}
-        <div className="hidden lg:flex lg:w-1/2 p-2 rounded-lg h-screen items-center justify-center">
+        <div className="hidden lg:flex lg:w-1/2 p-2   h-screen items-center justify-center">
           <img
             src={BG}
             alt="Description of image"
-            className="w-full h-full object-cover     rounded-lg"
+            className="w-full h-full object-cover   rounded-2xl"
           />
         </div>
 
         {/* Cột chứa form login */}
-        <div className="w-full lg:w-1/2 flex flex-col items-center justify-center px-5 py-10 lg:p-20 bg-gray-50">
-          {/*  <div className="flex flex-col items-center top-20  absolute">
+        <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-5  pt-36  ">
+          <div className="flex flex-col items-center top-20  absolute">
             <img
-              src="https://via.placeholder.com/150" // Thay bằng link logo của bạn
+              src={Logo}
               alt="Company Logo"
-              className="h-16 w-16 mb-4 rounded-md"
+              className=" w-60 h-auto mb-4 rounded-md"
             />
-            <h1 className="text-xl font-semibold text-gray-700">
-              ITM Semiconductor CO., Ltd.
-            </h1>
-          </div> */}
 
-          <div className="mx-auto max-w-lg text-center mb-5">
+          </div>
+
+          <div className="mx-auto max-w-lg text-center mb-5 mt-3 ">
             <h1 className="text-2xl font-bold sm:text-3xl">Welcome Back!</h1>
-            <p className="mt-4 text-gray-500 text-xs">
+            <p className="mt-4 text-gray-500  text-xs">
               ITM Semiconductor CO., Ltd, a company that gives trust to
               customers and happiness to employees, value shared growth to
               shareholders.
@@ -115,7 +114,7 @@ export default function Login() {
               ]}
             >
               <Input
-                className="w-full rounded-lg border-gray-200 bg-gray-50 p-4 text-sm shadow-sm"
+                className="w-full p-3 text-sm "
                 size="large"
                 prefix={<UserOutlined className="site-form-item-icon" />}
                 placeholder="Employee ID"
@@ -128,7 +127,7 @@ export default function Login() {
               ]}
             >
               <Input.Password
-                className="w-full rounded-lg border-gray-200 bg-gray-50 p-4 text-sm shadow-sm"
+                className="w-full  p-3 text-sm "
                 size="large"
                 prefix={<LockOutlined className="site-form-item-icon" />}
                 placeholder="Password"
@@ -140,13 +139,14 @@ export default function Login() {
               </div>
             )}
             <Form.Item>
-              <Button
-                htmlType="submit"
-                className="w-full rounded-lg h-full bg-indigo-600 text-white p-4 shadow-sm text-sm"
+              <button
+                type="submit"
+                className="w-full rounded-lg h-full  bg-gray-700 text-white mt-4 p-3 text-base hover:bg-gray-700 first-line:relative hover:text-white"
                 size="large"
               >
                 Log in
-              </Button>
+              </button>
+
             </Form.Item>
           </Form>
         </div>

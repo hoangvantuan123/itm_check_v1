@@ -19,8 +19,8 @@ const { Search } = Input
 const { Title, Text } = Typography
 import decodeJWT from '../../utils/decode-JWT'
 import 'moment/locale/vi'
-import '../../static/css/scroll_container.scss'
-import '../../static/css/drawer_search.scss'
+import '../../static/css/scroll_container.css'
+import '../../static/css/drawer_search.css'
 import {
   InboxOutlined,
   SaveOutlined,

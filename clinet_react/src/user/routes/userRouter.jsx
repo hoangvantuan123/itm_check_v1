@@ -161,7 +161,7 @@ const UserRouter = () => {
                           'home',
                           'view',
                         ) ? (
-                          <Default />
+                          <Home/>
                         ) : (
                           <Unauthorized />
                         )

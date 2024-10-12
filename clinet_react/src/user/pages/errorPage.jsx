@@ -7,7 +7,7 @@ import decodeJWT from '../../utils/decode-JWT'
 const { Title, Text } = Typography
 const { TabPane } = Tabs
 import 'moment/locale/vi'
-import '../../static/css/scroll_container.scss'
+import '../../static/css/scroll_container.css'
 
 export default function ErrorPage() {
   const { t } = useTranslation()

@@ -18,7 +18,7 @@ import {
 } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import '../../static/css/scroll_container.scss'
+import '../../static/css/scroll_container.css'
 import ViewDetailUserHrRecruitment from '../components/candidateForm/viewDetailUserHrRecruitment'
 import { GetHrInfoId } from '../../features/hrRecruitment/getPersonnelId'
 import NoData from './noData'

@@ -42,7 +42,7 @@ export default function Setting({ userNameLogin }) {
     <div>
       <div
         onClick={showModal}
-        className="flex items-center gap-2 rounded-lg px-4 py-3 cursor-pointer text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+        className="flex items-center gap-2 cursor-pointer "
       >
         <Avatar shape="square" icon={<UserOutlined />} />
         <Text className="text-sm font-medium">{userNameLogin}</Text>
