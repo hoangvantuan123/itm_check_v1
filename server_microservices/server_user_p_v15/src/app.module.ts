@@ -6,10 +6,11 @@ import { MenuModule } from './ui_menu/ui_menu.module';
 import { TableModule } from './table/table.module';
 import { HrEmployeeModule } from './hr/hr_employee.module';
 import * as cors from 'cors';
-
+import { HealthController } from './health.controller';
 @Module({
   imports: [AuthModule, ResGroupsModule, ResUsersModule, MenuModule, TableModule, HrEmployeeModule],
   providers: [],
+  controllers: [HealthController]
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
